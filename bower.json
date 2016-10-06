@@ -1,0 +1,26 @@
+{
+  "name": "vis-framework",
+  "authors": [
+    "Daniel Osman <daniel.osman@damega.net>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "^2.3.2",
+    "jquery": "^3.1.1",
+    "d3": "^4.2.6",
+    "underscore": "^1.8.3",
+    "backbone": "^1.3.3",
+    "almond": "^0.3.3"
+  }
+}
