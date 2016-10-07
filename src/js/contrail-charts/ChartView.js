@@ -41,8 +41,9 @@ define( [
             };
         },
 
-        setData: function( dataConfig, data ) {
+        setData: function( data, dataConfig ) {
             var self = this;
+            dataConfig = dataConfig || {};
             // Instantiate data model if it did not exist.
             if( !self.chartDataModel ) {
                 self.chartDataModel = new ContrailChartsDataModel( {
@@ -99,8 +100,7 @@ define( [
                 if( !self.messageView ) {
                     self.messageView = new MessageView({
                         config: new MessageComponentConfigModel( self.chartConfig.message ),
-                        id: "messageView",
-                        container: $(selector).find( ".coCharts-main-container" )
+                        container: $( self.chartConfig.message.el )
                     });
                 }
                 else {
@@ -115,7 +115,7 @@ define( [
             if( self.isEnabledComponent( "tooltip" ) ) {
                 if( !self.tooltipView ) {
                     self.tooltipView = new TooltipView({
-                        config: new TooltipComponentConfigModel( self.chartConfig.tooltip )
+                        config: new TooltipConfigModel( self.chartConfig.tooltip )
                     });
                 }
                 else {
@@ -131,9 +131,8 @@ define( [
                 if( !self.navigationView ) {
                     self.navigationView = new NavigationView({
                         model: dataProvider,
-                        config: new NavigationComponentConfigModel( self.chartConfig.navigation ),
-                        id: "navigationView",
-                        el: $(selector).find( ".coCharts-navigation-container" )
+                        config: new NavigationConfigModel( self.chartConfig.navigation ),
+                        el: $( self.chartConfig.navigation.el )
                     });
                 }
                 else {
@@ -144,8 +143,8 @@ define( [
                 }
                 // The remaining components dataModel will be the one fetched from the navigationView.
                 dataProvider = self.navigationView.getFocusDataProvider();
-                if( messageView ) {
-                    messageView.registerComponentMessageEvent( self.navigationView.eventObject );
+                if( self.isEnabledComponent( "message" ) ) {
+                    self.messageView.registerComponentMessageEvent( self.navigationView.eventObject );
                 }
             }
             if( self.isEnabledComponent( "mainChart" ) ) {
@@ -153,8 +152,7 @@ define( [
                     self.compositeYChartView = new CompositeYChartView({
                         model: dataProvider,
                         config: new CompositeYChartConfigModel( self.chartConfig.mainChart ),
-                        el: $(selector).find( ".coCharts-main-container" ),
-                        id: self.chartConfig.chartId
+                        el: $( self.chartConfig.mainChart.el )
                     });
                 }
                 else {
@@ -175,7 +173,7 @@ define( [
                 if( !self.controlPanelView ) {
                     self.controlPanelView = new ControlPanelView( {
                         config: new ControlPanelConfigModel( self.chartConfig.controlPanel ),
-                        el: $(selector).find( ".coCharts-control-panel-container" )
+                        el: $( self.chartConfig.controlPanel.el )
                     });
                 }
                 else {

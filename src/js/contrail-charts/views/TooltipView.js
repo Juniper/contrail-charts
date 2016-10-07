@@ -5,52 +5,41 @@
 define([
     "jquery", "underscore", "d3",
     "contrail-charts/views/ContrailChartsView"
-], function ($, _, d3, ContrailChartsView) {
+], function( $, _, d3, ContrailChartsView ) {
     var TooltipView = ContrailChartsView.extend({
         tagName: "div",
-        className: "tooltip-view",
+        className: "coCharts-tooltip-view",
 
         initialize: function (options) {
             this.config = options.config;
             this.resetParams();
             this.params.show = 0;
-            this.template = contrail.getTemplate4Id( "coCharts-tooltip" );
         },
 
         registerTriggerEvent: function (eventObject, showEventType, hideEventType) {
-            this.listenTo(eventObject, showEventType, this.show);
-            this.listenTo(eventObject, hideEventType, this.hide);
+            this.listenTo( eventObject, showEventType, this.show );
+            this.listenTo( eventObject, hideEventType, this.hide );
         },
 
         generateTooltipHTML: function( tooltipConfig ) {
-            var tooltipElementTemplate = contrail.getTemplate4Id( cowc.TMPL_ELEMENT_TOOLTIP ),
-                tooltipElementTitleTemplate = contrail.getTemplate4Id( cowc.TMPL_ELEMENT_TOOLTIP_TITLE ),
-                tooltipElementContentTemplate = contrail.getTemplate4Id( cowc.TMPL_ELEMENT_TOOLTIP_CONTENT ),
-                tooltipElementObj, tooltipElementTitleObj, tooltipElementContentObj;
-
-            tooltipConfig = $.extend( true, {}, cowc.DEFAULT_CONFIG_ELEMENT_TOOLTIP, tooltipConfig );
-
-            tooltipElementObj = $( tooltipElementTemplate( tooltipConfig ) );
-            tooltipElementTitleObj = $( tooltipElementTitleTemplate( tooltipConfig.title ) );
-            tooltipElementContentObj = $( tooltipElementContentTemplate( tooltipConfig.content ) );
-
-            tooltipElementObj.find( ".popover-content" ).append( tooltipElementContentObj );
-            if( _.has( tooltipConfig, 'title' ) && tooltipConfig.title.name ) {
-                tooltipElementObj.find( ".popover-title" ).append( tooltipElementTitleObj );
-            }
-            else {
-                tooltipElementObj.find( ".popover-title" ).addClass( "hide" );
-                tooltipElementObj.find( ".popover-remove" ).addClass( "hide" );
-            }
-
-            return tooltipElementObj;
+            var tooltipElement = $( "<div></div>" );
+            tooltipElement.addClass( "tooltip-content" );
+            _.each( tooltipConfig.content.info, function( info ) {
+                var tooltipItem = $( "<div></div>" );
+                tooltipItem.addClass( "tooltip-item" );
+                tooltipItem.append( "<span class=\"tooltip-item-label\">" + info.label + ":</span>" );
+                tooltipItem.append( "<span class=\"tooltip-item-value\">" + info.value + "</span>" );
+                tooltipElement.append( tooltipItem );
+            });
+            return tooltipElement;
         },
 
         show: function( tooltipData, tooltipConfig, offsetLeft, offsetTop ) {
             var self = this;
             self.params.show++;
-            var tooltipElementObj = self.generateTooltipHTML( tooltipConfig );
-
+            var tooltipElement = self.generateTooltipHTML( tooltipConfig );
+            console.log( "show: ", tooltipData, tooltipConfig, offsetLeft, offsetTop );
+            /*
             // TODO: This should go to view events
             $(tooltipElementObj).find(".popover-tooltip-footer").find(".btn")
                 .off("click")
@@ -65,14 +54,15 @@ define([
                 .on("click", function (e) {
                     self.hide();
                 });
+            */
 
             $( "body" ).append( this.$el );
-            this.$el.html( tooltipElementObj );
+            this.$el.html( tooltipElement );
             this.$el.show();
 
             // Tooltip dimmensions will be available after render.
-            var tooltipWidth = tooltipElementObj.width();
-            var tooltipHeight = tooltipElementObj.height();
+            var tooltipWidth = tooltipElement.width();
+            var tooltipHeight = tooltipElement.height();
             var windowWidth = $( document ).width();
             var tooltipPositionTop = 0;
             var tooltipPositionLeft = offsetLeft;
@@ -85,7 +75,7 @@ define([
             else {
                 tooltipPositionLeft += 20;
             }
-            $(tooltipElementObj).css({
+            $(tooltipElement).css({
                 top: tooltipPositionTop,
                 left: tooltipPositionLeft
             });

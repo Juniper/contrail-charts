@@ -22,7 +22,7 @@ define([
             var self = this;
             self.config = options.config;
             //self.resetParams();
-            self.template = contrail.getTemplate4Id( "coCharts-navigation-panel" );
+            //self.template = contrail.getTemplate4Id( "coCharts-navigation-panel" );
 
             // NavigationView does not react itself to model changes. Instead it listens to compositeYChartView render events
             // and updates itself every time the compositeYChartView renders itself.

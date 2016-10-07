@@ -131,15 +131,15 @@ define([
                 .attr( "y", yScale.range()[0] )
                 .attr( "height", 0 )
                 .attr( "width", function( d ) { return d.w; } )
-                .on("mouseover", function( d ) {
-                    var pos = $(this).offset();
-                    self.eventObject.trigger("mouseover", d.data, pos.left, pos.top);
-                    d3.select(this).classed("active", true);
+                .on( "mouseover", function( d ) {
+                    //var pos = $( this ).offset(); // not working in jquery 3
+                    self.eventObject.trigger( "mouseover", d.data, d.x, d.y );
+                    d3.select(this).classed( "active", true );
                 })
-                .on("mouseout", function( d ) {
-                    var pos = $(this).offset();
-                    self.eventObject.trigger("mouseout", d.data, pos.left, pos.top);
-                    d3.select(this).classed("active", false);
+                .on( "mouseout", function( d ) {
+                    //var pos = $( this ).offset(); // not working in jquery 3
+                    self.eventObject.trigger( "mouseout", d.data, d.x, d.y );
+                    d3.select(this).classed( "active", false );
                 })
                 .merge( svgBarGroups ).transition().ease( d3.easeLinear ).duration( self.params.duration )
                 .attr( "fill", function( d ) { return d.color; } )

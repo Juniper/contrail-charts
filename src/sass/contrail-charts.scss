@@ -1,0 +1,67 @@
+
+.coCharts-svg {
+	.axis {
+		.domain {
+			display: none;
+		}
+		.tick {
+			line {
+				stroke: #eee;
+			}
+			text {
+				font-size: 10px;
+				fill: #aaa;
+			}
+		}
+		.axis-label {
+			font-size: 10px;
+			fill: #aaa;
+			text-anchor: middle;
+		}
+	}
+
+	.line-chart {
+		.line {
+			fill: none;
+			stroke-width: 3;
+			opacity: 0.8;
+		}
+	}
+
+	.bar-chart {
+		.bar {
+			opacity: 0.6;
+		}
+		.bar.active {
+			opacity: 0.9;
+		}
+	}
+
+	.brush {
+		.selection {
+			fill: #aaa;
+		}
+		.handle--custom {
+			fill: #888;
+			stroke: #555;
+		}
+	}
+}
+
+.coCharts-tooltip-view {
+	.tooltip-content {
+		position: absolute;
+		padding: 10px;
+		border: 1px solid #aaa;
+		background-color: rgba( 255, 255, 255, 0.9 );
+		font-size: 12px;
+		color: #555;
+
+		.tooltip-item {
+			.tooltip-item-label {
+				font-weight: bold;
+				margin-right: 10px;
+			}
+		}
+	}
+}

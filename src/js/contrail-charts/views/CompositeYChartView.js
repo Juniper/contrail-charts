@@ -157,7 +157,7 @@ define([
                 self.params.chartWidth += self.params.chartWidthDelta;
             }
             if( !self.params.chartHeight ) {
-                self.params.chartHeight = Math.round(3 * self.params.chartWidth / 4);
+                self.params.chartHeight = Math.round( self.params.chartWidth / 2 );
             }
             if( !self.params.margin ) {
             	self.params.margin = 5;
@@ -165,18 +165,11 @@ define([
             if( !self.params.marginInner ) {
             	self.params.marginInner = 0;
             }
-            // If the side margin (ie marginLeft) was not set in config then use global margin and add extra space for
-            // title and / or axis if they were defined (ie. titleLeft adds 30 pixels to the marginLeft parameter).
-            var elementsThatNeedMargins = {title: 30, axis: 30};
-            _.each(["Top", "Bottom", "Left", "Right"], function (side) {
-                if (!self.params["margin" + side]) {
-                    self.params["margin" + side] = self.params.margin;
-                    _.each(elementsThatNeedMargins, function (marginAdd, key) {
-                        if (self.params[key + side]) {
-                            // The side margin was undefined and we need addition room (for axis, title, etc.)
-                            self.params["margin" + side] += marginAdd;
-                        }
-                    });
+            // TODO: use the 'axis' param to compute additional margins for the axis
+            var sides = ['Top','Right','Bottom','Left'];
+            _.each( sides, function( side ) {
+                if( !self.params['margin'+side] ) {
+                    self.params['margin'+side] = self.params.margin;
                 }
             });
         },
@@ -316,7 +309,7 @@ define([
             var svgs = d3.select( self.el ).select( "svg" );
             if( svgs.empty() ) {
                 d3.select( self.el ).append( "svg" )
-                    .attr( "id", self.id )
+                    .attr( "class", "coCharts-svg" )
                     .append( "g" )
                         .attr( "class", "axis x-axis" )
                         .attr( "transform", "translate(0," + ( self.params.yRange[1] - self.params.marginInner ) + ")" );
@@ -382,7 +375,7 @@ define([
             var self = this;
             var xAxis = d3.axisBottom( self.params.xScale )
                 .tickSize( self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner )
-                .tickPadding( 5 )
+                .tickPadding( 10 )
                 .ticks( self.params.xTicks );
             if( self.hasAxisConfig( 'x', 'formatter' ) ) {
                 xAxis = xAxis.tickFormat( self.params.axis.x.formatter );
