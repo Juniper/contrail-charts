@@ -20,17 +20,28 @@ module.exports = function(grunt) {
       },
       lib: {
         src: ['build/**/lib', 'build/css/main.css']
+      },
+      examples: {
+        src: ['examples/build/**/*']
       }
     },
 
     sass: {
       dist: {
         options: {
-          //style: 'expanded'
           style: 'compressed'
         },
         files: {
-          'build/css/contrail-charts.css': 'src/sass/contrail-charts.scss'
+          'build/css/contrail-charts.css': 'examples/src/sass/contrail-charts.scss'
+        }
+      },
+      examples: {
+        options: {
+          style: 'compressed',
+          loadPath: ['bower_components/components-font-awesome/scss','src/sass','examples/src/scss']
+        },
+        files: {
+          'examples/build/css/contrail-charts-examples-all.css': 'examples/src/scss/contrail-charts-examples-all.scss'
         }
       }
     },
@@ -45,6 +56,12 @@ module.exports = function(grunt) {
         files: [
           { expand: true, cwd: 'src', flatten: false, src: ['**/*.html', '**/*.js', '**/*.png'], dest: 'build/', filter: 'isFile' },
           { expand: true, flatten: true,  src: ['build/js/lib/require.js'], dest: 'build/js/', filter: 'isFile' }
+        ]
+      },
+      examples: {
+        files: [
+          { expand: true, flatten: true,  src: ['examples/src/html/index.html'], dest: 'examples/build/', filter: 'isFile' },
+          { expand: true, flatten: true,  src: ['build/js/lib/require.js'], dest: 'examples/build/js/lib/', filter: 'isFile' }
         ]
       }
     },
@@ -62,7 +79,7 @@ module.exports = function(grunt) {
           'underscore.js': 'underscore/underscore.js',
           'backbone.js': 'backbone/backbone.js'
         }
-      }
+      },
       /*,
       css: {
         options: {
@@ -72,6 +89,14 @@ module.exports = function(grunt) {
         }
       }
       */
+      fonts: {
+        options: {
+          destPrefix: 'examples/build'
+        },
+        files: {
+          'fonts': 'components-font-awesome/fonts/*'
+        }
+      }
     },
 
     uglify: {
@@ -150,15 +175,15 @@ module.exports = function(grunt) {
       examples: {
         options: {
           name: 'config',
-          baseUrl: 'examples/js',
-          mainConfigFile: 'examples/js/config.js',
-          out: 'examples/js/contrail-charts-examples-all-min.js',
+          baseUrl: 'examples/src/js',
+          mainConfigFile: 'examples/src/js/config.js',
+          out: 'examples/build/js/contrail-charts-examples-all.js',
           paths: {
-            'contrail-charts': '../../build/js/contrail-charts',
-            'jquery': '../../build/js/lib/jquery',
-            'd3': '../../build/js/lib/d3',
-            'underscore': '../../build/js/lib/underscore',
-            'backbone': '../../build/js/lib/backbone'
+            'contrail-charts': '../../../build/js/contrail-charts',
+            'jquery': '../../../build/js/lib/jquery',
+            'd3': '../../../build/js/lib/d3',
+            'underscore': '../../../build/js/lib/underscore',
+            'backbone': '../../../build/js/lib/backbone'
           },
           optimize: 'none'
         }
@@ -182,13 +207,13 @@ module.exports = function(grunt) {
     watch: {
       src: {
         files: [ 'src/js/**/*.js', 'src/sass/**/*.scss', 'src/**/*.html' ],
-        tasks: [ 'sass', 'requirejs:css', 'requirejs:dev', 'requirejs:examples' ]
+        tasks: [ 'copy:examples', 'sass:examples', 'requirejs:dev', 'requirejs:examples' ]
       }
     }
   });
 
-  grunt.registerTask( 'default',  ['clean:dev', 'bowercopy:js', /*'bowercopy:css', 'copy:dev',*/  'sass', 'requirejs:css', 'requirejs:dev', 'watch' ] );
-  grunt.registerTask( 'examples',  ['clean:dev', 'bowercopy:js', /*'bowercopy:css', 'copy:dev',*/  'sass', 'requirejs:css', 'requirejs:dev', 'requirejs:examples', 'watch' ] );
+  grunt.registerTask( 'default',  ['clean:dev', 'bowercopy:js', 'sass:dist', 'requirejs:css', 'requirejs:dev', 'watch' ] );
+  grunt.registerTask( 'examples',  ['clean:dev', 'clean:examples', 'bowercopy:js', 'bowercopy:fonts', 'copy:examples', 'sass:examples', 'requirejs:dev', 'requirejs:examples', 'watch' ] );
   grunt.registerTask( 'prod', ['clean:dev', 'bowercopy:js', 'bowercopy:css', 'copy:prod', 'sass', 'requirejs:css', 'requirejs:compile', 'uglify:prod', 'clean:lib' ] );
 
 };

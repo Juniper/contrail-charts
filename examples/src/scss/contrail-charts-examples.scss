@@ -1,0 +1,37 @@
+/**
+* Styles specific for contrail-examples.
+*/
+html {
+	overflow-y: scroll;
+}
+
+button {
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+}
+
+#complexChart {
+	position: relative;
+
+	#complexChart-mainChart {
+		position: relative;
+	}
+	#complexChart-controlPanel {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 32px;
+	}
+	#complexChart-navigation {
+		margin-bottom: 25px;
+	}
+}

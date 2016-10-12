@@ -111,7 +111,40 @@ define([
 		},
 		tooltip: {
 
-		}
+		},
+		controlPanel: {
+			el: "#complexChart-controlPanel",
+            enable: true,
+            buttons: [
+                {
+                    name: "filter",
+                    title: "Filter",
+                    iconClass: 'fa fa-filter',
+                    events: {
+                        click: "filterVariables"
+                    },
+                    panel: {
+                        name: "accessorData",
+                        width: "350px"
+                    }
+                },
+                {
+                    name: "zoomIn",
+                    title: "Zoom In",
+                    iconClass: 'fa fa-search-plus'
+                },
+                {
+                    name: "zoomOut",
+                    title: "Zoom Out",
+                    iconClass: 'fa fa-search-minus'
+                },
+                {
+                    name: "zoomReset",
+                    title: "Zoom Reset",
+                    iconClass: 'fa fa-times-circle-o'
+                }
+            ]
+        },
 	});
 	complexChartView.render();
 

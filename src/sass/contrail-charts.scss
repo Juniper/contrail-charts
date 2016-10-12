@@ -1,4 +1,35 @@
 
+@mixin transition($transition...) {
+    -moz-transition:    $transition;
+    -o-transition:      $transition;
+    -webkit-transition: $transition;
+    transition:         $transition;
+}
+@mixin transition-property($property...) {
+    -moz-transition-property:    $property;
+    -o-transition-property:      $property;
+    -webkit-transition-property: $property;
+    transition-property:         $property;
+}
+@mixin transition-duration($duration...) {
+    -moz-transition-property:    $duration;
+    -o-transition-property:      $duration;
+    -webkit-transition-property: $duration;
+    transition-property:         $duration;
+}
+@mixin transition-timing-function($timing...) {
+    -moz-transition-timing-function:    $timing;
+    -o-transition-timing-function:      $timing;
+    -webkit-transition-timing-function: $timing;
+    transition-timing-function:         $timing;
+}
+@mixin transition-delay($delay...) {
+    -moz-transition-delay:    $delay;
+    -o-transition-delay:      $delay;
+    -webkit-transition-delay: $delay;
+    transition-delay:         $delay;
+}
+
 .coCharts-svg {
 	.axis {
 		.domain {
@@ -62,6 +93,24 @@
 				font-weight: bold;
 				margin-right: 10px;
 			}
+		}
+	}
+}
+
+.coCharts-control-panel-view {
+	.control-panel-items {
+		.control-panel-item {
+			width: 100%;
+			font-size: 14px;
+			background-color: #fff;
+			padding: 5px;
+			border: 1px solid #ddd;
+			color: #444;
+			margin: 0 0 5px 0;
+			@include transition( background-color .25s );
+		}
+		.control-panel-item:hover {
+			background-color: #ddd;
 		}
 	}
 }

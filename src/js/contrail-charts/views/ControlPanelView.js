@@ -9,7 +9,7 @@ define([
 ], function( _, Events, ContrailChartsView ) {
     var ControlPanelView = ContrailChartsView.extend({
         tagName: "div",
-        className: "control-panel",
+        className: "coCharts-control-panel-view",
 
         expandedTemplates: {
             accessorData: 'SOME_TEMPLATE_ID'
@@ -108,10 +108,19 @@ define([
         },
 
         render: function() {
+            console.log( "ControlPanelView render." );
             var self = this;
             self.resetParams();
-            var controlPanelTemplate = contrail.getTemplate4Id( cowc.TMPL_CHARTS_CONTROL_PANEL );
-            self.$el.html( controlPanelTemplate( self.params ) );
+            var $controlPanel = $( "<div class=\"control-panel-items\"></div>" );
+            _.each( self.params.buttons, function( button ) {
+                var $button = $( "<button data-name=\"" + button.name + "\" title=\"" + button.title + "\"></button>" );
+                $button.append( "<i class=\"" + button.iconClass + "\"></i>" );
+                $button.addClass( "control-panel-item" );
+                $button.addClass( "control-panel-item-" + button.name );
+                $controlPanel.append( $button );
+            });
+            self.$el.html( $controlPanel );
+            self.$el.addClass( self.className );
         }
     });
 

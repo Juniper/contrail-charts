@@ -17,7 +17,7 @@ define([
 ) {
     var CompositeYChartView = ContrailChartsView.extend({
     	tagName: "div",
-    	chartType: "compositeY",
+    	className: "coCharts-main-chart",
 
     	initialize: function (options) {
             var self = this;
