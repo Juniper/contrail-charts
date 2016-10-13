@@ -20,6 +20,18 @@ define([
 	var complexChartView = new coCharts.ChartView();
 	complexChartView.setData( complexData );
 	complexChartView.setConfig( {
+		bindingHandler: {
+            bindings: [
+                {
+                    sourceComponent: 'mainChart',
+                    sourceModel: 'config',
+                    sourcePath: 'accessorData',
+                    targetComponent: 'controlPanel',
+                    targetModel: 'config',
+                    action: 'sync'
+                }
+            ]
+        },
 		mainChart: {
 			el: "#complexChart-mainChart",
 			marginInner: 10,
@@ -31,6 +43,7 @@ define([
 				a: {
 					enable: true,
 					chartType: 'stackedBar',
+					possibleChartTypes: [ { name: 'stackedBar', label: 'Stacked Bar Chart' }, { name: 'line', label: 'Line Chart' } ],
 					y: 1,
 					label: "A Label",
 					tooltip: {
@@ -127,21 +140,6 @@ define([
                         name: "accessorData",
                         width: "350px"
                     }
-                },
-                {
-                    name: "zoomIn",
-                    title: "Zoom In",
-                    iconClass: 'fa fa-search-plus'
-                },
-                {
-                    name: "zoomOut",
-                    title: "Zoom Out",
-                    iconClass: 'fa fa-search-minus'
-                },
-                {
-                    name: "zoomReset",
-                    title: "Zoom Reset",
-                    iconClass: 'fa fa-times-circle-o'
                 }
             ]
         },

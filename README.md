@@ -1,7 +1,7 @@
 # contrail-charts
 contrail chart MVC library using D3
 
-# Compiling
+# Building
 
 ## Download tools
 ```
@@ -19,4 +19,10 @@ bower install
 ```
 grunt examples
 ```
-Then run the file examples/index.html in your browser.
+Then run the file examples/build/index.html in your browser.
+
+## Compile minified library
+```
+grunt lib
+```
+Then use the js and css files in the build folder.

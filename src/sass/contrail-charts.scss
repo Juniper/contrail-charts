@@ -1,4 +1,6 @@
-
+/*
+* Transition mixins.
+*/
 @mixin transition($transition...) {
     -moz-transition:    $transition;
     -o-transition:      $transition;
@@ -28,6 +30,10 @@
     -o-transition-delay:      $delay;
     -webkit-transition-delay: $delay;
     transition-delay:         $delay;
+}
+
+.hide {
+	display: none;
 }
 
 .coCharts-svg {
@@ -99,6 +105,9 @@
 
 .coCharts-control-panel-view {
 	.control-panel-items {
+		width: 32px;
+		float: right;
+
 		.control-panel-item {
 			width: 100%;
 			font-size: 14px;
@@ -111,6 +120,43 @@
 		}
 		.control-panel-item:hover {
 			background-color: #ddd;
+		}
+	}
+	.control-panel-expanded-container {
+		margin: 0 33px 0 0;
+		border: 1px solid #ddd;
+		background-color: #fff;
+
+		.control-panel-filter-head {
+			padding: 5px 10px 5px 10px;
+			background-color: #ddd;
+			color: #444;
+			font-size: 14px;
+
+			.control-panel-filter-head-icon {
+				margin-right: 10px;
+			}
+			.control-panel-filter-close {
+				float: right;
+				cursor: pointer;
+			}
+		}
+		.control-panel-filter-body {
+			padding: 10px;
+			color: #444;
+			font-size: 14px;
+
+			.control-panel-filter-item {
+				.accessor-data-checkbox {
+					cursor: pointer;
+				}
+				.accessor-data-checkbox-label {
+					cursor: pointer;
+				}
+				.accessor-data-chart-type-select {
+					float: right;
+				}
+			}
 		}
 	}
 }

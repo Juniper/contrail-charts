@@ -12,7 +12,8 @@ define( [
     "contrail-charts/views/ControlPanelView",
     "contrail-charts/views/MessageView",
     "contrail-charts/views/NavigationView",
-    "contrail-charts/views/TooltipView"
+    "contrail-charts/views/TooltipView",
+    "contrail-charts/BindingHandler"
 ], function(
     $, _,
     CompositeYChartConfigModel,
@@ -27,7 +28,8 @@ define( [
     ControlPanelView,
     MessageView,
     NavigationView,
-    TooltipView
+    TooltipView,
+    BindingHandler
 ) {
     var ChartView = View.extend({
         initialize: function() {
@@ -182,6 +184,9 @@ define( [
                 if( self.isEnabledComponent( "bindingHandler" ) ) {
                     self.bindingHandler.addComponent( "controlPanel", self.controlPanelView );
                 }
+            }
+            if( self.isEnabledComponent( "bindingHandler" ) ) {
+                self.bindingHandler.start();
             }
         },
 
