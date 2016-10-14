@@ -139,7 +139,7 @@ define([
         setRangeFor: function (newRange) {
             var self = this;
             var range = _.extend({}, self.getRange());
-            var manualRange = _.extend({}, self.get("manualRange"));
+            var manualRange = _.extend( {}, self.getManualRange() );
             _.each(newRange, function (variableRange, variableName) {
                 range[variableName] = variableRange;
                 manualRange[variableName] = variableRange;
@@ -150,11 +150,12 @@ define([
         resetRangeFor: function (newRange) {
             var self = this;
             var range = _.extend({}, self.getRange());
+            var manualRange = _.extend({}, self.get("manualRange"));
             _.each(newRange, function (variableRange, variableName) {
                 delete range[variableName];
-                delete self.get("manualRange")[variableName];
+                delete manualRange[variableName];
             });
-            self.setRange(range);
+            self.setDataAndRanges(range, manualRange);
         },
 
         resetAllRanges: function() {
@@ -214,9 +215,9 @@ define([
                 data = formatData(data, manualRange);
             }
             // Filter data by manualRange.
-            data = _.filter( data, function( d ) {
+            var filteredData = _.filter( data, function( d ) {
                 var ok = true;
-                _.each( self.get( 'manualRange' ), function( range, key ) {
+                _.each( manualRange, function( range, key ) {
                     if( !_.has( d, key ) ) {
                         ok = false;
                     }
@@ -228,7 +229,7 @@ define([
                 });
                 return ok;
             });
-            this.set({data: data, range: range, manualRange: manualRange});
+            this.set({data: filteredData, range: range, manualRange: manualRange});
         },
 
         /**

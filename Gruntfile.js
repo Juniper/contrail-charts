@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function( grunt ) {
   grunt.loadNpmTasks( 'grunt-contrib-copy' );
   grunt.loadNpmTasks( 'grunt-contrib-clean' );
   grunt.loadNpmTasks( 'grunt-bowercopy' );
@@ -6,6 +6,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks( 'grunt-contrib-jshint' );
   grunt.loadNpmTasks( 'grunt-contrib-watch' );
   grunt.loadNpmTasks( 'grunt-contrib-sass' );
+  grunt.loadNpmTasks( 'grunt-contrib-jasmine' );
+  grunt.loadNpmTasks( 'grunt-contrib-connect' );
+
+  // Fix for grunt-template-jasmine-requirejs old grunt.util._ support.
+  grunt.util._.contains = require( 'underscore' ).contains;
+  grunt.util._.template = function( tmpl, context ) { return require( 'underscore' ).template( tmpl )( context ) };
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -166,6 +172,39 @@ module.exports = function(grunt) {
       }
     },
 
+    connect: {
+      test : {
+        port : 8000
+      }
+    },
+    jasmine: {
+      test: {
+        src: 'src/js/**/*.js',
+        options: {
+          keepRunner: true,
+          specs: 'tests/*Spec.js',
+          helpers: 'tests/*Helper.js',
+          host: 'http://127.0.0.1:8000/',
+          template: require( 'grunt-template-jasmine-requirejs' ),
+          templateOptions: {
+            version: 'build/js/lib/require.js',
+            requireConfigFile: 'src/js/config.js',
+            requireConfig: {
+              baseUrl: 'src/js',
+              paths: {
+                'contrail-charts': 'contrail-charts',
+                requirejs: 'lib/require',
+                jquery: '../../build/js/lib/jquery',
+                d3: '../../build/js/lib/d3',
+                underscore: '../../build/js/lib/underscore',
+                backbone: '../../build/js/lib/backbone'
+              }
+            }
+          }
+        }
+      }
+    },
+
     watch: {
       src: {
         files: [ 'src/js/**/*.js', 'src/sass/**/*.scss', 'src/**/*.html', 'examples/src/js/**/*.js', 'examples/src/scss/**/*.scss', 'examples/src/html/**/*.html' ],
@@ -174,8 +213,9 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask( 'default',  [ 'clean:dev', 'bowercopy:js', 'sass:dist', 'requirejs:css', 'requirejs:dev', 'watch' ] );
+  grunt.registerTask( 'default',  [ 'clean:dev', 'bowercopy:js', 'sass:dist', 'requirejs:dev', 'watch' ] );
   grunt.registerTask( 'examples',  [ 'clean:examples', 'bowercopy:js', 'bowercopy:fonts', 'copy:examples', 'sass:examples', 'requirejs:dev', 'requirejs:examples', 'watch' ] );
   grunt.registerTask( 'lib', [ 'clean:dev', 'sass:dist', 'requirejs:compile' ] );
+  grunt.registerTask( 'test', [ 'clean:dev', 'bowercopy:js', 'sass:dist', 'connect:test', 'jasmine:test' ] );
 
 };

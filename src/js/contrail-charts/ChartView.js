@@ -34,6 +34,7 @@ define( [
     var ChartView = View.extend({
         initialize: function() {
             var self = this;
+            /*
             self.componentMap = {
                 message: { view: MessageView, config: MessageConfigModel },
                 tooltip: { view: TooltipView, config: TooltipConfigModel },
@@ -41,6 +42,7 @@ define( [
                 mainChart: { view: CompositeYChartView, config: CompositeYChartConfigModel },
                 controlPanel: { view: ControlPanelView, config: ControlPanelConfigModel }
             };
+            */
         },
 
         setData: function( data, dataConfig ) {
@@ -86,7 +88,6 @@ define( [
         */
         lazyComponentInit: function() {
             var self = this;
-            var selector = $( "body" );
             // TODO: all this initialization may be automated based on config.
             if( self.isEnabledComponent( "bindingHandler" ) ) {
                 if( !self.bindingHandler ) {

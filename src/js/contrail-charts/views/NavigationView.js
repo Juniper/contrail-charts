@@ -98,6 +98,11 @@ define([
             var svg = self.svgSelection();
             svg.select( "g.brush" ).remove();
             self.brush = null;
+            self.config.unset( "focusDomain", { silent: true } );
+            var x = this.params.xAccessor;
+            var newFocusDomain = {};
+            newFocusDomain[x] = [];
+            self.focusDataProvider.resetRangeFor( newFocusDomain );
         },
 
         prevChunkSelected: function () {
@@ -162,8 +167,8 @@ define([
             var self = this;
             console.log( "NavigationView renderBrush: ", self.params );
             var x = self.params.xAccessor;
+            var svg = self.svgSelection();
             if( !self.brush ) {
-                var svg = self.svgSelection();
                 var marginInner = self.params.marginInner;
                 var brushHandleHeight = 16;//self.params.yRange[0] - self.params.yRange[1];
                 var brushHandleCenter = (self.params.yRange[0] - self.params.yRange[1] + 2 * marginInner) / 2
@@ -190,6 +195,15 @@ define([
                         }
                         else {
                             gHandles.classed( "hide", true );
+                            self.removeBrush();
+                            self.renderBrush();
+                        }
+                    })
+                    .on( "end", function () {
+                        var dataWindow = d3.event.selection;
+                        if( !dataWindow ) {
+                            self.removeBrush();
+                            self.renderBrush();
                         }
                     });
                 var gBrush = svg.append( "g" ).attr( "class", "brush" ).call( self.brush );
