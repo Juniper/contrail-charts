@@ -215,6 +215,7 @@ define([
                 data = formatData(data, manualRange);
             }
             // Filter data by manualRange.
+            /*
             var filteredData = _.filter( data, function( d ) {
                 var ok = true;
                 _.each( manualRange, function( range, key ) {
@@ -229,7 +230,8 @@ define([
                 });
                 return ok;
             });
-            this.set({data: filteredData, range: range, manualRange: manualRange});
+            */
+            this.set({data: data, range: range, manualRange: manualRange});
         },
 
         /**

@@ -308,11 +308,17 @@ define([
             var translate = self.params.xRange[0] - self.params.marginInner;
             var svgs = d3.select( self.el ).select( "svg" );
             if( svgs.empty() ) {
-                d3.select( self.el ).append( "svg" )
-                    .attr( "class", "coCharts-svg" )
-                    .append( "g" )
-                        .attr( "class", "axis x-axis" )
-                        .attr( "transform", "translate(0," + ( self.params.yRange[1] - self.params.marginInner ) + ")" );
+                var svg = d3.select( self.el ).append( "svg" ).attr( "class", "coCharts-svg" );
+                svg.append( "clipPath" )
+                    .attr( "id", "rect-clipPath" )
+                    .append( "rect" )
+                    .attr( "x", self.params.xRange[0] - self.params.marginInner )
+                    .attr( "y", self.params.yRange[1] - self.params.marginInner )
+                    .attr( "width", self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner )
+                    .attr( "height", self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner );
+                svg.append( "g" )
+                    .attr( "class", "axis x-axis" )
+                    .attr( "transform", "translate(0," + ( self.params.yRange[1] - self.params.marginInner ) + ")" );
             }
             // Handle Y axis
             var svgYAxis = self.svgSelection().selectAll( ".axis.y-axis" ).data( self.params.yAxisInfoArray, function( d ) {
@@ -331,7 +337,8 @@ define([
             svgComponentGroups.enter().append( "g" )
                 .attr( "class", function( component ) {
                     return "component-group component-" + component.getName() + " " + component.className;
-                } );
+                })
+                .attr( "clip-path", "url(#rect-clipPath)" );
             // Every component can add a one time (enter) code into it's component group.
             svgComponentGroups.enter().each( function( component ) {
                 if( _.isFunction( component.renderSVG ) ) {
@@ -341,8 +348,13 @@ define([
             svgComponentGroups.exit().remove();
             // Handle (re)size.
             self.svgSelection()
-                .attr("width", self.params.chartWidth)
-                .attr("height", self.params.chartHeight);
+                .attr( "width", self.params.chartWidth )
+                .attr( "height", self.params.chartHeight )
+                .select( "#rect-clipPath" ).select( "rect" )
+                .attr( "x", self.params.xRange[0] - self.params.marginInner )
+                .attr( "y", self.params.yRange[1] - self.params.marginInner )
+                .attr( "width", self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner )
+                .attr( "height", self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner );
         },
 
         getTooltipConfig: function( dataItem ) {

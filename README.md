@@ -26,3 +26,9 @@ Then run the file examples/build/index.html in your browser.
 grunt lib
 ```
 Then use the js and css files in the build folder.
+
+## Run tests
+```
+grunt test
+```
+
