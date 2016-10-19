@@ -1,11 +1,10 @@
 {
   "name": "contrail-charts",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "MVC based chart library",
+  "main": "src/js/contrail-charts.js",
   "scripts": {},
-  "author": "Daniel Osman",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "devDependencies": {
     "bower": "^1.7.9",
     "grunt": "^1.0.1",

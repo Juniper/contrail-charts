@@ -1,12 +1,9 @@
 {
-  "name": "vis-framework",
-  "authors": [
-    "Daniel Osman <daniel.osman@damega.net>"
-  ],
-  "description": "",
-  "main": "",
+  "name": "contrail-charts",
+  "description": "MVC based Chart Library",
+  "main": "src/js/contrail-charts.js",
   "moduleType": [],
-  "license": "MIT",
+  "license": "Apache-2.0",
   "homepage": "",
   "ignore": [
     "**/.*",

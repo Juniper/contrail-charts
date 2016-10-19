@@ -87,14 +87,14 @@ module.exports = function( grunt ) {
 
     requirejs: {
       // For production optimize javascript into one minified version without dependencies.
-      compile: {
+      compile_clean: {
         options: {
           //name: 'bower_components/almond/almond',
           include: ['contrail-charts'],
           exclude: ['jquery', 'd3', 'underscore', 'backbone'],
           baseUrl: 'src/js',
           mainConfigFile: 'src/js/config.js',
-          out: 'build/js/contrail-charts.min.js',
+          out: 'build/js/contrail-charts.clean.min.js',
           paths: {
             'contrail-charts': 'contrail-charts',
             'jquery': 'empty:',
@@ -121,6 +121,40 @@ module.exports = function( grunt ) {
           }
         }
       },
+      compile: {
+        options: {
+          include: ['contrail-charts'],
+          exclude: [],
+          baseUrl: 'src/js',
+          mainConfigFile: 'src/js/config.js',
+          out: 'build/js/contrail-charts.min.js',
+          paths: {
+            'contrail-charts': 'contrail-charts',
+            'jquery': '../../build/js/lib/jquery',
+            'd3': '../../build/js/lib/d3',
+            'underscore': '../../build/js/lib/underscore',
+            'backbone': '../../build/js/lib/backbone'
+          },
+          preserveLicenseComments: false,
+          generateSourceMaps: true,
+          optimize: 'uglify2',
+          uglify2: {
+            output: {
+              beautify: false
+            },
+            compress: {
+              drop_console: true,
+              sequences: false,
+              global_defs: {
+                DEBUG: false
+              }
+            },
+            warnings: true,
+            mangle: true
+          }
+        }
+      },
+
       dev: {
         options: {
           //name: '../../bower_components/almond/almond',
@@ -215,7 +249,8 @@ module.exports = function( grunt ) {
 
   grunt.registerTask( 'default',  [ 'clean:dev', 'bowercopy:js', 'sass:dist', 'requirejs:dev', 'watch' ] );
   grunt.registerTask( 'examples',  [ 'clean:examples', 'bowercopy:js', 'bowercopy:fonts', 'copy:examples', 'sass:examples', 'requirejs:dev', 'requirejs:examples', 'watch' ] );
-  grunt.registerTask( 'lib', [ 'clean:dev', 'sass:dist', 'requirejs:compile' ] );
+  grunt.registerTask( 'lib', [ 'clean:dev', 'bowercopy:js', 'sass:dist', 'requirejs:compile' ] );
+  grunt.registerTask( 'lib-clean', [ 'clean:dev', 'sass:dist', 'requirejs:compile_clean' ] );
   grunt.registerTask( 'test', [ 'clean:dev', 'bowercopy:js', 'sass:dist', 'connect:test', 'jasmine:test' ] );
 
 };
