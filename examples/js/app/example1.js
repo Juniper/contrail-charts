@@ -1,9 +1,11 @@
 
 define([
-	"d3",
-    "contrail-charts"
-], function( d3, coCharts ) {
+	"d3", "underscore",
+    "coCharts"
+], function( d3, _, coCharts ) {
 
+	console.log( "d3: ", d3 );
+	
 	// Complex example
 	var complexData = [];
 	_.each( d3.range( 100 ), function( i ) {

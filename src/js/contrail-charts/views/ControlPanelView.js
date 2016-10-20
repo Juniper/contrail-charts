@@ -3,10 +3,10 @@
  */
 
 define([
-    "underscore",
+    "jquery", "underscore",
     "contrail-charts/models/Events",
     "contrail-charts/views/ContrailChartsView"
-], function( _, Events, ContrailChartsView ) {
+], function( $, _, Events, ContrailChartsView ) {
     var ControlPanelView = ContrailChartsView.extend({
         tagName: "div",
         className: "coCharts-control-panel-view",
