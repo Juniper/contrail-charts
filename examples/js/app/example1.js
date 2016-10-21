@@ -19,7 +19,7 @@ define([
 			e: (Math.random() - 0.5) * 10
 		});
 	});
-	var complexChartView = new coCharts.ChartView();
+	var complexChartView = new coCharts.XYChartView();
 	complexChartView.setData( complexData );
 	complexChartView.setConfig( {
 		bindingHandler: {
@@ -158,7 +158,7 @@ define([
 		{ x: 1475763930000, y: 4 },
 		{ x: 1475764930000, y: 5 }
 	];
-	var simpleChartView = new coCharts.ChartView();
+	var simpleChartView = new coCharts.XYChartView();
 	simpleChartView.setData( simpleData );
 	simpleChartView.setConfig( {
 		mainChart: {

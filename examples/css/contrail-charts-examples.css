@@ -30,3 +30,11 @@ html {
 #complexChart-navigation {
 	margin-bottom: 25px;
 }
+
+#chart1 {
+	width: 50%;
+}
+
+#chart2 {
+	width: 50%;
+}
