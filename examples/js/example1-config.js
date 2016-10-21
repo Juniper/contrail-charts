@@ -1,7 +1,7 @@
 requirejs.config({
     paths: {
         app: 'app',
-        'coCharts': '../../lib/contrail-charts.min',
+        'contrail-charts': '../../lib/contrail-charts.min',
         'jquery': 'lib/jquery',
         'd3': 'lib/d3',
         'd3v4': 'lib/d3v4',

@@ -26,7 +26,7 @@ var config = {
     filename: outputFile,
     library: libraryName,
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: false
   },
   module: {
     loaders: [
@@ -49,10 +49,10 @@ var config = {
     ]
   },
   externals: {
-    jquery: 'jquery',
-    d3: 'd3v4',
-    underscore: 'underscore',
-    backbone: 'backbone'
+    jquery: { amd: 'jquery', root: 'jQuery' },
+    d3: { amd: 'd3v4', root: 'd3' },
+    underscore: { amd: 'underscore', root: '_' },
+    backbone: { amd: 'backbone', root: 'Backbone' }
   },
   resolve: {
     root: path.resolve('./src/js'),

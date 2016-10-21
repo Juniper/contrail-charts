@@ -1,7 +1,7 @@
 
 define([
 	"d3", "underscore",
-    "coCharts"
+    "contrail-charts"
 ], function( d3, _, coCharts ) {
 
 	console.log( "d3: ", d3 );
