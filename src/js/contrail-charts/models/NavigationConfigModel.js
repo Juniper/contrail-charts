@@ -5,8 +5,9 @@
 define([
     "jquery",
     "underscore",
+    "d3",
     "contrail-charts/models/ContrailChartsConfigModel"
-], function( $, _, ContrailChartsConfigModel ) {
+], function( $, _, d3, ContrailChartsConfigModel ) {
     var NavigationConfigModel = ContrailChartsConfigModel.extend({
         defaults: {
             /// The chart width. If not provided will be caculated by View.
