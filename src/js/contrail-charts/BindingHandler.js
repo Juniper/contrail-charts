@@ -17,6 +17,7 @@ define([
         * This information will be used later in order to perform bindings defined in a configuration.
         */
     	addComponent: function( chartId, componentName, component ) {
+            console.log( "Adding component to BindingHandler: ", chartId, componentName );
             chartId = chartId || 'default';
             var savedChart = this.get( 'charts' )[chartId];
             if( !savedChart ) {
@@ -67,12 +68,13 @@ define([
                         if( _.has( charts[binding.sourceChart][binding.sourceComponent], binding.sourceModel ) && _.has( charts[binding.targetChart][binding.targetComponent], binding.targetModel ) ) {
                             var sourceModel = charts[binding.sourceChart][binding.sourceComponent][binding.sourceModel];
                             var targetModel = charts[binding.targetChart][binding.targetComponent][binding.targetModel];
-                            if( sourceModel.has( binding.sourcePath ) ) {
-                                if( binding.action == 'sync' ) {
-                                    // Two way listen for changes and perform sync on startup.
-                                    self.performSync( sourceModel, binding.sourcePath, targetModel );
-                                    self.performSync( targetModel, binding.sourcePath, sourceModel );
-                                }
+                            if( binding.action == 'sync' ) {
+                                // Two way listen for changes and perform sync on startup.
+                                self.performSync( sourceModel, binding.sourcePath, targetModel );
+                                self.performSync( targetModel, binding.sourcePath, sourceModel );
+                            }
+                            else if( _.isFunction( binding.action ) ) {
+                                self.listenTo( sourceModel, binding.sourcePath, _.partial( binding.action, sourceModel, targetModel ) );
                             }
                         }
                     }

@@ -11,7 +11,7 @@ for( var i = 0; i < 100; i++ ) {
 		x: 1475760930000 + 1000000 * i,
 		a: a,
 		b: a + Math.random() * 10,
-		c: Math.random() * 100,
+		c: Math.random() * 10,
 		d: i + (Math.random() - 0.5) * 10,
 		e: (Math.random() - 0.5) * 10
 	});
@@ -36,7 +36,17 @@ var chartConfigs = [
 			el: "#chart2",
 			xAccessor: 'x',
 			accessorData: {
-				b: {
+				c: {
+					chartType: 'line'
+				}
+			}
+		},
+		navigation: {
+			el: "#chart2-navigation",
+			xAccessor: 'x',
+			chartHeight: 200,
+			accessorData: {
+				c: {
 					chartType: 'line'
 				}
 			}
@@ -47,7 +57,24 @@ var chartConfigs = [
 var chartView = new coCharts.ChartView();
 chartView.setConfig( {
 	bindingHandler: {
-        bindings: []
+        bindings: [
+        	{
+        		sourceChart: 'chart2',
+        		sourceComponent: 'navigation',
+        		sourceModel: 'events',
+        		sourcePath: 'windowChanged',
+        		targetChart: 'chart1',
+        		targetComponent: 'mainChart',
+        		targetModel: 'config',
+        		action: function( sourceModel, targetModel, xMin, xMax ) {
+        			var axis = targetModel.get( 'axis' ) || {};
+        			axis.x = axis.x || {};
+        			axis.x.domain = [xMin, xMax];
+        			targetModel.set( { axis: axis }, { silent : true } );
+        			targetModel.trigger( "change" );
+        		}
+        	}
+        ]
     },
 	charts: chartConfigs
 });

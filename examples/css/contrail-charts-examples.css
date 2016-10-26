@@ -32,9 +32,11 @@ html {
 }
 
 #chart1 {
-	width: 50%;
+	width: 45%;
+	display: inline-block;
 }
 
 #chart2 {
-	width: 50%;
+	width: 45%;
+	display: inline-block;
 }

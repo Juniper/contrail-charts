@@ -65,7 +65,7 @@ define( [
         */
         setBindingHandler: function( bindingHandler ) {
             var self = this;
-            self.hasExternalBindingHandler = (bindingHandler == null);
+            self.hasExternalBindingHandler = (bindingHandler != null);
             self.bindingHandler = bindingHandler;
         },
 
@@ -108,7 +108,7 @@ define( [
                 else {
                     self.messageView.config.set( self.chartConfig.message );
                 }
-                if( self.isEnabledComponent( "bindingHandler" ) ) {
+                if( self.isEnabledComponent( "bindingHandler" ) || self.hasExternalBindingHandler ) {
                     self.bindingHandler.addComponent( self.chartConfig.chartId, "message", self.messageView );
                 }
                 // One way to bind to message events of already created model.
@@ -123,7 +123,7 @@ define( [
                 else {
                     self.tooltipView.config.set( self.chartConfig.tooltip );
                 }
-                if( self.isEnabledComponent( "bindingHandler" ) ) {
+                if( self.isEnabledComponent( "bindingHandler" ) || self.hasExternalBindingHandler ) {
                     self.bindingHandler.addComponent( self.chartConfig.chartId, "tooltip", self.tooltipView );
                 }
             }
@@ -140,7 +140,7 @@ define( [
                 else {
                     self.navigationView.config.set( self.chartConfig.navigation );
                 }
-                if( self.isEnabledComponent( "bindingHandler" ) ) {
+                if( self.isEnabledComponent( "bindingHandler" ) || self.hasExternalBindingHandler ) {
                     self.bindingHandler.addComponent( self.chartConfig.chartId, "navigation", self.navigationView );
                 }
                 // The remaining components dataModel will be the one fetched from the navigationView.
@@ -161,7 +161,7 @@ define( [
                     self.compositeYChartView.config.set( self.chartConfig.mainChart );
                 }
                 console.log( "MainChart: ", self.compositeYChartView );
-                if( self.isEnabledComponent( "bindingHandler" ) ) {
+                if( self.isEnabledComponent( "bindingHandler" ) || self.hasExternalBindingHandler ) {
                     self.bindingHandler.addComponent( self.chartConfig.chartId, "mainChart", self.compositeYChartView );
                 }
                 if( self.isEnabledComponent( "message" ) ) {
@@ -181,7 +181,7 @@ define( [
                 else {
                     self.controlPanelView.config.set( self.chartConfig.controlPanel );
                 }
-                if( self.isEnabledComponent( "bindingHandler" ) ) {
+                if( self.isEnabledComponent( "bindingHandler" ) || self.hasExternalBindingHandler ) {
                     self.bindingHandler.addComponent( self.chartConfig.chartId, "controlPanel", self.controlPanelView );
                 }
             }
