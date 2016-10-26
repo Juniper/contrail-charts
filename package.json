@@ -5,7 +5,8 @@
   "main": "src/js/contrail-charts.js",
   "scripts": {
     "lib": "webpack --mode=lib",
-    "dev": "webpack --progress --colors --watch --mode=dev"
+    "dev": "webpack --progress --colors --watch --mode=dev",
+    "lint": "standard --verbose | snazzy"
   },
   "license": "Apache-2.0",
   "devDependencies": {
@@ -13,6 +14,8 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2",
+    "snazzy": "^5.0.0",
+    "standard": "^8.5.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2",
     "yargs": "^6.2.0"
@@ -22,5 +25,10 @@
     "d3": "^4.2.7",
     "jquery": "^3.1.1",
     "underscore": "^1.8.3"
-  }
+  },
+  "standard": {
+    "ignore": [
+      "lib/"
+    ]
+   }
 }
