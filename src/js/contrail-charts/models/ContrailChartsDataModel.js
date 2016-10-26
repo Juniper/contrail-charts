@@ -31,8 +31,8 @@ define([
             },
 
             setData: function (data) {
-                if (_.isFunction(this.dataParser)) {
-                    data = this.dataParser(data);
+                if (_.isFunction(this.get("dataParser"))) {
+                    data = this.get("dataParser")(data);
                 }
                 this.set({data: data});
             },
