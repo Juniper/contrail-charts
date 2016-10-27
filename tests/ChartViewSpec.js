@@ -1,5 +1,7 @@
 
-define( ['contrail-charts'], function( coCharts ) {
+//define( ['contrail-charts'], function( coCharts ) {
+//var coCharts = require( 'contrail-charts' );
+
 	describe( "coCharts", function() {
 	  it( "coCharts is defined", function() {
 	    expect( coCharts ).toBeDefined();
@@ -61,4 +63,5 @@ define( ['contrail-charts'], function( coCharts ) {
 			expect( chartView.compositeYChartView.render ).toHaveBeenCalled();
 		});
 	});
-});
+
+//});
