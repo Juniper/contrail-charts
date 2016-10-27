@@ -101,7 +101,7 @@ define( [
                 // Common Message View. will be used for rendering info messages and errors.
                 if( !self.messageView ) {
                     self.messageView = new MessageView({
-                        config: new MessageComponentConfigModel( self.chartConfig.message ),
+                        config: new MessageConfigModel( self.chartConfig.message ),
                         container: $( self.chartConfig.message.el )
                     });
                 }
