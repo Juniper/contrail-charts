@@ -16,6 +16,7 @@
     "ignore-loader": "^0.1.1",
     "jasmine-core": "^2.5.2",
     "node-sass": "^3.10.1",
+    "open": "0.0.5",
     "sass-loader": "^4.0.2",
     "snazzy": "^5.0.0",
     "standard": "^8.5.0",
