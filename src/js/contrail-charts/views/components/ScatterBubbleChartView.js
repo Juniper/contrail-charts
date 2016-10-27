@@ -119,6 +119,7 @@ define([
                 .attr( "class", d.className )
                 .attr( "cx", d.x )
                 .attr( "cy", d.y )
+                .attr( "fill", d.color )
                 .attr( "r", 0 )
             .on( "mouseover", function( d ) {
                 var pos = $(this).offset();
@@ -136,6 +137,7 @@ define([
             selection.transition().ease( d3.easeLinear ).duration( 300 )
                 .attr( "cx", d.x )
                 .attr( "cy", d.y )
+                .attr( "fill", d.color )
                 .attr( "r", d.r );
         },
 

@@ -9,6 +9,7 @@
 
 	  it( "coCharts has all elements", function() {
 	    expect( coCharts.ChartView ).toBeDefined();
+	    expect( coCharts.XYChartView ).toBeDefined();
         expect( coCharts.BindingHandler ).toBeDefined();
         expect( coCharts.CompositeYChartConfigModel ).toBeDefined();
         expect( coCharts.ControlPanelConfigModel ).toBeDefined();
@@ -25,7 +26,7 @@
 	  });
 	});
 
-	describe( "coCharts.ChartView", function() {
+	describe( "coCharts.XYChartView", function() {
 		var simpleChartConfig = {
 			mainChart: {
 				el: "#chartView",
@@ -38,23 +39,23 @@
 			}
 		};
 
-		it( "ChartView has mainChart", function() {
-			var chartView = new coCharts.ChartView();
+		it( "XYChartView has mainChart", function() {
+			var chartView = new coCharts.XYChartView();
 			chartView.setConfig( simpleChartConfig );
 			expect( chartView.compositeYChartView ).toBeDefined();
 			expect( chartView.navigationView ).not.toBeDefined();
 		});
 
-		it( "ChartView mainChart generates activeAccessorData on render", function() {
-			var chartView = new coCharts.ChartView();
+		it( "XYChartView mainChart generates activeAccessorData on render", function() {
+			var chartView = new coCharts.XYChartView();
 			chartView.setData( [] );
 			chartView.setConfig( simpleChartConfig );
 			chartView.compositeYChartView.actualRender();
 			expect( chartView.compositeYChartView.params.activeAccessorData.y ).toBeDefined();
 		});
 
-		it( "ChartView mainChart render is called", function() {
-			var chartView = new coCharts.ChartView();
+		it( "XYChartView mainChart render is called", function() {
+			var chartView = new coCharts.XYChartView();
 			chartView.setData( [] );
 			chartView.setConfig( simpleChartConfig );
 			spyOn( chartView.compositeYChartView, 'render');

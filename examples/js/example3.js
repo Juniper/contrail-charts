@@ -25,7 +25,10 @@ var chartConfigs = [
 			xAccessor: 'x',
 			accessorData: {
 				a: {
-					chartType: 'line'
+					chartType: 'stackedBar'
+				},
+				d: {
+					chartType: 'stackedBar'
 				}
 			}
 		}
