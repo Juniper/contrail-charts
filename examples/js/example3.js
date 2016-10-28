@@ -7,9 +7,7 @@ for (var i = 0; i < 100; i++) {
     x: 1475760930000 + 1000000 * i,
     a: a,
     b: a + Math.random() * 10,
-    c: Math.random() * 10,
-    d: i + (Math.random() - 0.5) * 10,
-    e: (Math.random() - 0.5) * 10
+    c: Math.random() * 10
   })
 }
 
@@ -23,7 +21,7 @@ var chartConfigs = [
         a: {
           chartType: 'stackedBar'
         },
-        d: {
+        b: {
           chartType: 'stackedBar'
         }
       }

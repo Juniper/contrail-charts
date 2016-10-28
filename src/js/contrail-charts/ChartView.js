@@ -15,6 +15,9 @@ define([
       self.charts = {}
     },
 
+    /**
+    * Data can be set separately into every chart so every chart can have different data.
+    */
     setData: function (data, dataConfig, chartId) {
       var self = this
       dataConfig = dataConfig || {}
@@ -29,6 +32,10 @@ define([
       }
     },
 
+    /**
+    * Sets the config for all charts that can be part of this parent chart.
+    * This config needs to be set before setData because when setting data we need the sub chart to be already defined in order to set data into it.
+    */
     setConfig: function (config) {
       var self = this
       self.chartConfig = config
@@ -36,7 +43,7 @@ define([
     },
 
     /**
-    * Instantiate the required views if they do not exist yet, set their configurations otherwise.
+    * Instantiate the required views (sub charts) if they do not exist yet, set their configurations otherwise.
     */
     componentInit: function () {
       var self = this
