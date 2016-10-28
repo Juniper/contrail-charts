@@ -3,24 +3,23 @@
  */
 
 define([
-    "jquery",
-    "underscore",
-    "contrail-charts/models/ContrailChartsConfigModel"
-], function( $, _, ContrailChartsConfigModel ) {
-        var MessageConfigModel = ContrailChartsConfigModel.extend({
-            defaults: {
-                messages: [],
-                
-                _showOnceMessageIds: [],
-                
-                noDataMessage: "No Data Found",
-                
-                showDataStatusMessage: true,
-                
-                statusMessageHandler: undefined
-            }
-        });
+  'jquery',
+  'underscore',
+  'contrail-charts/models/ContrailChartsConfigModel'
+], function ($, _, ContrailChartsConfigModel) {
+  var MessageConfigModel = ContrailChartsConfigModel.extend({
+    defaults: {
+      messages: [],
 
-        return MessageConfigModel;
+      _showOnceMessageIds: [],
+
+      noDataMessage: 'No Data Found',
+
+      showDataStatusMessage: true,
+
+      statusMessageHandler: undefined
     }
-);
+  })
+
+  return MessageConfigModel
+})

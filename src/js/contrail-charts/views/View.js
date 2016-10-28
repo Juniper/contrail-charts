@@ -3,8 +3,8 @@
  */
 
 define([
-    "backbone"
-], function( Backbone ) {
-	var View = Backbone.View.extend( {} );
-	return View;
-});
+  'backbone'
+], function (Backbone) {
+  var View = Backbone.View.extend({})
+  return View
+})

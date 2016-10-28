@@ -3,7 +3,7 @@
  */
 
 define([
-    "backbone"
-], function( Backbone ) {
-	return Backbone.Events
-});
+  'backbone'
+], function (Backbone) {
+  return Backbone.Events
+})

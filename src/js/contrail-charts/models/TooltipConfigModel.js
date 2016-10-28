@@ -3,14 +3,13 @@
  */
 
 define([
-	"jquery",
-	"underscore",
-	"contrail-charts/models/ContrailChartsConfigModel"
-], function( $, _, ContrailChartsConfigModel ) {
-        var TooltipConfigModel = ContrailChartsConfigModel.extend({
-            defaults: {}
-        });
+  'jquery',
+  'underscore',
+  'contrail-charts/models/ContrailChartsConfigModel'
+], function ($, _, ContrailChartsConfigModel) {
+  var TooltipConfigModel = ContrailChartsConfigModel.extend({
+    defaults: {}
+  })
 
-        return TooltipConfigModel;
-    }
-);
+  return TooltipConfigModel
+})

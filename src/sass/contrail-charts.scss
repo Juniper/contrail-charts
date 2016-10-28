@@ -41,7 +41,6 @@ button:focus {
 			text-anchor: middle;
 		}
 	}
-
 	.line-chart {
 		.line {
 			fill: none;
@@ -49,7 +48,6 @@ button:focus {
 			opacity: 0.8;
 		}
 	}
-
 	.bar-chart {
 		.bar {
 			opacity: 0.6;
@@ -58,7 +56,20 @@ button:focus {
 			opacity: 0.9;
 		}
 	}
-
+	.scatter-bubble-chart {
+		.bubble {
+			opacity: 0.55;
+			stroke-width: 0;
+			shape-rendering: geometricPrecision;
+		}
+		.bubble:hover {
+			opacity: 0.85;
+			stroke-width: 2;
+			stroke: #ddd;
+			cursor: pointer;
+			shape-rendering: geometricPrecision;
+		}
+	}
 	.brush {
 		.selection {
 			fill: #aaa;
