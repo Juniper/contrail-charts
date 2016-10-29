@@ -1,29 +1,31 @@
-var webpack = require( 'webpack' );
-var ExtractTextPlugin = require( "extract-text-webpack-plugin" );
-var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
-var path = require( 'path' );
-var env = require( 'yargs' ).argv.mode;
+var webpack = require('webpack')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
+var path = require('path')
+var env = require('yargs').argv.mode
 
-var fileName = 'contrail-charts';
-var libraryName = 'coCharts';
+var fileName = 'contrail-charts'
+var libraryName = 'coCharts'
 
-var plugins = [], outputFile;
+var plugins = []
+var outputFile
 
 if (env === 'lib') {
-  plugins.push( new UglifyJsPlugin({ minimize: true }) );
-  outputFile = fileName + '.min.js';
+  plugins.push(new UglifyJsPlugin({ minimize: true }))
+  outputFile = fileName + '.min.js'
 } else {
-  outputFile = fileName + '.js';
+  outputFile = fileName + '.js'
 }
 
-plugins.push( new ExtractTextPlugin( fileName + ".css" ) );
+// Let's put css under css directory.
+plugins.push(new ExtractTextPlugin('css/' + fileName + '.css'))
 
 var config = {
-  entry: __dirname + '/src/js/contrail-charts.js',
+  entry: path.join(__dirname, '/src/js/contrail-charts.js'),
   devtool: 'source-map',
   output: {
-    path: __dirname + '/lib',
-    filename: outputFile,
+    path: path.join(__dirname, '/lib'),
+    filename: 'js/' + outputFile,
     library: libraryName,
     libraryTarget: 'umd',
     umdNamedDefine: false
@@ -44,7 +46,7 @@ var config = {
       */
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract( "style-loader", "css-loader!sass-loader" )
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
       }
     ]
   },
@@ -59,6 +61,6 @@ var config = {
     extensions: ['', '.js']
   },
   plugins: plugins
-};
+}
 
-module.exports = config;
+module.exports = config
