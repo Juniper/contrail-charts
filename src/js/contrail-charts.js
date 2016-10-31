@@ -1,5 +1,6 @@
 var ChartView = require('contrail-charts/ChartView')
 var XYChartView = require('contrail-charts/charts/XYChartView')
+var PieChartView = require('contrail-charts/charts/PieChartView')
 var BindingHandler = require('contrail-charts/BindingHandler')
 var CompositeYChartConfigModel = require('contrail-charts/models/CompositeYChartConfigModel')
 var ControlPanelConfigModel = require('contrail-charts/models/ControlPanelConfigModel')
@@ -19,6 +20,7 @@ require('../sass/contrail-charts.scss')
 module.exports = {
   ChartView: ChartView,
   XYChartView: XYChartView,
+  PieChartView: PieChartView,
   BindingHandler: BindingHandler,
   CompositeYChartConfigModel: CompositeYChartConfigModel,
   ControlPanelConfigModel: ControlPanelConfigModel,
