@@ -8,7 +8,26 @@ define([
   'contrail-charts/models/ContrailChartsConfigModel'
 ], function ($, _, ContrailChartsConfigModel) {
   var TooltipConfigModel = ContrailChartsConfigModel.extend({
-    defaults: {}
+    defaults: {
+      generateTooltipHTML: function (tooltipData, accessor, tooltipConfig) {
+        var tooltipElement = $('<div></div>')
+        tooltipElement.addClass('tooltip-content')
+        if (accessor.label) {
+          var tooltipTitle = $('<div></div>')
+          tooltipTitle.addClass('tooltip-title')
+          tooltipTitle.append(accessor.label)
+          tooltipElement.append(tooltipTitle)
+        }
+        _.each(tooltipConfig.data, function (d) {
+          var tooltipItem = $('<div></div>')
+          tooltipItem.addClass('tooltip-item')
+          tooltipItem.append('<span class="tooltip-item-label">' + d.labelFormatter(tooltipData[d.accessor]) + ':</span>')
+          tooltipItem.append('<span class="tooltip-item-value">' + d.valueFormatter(tooltipData[d.accessor]) + '</span>')
+          tooltipElement.append(tooltipItem)
+        })
+        return tooltipElement
+      }
+    }
   })
 
   return TooltipConfigModel

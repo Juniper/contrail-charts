@@ -21,41 +21,23 @@ define([
       this.listenTo(eventObject, hideEventType, this.hide)
     },
 
-    generateTooltipHTML: function (tooltipConfig) {
-      var tooltipElement = $('<div></div>')
-      tooltipElement.addClass('tooltip-content')
-      _.each(tooltipConfig.content.info, function (info) {
-        var tooltipItem = $('<div></div>')
-        tooltipItem.addClass('tooltip-item')
-        tooltipItem.append('<span class="tooltip-item-label">' + info.label + ':</span>')
-        tooltipItem.append('<span class="tooltip-item-value">' + info.value + '</span>')
-        tooltipElement.append(tooltipItem)
-      })
-      return tooltipElement
+    generateTooltipHTML: function (tooltipData, accessor) {
+      var tooltipConfig = {}
+      var fnGenerateTooltipHTML = this.config.get('generateTooltipHTML')
+      if (accessor.tooltip) {
+        tooltipConfig = this.config.get(accessor.tooltip)
+        if (_.isFunction(tooltipConfig, 'generateTooltipHTML')) {
+          fnGenerateTooltipHTML = tooltipConfig.generateTooltipHTML
+        }
+      }
+      return fnGenerateTooltipHTML(tooltipData, accessor, tooltipConfig)
     },
 
-    show: function (tooltipData, tooltipConfig, offsetLeft, offsetTop) {
+    show: function (tooltipData, offsetLeft, offsetTop, accessor) {
       var self = this
       self.params.show++
-      var tooltipElement = self.generateTooltipHTML(tooltipConfig)
-      console.log('show: ', tooltipData, tooltipConfig, offsetLeft, offsetTop)
-      /*
-      // TODO: This should go to view events
-      $(tooltipElementObj).find(".popover-tooltip-footer").find(".btn")
-          .off("click")
-          .on("click", function () {
-              var actionKey = $(this).data("action"),
-                  actionCallback = tooltipConfig.content.actions[actionKey].callback
-              self.hide()
-              actionCallback(tooltipData)
-          })
-      $(tooltipElementObj).find(".popover-remove")
-          .off("click")
-          .on("click", function (e) {
-              self.hide()
-          })
-      */
-
+      var tooltipElement = $(self.generateTooltipHTML(tooltipData, accessor))
+      console.log('show: ', tooltipData, offsetLeft, offsetTop, accessor)
       $('body').append(this.$el)
       this.$el.html(tooltipElement)
       this.$el.show()

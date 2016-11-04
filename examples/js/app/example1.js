@@ -39,63 +39,69 @@ define([
       marginRight: 80,
       marginBottom: 40,
       xAccessor: 'x',
-      accessorData: {
-        a: {
-          enable: true,
-          chartType: 'stackedBar',
-          possibleChartTypes: [ { name: 'stackedBar', label: 'Stacked Bar Chart' }, { name: 'line', label: 'Line Chart' } ],
-          y: 1,
-          label: 'A Label',
-          tooltip: {
-            nameFormatter: function (key) {
-              return 'A'
-            },
-            valueFormatter: d3.format('.05f')
+      plot: {
+        x: {
+          accessor: 'x',
+          label: 'Time',
+          axis: 'x'
+        },
+        y: [
+          {
+            accessor: 'a',
+            label: 'A',
+            enabled: true,
+            graph: 'stackedBar',
+            axis: 'y1',
+            tooltip: 'tooltip'
+          },
+          {
+            accessor: 'b',
+            label: 'B',
+            enabled: true,
+            graph: 'stackedBar',
+            axis: 'y1',
+            tooltip: 'tooltip'
+          },
+          {
+            accessor: 'c',
+            label: 'C',
+            enabled: false,
+            graph: 'stackedBar',
+            axis: 'y1',
+            tooltip: 'tooltip'
+          },
+          {
+            accessor: 'd',
+            label: 'Megabytes',
+            color: '#d62728',
+            enabled: true,
+            graph: 'line',
+            axis: 'y2',
+            tooltip: 'tooltip'
+          },
+          {
+            accessor: 'e',
+            label: 'Megabytes',
+            color: '#9467bd',
+            enabled: true,
+            graph: 'line',
+            axis: 'y2',
+            tooltip: 'tooltip'
           }
-        },
-        b: {
-          enable: true,
-          chartType: 'stackedBar',
-          y: 1,
-          label: 'B Label',
-          tooltip: {
-            nameFormatter: function (key) {
-              return 'B'
-            },
-            valueFormatter: d3.format('.0f')
-          }
-        },
-        c: {
-          enable: false,
-          chartType: 'stackedBar',
-          y: 1,
-          label: 'C Label'
-        },
-        d: {
-          enable: true,
-          chartType: 'line',
-          y: 2,
-          label: 'Megabytes',
-          color: '#d62728'
-        },
-        e: {
-          enable: true,
-          chartType: 'line',
-          y: 2,
-          label: 'Megabytes',
-          color: '#9467bd'
-        }
+        ]
       },
       axis: {
         x: {
 
         },
         y1: {
-          formatter: d3.format('.01f'),
+          position: 'left',
+          formatter: d3.format('.0f'),
           labelMargin: 15
         },
         y2: {
-          formatter: d3.format('.0f'),
+          position: 'right',
+          formatter: d3.format('.02f'),
           labelMargin: 15
         }
       }
@@ -107,23 +113,51 @@ define([
       marginRight: 80,
       marginBottom: 40,
       xAccessor: 'x',
-      accessorData: {
-        a: {
-          enable: true,
-          chartType: 'stackedBar',
-          y: 1,
-          label: 'A Label'
+      plot: {
+        x: {
+          accessor: 'x',
+          label: 'Time'
         },
-        b: {
-          enable: true,
-          chartType: 'stackedBar',
-          y: 1,
-          label: 'B Label'
-        }
+        y: [
+          {
+            accessor: 'a',
+            label: 'A',
+            graph: 'stackedBar'
+          },
+          {
+            accessor: 'b',
+            label: 'B',
+            graph: 'stackedBar'
+          }
+        ]
       }
     },
     tooltip: {
-
+      tooltip: {
+        data: [
+          {
+            accessor: 'x',
+            labelFormatter: function (key) {
+              return 'Time'
+            },
+            valueFormatter: d3.format('.0f')
+          },
+          {
+            accessor: 'a',
+            labelFormatter: function (key) {
+              return 'A'
+            },
+            valueFormatter: d3.format('.05f')
+          },
+          {
+            accessor: 'b',
+            labelFormatter: function (key) {
+              return 'B'
+            },
+            valueFormatter: d3.format('.02f')
+          }
+        ]
+      }
     },
     controlPanel: {
       el: '#complexChart-controlPanel',
@@ -159,11 +193,16 @@ define([
   simpleChartView.setConfig({
     mainChart: {
       el: '#simpleChart',
-      xAccessor: 'x',
-      accessorData: {
-        y: {
-          chartType: 'line'
-        }
+      plot: {
+        x: {
+          accessor: 'x'
+        },
+        y: [
+          {
+            accessor: 'y',
+            graph: 'line'
+          }
+        ]
       }
     }
   })

@@ -35,7 +35,7 @@ define([
     },
 
     getYScale: function () {
-      return this.params[this.axisName + 'Scale']
+      return this.params.axis[this.axisName].scale
     },
 
     getBubbleColor: function (accessor, key) {
@@ -43,11 +43,10 @@ define([
       if (_.has(accessor, 'color')) {
         return accessor.color
       } else {
-        var axis = accessor.y
-        if (!self.params['_y' + axis + 'ColorScale']) {
-          self.params['_y' + axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
+        if (!self.params[accessor.axis + 'ColorScale']) {
+          self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
         }
-        return self.params['_y' + axis + 'ColorScale'](key)
+        return self.params[accessor.axis + 'ColorScale'](key)
       }
     },
 
@@ -58,19 +57,19 @@ define([
     */
     calculateAxisDomains: function () {
       var self = this
-      var domains = { x: self.model.getRangeFor(self.params.xAccessor) }
+      var domains = {}
+      domains[self.params.plot.x.axis] = self.model.getRangeFor(self.params.plot.x.accessor)
       domains[self.axisName] = []
       // The domains calculated here can be overriden in the axis configuration.
       // The overrides are handled by the parent.
-      _.each(self.params.activeAccessorData, function (accessor, key) {
-        var domain = self.model.getRangeFor(key)
+      _.each(self.params.activeAccessorData, function (accessor) {
+        var domain = self.model.getRangeFor(accessor.accessor)
         domains[self.axisName] = domains[self.axisName].concat(domain)
-        if (accessor.sizeAccessor && accessor.shape) {
-          var sizeAxisName = 'r' + accessor.shape
-          if (!domains[sizeAxisName]) {
-            domains[sizeAxisName] = []
+        if (accessor.sizeAccessor && accessor.shape && accessor.sizeAxis) {
+          if (!domains[accessor.sizeAxis]) {
+            domains[accessor.sizeAxis] = []
           }
-          domains[sizeAxisName] = domains[sizeAxisName].concat(self.model.getRangeFor(accessor.sizeAccessor))
+          domains[accessor.sizeAxis] = domains[accessor.sizeAxis].concat(self.model.getRangeFor(accessor.sizeAccessor))
         }
       })
       _.each(domains, function (domain, key) {
@@ -123,7 +122,7 @@ define([
         .attr('r', 0)
         .on('mouseover', function (d) {
           // var pos = $(this).offset() // not working in jquery 3
-          self.eventObject.trigger('mouseover', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71)
+          self.eventObject.trigger('mouseover', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71, d.accessor)
           d3.select(this).classed('active', true)
         })
         .on('mouseout', function (d) {
@@ -145,23 +144,26 @@ define([
       var self = this
       var data = self.getData()
       var yScale = self.getYScale()
+      var xScale = self.params.axis[self.params.plot.x.axis].scale
 
       // Create a flat data structure
       var flatData = []
       _.each(data, function (d) {
-        var x = d[self.params.xAccessor]
-        _.each(self.params.activeAccessorData, function (accessor, key) {
+        var x = d[self.params.plot.x.accessor]
+        _.each(self.params.activeAccessorData, function (accessor) {
+          var key = accessor.accessor
           var y = d[key]
-          var rScaleName = 'r' + accessor.shape + 'Scale'
+          var rScale = self.params.axis[accessor.sizeAxis].scale
           var obj = {
             id: x + '-' + key,
             className: 'bubble bubble-' + key,
             selectClassName: '.bubble-' + key,
-            x: self.params.xScale(x),
+            x: xScale(x),
             y: yScale(y),
             shape: accessor.shape,
-            r: self.params[rScaleName](d[accessor.sizeAccessor]),
+            r: rScale(d[accessor.sizeAccessor]),
             color: self.getBubbleColor(accessor, key),
+            accessor: accessor,
             data: d
           }
           flatData.push(obj)

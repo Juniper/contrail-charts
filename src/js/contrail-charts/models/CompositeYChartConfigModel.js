@@ -33,12 +33,6 @@ define([
       marginRight: undefined,
       marginInner: undefined,
 
-      // / Scales can be provided as a d3 scale or undefined if they need to be calculated.
-      xScale: undefined,
-      y1Scale: undefined,
-      y2Scale: undefined,
-      xDomain: undefined,
-
       /*
       // The y axis accessors.
       accessorData: {
@@ -87,9 +81,6 @@ define([
       },
       */
 
-      // x variable name
-      xAccessor: 'x',
-      xLabel: undefined,
       curve: d3.curveCatmullRom.alpha(0.5),
 
       // Tooltip content & config specific callback
