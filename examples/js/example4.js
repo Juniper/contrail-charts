@@ -17,35 +17,78 @@ for (var i = 0; i < 100; i++) {
 var chartConfig = {
   mainChart: {
     el: '#chart',
-    xAccessor: 'x',
     marginInner: 25,
     rRange: [3, 50],
-    accessorData: {
-      y: {
-        chartType: 'scatterBubble',
-        sizeAccessor: 'r',
-        shape: 'circle',
-        tooltip: {
-          nameFormatter: function (key) {
-            return 'Y'
-          },
-          valueFormatter: numberFormatFunction
+    plot: {
+      x: {
+        accessor: 'x'
+      },
+      y: [
+        {
+          accessor: 'a',
+          label: 'BUBBLE',
+          graph: 'scatterBubble',
+          sizeAccessor: 'r',
+          sizeAxis: 'rAxis',
+          shape: 'circle',
+          tooltip: 'tooltip'
         }
+      ]
+    },
+    axis: {
+      rAxis: {
+        range: [3, 50]
       }
     }
   },
   tooltip: {
-
+    tooltip: {
+      data: [
+        {
+          accessor: 'x',
+          labelFormatter: function (key) {
+            return 'Time'
+          },
+          valueFormatter: numberFormatFunction
+        },
+        {
+          accessor: 'a',
+          labelFormatter: function (key) {
+            return 'A'
+          },
+          valueFormatter: numberFormatFunction
+        },
+        {
+          accessor: 'y',
+          labelFormatter: function (key) {
+            return 'Y'
+          },
+          valueFormatter: numberFormatFunction
+        },
+        {
+          accessor: 'r',
+          labelFormatter: function (key) {
+            return 'R'
+          },
+          valueFormatter: numberFormatFunction
+        }
+      ]
+    }
   },
   navigation: {
     el: '#chart-navigation',
-    xAccessor: 'x',
     marginInner: 5,
     chartHeight: 200,
-    accessorData: {
-      a: {
-        chartType: 'line'
-      }
+    plot: {
+      x: {
+        accessor: 'x'
+      },
+      y: [
+        {
+          accessor: 'a',
+          graph: 'line'
+        }
+      ]
     }
   }
 }

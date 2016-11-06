@@ -46,7 +46,8 @@ define([
 
     handleModelChange: function (e) {
       var self = this
-      var x = self.params.xAccessor
+      var x = self.params.plot.x.accessor
+      var xScale = self.params.axis[self.params.plot.x.axis].scale
       var rangeX = self.model.getRangeFor(x)
       // Fetch the previous data window position
       var prevWindowXMin
@@ -84,7 +85,7 @@ define([
         }
 
         var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
-        self.brush.move(brushGroup, [self.params.xScale(xMin), self.params.xScale(xMax)])
+        self.brush.move(brushGroup, [xScale(xMin), xScale(xMax)])
       } else {
         self.removeBrush()
       }
@@ -163,7 +164,8 @@ define([
     renderBrush: function () {
       var self = this
       console.log('NavigationView renderBrush: ', self.params)
-      var x = self.params.xAccessor
+      var x = self.params.plot.x.accessor
+      var xScale = self.params.axis[self.params.plot.x.axis].scale
       var svg = self.svgSelection()
       if (!self.brush) {
         var marginInner = self.params.marginInner
@@ -176,11 +178,18 @@ define([
           .handleSize(10)
           .on('brush', function () {
             var dataWindow = d3.event.selection
-            var xMin = self.params.xScale.invert(dataWindow[0])
-            var xMax = self.params.xScale.invert(dataWindow[1])
+            var xMin = xScale.invert(dataWindow[0])
+            var xMax = xScale.invert(dataWindow[1])
+            if (_.isDate(xMin)) {
+              xMin = xMin.getTime()
+            }
+            if (_.isDate(xMax)) {
+              xMax = xMax.getTime()
+            }
             var focusDomain = {}
             focusDomain[x] = [xMin, xMax]
             self.config.set({ focusDomain: focusDomain }, { silent: true })
+            console.log('focusDomain: ', focusDomain)
             self.focusDataProvider.setRangeFor(focusDomain)
             self.eventObject.trigger('windowChanged', xMin, xMax)
 

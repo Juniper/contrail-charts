@@ -33,7 +33,7 @@ define([
     },
 
     getYScale: function () {
-      return this.params[this.axisName + 'Scale']
+      return this.params.axis[this.axisName].scale
     },
 
     getBarColor: function (accessor, key) {
@@ -41,11 +41,10 @@ define([
       if (_.has(accessor, 'color')) {
         return accessor.color
       } else {
-        var axis = accessor.y
-        if (!self.params['_y' + axis + 'ColorScale']) {
-          self.params['_y' + axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
+        if (!self.params[accessor.axis + 'ColorScale']) {
+          self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
         }
-        return self.params['_y' + axis + 'ColorScale'](key)
+        return self.params[accessor.axis + 'ColorScale'](key)
       }
     },
 
@@ -56,11 +55,12 @@ define([
     */
     calculateAxisDomains: function () {
       var self = this
-      var domains = { x: self.model.getRangeFor(self.params.xAccessor) }
+      var domains = {}
+      domains[self.params.plot.x.axis] = self.model.getRangeFor(self.params.plot.x.accessor)
       // The domains calculated here can be overriden in the axis configuration.
       // The overrides are handled by the parent.
-      _.each(self.params.activeAccessorData, function (accessor, key) {
-        var domain = self.model.getRangeFor(key)
+      _.each(self.params.activeAccessorData, function (accessor) {
+        var domain = self.model.getRangeFor(accessor.accessor)
         if (_.has(domains, self.axisName)) {
           // domains[self.axisName][0] = Math.min( domain[0], domains[self.axisName][0] )
           domains[self.axisName][1] += domain[1]
@@ -88,12 +88,13 @@ define([
       var self = this
       var data = self.getData()
       var yScale = self.getYScale()
+      var xScale = self.params.axis[self.params.plot.x.axis].scale
 
       // Create a flat data structure
       var flatData = []
-      var xValues = _.pluck(self.getData(), self.params.xAccessor)
+      var xValues = _.pluck(self.getData(), self.params.plot.x.accessor)
       var xValuesExtent = d3.extent(xValues)
-      var xRange = [self.params.xScale(xValuesExtent[0]), self.params.xScale(xValuesExtent[1])]
+      var xRange = [xScale(xValuesExtent[0]), xScale(xValuesExtent[1])]
       var len = data.length - 1
       if (len === 0) {
         len = 1
@@ -101,17 +102,19 @@ define([
       var bandWidth = (0.95 * ((xRange[1] - xRange[0]) / len) - 1)
       var bandWidthHalf = (bandWidth / 2)
       _.each(data, function (d) {
-        var x = d[self.params.xAccessor]
+        var x = d[self.params.plot.x.accessor]
         var stackedY = yScale.domain()[0]
-        _.each(self.params.activeAccessorData, function (accessor, key) {
+        _.each(self.params.activeAccessorData, function (accessor) {
+          var key = accessor.accessor
           var obj = {
             id: x + '-' + key,
             className: 'bar bar-' + key,
-            x: self.params.xScale(x) - bandWidthHalf,
+            x: xScale(x) - bandWidthHalf,
             y: yScale(stackedY + d[key]),
             h: yScale.range()[0] - yScale(d[key]),
             w: bandWidth,
             color: self.getBarColor(accessor, key),
+            accessor: accessor,
             data: d
           }
           stackedY += d[key]
@@ -129,7 +132,7 @@ define([
         .attr('width', function (d) { return d.w })
         .on('mouseover', function (d) {
           // var pos = $( this ).offset() // not working in jquery 3
-          self.eventObject.trigger('mouseover', d.data, d.x, d.y)
+          self.eventObject.trigger('mouseover', d.data, d.x, d.y, d.accessor)
           d3.select(this).classed('active', true)
         })
         .on('mouseout', function (d) {

@@ -25,7 +25,6 @@ define([
 
       // / The config model
       self.config = options.config
-      console.log('CompositeYChartView initialize')
 
       // / View params hold values from the config and computed values.
       self.debouncedRenderFunction = _.bind(_.debounce(self.actualRender, 10), self)
@@ -45,6 +44,7 @@ define([
 
     resetParams: function () {
       // Reset parents params
+      console.log('ResetParams: ', this.config)
       this.params = this.config.initializedComputedParameters()
       // Reset params for all children.
       // This way every child component can have access to parents config and still have its own computed params stored in config.
@@ -56,23 +56,31 @@ define([
     possibleChildViews: { line: LineChartView, bar: BarChartView, stackedBar: StackedBarChartView, scatterBubble: ScatterBubbleChartView },
 
     /**
-    * Update the components array based on the accessorData.
+    * Update the components array based on the plot.y.
     */
     updateChildComponents: function () {
       var self = this
+      var plot = self.config.get('plot')
       self.components = []
-      _.each(self.config.get('accessorData'), function (accessor, key) {
-        if (!_.isFinite(accessor.y) || accessor.y < 0) {
-          accessor.y = 1
+      if (!plot.x.axis) {
+        // Default x axis name.
+        plot.x.axis = 'x'
+      }
+      _.each(plot.y, function (accessor) {
+        if (!accessor.axis) {
+          // Default y axis name.
+          accessor.axis = 'y'
         }
-        var axisName = 'y' + accessor.y
-        if (accessor.chartType && (!_.has(accessor, 'enable') || accessor.enable)) {
-          var componentName = axisName + '-' + accessor.chartType
+        if (!_.has(accessor, 'enabled')) {
+          accessor.enabled = true
+        }
+        if (accessor.graph && accessor.enabled) {
+          var componentName = accessor.axis + '-' + accessor.graph
           var foundComponent = _.find(self.components, function (component) { return component.getName() === componentName })
           if (!foundComponent) {
             // The child component with this name does not exist yet. Instantiate the child component.
             _.each(self.possibleChildViews, function (ChildView, chartType) {
-              if (chartType === accessor.chartType) {
+              if (chartType === accessor.graph) {
                 // TODO: a way to provide a different model to every child
                 // TODO: pass eventObject to child?
                 foundComponent = new ChildView({
@@ -80,7 +88,7 @@ define([
                   config: self.config,
                   el: self.el,
                   id: self.id,
-                  axisName: axisName
+                  axisName: accessor.axis
                 })
                 self.components.push(foundComponent)
               }
@@ -93,48 +101,45 @@ define([
     },
 
     /**
-    * Calculates the activeAccessorData that holds only the verified and enabled accessors from the accessorData structure.
+    * Calculates the activeAccessorData that holds only the verified and enabled accessors from the 'plot' structure.
     * Params: activeAccessorData, yAxisInfoArray
     */
     calculateActiveAccessorData: function () {
       var self = this
       var data = self.getData()
-      self.params.activeAccessorData = {}
+      self.params.activeAccessorData = []
       self.params.yAxisInfoArray = []
       console.log('data: ', data)
       // Initialize the components activeAccessorData structure
       _.each(self.components, function (component) {
-        component.params.activeAccessorData = {}
-        component.params.enable = false
+        component.params.activeAccessorData = []
+        component.params.enabled = false
       })
       // Fill the activeAccessorData structure.
-      _.each(self.params.accessorData, function (accessor, key) {
-        if (!_.isFinite(accessor.y) || accessor.y < 0) {
-          accessor.y = 1
-        }
-        var axisName = 'y' + accessor.y
-        var component = self.getComponent(axisName, accessor.chartType)
+      _.each(self.params.plot.y, function (accessor) {
+        var component = self.getComponent(accessor.axis, accessor.graph)
         if (component) {
-          if (!_.has(accessor, 'enable') || accessor.enable) {
-            self.params.activeAccessorData[key] = accessor
-            var foundAxisInfo = _.findWhere(self.params.yAxisInfoArray, { name: axisName })
+          if (accessor.enabled) {
+            self.params.activeAccessorData.push(accessor)
+            var foundAxisInfo = _.findWhere(self.params.yAxisInfoArray, { name: accessor.axis })
+            var axisPosition = self.hasAxisConfig(accessor.axis, 'position') ? self.params.axis[accessor.axis].position : 'left'
             if (!foundAxisInfo) {
               foundAxisInfo = {
-                name: axisName,
+                name: accessor.axis,
                 used: 0,
-                position: ((accessor.y % 2) ? 'left' : 'right'),
-                num: Math.floor((accessor.y - 1) / 2),
+                position: axisPosition,
+                num: 0,
                 accessors: []
               }
               self.params.yAxisInfoArray.push(foundAxisInfo)
             }
             foundAxisInfo.used++
-            foundAxisInfo.accessors.push(key)
-            if (accessor.chartType) {
+            foundAxisInfo.accessors.push(accessor.accessor)
+            if (accessor.graph) {
               // Set the activeAccessorData to the appropriate components.
               if (component) {
-                component.params.activeAccessorData[key] = accessor
-                component.params.enable = true
+                component.params.activeAccessorData.push(accessor)
+                component.params.enabled = true
               }
             }
           }
@@ -223,7 +228,7 @@ define([
       var self = this
       var domains = {}
       _.each(self.components, function (component) {
-        if (component.params.enable) {
+        if (component.params.enabled) {
           var componentDomains = component.calculateAxisDomains()
           _.each(componentDomains, function (domain, axisName) {
             if (!_.has(domains, axisName)) {
@@ -249,11 +254,6 @@ define([
           })
         }
       })
-      // Now:
-      // domains.y1 holds the maximum extent (domain) for all variables displayed on the Y1 axis
-      // domains.y2 holds the maximum extent (domain) for all variables displayed on the Y2 axis
-      // domains.y3 ...
-      // domains.r[shape] holds the maximum extent (domain) of the shape's size.
       return domains
     },
 
@@ -263,35 +263,49 @@ define([
     saveScales: function () {
       var self = this
       var domains = self.combineAxisDomains()
+      if (!_.has(self.params, 'axis')) {
+        self.params.axis = {}
+      }
       _.each(domains, function (domain, axisName) {
-        var domainName = axisName + 'Domain'
-        if (!_.isArray(self.config.get(domainName))) {
-          self.params[domainName] = domain
+        if (!_.has(self.params.axis, axisName)) {
+          self.params.axis[axisName] = {}
         }
-        var scaleName = axisName + 'Scale'
-        var rangeName = axisName.charAt(0) + 'Range'
-        if (!_.isFunction(self.config.get(scaleName)) && self.params[rangeName]) {
+        if (!self.hasAxisConfig(axisName, 'position')) {
+          // Default axis position.
+          if (axisName.charAt(0) === 'x') {
+            self.params.axis[axisName].position = 'bottom'
+          } else if (axisName.charAt(0) === 'y') {
+            self.params.axis[axisName].position = 'left'
+          }
+        }
+        if (!self.hasAxisConfig(axisName, 'range')) {
+          if (['bottom', 'top'].indexOf(self.params.axis[axisName].position) >= 0) {
+            self.params.axis[axisName].range = self.params.xRange
+          } else if (['left', 'right'].indexOf(self.params.axis[axisName].position) >= 0) {
+            self.params.axis[axisName].range = self.params.yRange
+          }
+        }
+        if (!self.hasAxisConfig(axisName, 'domain')) {
+          self.params.axis[axisName].domain = domain
+        }
+        if (!_.isFunction(self.params.axis[axisName].scale) && self.params.axis[axisName].range) {
           var baseScale = null
-          if (self.hasAxisConfig(axisName, 'scale')) {
-            if (_.isFunction(self.params.axis[axisName].scale)) {
-              baseScale = self.params.axis[axisName].scale
-            } else {
-              baseScale = d3[self.params.axis[axisName].scale]()
-            }
-          } else if (axisName === 'x') {
+          if (self.hasAxisConfig(axisName, 'scale') && _.isFunction(d3[self.params.axis[axisName]])) {
+            baseScale = d3[self.params.axis[axisName].scale]()
+          } else if (['bottom', 'top'].indexOf(self.params.axis[axisName].position) >= 0) {
             baseScale = d3.scaleTime()
           } else {
             baseScale = d3.scaleLinear()
           }
-          self.params[scaleName] = baseScale.domain(self.params[domainName]).range(self.params[rangeName])
+          self.params.axis[axisName].scale = baseScale.domain(self.params.axis[axisName].domain).range(self.params.axis[axisName].range)
           if (self.hasAxisConfig(axisName, 'nice') && self.params.axis[axisName].nice) {
-            self.params[scaleName] = self.params[scaleName].nice(self.params.xTicks)
+            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.xTicks)
           }
         }
-        // Now update the scales of the appropriate components.
-        _.each(self.getComponents(axisName), function (component) {
-          component.params[scaleName] = self.params[scaleName]
-        })
+      })
+      // Now update the scales of the appropriate components.
+      _.each(self.components, function (component) {
+        component.params.axis = self.params.axis
       })
     },
 
@@ -353,6 +367,7 @@ define([
         .attr('height', self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
     },
 
+    /*
     getTooltipConfig: function (dataItem) {
       var self = this
       var formattedData = {}
@@ -372,6 +387,7 @@ define([
       var tooltipConfig = self.params.getTooltipTemplateConfig(formattedData)
       return tooltipConfig
     },
+    */
 
     hasAxisConfig: function (axisName, axisConfigParam) {
       var self = this
@@ -383,7 +399,8 @@ define([
      */
     renderAxis: function () {
       var self = this
-      var xAxis = d3.axisBottom(self.params.xScale)
+      var xAxisName = self.params.plot.x.axis
+      var xAxis = d3.axisBottom(self.params.axis[xAxisName].scale)
         .tickSize(self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
         .tickPadding(10)
         .ticks(self.params.xTicks)
@@ -395,11 +412,11 @@ define([
       // X axis label
       var xLabelData = []
       var xLabelMargin = 5
-      if (self.hasAxisConfig('x', 'labelMargin')) {
-        xLabelMargin = self.params.axis.x.labelMargin
+      if (self.hasAxisConfig(xAxisName, 'labelMargin')) {
+        xLabelMargin = self.params.axis[xAxisName].labelMargin
       }
-      if (self.params.xLabel) {
-        xLabelData.push(self.params.xLabel)
+      if (self.hasAxisConfig(xAxisName, 'label')) {
+        xLabelData.push(self.params.axis[xAxisName].label)
       }
       var xAxisLabelSvg = self.svgSelection().select('.axis.x-axis').selectAll('.axis-label').data(xLabelData)
       xAxisLabelSvg.enter()
@@ -421,22 +438,21 @@ define([
         if (self.hasAxisConfig(axisInfo.name, 'labelMargin')) {
           yLabelMargin = self.params.axis[axisInfo.name].labelMargin
         }
-        var scaleName = axisInfo.name + 'Scale'
         yLabelX = 0 - self.params.marginLeft + yLabelMargin
         yLabelTransform = 'rotate(-90)'
         if (axisInfo.position === 'right') {
           yLabelX = self.params.chartWidth - self.params.marginLeft - yLabelMargin
           yLabelTransform = 'rotate(90)'
-          axisInfo.yAxis = d3.axisRight(self.params[scaleName])
+          axisInfo.yAxis = d3.axisRight(self.params.axis[axisInfo.name].scale)
             .tickSize((self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner))
             .tickPadding(5).ticks(self.params.yTicks)
         } else {
-          axisInfo.yAxis = d3.axisLeft(self.params[scaleName])
+          axisInfo.yAxis = d3.axisLeft(self.params.axis[axisInfo.name].scale)
             .tickSize(-(self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner))
             .tickPadding(5).ticks(self.params.yTicks)
         }
         if (!referenceYScale) {
-          referenceYScale = self.params[scaleName]
+          referenceYScale = self.params.axis[axisInfo.name].scale
         } else {
           // This is not the first Y axis so adjust the tick values to the first axis tick values.
           var referenceTickValues = _.map(referenceYScale.ticks(self.params.yTicks), function (tickValue) {
@@ -453,14 +469,15 @@ define([
         var i = 0
         // There will be one label per unique accessor label displayed on this axis.
         _.each(axisInfo.accessors, function (key) {
-          if (self.params.activeAccessorData[key].label) {
-            var foundYLabelData = _.findWhere(yLabelData, { label: self.params.activeAccessorData[key].label })
+          var foundActiveAccessorData = _.findWhere(self.params.activeAccessorData, { accessor: key })
+          if (foundActiveAccessorData && foundActiveAccessorData.label) {
+            var foundYLabelData = _.findWhere(yLabelData, { label: foundActiveAccessorData.label })
             if (!foundYLabelData) {
               var yLabelXDelta = 12 * i
               if (axisInfo.position === 'right') {
                 yLabelXDelta = -yLabelXDelta
               }
-              yLabelData.push({ label: self.params.activeAccessorData[key].label, x: yLabelX + yLabelXDelta })
+              yLabelData.push({ label: foundActiveAccessorData.label, x: yLabelX + yLabelXDelta })
               i++
             }
           }
@@ -485,9 +502,9 @@ define([
       })
     },
 
-    onMouseOver: function (dataItem, x, y) {
+    onMouseOver: function (dataItem, x, y, accessor) {
       var self = this
-      self.eventObject.trigger('showTooltip', dataItem, self.getTooltipConfig(dataItem), x, y)
+      self.eventObject.trigger('showTooltip', dataItem, x, y, accessor)
     },
 
     onMouseOut: function (dataItem, x, y) {

@@ -36,7 +36,7 @@ define([
     },
 
     getYScale: function () {
-      return this.params[this.axisName + 'Scale']
+      return this.params.axis[this.axisName].scale
     },
 
     /**
@@ -46,12 +46,13 @@ define([
     */
     calculateAxisDomains: function () {
       var self = this
-      var domains = { x: self.model.getRangeFor(self.params.xAccessor) }
+      var domains = {}
+      domains[self.params.plot.x.axis] = self.model.getRangeFor(self.params.plot.x.accessor)
       domains[self.axisName] = []
       // The domains calculated here can be overriden in the axis configuration.
       // The overrides are handled by the parent.
-      _.each(self.params.activeAccessorData, function (accessor, key) {
-        var domain = self.model.getRangeFor(key)
+      _.each(self.params.activeAccessorData, function (accessor) {
+        var domain = self.model.getRangeFor(accessor.accessor)
         domains[self.axisName] = domains[self.axisName].concat(domain)
       })
       domains[self.axisName] = d3.extent(domains[self.axisName])
@@ -72,31 +73,32 @@ define([
       enteringSelection.append('g').attr('class', 'lines')
     },
 
-    getLineColor: function (accessorKey) {
+    getLineColor: function (accessor) {
       var self = this
-      if (_.has(self.params.accessorData[accessorKey], 'color')) {
-        return self.params.accessorData[accessorKey].color
+      if (_.has(accessor, 'color')) {
+        return accessor.color
       } else {
-        var axis = self.params.accessorData[accessorKey].y
-        if (!self.params['_y' + axis + 'ColorScale']) {
-          self.params['_y' + axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
+        if (!self.params[accessor.axis + 'ColorScale']) {
+          self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
         }
-        return self.params['_y' + axis + 'ColorScale'](accessorKey)
+        return self.params[accessor.axis + 'ColorScale'](accessor.accessor)
       }
     },
 
     getTooltipData: function (data, xPos) {
       var self = this
+      var xAccessor = self.params.plot.x.accessor
+      var xScale = self.params.axis[self.params.plot.x.axis].scale
       var xBisector = d3.bisector(function (d) {
-        var x = d[self.params.xAccessor]
+        var x = d[xAccessor]
         return x
       }).left
-      var xVal = self.params.xScale.invert(xPos)
+      var xVal = xScale.invert(xPos)
       // if( _.isDate( xVal ) ) {
       //    xVal = xVal.getTime()
       // }
       var index = xBisector(data, xVal, 1)
-      var dataItem = xVal - data[index - 1][self.params.xAccessor] > data[index][self.params.xAccessor] - xVal ? data[index] : data[index - 1]
+      var dataItem = xVal - data[index - 1][xAccessor] > data[index][xAccessor] - xVal ? data[index] : data[index - 1]
       return dataItem
     },
 
@@ -109,24 +111,26 @@ define([
       // Collect linePathData - one line per Y accessor.
       var linePathData = []
       var lines = {}
+      var yScale = self.getYScale()
+      var xScale = self.params.axis[self.params.plot.x.axis].scale
       var zeroLine = d3.line()
         .x(function (d) {
-          return self.params.xScale(d[self.params.xAccessor])
+          return xScale(d[self.params.plot.x.accessor])
         })
         .y(function (d) {
           return yScale.range()[0]
         })
-      var yScale = self.getYScale()
-      _.each(self.params.activeAccessorData, function (accessor, key) {
+      _.each(self.params.activeAccessorData, function (accessor) {
+        var key = accessor.accessor
         lines[key] = d3.line()
           .x(function (d) {
-            return self.params.xScale(d[self.params.xAccessor])
+            return xScale(d[self.params.plot.x.accessor])
           })
           .y(function (d) {
             return yScale(d[key])
           })
-          .curve(self.params.curve)
-        linePathData.push({ key: key, data: data })
+          .curve(self.config.get('curve'))
+        linePathData.push({ key: key, accessor: accessor, data: data })
       })
       console.log('Rendering data in LineChartView: ', data, self.params, linePathData, self.getName())
 
@@ -139,7 +143,7 @@ define([
           var pos = d3.mouse(this) // $(this).offset()
           var offset = $(this).offset()
           var dataItem = self.getTooltipData(d.data, pos[0])
-          self.eventObject.trigger('mouseover', dataItem, offset.left + pos[0] - self.params.xScale.range()[0], offset.top)
+          self.eventObject.trigger('mouseover', dataItem, offset.left + pos[0] - xScale.range()[0], offset.top, d.accessor)
           d3.select(this).classed('active', true)
         })
         .on('mouseout', function (d) {
@@ -148,7 +152,7 @@ define([
           d3.select(this).classed('active', false)
         })
         .transition().ease(d3.easeLinear).duration(self.params.duration)
-        .attr('stroke', function (d) { return self.getLineColor(d.key) })
+        .attr('stroke', function (d) { return self.getLineColor(d.accessor) })
         .attr('d', function (d) { return lines[d.key](data) })
       svgLines.exit().remove()
     },

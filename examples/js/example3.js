@@ -16,14 +16,20 @@ var chartConfigs = [
     chartId: 'chart1',
     mainChart: {
       el: '#chart1',
-      xAccessor: 'x',
-      accessorData: {
-        a: {
-          chartType: 'stackedBar'
+      plot: {
+        x: {
+          accessor: 'x'
         },
-        b: {
-          chartType: 'stackedBar'
-        }
+        y: [
+          {
+            accessor: 'a',
+            graph: 'bar'
+          },
+          {
+            accessor: 'b',
+            graph: 'bar'
+          }
+        ]
       }
     }
   },
@@ -31,21 +37,31 @@ var chartConfigs = [
     chartId: 'chart2',
     mainChart: {
       el: '#chart2',
-      xAccessor: 'x',
-      accessorData: {
-        c: {
-          chartType: 'line'
-        }
+      plot: {
+        x: {
+          accessor: 'x'
+        },
+        y: [
+          {
+            accessor: 'c',
+            graph: 'line'
+          }
+        ]
       }
     },
     navigation: {
       el: '#chart2-navigation',
-      xAccessor: 'x',
       chartHeight: 200,
-      accessorData: {
-        c: {
-          chartType: 'line'
-        }
+      plot: {
+        x: {
+          accessor: 'x'
+        },
+        y: [
+          {
+            accessor: 'c',
+            graph: 'line'
+          }
+        ]
       }
     }
   }
@@ -64,6 +80,7 @@ chartView.setConfig({
         targetComponent: 'mainChart',
         targetModel: 'config',
         action: function (sourceModel, targetModel, xMin, xMax) {
+          console.log('bindingHandler: ', xMin, xMax)
           var axis = targetModel.get('axis') || {}
           axis.x = axis.x || {}
           axis.x.domain = [xMin, xMax]
