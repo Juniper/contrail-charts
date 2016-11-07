@@ -28,8 +28,8 @@ define([
     },
 
     /**
-    * Returns the unique name of this component so it can identify itself for the parent.
-    * The component's name is of the following format: [axisName]-[chartType] ie. "y1-line".
+    * Returns the unique name of this drawing so it can identify itself for the parent.
+    * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
     */
     getName: function () {
       return this.axisName + '-' + this.chartType
@@ -105,7 +105,7 @@ define([
     renderData: function () {
       var self = this
       var data = self.getData()
-      var svg = self.svgSelection().select('g.component-' + self.getName())
+      var svg = self.svgSelection().select('g.drawing-' + self.getName())
 
       // Draw one line (path) for each Y accessor.
       // Collect linePathData - one line per Y accessor.

@@ -8,11 +8,37 @@ var pieData = [
   { x: "45-64", y: 8819342 },
   { x: "≥65", y: 612463 },
 ];
-var chartConfig = {
-  el: "#pieChart",
-  chartWidth: 960,
-  chartHeight: 500,
-  radius: 200,
+function numberFormatFunction (number) {
+  return number.toFixed(2)
 }
-var pieChartView = new coCharts.PieChartView(chartConfig);
-pieChartView.setData(pieData);
+var chartConfig = {
+  radialChart: {
+    el: "#pieChart",
+    chartWidth: 960,
+    chartHeight: 500,
+    radius: 200,
+  },
+  tooltip: {
+    tooltip: {
+      data: [
+        {
+          accessor: 'x',
+          labelFormatter: function (key) {
+            return 'Time'
+          },
+          valueFormatter: numberFormatFunction
+        },
+        {
+          accessor: 'a',
+          labelFormatter: function (key) {
+            return 'A'
+          },
+          valueFormatter: numberFormatFunction
+        },
+      ],
+    },
+  },
+}
+var chartView = new coCharts.XYChartView();
+chartView.setConfig(chartConfig);
+chartView.setData(pieData);

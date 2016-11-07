@@ -24,15 +24,23 @@ define([
 
       // NavigationView does not react itself to model changes. Instead it listens to compositeYChartView render events
       // and updates itself every time the compositeYChartView renders itself.
-      self.isModelChanged = false
-      self.listenTo(self.model, 'change', self.modelChanged)
-      self.listenTo(self.config, 'change', self.modelChanged)
+      self._isModelChanged = false
+      self.listenTo(self.model, 'change', self._onModelChange)
+      self.listenTo(self.config, 'change', self._onModelChange)
       self.eventObject = _.extend({}, Events)
 
-      self.focusDataProvider = new DataProvider({parentDataModel: self.model})
+      self._focusDataProvider = new DataProvider({parentDataModel: self.model})
       self.brush = null
 
       self.compositeYChartView = null
+    },
+
+    changeModel: function (model) {
+      var self = this
+      self.stopListening(self.model)
+      self.model = model
+      self._focusDataProvider = new DataProvider({parentDataModel: self.model})
+      self.listenTo(self.model, 'change', self._onModelChange)
     },
 
     events: {
@@ -40,8 +48,8 @@ define([
       'click .next>a': 'nextChunkSelected'
     },
 
-    modelChanged: function () {
-      this.isModelChanged = true
+    _onModelChange: function () {
+      this._isModelChanged = true
     },
 
     handleModelChange: function (e) {
@@ -80,7 +88,7 @@ define([
         var newFocusDomain = {}
         newFocusDomain[x] = [xMin, xMax]
         if (xMin !== prevWindowXMin || xMax !== prevWindowXMax) {
-          self.focusDataProvider.setRangeFor(newFocusDomain)
+          self._focusDataProvider.setRangeFor(newFocusDomain)
           self.config.set({ focusDomain: newFocusDomain }, { silent: true })
         }
 
@@ -100,7 +108,7 @@ define([
       var x = this.params.xAccessor
       var newFocusDomain = {}
       newFocusDomain[x] = []
-      self.focusDataProvider.resetRangeFor(newFocusDomain)
+      self._focusDataProvider.resetRangeFor(newFocusDomain)
     },
 
     prevChunkSelected: function () {
@@ -124,7 +132,7 @@ define([
     },
 
     getFocusDataProvider: function () {
-      return this.focusDataProvider
+      return this._focusDataProvider
     },
 
     initializeAndRenderCompositeYChartView: function () {
@@ -150,9 +158,9 @@ define([
     chartRendered: function () {
       var self = this
       self.params = self.compositeYChartView.params
-      if (self.isModelChanged) {
+      if (self._isModelChanged) {
         self.handleModelChange()
-        self.isModelChanged = false
+        self._isModelChanged = false
       }
       self.renderBrush()
     // self.renderPageLinks()
@@ -190,7 +198,7 @@ define([
             focusDomain[x] = [xMin, xMax]
             self.config.set({ focusDomain: focusDomain }, { silent: true })
             console.log('focusDomain: ', focusDomain)
-            self.focusDataProvider.setRangeFor(focusDomain)
+            self._focusDataProvider.setRangeFor(focusDomain)
             self.eventObject.trigger('windowChanged', xMin, xMax)
 
             var gHandles = svg.select('g.brush').selectAll('.handle--custom')

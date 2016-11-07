@@ -18,12 +18,11 @@ for (var i = 0; i < 100; i++) {
   })
 }
 var complexChartView = new coCharts.XYChartView()
-complexChartView.setData(complexData)
 complexChartView.setConfig({
   bindingHandler: {
     bindings: [
       {
-        sourceComponent: 'mainChart',
+        sourceComponent: 'xyChart',
         sourceModel: 'config',
         sourcePath: 'accessorData',
         targetComponent: 'controlPanel',
@@ -32,8 +31,8 @@ complexChartView.setConfig({
       }
     ]
   },
-  mainChart: {
-    el: '#complexChart-mainChart',
+  xyChart: {
+    el: '#complexChart-xyChart',
     marginInner: 10,
     marginLeft: 80,
     marginRight: 80,
@@ -197,6 +196,7 @@ complexChartView.setConfig({
     ]
   }
 })
+complexChartView.setData(complexData)
 complexChartView.render()
 
 // Most basic chart.
@@ -208,9 +208,8 @@ var simpleData = [
   { x: 1475764930000, y: 5 }
 ]
 var simpleChartView = new coCharts.XYChartView()
-simpleChartView.setData(simpleData)
 simpleChartView.setConfig({
-  mainChart: {
+  xyChart: {
     el: '#simpleChart',
     plot: {
       x: {
@@ -225,4 +224,4 @@ simpleChartView.setConfig({
     }
   }
 })
-simpleChartView.render()
+simpleChartView.setData(simpleData)

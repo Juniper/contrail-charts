@@ -27,8 +27,8 @@ define([
     },
 
     /**
-    * Returns the unique name of this component so it can identify itself for the parent.
-    * The component's name is of the following format: [axisName]-[chartType] ie. "y1-line".
+    * Returns the unique name of this drawing so it can identify itself for the parent.
+    * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
     */
     getName: function () {
       return this.axisName + '-' + this.chartType
@@ -170,12 +170,12 @@ define([
         })
       })
       console.log('Rendering data in ScatterBubbleChart: ', flatData, self.params, self.getName())
-      var svgBubbles = self.svgSelection().select('g.component-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
+      var svgBubbles = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
       svgBubbles.enter()
         .each(function (d, i, selection) {
           _.bind(self[self.shapeEnterFunctions[d.shape]], self)(d, d3.select(this))
         })
-      svgBubbles = self.svgSelection().select('g.component-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
+      svgBubbles = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
       svgBubbles
         .each(function (d) {
           self[self.shapeEditFunctions[d.shape]](d, d3.select(this))

@@ -6,10 +6,10 @@ define([
   'jquery', 'underscore', 'd3',
   'contrail-charts/models/Events',
   'contrail-charts/views/ContrailChartsView',
-  'contrail-charts/views/components/LineChartView',
-  'contrail-charts/views/components/GroupedBarChartView',
-  'contrail-charts/views/components/StackedBarChartView',
-  'contrail-charts/views/components/ScatterBubbleChartView'
+  'contrail-charts/views/drawings/LineChartView',
+  'contrail-charts/views/drawings/GroupedBarChartView',
+  'contrail-charts/views/drawings/StackedBarChartView',
+  'contrail-charts/views/drawings/ScatterBubbleChartView'
 ], function (
   $, _, d3,
   Events, ContrailChartsView,
@@ -17,7 +17,7 @@ define([
 ) {
   var CompositeYChartView = ContrailChartsView.extend({
     tagName: 'div',
-    className: 'coCharts-main-chart',
+    className: 'coCharts-xy-chart',
 
     initialize: function (options) {
       var self = this
@@ -27,14 +27,25 @@ define([
       self.config = options.config
 
       // / View params hold values from the config and computed values.
-      self.debouncedRenderFunction = _.bind(_.debounce(self.actualRender, 10), self)
-      self.listenTo(self.model, 'change', self.dataModelChanged)
-      self.listenTo(self.config, 'change', self.configModelChanged)
+      self._debouncedRenderFunction = _.bind(_.debounce(self._render, 10), self)
+      self.listenTo(self.model, 'change', self._onDataModelChange)
+      self.listenTo(self.config, 'change', self._onConfigModelChange)
       self.eventObject = _.extend({}, Events)
-      self.handleWindowResize()
+      self._onWindowResize()
     },
 
-    handleWindowResize: function () {
+    changeModel: function (model) {
+      var self = this
+      self.stopListening(self.model)
+      self.model = model
+      self.listenTo(self.model, 'change', self._onDataModelChange)
+      _.each(self._drawings, function (drawing) {
+        drawing.model = model
+      })
+      self._onDataModelChange()
+    },
+
+    _onWindowResize: function () {
       var self = this
       var throttled = _.throttle(function () {
         self.render()
@@ -47,21 +58,21 @@ define([
       console.log('ResetParams: ', this.config)
       this.params = this.config.initializedComputedParameters()
       // Reset params for all children.
-      // This way every child component can have access to parents config and still have its own computed params stored in config.
-      _.each(this.components, function (component, i) {
-        component.resetParamsForChild(i)
+      // This way every child drawing can have access to parents config and still have its own computed params stored in config.
+      _.each(this._drawings, function (drawing, i) {
+        drawing.resetParamsForChild(i)
       })
     },
 
     possibleChildViews: { line: LineChartView, bar: BarChartView, stackedBar: StackedBarChartView, scatterBubble: ScatterBubbleChartView },
 
     /**
-    * Update the components array based on the plot.y.
+    * Update the drawings array based on the plot.y.
     */
-    updateChildComponents: function () {
+    _updateChildDrawings: function () {
       var self = this
       var plot = self.config.get('plot')
-      self.components = []
+      self._drawings = []
       if (!plot.x.axis) {
         // Default x axis name.
         plot.x.axis = 'x'
@@ -75,29 +86,29 @@ define([
           accessor.enabled = true
         }
         if (accessor.graph && accessor.enabled) {
-          var componentName = accessor.axis + '-' + accessor.graph
-          var foundComponent = _.find(self.components, function (component) { return component.getName() === componentName })
-          if (!foundComponent) {
-            // The child component with this name does not exist yet. Instantiate the child component.
+          var drawingName = accessor.axis + '-' + accessor.graph
+          var foundDrawing = _.find(self._drawings, function (drawing) { return drawing.getName() === drawingName })
+          if (!foundDrawing) {
+            // The child drawing with this name does not exist yet. Instantiate the child drawing.
             _.each(self.possibleChildViews, function (ChildView, chartType) {
               if (chartType === accessor.graph) {
                 // TODO: a way to provide a different model to every child
                 // TODO: pass eventObject to child?
-                foundComponent = new ChildView({
+                foundDrawing = new ChildView({
                   model: self.model,
                   config: self.config,
                   el: self.el,
                   id: self.id,
                   axisName: accessor.axis
                 })
-                self.components.push(foundComponent)
+                self._drawings.push(foundDrawing)
               }
             })
           }
         }
       })
-      // Order the components so the highest order components get rendered first.
-      self.components.sort(function (a, b) { return b.renderOrder - a.renderOrder })
+      // Order the drawings so the highest order drawings get rendered first.
+      self._drawings.sort(function (a, b) { return b.renderOrder - a.renderOrder })
     },
 
     /**
@@ -110,15 +121,15 @@ define([
       self.params.activeAccessorData = []
       self.params.yAxisInfoArray = []
       console.log('data: ', data)
-      // Initialize the components activeAccessorData structure
-      _.each(self.components, function (component) {
-        component.params.activeAccessorData = []
-        component.params.enabled = false
+      // Initialize the drawings activeAccessorData structure
+      _.each(self._drawings, function (drawing) {
+        drawing.params.activeAccessorData = []
+        drawing.params.enabled = false
       })
       // Fill the activeAccessorData structure.
       _.each(self.params.plot.y, function (accessor) {
-        var component = self.getComponent(accessor.axis, accessor.graph)
-        if (component) {
+        var drawing = self.getDrawing(accessor.axis, accessor.graph)
+        if (drawing) {
           if (accessor.enabled) {
             self.params.activeAccessorData.push(accessor)
             var foundAxisInfo = _.findWhere(self.params.yAxisInfoArray, { name: accessor.axis })
@@ -136,10 +147,10 @@ define([
             foundAxisInfo.used++
             foundAxisInfo.accessors.push(accessor.accessor)
             if (accessor.graph) {
-              // Set the activeAccessorData to the appropriate components.
-              if (component) {
-                component.params.activeAccessorData.push(accessor)
-                component.params.enabled = true
+              // Set the activeAccessorData to the appropriate drawings.
+              if (drawing) {
+                drawing.params.activeAccessorData.push(accessor)
+                drawing.params.enabled = true
               }
             }
           }
@@ -190,47 +201,47 @@ define([
       self.params.xRange = [self.params.marginLeft + self.params.marginInner, self.params.chartWidth - self.params.marginRight - self.params.marginInner]
       self.params.yRange = [self.params.chartHeight - self.params.marginInner - self.params.marginBottom, self.params.marginInner + self.params.marginTop]
       self.saveScales()
-      // Now let every component perform it's own calculations based on the provided X and Y scales.
-      _.each(self.components, function (component) {
-        if (_.isFunction(component.calculateScales)) {
-          component.calculateScales()
+      // Now let every drawing perform it's own calculations based on the provided X and Y scales.
+      _.each(self._drawings, function (drawing) {
+        if (_.isFunction(drawing.calculateScales)) {
+          drawing.calculateScales()
         }
       })
     },
 
-    getComponent: function (axisName, chartType) {
+    getDrawing: function (axisName, chartType) {
       var self = this
-      var foundComponent = null
-      var componentName = axisName + '-' + chartType
-      _.each(self.components, function (component) {
-        if (component.getName() === componentName) {
-          foundComponent = component
+      var foundDrawing = null
+      var drawingName = axisName + '-' + chartType
+      _.each(self._drawings, function (drawing) {
+        if (drawing.getName() === drawingName) {
+          foundDrawing = drawing
         }
       })
-      return foundComponent
+      return foundDrawing
     },
 
-    getComponents: function (axisName) {
+    getDrawings: function (axisName) {
       var self = this
-      var foundComponents = []
-      _.each(self.components, function (component) {
-        if (_.contains(component.params.handledAxisNames, axisName)) {
-          foundComponents.push(component)
+      var foundDrawings = []
+      _.each(self._drawings, function (drawing) {
+        if (_.contains(drawing.params.handledAxisNames, axisName)) {
+          foundDrawings.push(drawing)
         }
       })
-      return foundComponents
+      return foundDrawings
     },
 
     /**
-    * Combine the axis domains (extents) from all enabled components.
+    * Combine the axis domains (extents) from all enabled drawings.
     */
     combineAxisDomains: function () {
       var self = this
       var domains = {}
-      _.each(self.components, function (component) {
-        if (component.params.enabled) {
-          var componentDomains = component.calculateAxisDomains()
-          _.each(componentDomains, function (domain, axisName) {
+      _.each(self._drawings, function (drawing) {
+        if (drawing.params.enabled) {
+          var drawingDomains = drawing.calculateAxisDomains()
+          _.each(drawingDomains, function (domain, axisName) {
             if (!_.has(domains, axisName)) {
               domains[axisName] = [domain[0], domain[1]]
             } else {
@@ -258,7 +269,7 @@ define([
     },
 
     /**
-    * Save all scales in the params and component.params structures.
+    * Save all scales in the params and drawing.params structures.
     */
     saveScales: function () {
       var self = this
@@ -303,14 +314,14 @@ define([
           }
         }
       })
-      // Now update the scales of the appropriate components.
-      _.each(self.components, function (component) {
-        component.params.axis = self.params.axis
+      // Now update the scales of the appropriate drawings.
+      _.each(self._drawings, function (drawing) {
+        drawing.params.axis = self.params.axis
       })
     },
 
     /**
-     * Renders the svg element with axis and component groups.
+     * Renders the svg element with axis and drawing groups.
      * Resizes chart dimensions if chart already exists.
      */
     renderSVG: function () {
@@ -340,22 +351,22 @@ define([
         .attr('class', function (d) { return 'axis y-axis ' + d.name + '-axis' })
         .merge(svgYAxis)
         .attr('transform', 'translate(' + translate + ',0)')
-      // Handle component groups
-      var svgComponentGroups = self.svgSelection().selectAll('.component-group').data(self.components, function (c) {
+      // Handle drawing groups
+      var svgDrawingGroups = self.svgSelection().selectAll('.drawing-group').data(self._drawings, function (c) {
         return c.getName()
       })
-      svgComponentGroups.enter().append('g')
-        .attr('class', function (component) {
-          return 'component-group component-' + component.getName() + ' ' + component.className
+      svgDrawingGroups.enter().append('g')
+        .attr('class', function (drawing) {
+          return 'drawing-group drawing-' + drawing.getName() + ' ' + drawing.className
         })
         .attr('clip-path', 'url(#rect-clipPath)')
-      // Every component can add a one time (enter) code into it's component group.
-      svgComponentGroups.enter().each(function (component) {
-        if (_.isFunction(component.renderSVG)) {
-          d3.select(this).select('.component-' + component.getName()).call(component.renderSVG)
+      // Every drawing can add a one time (enter) code into it's drawing group.
+      svgDrawingGroups.enter().each(function (drawing) {
+        if (_.isFunction(drawing.renderSVG)) {
+          d3.select(this).select('.drawing-' + drawing.getName()).call(drawing.renderSVG)
         }
       })
-      svgComponentGroups.exit().remove()
+      svgDrawingGroups.exit().remove()
       // Handle (re)size.
       self.svgSelection()
         .attr('width', self.params.chartWidth)
@@ -427,7 +438,7 @@ define([
         .attr('y', self.params.chartHeight - self.params.marginTop - xLabelMargin)
         .text(function (d) { return d })
       xAxisLabelSvg.exit().remove()
-      // We render the yAxis here because there may be multiple components for one axis.
+      // We render the yAxis here because there may be multiple drawings for one axis.
       // The parent has aggregated information about all Y axis.
       var referenceYScale = null
       var yLabelX = 0
@@ -497,8 +508,8 @@ define([
 
     renderData: function () {
       var self = this
-      _.each(self.components, function (component) {
-        component.renderData()
+      _.each(self._drawings, function (drawing) {
+        drawing.renderData()
       })
     },
 
@@ -514,24 +525,24 @@ define([
 
     startEventListeners: function () {
       var self = this
-      _.each(self.components, function (component) {
-        self.listenTo(component.eventObject, 'mouseover', self.onMouseOver)
-        self.listenTo(component.eventObject, 'mouseout', self.onMouseOut)
+      _.each(self._drawings, function (drawing) {
+        self.listenTo(drawing.eventObject, 'mouseover', self.onMouseOver)
+        self.listenTo(drawing.eventObject, 'mouseout', self.onMouseOut)
       })
     },
 
-    dataModelChanged: function () {
+    _onDataModelChange: function () {
       this.render()
     },
 
-    configModelChanged: function () {
+    _onConfigModelChange: function () {
       this.render()
     },
 
-    actualRender: function () {
+    _render: function () {
       var self = this
       console.log('CompositeYChartView render start.')
-      self.updateChildComponents()
+      self._updateChildDrawings()
       self.resetParams()
       self.calculateActiveAccessorData()
       self.calculateDimmensions()
@@ -547,7 +558,7 @@ define([
     render: function () {
       var self = this
       if (self.config) {
-        self.debouncedRenderFunction()
+        self._debouncedRenderFunction()
       }
       return self
     }

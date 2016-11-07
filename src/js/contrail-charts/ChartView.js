@@ -23,13 +23,7 @@ define([
       dataConfig = dataConfig || {}
       chartId = chartId || 'default'
       // Set data to the given chart if it exists.
-      if (self.charts[chartId] && self.charts[chartId].chartDataModel) {
-        self.charts[chartId].chartDataModel.set(dataConfig, { silent: true })
-        // Set data to data model.
-        if (_.isArray(data)) {
-          self.charts[chartId].chartDataModel.setData(data)
-        }
-      }
+      if (self.charts[chartId]) self.charts[chartId].setData(data, dataConfig)
     },
 
     /**

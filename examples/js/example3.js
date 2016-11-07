@@ -14,7 +14,7 @@ for (var i = 0; i < 100; i++) {
 var chartConfigs = [
   {
     chartId: 'chart1',
-    mainChart: {
+    xyChart: {
       el: '#chart1',
       plot: {
         x: {
@@ -35,7 +35,7 @@ var chartConfigs = [
   },
   {
     chartId: 'chart2',
-    mainChart: {
+    xyChart: {
       el: '#chart2',
       plot: {
         x: {
@@ -77,7 +77,7 @@ chartView.setConfig({
         sourceModel: 'events',
         sourcePath: 'windowChanged',
         targetChart: 'chart1',
-        targetComponent: 'mainChart',
+        targetComponent: 'xyChart',
         targetModel: 'config',
         action: function (sourceModel, targetModel, xMin, xMax) {
           console.log('bindingHandler: ', xMin, xMax)

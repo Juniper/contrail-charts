@@ -25,8 +25,8 @@ define([
     },
 
     /**
-    * Returns the unique name of this component so it can identify itself for the parent.
-    * The component's name is of the following format: [axisName]-[chartType] ie. "y1-line".
+    * Returns the unique name of this drawing so it can identify itself for the parent.
+    * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
     */
     getName: function () {
       return this.axisName + '-' + this.chartType
@@ -123,7 +123,7 @@ define([
       })
       // Render the flat data structure
       console.log('Rendering data in BarChartView: ', flatData, self.params, self.getName())
-      var svgBarGroups = self.svgSelection().select('g.component-' + self.getName()).selectAll('.bar').data(flatData, function (d) { return d.id })
+      var svgBarGroups = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bar').data(flatData, function (d) { return d.id })
       svgBarGroups.enter().append('rect')
         .attr('class', function (d) { return d.className })
         .attr('x', function (d) { return d.x })

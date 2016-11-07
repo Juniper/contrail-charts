@@ -39,10 +39,10 @@ define([
     initialize: function () {
       var self = this
       self.hasExternalBindingHandler = false
-      self.chartDataModel = new ContrailChartsDataModel()
-      self.dataProvider = new DataProvider({ parentDataModel: self.chartDataModel })
+      self._dataModel = new ContrailChartsDataModel()
+      self._dataProvider = new DataProvider({ parentDataModel: self._dataModel })
+      self._components = {}
     },
-
     /**
     * Provide data for this chart as a simple array of objects.
     * Additional ContrailChartsDataModel configuration may be provided.
@@ -51,13 +51,10 @@ define([
     setData: function (data, dataConfig) {
       var self = this
       dataConfig = dataConfig || {}
-      self.chartDataModel.set(dataConfig, { silent: true })
-      // Set data to data model.
-      if (_.isArray(data)) {
-        self.chartDataModel.setData(data)
-      }
-    },
+      self._dataModel.set(dataConfig, { silent: true })
 
+      if (_.isArray(data)) self._dataModel.setData(data)
+    },
     /**
     * Provides a global BindingHandler to this chart.
     * If no BindingHandler is provided it will be instantiated by this chart if needed based on its local configuration.
@@ -67,129 +64,89 @@ define([
       self.hasExternalBindingHandler = (bindingHandler != null)
       self.bindingHandler = bindingHandler
     },
-
     /**
     * Sets the configuration for this chart as a simple object.
-    * This will cause a lazy component init.
-    */
-    setConfig: function (config) {
-      var self = this
-      self.chartConfig = config
-      if (!self.chartConfig.chartId) {
-        self.chartConfig.chartId = 'XYChartView'
-      }
-      self.componentInit()
-    },
-
-    /**
     * Instantiate the required views if they do not exist yet, set their configurations otherwise.
     * Setting configuration to a rendered chart will trigger a ConfigModel change event that will cause the chart to be re-rendered.
     */
-    componentInit: function () {
+    setConfig: function (config) {
       var self = this
-      // TODO: all this initialization may be automated based on config.
-      if (self.isEnabledComponent('bindingHandler')) {
-        if (!self.bindingHandler) {
-          self.bindingHandler = new BindingHandler(self.chartConfig.bindingHandler)
-        } else {
-          self.bindingHandler.addBindings(self.chartConfig.bindingHandler.bindings, self.chartConfig.chartId)
-        }
+      self._config = config
+      if (!self._config.chartId) {
+        self._config.chartId = 'XYChartView'
       }
-      if (self.isEnabledComponent('message')) {
-        // Common Message View. will be used for rendering info messages and errors.
-        if (!self.messageView) {
-          self.messageView = new MessageView({
-            config: new MessageConfigModel(self.chartConfig.message),
-            container: $(self.chartConfig.message.el)
-          })
-        } else {
-          self.messageView.config.set(self.chartConfig.message)
+      self._initComponents()
+    },
+
+    _registerComponent: function (name, config, model) {
+      var self = this
+      var component = self._components[name]
+      if (!self._isEnabledComponent(name)) return false
+      if (!component) {
+        var configModel = new coCharts.components[name].configModel(config)
+        var viewOptions = _.extend(config, {
+          config: configModel,
+          model: model,
+        })
+        self._components[name] = new coCharts.components[name].view(viewOptions)
+        component = self._components[name]
+
+        if (self._isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
+          self.bindingHandler.addComponent(self._config.chartId, name, component)
         }
-        if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-          self.bindingHandler.addComponent(self.chartConfig.chartId, 'message', self.messageView)
-        }
-        // One way to bind to message events of already created model.
-        self.messageView.registerModelDataStatusEvents(self.chartDataModel)
+      } else {
+        component.config.set(config)
       }
-      if (self.isEnabledComponent('tooltip')) {
-        if (!self.tooltipView) {
-          self.tooltipView = new TooltipView({
-            config: new TooltipConfigModel(self.chartConfig.tooltip)
-          })
-        } else {
-          self.tooltipView.config.set(self.chartConfig.tooltip)
+      return component
+    },
+
+    _initComponents: function () {
+      var self = this
+      _.each(self._config, function (config, name) {
+
+        // TODO is bindingHandler a component?
+        if (name === 'bindingHandler' && self._isEnabledComponent('bindingHandler')) {
+          if (!self.bindingHandler) {
+            self.bindingHandler = new BindingHandler(self._config.bindingHandler)
+          } else {
+            self.bindingHandler.addBindings(self._config.bindingHandler.bindings, self._config.chartId)
+          }
+          return
         }
-        if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-          self.bindingHandler.addComponent(self.chartConfig.chartId, 'tooltip', self.tooltipView)
-        }
+        self._registerComponent(name, config)
+      })
+
+      // One way to bind to message events of already created model.
+      if (self._components.message) self._components.message.registerModelDataStatusEvents(self._dataModel)
+      if (self._components.navigation) {
+        self._components.navigation.changeModel(self._dataProvider)
+        if (self._components.message) self._components.message.registerComponentMessageEvent(self.navigationView.eventObject)
+        
+        // Data aware components should use model of Navigation component
+        var dataModel = self._components.navigation.getFocusDataProvider()
+        if (self._components.xyChart) self._components.xyChart.changeModel(dataModel)
       }
-      var dataProvider = self.dataProvider
-      if (self.isEnabledComponent('navigation')) {
-        // TODO: id should be config based
-        if (!self.navigationView) {
-          self.navigationView = new NavigationView({
-            model: dataProvider,
-            config: new NavigationConfigModel(self.chartConfig.navigation),
-            el: $(self.chartConfig.navigation.el)
-          })
-        } else {
-          self.navigationView.config.set(self.chartConfig.navigation)
-        }
-        if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-          self.bindingHandler.addComponent(self.chartConfig.chartId, 'navigation', self.navigationView)
-        }
-        // The remaining components dataModel will be the one fetched from the navigationView.
-        dataProvider = self.navigationView.getFocusDataProvider()
-        if (self.isEnabledComponent('message')) {
-          self.messageView.registerComponentMessageEvent(self.navigationView.eventObject)
-        }
+      if (self._components.xyChart) {
+        if (!self._components.navigation) self._components.xyChart.changeModel(self._dataProvider)
+        if (self._components.message) self._components.message.registerComponentMessageEvent(self.compositeYChartView.eventObject)
+        if (self._components.tooltip) self._components.tooltip.registerTriggerEvent(self._components.xyChart.eventObject, 'showTooltip', 'hideTooltip')
       }
-      if (self.isEnabledComponent('mainChart')) {
-        if (!self.compositeYChartView) {
-          self.compositeYChartView = new CompositeYChartView({
-            model: dataProvider,
-            config: new CompositeYChartConfigModel(self.chartConfig.mainChart),
-            el: $(self.chartConfig.mainChart.el)
-          })
-        } else {
-          self.compositeYChartView.config.set(self.chartConfig.mainChart)
-        }
-        console.log('MainChart: ', self.compositeYChartView)
-        if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-          self.bindingHandler.addComponent(self.chartConfig.chartId, 'mainChart', self.compositeYChartView)
-        }
-        if (self.isEnabledComponent('message')) {
-          self.messageView.registerComponentMessageEvent(self.compositeYChartView.eventObject)
-        }
-        if (self.isEnabledComponent('tooltip')) {
-          self.tooltipView.registerTriggerEvent(self.compositeYChartView.eventObject, 'showTooltip', 'hideTooltip')
-        }
+      if (self._components.radialChart) {
+        self._components.radialChart.changeModel(self._dataProvider)
       }
-      if (self.isEnabledComponent('controlPanel')) {
-        if (!self.controlPanelView) {
-          self.controlPanelView = new ControlPanelView({
-            config: new ControlPanelConfigModel(self.chartConfig.controlPanel),
-            el: $(self.chartConfig.controlPanel.el)
-          })
-        } else {
-          self.controlPanelView.config.set(self.chartConfig.controlPanel)
-        }
-        if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-          self.bindingHandler.addComponent(self.chartConfig.chartId, 'controlPanel', self.controlPanelView)
-        }
-      }
-      if (self.isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
+
+      if (self._isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
         // Only start the binding handler if it is not an external one.
         // Otherwise assume it will be started by the parent chart.
         self.bindingHandler.start()
       }
     },
 
-    isEnabledComponent: function (configName) {
+    _isEnabledComponent: function (name) {
       var self = this
       var enabled = false
-      if (_.isObject(self.chartConfig[configName])) {
-        if (self.chartConfig[configName].enable !== false) {
+      if (_.isObject(self._config[name])) {
+        if (self._config[name].enable !== false) {
           enabled = true
         }
       }
@@ -198,21 +155,9 @@ define([
 
     render: function () {
       var self = this
-      if (self.isEnabledComponent('message')) {
-        self.messageView.render()
-      }
-      if (self.isEnabledComponent('tooltip')) {
-        self.tooltipView.render()
-      }
-      if (self.isEnabledComponent('navigation')) {
-        self.navigationView.render()
-      }
-      if (self.isEnabledComponent('mainChart')) {
-        self.compositeYChartView.render()
-      }
-      if (self.isEnabledComponent('controlPanel')) {
-        self.controlPanelView.render()
-      }
+      _.each(self._components, function (component) {
+        component.render()
+      })
     }
   })
 

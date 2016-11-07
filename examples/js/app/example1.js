@@ -23,7 +23,7 @@ define([
     bindingHandler: {
       bindings: [
         {
-          sourceComponent: 'mainChart',
+          sourceComponent: 'xyChart',
           sourceModel: 'config',
           sourcePath: 'accessorData',
           targetComponent: 'controlPanel',
@@ -32,8 +32,8 @@ define([
         }
       ]
     },
-    mainChart: {
-      el: '#complexChart-mainChart',
+    xyChart: {
+      el: '#complexChart-xyChart',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
@@ -191,7 +191,7 @@ define([
   var simpleChartView = new coCharts.XYChartView()
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
-    mainChart: {
+    xyChart: {
       el: '#simpleChart',
       plot: {
         x: {
