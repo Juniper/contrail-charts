@@ -45,6 +45,7 @@ define([
 
     performSync: function (sourceModel, sourcePath, targetModel) {
       var self = this
+      console.log('performing sync: ', sourcePath)
       targetModel.set(sourcePath, sourceModel.get(sourcePath))
       if (_.isObject(sourceModel.get(sourcePath))) {
         // Perform manual event trigger.
@@ -62,7 +63,15 @@ define([
     start: function () {
       var self = this
       var charts = self.get('charts')
+      console.log('BindingHandler.start: ', charts)
       _.each(self.get('bindings'), function (binding) {
+        console.log('Processing binding: ', binding)
+        if (!binding.sourceChart && _.keys(charts).length === 1) {
+          binding.sourceChart = _.keys(charts)[0]
+        }
+        if (!binding.targetChart && _.keys(charts).length === 1) {
+          binding.targetChart = _.keys(charts)[0]
+        }
         if (_.has(charts, binding.sourceChart) && _.has(charts, binding.targetChart)) {
           if (_.has(charts[binding.sourceChart], binding.sourceComponent) && _.has(charts[binding.targetChart], binding.targetComponent)) {
             if (_.has(charts[binding.sourceChart][binding.sourceComponent], binding.sourceModel) && _.has(charts[binding.targetChart][binding.targetComponent], binding.targetModel)) {

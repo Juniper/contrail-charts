@@ -9,7 +9,6 @@ define([
 ], function ($, _, ContrailChartsConfigModel) {
   var ControlPanelConfigModel = ContrailChartsConfigModel.extend({
     defaults: {
-      accessorData: {}
     }
   })
 

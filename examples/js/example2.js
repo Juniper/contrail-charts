@@ -25,7 +25,7 @@ complexChartView.setConfig({
       {
         sourceComponent: 'mainChart',
         sourceModel: 'config',
-        sourcePath: 'accessorData',
+        sourcePath: 'plot',
         targetComponent: 'controlPanel',
         targetModel: 'config',
         action: 'sync'
@@ -59,7 +59,7 @@ complexChartView.setConfig({
           enabled: true,
           graph: 'stackedBar',
           axis: 'y1',
-          tooltip: 'tooltip'
+          tooltip: 'customTooltip'
         },
         {
           accessor: 'c',
@@ -176,11 +176,20 @@ complexChartView.setConfig({
           valueFormatter: numberFormatFunction
         }
       ]
+    },
+    customTooltip: {
+      generateTooltipHTML: function (data, accessor, tooltipConfig) {
+        // data - holds the data element
+        // accessor - holds the accessor structure which triggered this tooltip
+        // tooltipConfig - holds the tooltip configuration
+        console.log('custom tooltip')
+        return '<div class="tooltip-content">Custom tooltip for: ' + accessor.label + '</div>'
+      }
     }
   },
   controlPanel: {
     el: '#complexChart-controlPanel',
-    enable: true,
+    enabled: true,
     buttons: [
       {
         name: 'filter',
