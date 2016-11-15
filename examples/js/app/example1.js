@@ -25,7 +25,7 @@ define([
         {
           sourceComponent: 'xyChart',
           sourceModel: 'config',
-          sourcePath: 'accessorData',
+          sourcePath: 'plot',
           targetComponent: 'controlPanel',
           targetModel: 'config',
           action: 'sync'
@@ -38,7 +38,6 @@ define([
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      xAccessor: 'x',
       plot: {
         x: {
           accessor: 'x',
@@ -112,7 +111,6 @@ define([
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      xAccessor: 'x',
       plot: {
         x: {
           accessor: 'x',
@@ -161,7 +159,7 @@ define([
     },
     controlPanel: {
       el: '#complexChart-controlPanel',
-      enable: true,
+      enabled: true,
       buttons: [
         {
           name: 'filter',

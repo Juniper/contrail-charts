@@ -70,26 +70,30 @@ define([
 
     accessorDataCheckboxChanged: function () {
       var self = this
-      var accessorData = self.config.get('accessorData')
+      var plot = self.config.get('plot')
       self.$el.find('.accessor-data-checkbox').each(function () {
         var checked = $(this).is(':checked')
         var key = $(this).attr('value')
-        accessorData[key].enable = checked
+        var accessor = _.findWhere(plot.y, { accessor: key })
+        if (accessor) {
+          accessor.enabled = checked
+        }
       })
-      self.config.trigger('change:accessorData')
+      self.config.trigger('change:plot')
     },
 
     accessorDataSelectChanged: function () {
       var self = this
-      var accessorData = self.config.get('accessorData')
+      var plot = self.config.get('plot')
       self.$el.find('.accessor-data-chart-type-select').each(function () {
         var selectedChartType = $(this).val()
         var key = $(this).attr('name')
-        if (selectedChartType && accessorData[key]) {
-          accessorData[key].chartType = selectedChartType
+        var accessor = _.findWhere(plot.y, { accessor: key })
+        if (selectedChartType && accessor) {
+          accessor.graph = selectedChartType
         }
       })
-      self.config.trigger('change:accessorData')
+      self.config.trigger('change:plot')
     },
 
     generateExpandedPanel: function (params) {
@@ -100,10 +104,11 @@ define([
       $panelHead.append('<span class="control-panel-filter-close"><i class="fa fa-remove"></i></span>')
       var $panelBody = $('<div class="control-panel-filter-body"></div>')
       var $filterItems = $('<div class="control-panel-filter-items"></div>')
-      _.each(params.accessorData, function (accessor, key) {
+      _.each(params.plot.y, function (accessor) {
+        var key = accessor.accessor
         var $filterItem = $('<div class="control-panel-filter-item"></div>')
         var $checkbox = $('<input id="filter-item-input-' + key + '" type="checkbox" name="control-panel-filter" class="accessor-data-checkbox" value="' + key + '"/>')
-        if (accessor.enable) {
+        if (accessor.enabled) {
           $checkbox.prop('checked', true)
         }
         var $label = $('<label for="filter-item-input-' + key + '" class="accessor-data-checkbox-label"> ' + accessor.label + '</label>')

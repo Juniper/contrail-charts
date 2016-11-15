@@ -21,16 +21,18 @@ define([
       this.listenTo(eventObject, hideEventType, this.hide)
     },
 
-    generateTooltipHTML: function (tooltipData, accessor) {
+    generateTooltipHTML: function (data, accessor) {
       var tooltipConfig = {}
       var fnGenerateTooltipHTML = this.config.get('generateTooltipHTML')
       if (accessor.tooltip) {
+        console.log('Showing tooltip for: ', accessor.tooltip)
         tooltipConfig = this.config.get(accessor.tooltip)
-        if (_.isFunction(tooltipConfig, 'generateTooltipHTML')) {
+        if (_.isFunction(tooltipConfig.generateTooltipHTML)) {
+          console.log('Tooltip ' + accessor.tooltip + ' has custom HTML generator.')
           fnGenerateTooltipHTML = tooltipConfig.generateTooltipHTML
         }
       }
-      return fnGenerateTooltipHTML(tooltipData, accessor, tooltipConfig)
+      return fnGenerateTooltipHTML(data, accessor, tooltipConfig)
     },
 
     show: function (tooltipData, offsetLeft, offsetTop, accessor) {
