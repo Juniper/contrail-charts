@@ -4,7 +4,7 @@
 
 define([
   'underscore',
-  'contrail-charts/core/Model'
+  'contrail-charts/contrail/ContrailModel'
 ], function (_, Model) {
   /**
    * Base data model.

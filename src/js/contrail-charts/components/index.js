@@ -6,10 +6,10 @@ var NavigationConfigModel = require('./navigation/NavigationConfigModel')
 var NavigationView = require('./navigation/NavigationView')
 var TooltipConfigModel = require('./tooltip/TooltipConfigModel')
 var TooltipView = require('./tooltip/TooltipView')
-var CompositeYChartConfigModel = require('./composite-ychart/CompositeYChartConfigModel')
-var CompositeYChartView = require('./composite-ychart/CompositeYChartView')
-var RadialChartConfigModel = require('./radial-chart/RadialChartConfigModel')
-var RadialChartView = require('./radial-chart/RadialChartView')
+var CompositeYChartConfigModel = require('./composite-y-chart/CompositeYChartConfigModel')
+var CompositeYChartView = require('./composite-y-chart/CompositeYChartView')
+var RadialChartConfigModel = require('./composite-radial-chart/RadialChartConfigModel')
+var RadialChartView = require('./composite-radial-chart/RadialChartView')
 
 module.exports = {
   tooltip: {

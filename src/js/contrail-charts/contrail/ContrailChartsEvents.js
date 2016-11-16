@@ -3,7 +3,7 @@
  */
 
 define([
-  'contrail-charts/core/Events'
+  'contrail-charts/contrail/ContrailEvents'
 ], function (Events) {
   return Events
 })

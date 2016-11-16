@@ -6,7 +6,7 @@ define([
   'jquery',
   'underscore',
   'd3',
-  'contrail-charts/core/View'
+  'contrail-charts/contrail/ContrailView'
 ], function ($, _, d3, View) {
   /**
    * View base class.

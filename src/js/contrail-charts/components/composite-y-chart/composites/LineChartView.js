@@ -6,8 +6,8 @@ define([
   'jquery',
   'underscore',
   'd3',
-  'contrail-charts/base/ContrailChartsEvents',
-  'contrail-charts/base/ContrailChartsView'
+  'contrail-charts/contrail/ContrailChartsEvents',
+  'contrail-charts/contrail/ContrailChartsView'
 ], function ($, _, d3, Events, ContrailChartsView) {
   /**
   * This is the child view for CompositeYChartView.

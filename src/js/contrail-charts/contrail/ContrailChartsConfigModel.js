@@ -5,7 +5,7 @@
 define([
   'jquery',
   'underscore',
-  'contrail-charts/core/Model'
+  'contrail-charts/contrail/ContrailModel'
 ], function ($, _, Model) {
   var ContrailChartsConfigModel = Model.extend({
     initialize: function (options) {},
