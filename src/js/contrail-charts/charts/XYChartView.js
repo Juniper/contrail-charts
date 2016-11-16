@@ -16,7 +16,6 @@ define([
   // 'contrail-charts/views/TooltipView',
   // 'contrail-charts/BindingHandler'
   'contrail-charts/components/index',
-  'contrail-charts/providers/index',
   'contrail-charts/handlers/index'
 ], function (
   $, _,
@@ -36,7 +35,6 @@ define([
   // TooltipView,
   // BindingHandler
   components,
-  providers,
   handlers
 ) {
   /**
@@ -48,7 +46,7 @@ define([
       var self = this
       self.hasExternalBindingHandler = false
       self._dataModel = new ContrailChartsDataModel()
-      self._dataProvider = new providers.DataProvider({ parentDataModel: self._dataModel })
+      self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
       self._components = {}
     },
     /**
