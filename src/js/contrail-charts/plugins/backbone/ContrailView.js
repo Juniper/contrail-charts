@@ -5,6 +5,6 @@
 define([
   'backbone'
 ], function (Backbone) {
-  var Model = Backbone.Model.extend({})
-  return Model
+  var ContrailView = Backbone.View.extend({})
+  return ContrailView
 })

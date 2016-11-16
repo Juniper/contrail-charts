@@ -4,16 +4,16 @@
 
 define([
   'underscore',
-  'contrail-charts/contrail/ContrailModel',
-  'contrail-charts/contrail/ContrailEvents'
-], function (_, Model, Events) {
+  'contrail-model',
+  'contrail-events'
+], function (_, ContrailModel, ContrailEvents) {
   /**
    * A DataModel wrapper for view components.
    * Handles:
    * - data range calculation for view components
    * - data filtering and chaining between components
    */
-  var DataProvider = Model.extend({
+  var DataProvider = ContrailModel.extend({
     defaults: {
       _type: 'DataProvider',
 
@@ -36,7 +36,7 @@ define([
       // List or error objects with level and error message
       errorList: [],
 
-      messageEvent: _.extend({}, Events)
+      messageEvent: _.extend({}, ContrailEvents)
     },
 
     initialize: function (options) {

@@ -4,8 +4,8 @@
 
 define([
   'jquery', 'underscore',
-  'contrail-charts/contrail/ContrailChartsEvents',
-  'contrail-charts/contrail/ContrailChartsView'
+  'contrail-charts-events',
+  'contrail-charts-view'
 ], function ($, _, Events, ContrailChartsView) {
   var ControlPanelView = ContrailChartsView.extend({
     tagName: 'div',

@@ -5,7 +5,7 @@
 define([
   'jquery',
   'underscore',
-  'contrail-charts/contrail/ContrailChartsConfigModel'
+  'contrail-charts-config-model'
 ], function ($, _, ContrailChartsConfigModel) {
   var ControlPanelConfigModel = ContrailChartsConfigModel.extend({
     defaults: {

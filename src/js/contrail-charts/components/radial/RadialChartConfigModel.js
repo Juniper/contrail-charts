@@ -4,7 +4,7 @@
 
 define([
   'jquery', 'underscore', 'd3',
-  'contrail-charts/contrail/ContrailChartsConfigModel'
+  'contrail-charts-config-model'
 ], function ($, _, d3, ContrailChartsConfigModel) {
   var PieChartConfigModel = ContrailChartsConfigModel.extend({
     defaults: {

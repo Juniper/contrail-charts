@@ -1,15 +1,15 @@
 define([
   'underscore',
-  'contrail-charts/contrail/ContrailView', // Todo use contrailChartsView instead
-  'contrail-charts/charts/xy/XYChartView',
+  'contrail-view', // Todo use contrail-charts-view instead
+  'contrail-charts/charts/xy-chart/XYChartView',
   'contrail-charts/handlers/BindingHandler'
 ], function (
   _,
-  View,
+  ContrailView,
   XYChartView,
   BindingHandler
 ) {
-  var ChartView = View.extend({
+  var ChartView = ContrailView.extend({
     initialize: function () {
       var self = this
       self.charts = {}

@@ -6,12 +6,12 @@ define([
   'jquery',
   'underscore',
   'd3',
-  'contrail-charts/contrail/ContrailView'
-], function ($, _, d3, View) {
+  'contrail-view'
+], function ($, _, d3, ContrailView) {
   /**
    * View base class.
    */
-  var ContrailChartsView = View.extend({
+  var ContrailChartsView = ContrailView.extend({
     defaults: {
       _type: 'ContrailChartsView'
     },

@@ -6,6 +6,7 @@ var env = require('yargs').argv.mode
 
 var fileName = 'contrail-charts'
 var libraryName = 'coCharts'
+var framework = 'backbone'
 
 var plugins = []
 var outputFile
@@ -58,6 +59,16 @@ var config = {
   },
   resolve: {
     root: path.resolve('./src/js'),
+    alias: {
+      'contrail-model': 'contrail-charts/plugins/' + framework + '/ContrailModel',
+      'contrail-view': 'contrail-charts/plugins/' + framework + '/ContrailView',
+      'contrail-events': 'contrail-charts/plugins/' + framework + '/ContrailEvents',
+
+      'contrail-charts-data-model': 'contrail-charts/plugins/contrail/ContrailChartsDataModel',
+      'contrail-charts-config-model': 'contrail-charts/plugins/contrail/ContrailChartsConfigModel',
+      'contrail-charts-view': 'contrail-charts/plugins/contrail/ContrailChartsView',
+      'contrail-charts-events': 'contrail-charts/plugins/contrail/ContrailChartsEvents'
+    },
     extensions: ['', '.js']
   },
   plugins: plugins

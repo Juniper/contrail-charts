@@ -6,9 +6,9 @@ define([
   // 'contrail-charts/models/MessageConfigModel',
   // 'contrail-charts/models/NavigationConfigModel',
   // 'contrail-charts/models/TooltipConfigModel',
-  'contrail-charts/contrail/ContrailChartsDataModel',
+  'contrail-charts-data-model',
   // 'contrail-charts/models/DataProvider',
-  'contrail-charts/contrail/ContrailView',
+  'contrail-view', // Todo use contrail-charts-view instead?
   // 'contrail-charts/views/CompositeYChartView',
   // 'contrail-charts/views/ControlPanelView',
   // 'contrail-charts/views/MessageView',
@@ -27,7 +27,7 @@ define([
   // TooltipConfigModel,
   ContrailChartsDataModel,
   // DataProvider,
-  View,
+  ContrailView,
   // CompositeYChartView,
   // ControlPanelView,
   // MessageView,
@@ -41,7 +41,7 @@ define([
   * Chart with a common X axis and many possible child components rendering data on the Y axis (for example: line, bar, stackedBar).
   * Many different Y axis may be configured.
   */
-  var XYChartView = View.extend({
+  var XYChartView = ContrailView.extend({
     initialize: function () {
       var self = this
       self.hasExternalBindingHandler = false

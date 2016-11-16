@@ -4,12 +4,12 @@
 
 define([
   'underscore',
-  'contrail-charts/contrail/ContrailModel'
-], function (_, Model) {
+  'contrail-model'
+], function (_, ContrailModel) {
   /**
    * Base data model.
    */
-  var ContrailChartsDataModel = Model.extend({
+  var ContrailChartsDataModel = ContrailModel.extend({
     defaults: {
       // / The formatted data
       data: [],

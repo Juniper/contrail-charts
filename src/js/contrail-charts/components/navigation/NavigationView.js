@@ -6,10 +6,10 @@ define([
   'jquery',
   'underscore',
   'd3',
-  'contrail-charts/contrail/ContrailChartsEvents',
-  'contrail-charts/contrail/ContrailChartsView',
+  'contrail-charts-events',
+  'contrail-charts-view',
   'contrail-charts/handlers/DataProvider',
-  'contrail-charts/components/composite-y-chart/CompositeYChartView'
+  'contrail-charts/components/xy/CompositeYChartView'
 ], function (
   $, _, d3, Events, ContrailChartsView, DataProvider,
   CompositeYChartView

@@ -1,7 +1,7 @@
-var ChartView = require('./ChartView')
-var XYChartView = require('./xy/XYChartView')
+var MultiChartView = require('./multi-chart/MultiChartView')
+var XYChartView = require('./xy-chart/XYChartView')
 
 module.exports = {
-  ChartView: ChartView,
+  MultiChartView: MultiChartView,
   XYChartView: XYChartView
 }

@@ -4,9 +4,9 @@
 
 define([
   'underscore',
-  'contrail-charts/contrail/ContrailModel'
-], function (_, Model) {
-  var BindingHandler = Model.extend({
+  'contrail-model'
+], function (_, ContrailModel) {
+  var BindingHandler = ContrailModel.extend({
     defaults: {
       charts: {},
       bindings: []
