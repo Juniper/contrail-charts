@@ -6,10 +6,10 @@ define([
   'jquery', 'underscore', 'd3',
   'contrail-charts/base/ContrailChartsEvents',
   'contrail-charts/base/ContrailChartsView',
-  'contrail-charts/components/compositeYChart/composites/LineChartView',
-  'contrail-charts/components/compositeYChart/composites/GroupedBarChartView',
-  'contrail-charts/components/compositeYChart/composites/StackedBarChartView',
-  'contrail-charts/components/compositeYChart/composites/ScatterBubbleChartView'
+  'contrail-charts/components/composite-ychart/composites/LineChartView',
+  'contrail-charts/components/composite-ychart/composites/GroupedBarChartView',
+  'contrail-charts/components/composite-ychart/composites/StackedBarChartView',
+  'contrail-charts/components/composite-ychart/composites/ScatterBubbleChartView'
 ], function (
   $, _, d3,
   Events, ContrailChartsView,

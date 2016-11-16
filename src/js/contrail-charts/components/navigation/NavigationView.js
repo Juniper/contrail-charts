@@ -9,7 +9,7 @@ define([
   'contrail-charts/base/ContrailChartsEvents',
   'contrail-charts/base/ContrailChartsView',
   'contrail-charts/handlers/DataProvider',
-  'contrail-charts/components/compositeYChart/CompositeYChartView'
+  'contrail-charts/components/composite-ychart/CompositeYChartView'
 ], function (
   $, _, d3, Events, ContrailChartsView, DataProvider,
   CompositeYChartView

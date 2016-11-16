@@ -1,15 +1,15 @@
-var ControlPanelConfigModel = require('./controlPanel/ControlPanelConfigModel')
-var ControlPanelView = require('./controlPanel/ControlPanelView')
+var ControlPanelConfigModel = require('./control-panel/ControlPanelConfigModel')
+var ControlPanelView = require('./control-panel/ControlPanelView')
 var MessageConfigModel = require('./message/MessageConfigModel')
 var MessageView = require('./message/MessageView')
 var NavigationConfigModel = require('./navigation/NavigationConfigModel')
 var NavigationView = require('./navigation/NavigationView')
 var TooltipConfigModel = require('./tooltip/TooltipConfigModel')
 var TooltipView = require('./tooltip/TooltipView')
-var CompositeYChartConfigModel = require('./compositeYChart/CompositeYChartConfigModel')
-var CompositeYChartView = require('./compositeYChart/CompositeYChartView')
-var RadialChartConfigModel = require('./radialChart/RadialChartConfigModel')
-var RadialChartView = require('./radialChart/RadialChartView')
+var CompositeYChartConfigModel = require('./composite-ychart/CompositeYChartConfigModel')
+var CompositeYChartView = require('./composite-ychart/CompositeYChartView')
+var RadialChartConfigModel = require('./radial-chart/RadialChartConfigModel')
+var RadialChartView = require('./radial-chart/RadialChartView')
 
 module.exports = {
   tooltip: {

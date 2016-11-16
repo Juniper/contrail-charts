@@ -2,7 +2,7 @@
 requirejs.config({
   paths: {
     app: 'app',
-    'contrail-charts': '../../lib/js/contrail-charts.min',
+    'contrail-charts': '../../lib/js/contrail-charts',
     'jquery': 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min',
     'd3': 'https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min',
     'd3v4': 'https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.8/d3.min',

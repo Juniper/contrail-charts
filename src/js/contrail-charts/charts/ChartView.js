@@ -1,7 +1,7 @@
 define([
   'underscore',
   'contrail-charts/core/View', // Todo use contrailChartsView instead
-  'contrail-charts/charts/XYChartView',
+  'contrail-charts/charts/xy/XYChartView',
   'contrail-charts/handlers/BindingHandler'
 ], function (
   _,

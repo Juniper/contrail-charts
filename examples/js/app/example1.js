@@ -17,7 +17,7 @@ define([
       e: (Math.random() - 0.5) * 10
     })
   })
-  var complexChartView = new coCharts.XYChartView()
+  var complexChartView = new coCharts.charts.XYChartView()
   complexChartView.setData(complexData)
   complexChartView.setConfig({
     bindingHandler: {
