@@ -21,7 +21,7 @@ if (env === 'lib') {
 plugins.push(new ExtractTextPlugin('css/' + fileName + '.css'))
 
 var config = {
-  entry: path.join(__dirname, '/src/js/contrail-charts.js'),
+  entry: path.join(__dirname, '/src/js/contrail-charts/index.js'),
   devtool: 'source-map',
   output: {
     path: path.join(__dirname, '/lib'),

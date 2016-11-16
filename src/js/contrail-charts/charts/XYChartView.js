@@ -1,35 +1,43 @@
 define([
   'jquery', 'underscore',
-  'contrail-charts/models/CompositeYChartConfigModel',
-  'contrail-charts/models/ControlPanelConfigModel',
-  'contrail-charts/models/MessageConfigModel',
-  'contrail-charts/models/NavigationConfigModel',
-  'contrail-charts/models/TooltipConfigModel',
-  'contrail-charts/models/ContrailChartsDataModel',
-  'contrail-charts/models/DataProvider',
-  'contrail-charts/views/View',
-  'contrail-charts/views/CompositeYChartView',
-  'contrail-charts/views/ControlPanelView',
-  'contrail-charts/views/MessageView',
-  'contrail-charts/views/NavigationView',
-  'contrail-charts/views/TooltipView',
-  'contrail-charts/BindingHandler'
+  // 'contrail-charts-components',
+  // 'contrail-charts/models/CompositeYChartConfigModel',
+  // 'contrail-charts/models/ControlPanelConfigModel',
+  // 'contrail-charts/models/MessageConfigModel',
+  // 'contrail-charts/models/NavigationConfigModel',
+  // 'contrail-charts/models/TooltipConfigModel',
+  'contrail-charts/base/ContrailChartsDataModel',
+  // 'contrail-charts/models/DataProvider',
+  'contrail-charts/base/View',
+  // 'contrail-charts/views/CompositeYChartView',
+  // 'contrail-charts/views/ControlPanelView',
+  // 'contrail-charts/views/MessageView',
+  // 'contrail-charts/views/NavigationView',
+  // 'contrail-charts/views/TooltipView',
+  // 'contrail-charts/BindingHandler'
+  'contrail-charts/components/index',
+  'contrail-charts/providers/index',
+  'contrail-charts/handlers/index'
 ], function (
   $, _,
-  CompositeYChartConfigModel,
-  ControlPanelConfigModel,
-  MessageConfigModel,
-  NavigationConfigModel,
-  TooltipConfigModel,
+  // coCharts,
+  // CompositeYChartConfigModel,
+  // ControlPanelConfigModel,
+  // MessageConfigModel,
+  // NavigationConfigModel,
+  // TooltipConfigModel,
   ContrailChartsDataModel,
-  DataProvider,
+  // DataProvider,
   View,
-  CompositeYChartView,
-  ControlPanelView,
-  MessageView,
-  NavigationView,
-  TooltipView,
-  BindingHandler
+  // CompositeYChartView,
+  // ControlPanelView,
+  // MessageView,
+  // NavigationView,
+  // TooltipView,
+  // BindingHandler
+  components,
+  providers,
+  handlers
 ) {
   /**
   * Chart with a common X axis and many possible child components rendering data on the Y axis (for example: line, bar, stackedBar).
@@ -40,7 +48,7 @@ define([
       var self = this
       self.hasExternalBindingHandler = false
       self._dataModel = new ContrailChartsDataModel()
-      self._dataProvider = new DataProvider({ parentDataModel: self._dataModel })
+      self._dataProvider = new providers.DataProvider({ parentDataModel: self._dataModel })
       self._components = {}
     },
     /**
@@ -83,12 +91,12 @@ define([
       var component = self._components[name]
       if (!self._isEnabledComponent(name)) return false
       if (!component) {
-        var configModel = new coCharts.components[name].configModel(config)
+        var configModel = new components[name].ConfigModel(config)
         var viewOptions = _.extend(config, {
           config: configModel,
-          model: model,
+          model: model
         })
-        self._components[name] = new coCharts.components[name].view(viewOptions)
+        self._components[name] = new components[name].View(viewOptions)
         component = self._components[name]
 
         if (self._isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
@@ -103,11 +111,9 @@ define([
     _initComponents: function () {
       var self = this
       _.each(self._config, function (config, name) {
-
-        // TODO is bindingHandler a component?
         if (name === 'bindingHandler' && self._isEnabledComponent('bindingHandler')) {
           if (!self.bindingHandler) {
-            self.bindingHandler = new BindingHandler(self._config.bindingHandler)
+            self.bindingHandler = new handlers.BindingHandler(self._config.bindingHandler)
           } else {
             self.bindingHandler.addBindings(self._config.bindingHandler.bindings, self._config.chartId)
           }
@@ -121,7 +127,6 @@ define([
       if (self._components.navigation) {
         self._components.navigation.changeModel(self._dataProvider)
         if (self._components.message) self._components.message.registerComponentMessageEvent(self.navigationView.eventObject)
-        
         // Data aware components should use model of Navigation component
         var dataModel = self._components.navigation.getFocusDataProvider()
         if (self._components.xyChart) self._components.xyChart.changeModel(dataModel)

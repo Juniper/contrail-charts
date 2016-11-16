@@ -6,7 +6,7 @@ define([
   'jquery',
   'underscore',
   'd3',
-  'contrail-charts/models/ContrailChartsConfigModel'
+  'contrail-charts/base/ContrailChartsConfigModel'
 ], function ($, _, d3, ContrailChartsConfigModel) {
   var NavigationConfigModel = ContrailChartsConfigModel.extend({
     defaults: {

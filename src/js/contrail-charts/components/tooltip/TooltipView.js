@@ -4,7 +4,7 @@
 
 define([
   'jquery', 'underscore', 'd3',
-  'contrail-charts/views/ContrailChartsView'
+  'contrail-charts/base/ContrailChartsView'
 ], function ($, _, d3, ContrailChartsView) {
   var TooltipView = ContrailChartsView.extend({
     tagName: 'div',

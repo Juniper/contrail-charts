@@ -5,7 +5,7 @@
 define([
   'jquery',
   'underscore',
-  'contrail-charts/models/ContrailChartsConfigModel'
+  'contrail-charts/base/ContrailChartsConfigModel'
 ], function ($, _, ContrailChartsConfigModel) {
   var MessageConfigModel = ContrailChartsConfigModel.extend({
     defaults: {

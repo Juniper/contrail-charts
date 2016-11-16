@@ -1,8 +1,8 @@
 define([
   'underscore',
-  'contrail-charts/views/View',
+  'contrail-charts/base/View',
   'contrail-charts/charts/XYChartView',
-  'contrail-charts/BindingHandler'
+  'contrail-charts/handlers/BindingHandler'
 ], function (
   _,
   View,

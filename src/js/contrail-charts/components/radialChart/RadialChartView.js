@@ -1,9 +1,9 @@
 define([
   'jquery', 'lodash',
-  'contrail-charts/views/View',
-  'contrail-charts/views/ContrailChartsView',
-  'contrail-charts/models/ContrailChartsDataModel',
-  'contrail-charts/models/RadialChartConfigModel',
+  'contrail-charts/base/View',
+  'contrail-charts/base/ContrailChartsView',
+  'contrail-charts/base/ContrailChartsDataModel',
+  './RadialChartConfigModel',
 ], function (
   $, _,
   View,

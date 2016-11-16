@@ -4,8 +4,8 @@
 
 define([
   'underscore',
-  'contrail-charts/models/Model',
-  'contrail-charts/models/Events'
+  'contrail-charts/base/Model',
+  'contrail-charts/base/Events'
 ], function (_, Model, Events) {
   /**
    * A DataModel wrapper for view components.
