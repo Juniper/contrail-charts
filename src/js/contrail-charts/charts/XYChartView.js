@@ -100,7 +100,7 @@ define([
         if (!self.messageView) {
           self.messageView = new MessageView({
             config: new MessageConfigModel(self.chartConfig.message),
-            container: $(self.chartConfig.message.el)
+            el: $(self.chartConfig.message.el)
           })
         } else {
           self.messageView.config.set(self.chartConfig.message)
@@ -108,8 +108,6 @@ define([
         if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
           self.bindingHandler.addComponent(self.chartConfig.chartId, 'message', self.messageView)
         }
-        // One way to bind to message events of already created model.
-        self.messageView.registerModelDataStatusEvents(self.chartDataModel)
       }
       if (self.isEnabledComponent('tooltip')) {
         if (!self.tooltipView) {
@@ -140,9 +138,6 @@ define([
         }
         // The remaining components dataModel will be the one fetched from the navigationView.
         dataProvider = self.navigationView.getFocusDataProvider()
-        if (self.isEnabledComponent('message')) {
-          self.messageView.registerComponentMessageEvent(self.navigationView.eventObject)
-        }
       }
       if (self.isEnabledComponent('mainChart')) {
         if (!self.compositeYChartView) {
@@ -157,9 +152,6 @@ define([
         console.log('MainChart: ', self.compositeYChartView)
         if (self.isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
           self.bindingHandler.addComponent(self.chartConfig.chartId, 'mainChart', self.compositeYChartView)
-        }
-        if (self.isEnabledComponent('message')) {
-          self.messageView.registerComponentMessageEvent(self.compositeYChartView.eventObject)
         }
         if (self.isEnabledComponent('tooltip')) {
           self.tooltipView.registerTriggerEvent(self.compositeYChartView.eventObject, 'showTooltip', 'hideTooltip')
@@ -194,6 +186,13 @@ define([
         }
       }
       return enabled
+    },
+
+    renderMessage: function (msgObj) {
+      var self = this
+      if (self.isEnabledComponent('message')) {
+        self.messageView.renderMessage(msgObj)
+      }
     },
 
     render: function () {
