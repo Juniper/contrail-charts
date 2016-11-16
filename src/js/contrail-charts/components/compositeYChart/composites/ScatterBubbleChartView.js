@@ -4,7 +4,7 @@
 
 define([
   'jquery', 'underscore', 'd3',
-  'contrail-charts/base/Events',
+  'contrail-charts/base/ContrailChartsEvents',
   'contrail-charts/base/ContrailChartsView'
 ], function ($, _, d3, Events, ContrailChartsView) {
   var ScatterBubbleChartView = ContrailChartsView.extend({

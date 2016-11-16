@@ -8,7 +8,7 @@ define([
   // 'contrail-charts/models/TooltipConfigModel',
   'contrail-charts/base/ContrailChartsDataModel',
   // 'contrail-charts/models/DataProvider',
-  'contrail-charts/base/View',
+  'contrail-charts/core/View',
   // 'contrail-charts/views/CompositeYChartView',
   // 'contrail-charts/views/ControlPanelView',
   // 'contrail-charts/views/MessageView',

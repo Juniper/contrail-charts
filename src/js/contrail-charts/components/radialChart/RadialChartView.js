@@ -1,12 +1,10 @@
 define([
   'jquery', 'lodash',
-  'contrail-charts/base/View',
   'contrail-charts/base/ContrailChartsView',
   'contrail-charts/base/ContrailChartsDataModel',
   './RadialChartConfigModel',
 ], function (
   $, _,
-  View,
   ContrailChartsView,
   ContrailChartsDataModel,
   RadialChartConfigModel
