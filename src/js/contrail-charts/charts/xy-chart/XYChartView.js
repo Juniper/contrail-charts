@@ -1,39 +1,13 @@
 define([
   'jquery', 'underscore',
-  // 'contrail-charts-components',
-  // 'contrail-charts/models/CompositeYChartConfigModel',
-  // 'contrail-charts/models/ControlPanelConfigModel',
-  // 'contrail-charts/models/MessageConfigModel',
-  // 'contrail-charts/models/NavigationConfigModel',
-  // 'contrail-charts/models/TooltipConfigModel',
   'contrail-charts-data-model',
-  // 'contrail-charts/models/DataProvider',
   'contrail-view', // Todo use contrail-charts-view instead?
-  // 'contrail-charts/views/CompositeYChartView',
-  // 'contrail-charts/views/ControlPanelView',
-  // 'contrail-charts/views/MessageView',
-  // 'contrail-charts/views/NavigationView',
-  // 'contrail-charts/views/TooltipView',
-  // 'contrail-charts/BindingHandler'
   'contrail-charts/components/index',
   'contrail-charts/handlers/index'
 ], function (
   $, _,
-  // coCharts,
-  // CompositeYChartConfigModel,
-  // ControlPanelConfigModel,
-  // MessageConfigModel,
-  // NavigationConfigModel,
-  // TooltipConfigModel,
   ContrailChartsDataModel,
-  // DataProvider,
   ContrailView,
-  // CompositeYChartView,
-  // ControlPanelView,
-  // MessageView,
-  // NavigationView,
-  // TooltipView,
-  // BindingHandler
   components,
   handlers
 ) {

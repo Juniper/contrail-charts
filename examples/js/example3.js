@@ -67,7 +67,7 @@ var chartConfigs = [
   }
 ]
 
-var chartView = new coCharts.ChartView()
+var chartView = new coCharts.charts.MultiChartView()
 chartView.setConfig({
   bindingHandler: {
     bindings: [

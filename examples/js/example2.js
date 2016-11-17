@@ -17,7 +17,7 @@ for (var i = 0; i < 100; i++) {
     e: (Math.random() - 0.5) * 10
   })
 }
-var complexChartView = new coCharts.XYChartView()
+var complexChartView = new coCharts.charts.XYChartView()
 complexChartView.setConfig({
   bindingHandler: {
     bindings: [

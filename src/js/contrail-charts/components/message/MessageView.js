@@ -5,9 +5,7 @@
 define([
   'jquery', 'underscore', 'd3',
   'contrail-charts-events',
-  'contrail-charts-view',
-  'contrail-charts/models/Events',
-  'contrail-charts/views/ContrailChartsView'
+  'contrail-charts-view'
 ], function ($, _, d3, Events, ContrailChartsView) {
   var MessageView = ContrailChartsView.extend({
     tagName: 'div',

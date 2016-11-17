@@ -93,7 +93,7 @@ var chartConfig = {
   }
 }
 
-var chartView = new coCharts.XYChartView()
+var chartView = new coCharts.charts.XYChartView()
 chartView.setConfig(chartConfig)
 chartView.setData(complexData)
 chartView.render()
