@@ -186,7 +186,7 @@ define([
     { x: 1475763930000, y: 4 },
     { x: 1475764930000, y: 5 }
   ]
-  var simpleChartView = new coCharts.XYChartView()
+  var simpleChartView = new coCharts.charts.XYChartView()
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
     xyChart: {

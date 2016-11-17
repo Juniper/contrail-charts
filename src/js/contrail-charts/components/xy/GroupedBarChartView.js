@@ -16,10 +16,10 @@ define([
     renderOrder: 100,
 
     initialize: function (options) {
-      // / The config model
-      this.config = options.config
-      this.axisName = options.axisName
-      this.eventObject = _.extend({}, Events)
+      var self = this
+      self.config = options.config
+      self.axisName = options.axisName
+      self.eventObject = options.eventObject || _.extend({}, Events)
     },
 
     /**

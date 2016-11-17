@@ -4,24 +4,28 @@
 
 define([
   'jquery', 'underscore', 'd3',
+  'contrail-charts-events',
   'contrail-charts-view'
-], function ($, _, d3, ContrailChartsView) {
+], function ($, _, d3, Events, ContrailChartsView) {
   var TooltipView = ContrailChartsView.extend({
     tagName: 'div',
     className: 'coCharts-tooltip-view',
 
     initialize: function (options) {
-      this.config = options.config
-      this.resetParams()
-      this.params.show = 0
+      var self = this
+      self.config = options.config
+      self.resetParams()
+      self.params.show = 0
+      self.eventObject = options.eventObject || _.extend({}, Events)
+      self._registerListeners()
     },
 
-    registerTriggerEvent: function (eventObject, showEventType, hideEventType) {
-      this.listenTo(eventObject, showEventType, this.show)
-      this.listenTo(eventObject, hideEventType, this.hide)
+    _registerListeners: function () {
+      this.listenTo(this.eventObject, 'showTooltip', this._show)
+      this.listenTo(this.eventObject, 'hideTooltip', this._hide)
     },
 
-    generateTooltipHTML: function (data, accessor) {
+    _generateTooltipHTML: function (data, accessor) {
       var tooltipConfig = {}
       var fnGenerateTooltipHTML = this.config.get('generateTooltipHTML')
       if (accessor.tooltip) {
@@ -35,10 +39,10 @@ define([
       return fnGenerateTooltipHTML(data, accessor, tooltipConfig)
     },
 
-    show: function (tooltipData, offsetLeft, offsetTop, accessor) {
+    _show: function (tooltipData, offsetLeft, offsetTop, accessor) {
       var self = this
       self.params.show++
-      var tooltipElement = $(self.generateTooltipHTML(tooltipData, accessor))
+      var tooltipElement = $(self._generateTooltipHTML(tooltipData, accessor))
       console.log('show: ', tooltipData, offsetLeft, offsetTop, accessor)
       $('body').append(this.$el)
       this.$el.html(tooltipElement)
@@ -64,7 +68,7 @@ define([
       })
     },
 
-    hide: function (d, x, y) {
+    _hide: function (d, x, y) {
       var self = this
       self.params.show--
       _.delay(function () {

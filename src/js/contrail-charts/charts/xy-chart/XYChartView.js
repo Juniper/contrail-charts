@@ -1,11 +1,13 @@
 define([
   'jquery', 'underscore',
+  'contrail-charts-events',
   'contrail-charts-data-model',
   'contrail-view', // Todo use contrail-charts-view instead?
   'contrail-charts/components/index',
   'contrail-charts/handlers/index'
 ], function (
   $, _,
+  Events,
   ContrailChartsDataModel,
   ContrailView,
   components,
@@ -16,12 +18,14 @@ define([
   * Many different Y axis may be configured.
   */
   var XYChartView = ContrailView.extend({
-    initialize: function () {
+    initialize: function (options) {
       var self = this
       self.hasExternalBindingHandler = false
       self._dataModel = new ContrailChartsDataModel()
       self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
       self._components = {}
+      options = options || {}
+      self.eventObject = options.eventObject || _.extend({}, Events)
     },
     /**
     * Provide data for this chart as a simple array of objects.
@@ -66,7 +70,8 @@ define([
         var configModel = new components[name].ConfigModel(config)
         var viewOptions = _.extend(config, {
           config: configModel,
-          model: model
+          model: model,
+          eventObject: self.eventObject
         })
         self._components[name] = new components[name].View(viewOptions)
         component = self._components[name]
@@ -91,21 +96,17 @@ define([
           }
           return
         }
-        self._registerComponent(name, config)
+        self._registerComponent(name, config, self._dataProvider)
       })
 
-      if (self._components.navigation) {
-        self._components.navigation.changeModel(self._dataProvider)
+      if (self._isEnabledComponent('navigation')) {
         // Data aware components should use model of Navigation component
         var dataModel = self._components.navigation.getFocusDataProvider()
         if (self._components.xyChart) self._components.xyChart.changeModel(dataModel)
       }
-      if (self._components.xyChart) {
-        if (!self._components.navigation) self._components.xyChart.changeModel(self._dataProvider)
-        if (self._components.tooltip) self._components.tooltip.registerTriggerEvent(self._components.xyChart.eventObject, 'showTooltip', 'hideTooltip')
-      }
-      if (self._components.radialChart) {
-        self._components.radialChart.changeModel(self._dataProvider)
+      if (self._isEnabledComponent('radialChart')) {
+        // We only need to change the data model when the navigation view is enabled so the line below is probably not needed.
+        // self._components.radialChart.changeModel(self._dataProvider)
       }
 
       if (self._isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
@@ -119,7 +120,7 @@ define([
       var self = this
       var enabled = false
       if (_.isObject(self._config[name])) {
-        if (self._config[name].enable !== false) {
+        if (self._config[name].enabled !== false) {
           enabled = true
         }
       }
@@ -128,9 +129,7 @@ define([
 
     renderMessage: function (msgObj) {
       var self = this
-      if (self.isEnabledComponent('message')) {
-        self.messageView.renderMessage(msgObj)
-      }
+      self.eventObject.trigger('message', msgObj)
     },
 
     render: function () {

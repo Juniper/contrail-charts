@@ -27,7 +27,7 @@ define([
       self._isModelChanged = false
       self.listenTo(self.model, 'change', self._onModelChange)
       self.listenTo(self.config, 'change', self._onModelChange)
-      self.eventObject = _.extend({}, Events)
+      self.eventObject = options.eventObject || _.extend({}, Events)
 
       self._focusDataProvider = new DataProvider({parentDataModel: self.model})
       self.brush = null

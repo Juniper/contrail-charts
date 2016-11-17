@@ -30,7 +30,7 @@ define([
       self._debouncedRenderFunction = _.bind(_.debounce(self._render, 10), self)
       self.listenTo(self.model, 'change', self._onDataModelChange)
       self.listenTo(self.config, 'change', self._onConfigModelChange)
-      self.eventObject = _.extend({}, Events)
+      self.eventObject = options.eventObject || _.extend({}, Events)
       self._onWindowResize()
     },
 
@@ -97,6 +97,7 @@ define([
                 foundDrawing = new ChildView({
                   model: self.model,
                   config: self.config,
+                  eventObject: self.eventObject,
                   el: self.el,
                   id: self.id,
                   axisName: accessor.axis

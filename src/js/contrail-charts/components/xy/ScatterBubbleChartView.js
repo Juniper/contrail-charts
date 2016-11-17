@@ -14,16 +14,16 @@ define([
     renderOrder: 50,
 
     initialize: function (options) {
-      // / The config model
-      this.config = options.config
-      this.axisName = options.axisName
+      var self = this
+      self.config = options.config
+      self.axisName = options.axisName
 
       // The child's params are reset by parent.
 
       // TODO: should child react to model and config changes?
       // this.listenTo(this.model, "change", this.render)
       // this.listenTo(this.config, "change", this.render)
-      this.eventObject = _.extend({}, Events)
+      self.eventObject = options.eventObject || _.extend({}, Events)
     },
 
     /**

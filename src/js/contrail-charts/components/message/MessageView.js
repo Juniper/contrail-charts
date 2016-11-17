@@ -14,7 +14,11 @@ define([
     initialize: function (options) {
       var self = this
       self.config = options.config
-      this.eventObject = _.extend({}, Events)
+      self.eventObject = options.eventObject || _.extend({}, Events)
+      self._registerListeners()
+    },
+
+    _registerListeners: function () {
       this.listenTo(this.eventObject, 'message', this.renderMessage)
     },
 
