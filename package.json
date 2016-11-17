@@ -16,6 +16,7 @@
     "eslint-config-standard": "6.2.1",
     "eslint-plugin-standard": "2.0.1",
     "extract-text-webpack-plugin": "1.0.1",
+    "font-awesome": "4.7.0",
     "ignore-loader": "0.1.2",
     "jasmine-core": "2.5.2",
     "node-sass": "3.13.0",
@@ -35,6 +36,8 @@
     "ignore": [
       "lib/"
     ],
-    "globals": [ "define" ]
+    "globals": [
+      "define"
+    ]
   }
 }
