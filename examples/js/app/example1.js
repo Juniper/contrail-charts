@@ -2,8 +2,6 @@ define([
   'd3', 'underscore',
   'contrail-charts'
 ], function (d3, _, coCharts) {
-  console.log('d3: ', d3)
-
   // Complex example
   var complexData = []
   _.each(d3.range(100), function (i) {
@@ -186,7 +184,7 @@ define([
     { x: 1475763930000, y: 4 },
     { x: 1475764930000, y: 5 }
   ]
-  var simpleChartView = new coCharts.XYChartView()
+  var simpleChartView = new coCharts.charts.XYChartView()
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
     xyChart: {

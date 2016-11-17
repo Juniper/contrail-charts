@@ -67,7 +67,7 @@ var chartConfigs = [
   }
 ]
 
-var chartView = new coCharts.ChartView()
+var chartView = new coCharts.charts.MultiChartView()
 chartView.setConfig({
   bindingHandler: {
     bindings: [
@@ -80,7 +80,6 @@ chartView.setConfig({
         targetComponent: 'xyChart',
         targetModel: 'config',
         action: function (sourceModel, targetModel, xMin, xMax) {
-          console.log('bindingHandler: ', xMin, xMax)
           var axis = targetModel.get('axis') || {}
           axis.x = axis.x || {}
           axis.x.domain = [xMin, xMax]

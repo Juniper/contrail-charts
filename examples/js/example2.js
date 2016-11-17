@@ -17,7 +17,7 @@ for (var i = 0; i < 100; i++) {
     e: (Math.random() - 0.5) * 10
   })
 }
-var complexChartView = new coCharts.XYChartView()
+var complexChartView = new coCharts.charts.XYChartView()
 complexChartView.setConfig({
   bindingHandler: {
     bindings: [
@@ -181,7 +181,6 @@ complexChartView.setConfig({
         // data - holds the data element
         // accessor - holds the accessor structure which triggered this tooltip
         // tooltipConfig - holds the tooltip configuration
-        console.log('custom tooltip')
         return '<div class="tooltip-content">Custom tooltip for: ' + accessor.label + '</div>'
       }
     }
@@ -216,7 +215,7 @@ var simpleData = [
   { x: 1475763930000, y: 4 },
   { x: 1475764930000, y: 5 }
 ]
-var simpleChartView = new coCharts.XYChartView()
+var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
   xyChart: {
     el: '#simpleChart',
