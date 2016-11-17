@@ -31,6 +31,14 @@ html {
 	margin-bottom: 25px;
 }
 
+#messageView {
+	height: 250px;
+    width: 250px;
+    position: absolute;
+    top: 30px;
+    right: 15px;
+}
+
 #chart1 {
 	width: 45%;
 	display: inline-block;

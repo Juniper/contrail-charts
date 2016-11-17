@@ -167,3 +167,21 @@ button:focus {
 		}
 	}
 }
+
+.coCharts-message-view {
+	.message-row {
+		.message-title {
+			display: inline-block;
+			width: 30%;
+			padding: 5px;
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.message-body {
+			display: inline-block;
+			width: 70%;
+			padding: 5px;
+			font-size: 12px;
+		}
+	}
+}

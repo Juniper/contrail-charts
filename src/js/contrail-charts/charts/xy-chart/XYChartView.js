@@ -120,18 +120,14 @@ define([
         self._registerComponent(name, config)
       })
 
-      // One way to bind to message events of already created model.
-      if (self._components.message) self._components.message.registerModelDataStatusEvents(self._dataModel)
       if (self._components.navigation) {
         self._components.navigation.changeModel(self._dataProvider)
-        if (self._components.message) self._components.message.registerComponentMessageEvent(self.navigationView.eventObject)
         // Data aware components should use model of Navigation component
         var dataModel = self._components.navigation.getFocusDataProvider()
         if (self._components.xyChart) self._components.xyChart.changeModel(dataModel)
       }
       if (self._components.xyChart) {
         if (!self._components.navigation) self._components.xyChart.changeModel(self._dataProvider)
-        if (self._components.message) self._components.message.registerComponentMessageEvent(self.compositeYChartView.eventObject)
         if (self._components.tooltip) self._components.tooltip.registerTriggerEvent(self._components.xyChart.eventObject, 'showTooltip', 'hideTooltip')
       }
       if (self._components.radialChart) {
@@ -154,6 +150,13 @@ define([
         }
       }
       return enabled
+    },
+
+    renderMessage: function (msgObj) {
+      var self = this
+      if (self.isEnabledComponent('message')) {
+        self.messageView.renderMessage(msgObj)
+      }
     },
 
     render: function () {
