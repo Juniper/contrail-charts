@@ -4,7 +4,7 @@
   "description": "MVC based chart library",
   "main": "src/js/contrail-charts.js",
   "scripts": {
-    "lib": "webpack --mode=lib",
+    "build": "webpack --mode=build",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "test": "node test.js",
     "lint": "eslint src/** || true"
@@ -34,7 +34,7 @@
   },
   "standard": {
     "ignore": [
-      "lib/"
+      "build/"
     ],
     "globals": [
       "define"

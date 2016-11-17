@@ -11,7 +11,7 @@ var framework = 'backbone'
 var plugins = []
 var outputFile
 
-if (env === 'lib') {
+if (env === 'build') {
   plugins.push(new UglifyJsPlugin({ minimize: true }))
   outputFile = fileName + '.min.js'
 } else {
@@ -25,7 +25,7 @@ var config = {
   entry: path.join(__dirname, '/src/js/contrail-charts/index.js'),
   devtool: 'source-map',
   output: {
-    path: path.join(__dirname, '/lib'),
+    path: path.join(__dirname, '/build'),
     filename: 'js/' + outputFile,
     library: libraryName,
     libraryTarget: 'umd',

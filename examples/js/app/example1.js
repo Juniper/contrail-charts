@@ -1,5 +1,10 @@
+/*
+ * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ */
+
 define([
-  'd3', 'underscore',
+  'd3', // Example use of older d3 versions.
+  'underscore',
   'contrail-charts'
 ], function (d3, _, coCharts) {
   // Complex example
