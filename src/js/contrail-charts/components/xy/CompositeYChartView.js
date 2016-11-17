@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
+
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
@@ -26,7 +27,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self._debouncedRenderFunction = _.bind(_.debounce(self._render, 10), self)
     self.listenTo(self.model, 'change', self._onDataModelChange)
     self.listenTo(self.config, 'change', self._onConfigModelChange)
-    self.eventObject = _.extend({}, Events)
+    self.eventObject = options.eventObject || _.extend({}, Events)
     self._onWindowResize()
   },
 
@@ -92,6 +93,7 @@ var CompositeYChartView = ContrailChartsView.extend({
               foundDrawing = new ChildView({
                 model: self.model,
                 config: self.config,
+                eventObject: self.eventObject,
                 el: self.el,
                 id: self.id,
                 axisName: accessor.axis

@@ -16,17 +16,9 @@ var NavigationView = ContrailChartsView.extend({
   initialize: function (options) {
     var self = this
     self.config = options.config
-
-    // NavigationView does not react itself to model changes. Instead it listens to compositeYChartView render events
-    // and updates itself every time the compositeYChartView renders itself.
-    self._isModelChanged = false
-    self.listenTo(self.model, 'change', self._onModelChange)
-    self.listenTo(self.config, 'change', self._onModelChange)
-    self.eventObject = _.extend({}, Events)
-
+    self.eventObject = options.eventObject || _.extend({}, Events)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.brush = null
-
     self.compositeYChartView = null
   },
 

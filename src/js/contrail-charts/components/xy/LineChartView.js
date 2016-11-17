@@ -21,9 +21,8 @@ var LineChartView = ContrailChartsView.extend({
     this.axisName = options.axisName
 
     // The child's params are reset by parent.
-    this.eventObject = _.extend({}, Events)
+    self.eventObject = options.eventObject || _.extend({}, Events)
   },
-
   /**
   * Returns the unique name of this drawing so it can identify itself for the parent.
   * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".

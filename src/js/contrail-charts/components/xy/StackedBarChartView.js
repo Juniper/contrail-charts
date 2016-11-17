@@ -14,12 +14,13 @@ var StackedBarChartView = ContrailChartsView.extend({
   renderOrder: 100,
 
   initialize: function (options) {
-    // / The config model
-    this.config = options.config
-    this.axisName = options.axisName
+    var self = this
+    self.config = options.config
+    self.axisName = options.axisName
 
     // The child's params are reset by parent.
-    this.eventObject = _.extend({}, Events)
+
+    self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
   /**

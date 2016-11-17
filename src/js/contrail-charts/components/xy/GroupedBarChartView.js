@@ -13,12 +13,12 @@ var BarChartView = ContrailChartsView.extend({
   chartType: 'bar',
   renderOrder: 100,
 
-  initialize: function (options) {
-    // / The config model
-    this.config = options.config
-    this.axisName = options.axisName
-    this.eventObject = _.extend({}, Events)
-  },
+    initialize: function (options) {
+      var self = this
+      self.config = options.config
+      self.axisName = options.axisName
+      self.eventObject = options.eventObject || _.extend({}, Events)
+    },
 
   /**
   * Returns the unique name of this drawing so it can identify itself for the parent.

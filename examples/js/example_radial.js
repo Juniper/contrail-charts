@@ -39,6 +39,6 @@ var chartConfig = {
     },
   },
 }
-var chartView = new coCharts.charts.XYChartView();
+var chartView = new coCharts.charts.XYChartView(); // Todo call radialChartView instead.
 chartView.setConfig(chartConfig);
 chartView.setData(pieData);

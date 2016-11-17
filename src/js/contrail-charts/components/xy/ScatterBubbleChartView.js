@@ -13,18 +13,18 @@ var ScatterBubbleChartView = ContrailChartsView.extend({
   chartType: 'scatterBubble',
   renderOrder: 50,
 
-  initialize: function (options) {
-    // / The config model
-    this.config = options.config
-    this.axisName = options.axisName
+    initialize: function (options) {
+      var self = this
+      self.config = options.config
+      self.axisName = options.axisName
 
     // The child's params are reset by parent.
 
-    // TODO: should child react to model and config changes?
-    // this.listenTo(this.model, "change", this.render)
-    // this.listenTo(this.config, "change", this.render)
-    this.eventObject = _.extend({}, Events)
-  },
+      // TODO: should child react to model and config changes?
+      // this.listenTo(this.model, "change", this.render)
+      // this.listenTo(this.config, "change", this.render)
+      self.eventObject = options.eventObject || _.extend({}, Events)
+    },
 
   /**
   * Returns the unique name of this drawing so it can identify itself for the parent.
