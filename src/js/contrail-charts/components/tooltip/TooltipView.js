@@ -1,85 +1,77 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
+var $ = require('jquery')
+var _ = require('lodash')
+var d3 = require('d3')
+var ContrailChartsView = require('contrail-charts-view')
 
-define([
-  'jquery', 'underscore', 'd3',
-  'contrail-charts-events',
-  'contrail-charts-view'
-], function ($, _, d3, Events, ContrailChartsView) {
-  var TooltipView = ContrailChartsView.extend({
-    tagName: 'div',
-    className: 'coCharts-tooltip-view',
+var TooltipView = ContrailChartsView.extend({
+  tagName: 'div',
+  className: 'coCharts-tooltip-view',
 
-    initialize: function (options) {
-      var self = this
-      self.config = options.config
-      self.resetParams()
-      self.params.show = 0
-      self.eventObject = options.eventObject || _.extend({}, Events)
-      self._registerListeners()
-    },
+  initialize: function (options) {
+    this.config = options.config
+    this.resetParams()
+    this.params.show = 0
+  },
 
-    _registerListeners: function () {
-      this.listenTo(this.eventObject, 'showTooltip', this._show)
-      this.listenTo(this.eventObject, 'hideTooltip', this._hide)
-    },
+  registerTriggerEvent: function (eventObject, showEventType, hideEventType) {
+    this.listenTo(eventObject, showEventType, this.show)
+    this.listenTo(eventObject, hideEventType, this.hide)
+  },
 
-    _generateTooltipHTML: function (data, accessor) {
-      var tooltipConfig = {}
-      var fnGenerateTooltipHTML = this.config.get('generateTooltipHTML')
-      if (accessor.tooltip) {
-        console.log('Showing tooltip for: ', accessor.tooltip)
-        tooltipConfig = this.config.get(accessor.tooltip)
-        if (_.isFunction(tooltipConfig.generateTooltipHTML)) {
-          console.log('Tooltip ' + accessor.tooltip + ' has custom HTML generator.')
-          fnGenerateTooltipHTML = tooltipConfig.generateTooltipHTML
-        }
+  generateTooltipHTML: function (data, accessor) {
+    var tooltipConfig = {}
+    var fnGenerateTooltipHTML = this.config.get('generateTooltipHTML')
+    if (accessor.tooltip) {
+      tooltipConfig = this.config.get(accessor.tooltip)
+      if (_.isFunction(tooltipConfig.generateTooltipHTML)) {
+        fnGenerateTooltipHTML = tooltipConfig.generateTooltipHTML
       }
-      return fnGenerateTooltipHTML(data, accessor, tooltipConfig)
-    },
+    }
+    return fnGenerateTooltipHTML(data, accessor, tooltipConfig)
+  },
 
-    _show: function (tooltipData, offsetLeft, offsetTop, accessor) {
-      var self = this
-      self.params.show++
-      var tooltipElement = $(self._generateTooltipHTML(tooltipData, accessor))
-      console.log('show: ', tooltipData, offsetLeft, offsetTop, accessor)
-      $('body').append(this.$el)
-      this.$el.html(tooltipElement)
-      this.$el.show()
+  show: function (tooltipData, offsetLeft, offsetTop, accessor) {
+    var self = this
+    self.params.show++
+    var tooltipElement = $(self.generateTooltipHTML(tooltipData, accessor))
+    $('body').append(this.$el)
+    this.$el.html(tooltipElement)
+    this.$el.show()
 
-      // Tooltip dimmensions will be available after render.
-      var tooltipWidth = tooltipElement.width()
-      var tooltipHeight = tooltipElement.height()
-      var windowWidth = $(document).width()
-      var tooltipPositionTop = 0
-      var tooltipPositionLeft = offsetLeft
-      if (offsetTop > tooltipHeight / 2) {
-        tooltipPositionTop = offsetTop - tooltipHeight / 2
+    // Tooltip dimmensions will be available after render.
+    var tooltipWidth = tooltipElement.width()
+    var tooltipHeight = tooltipElement.height()
+    var windowWidth = $(document).width()
+    var tooltipPositionTop = 0
+    var tooltipPositionLeft = offsetLeft
+    if (offsetTop > tooltipHeight / 2) {
+      tooltipPositionTop = offsetTop - tooltipHeight / 2
+    }
+    if ((windowWidth - offsetLeft - 25) < tooltipWidth) {
+      tooltipPositionLeft = offsetLeft - tooltipWidth - 10
+    } else {
+      tooltipPositionLeft += 20
+    }
+    $(tooltipElement).css({
+      top: tooltipPositionTop,
+      left: tooltipPositionLeft
+    })
+  },
+
+  hide: function (d, x, y) {
+    var self = this
+    self.params.show--
+    _.delay(function () {
+      if (self.params.show <= 0) {
+        self.$el.hide()
       }
-      if ((windowWidth - offsetLeft - 25) < tooltipWidth) {
-        tooltipPositionLeft = offsetLeft - tooltipWidth - 10
-      } else {
-        tooltipPositionLeft += 20
-      }
-      $(tooltipElement).css({
-        top: tooltipPositionTop,
-        left: tooltipPositionLeft
-      })
-    },
+    }, 1000)
+  },
 
-    _hide: function (d, x, y) {
-      var self = this
-      self.params.show--
-      _.delay(function () {
-        if (self.params.show <= 0) {
-          self.$el.hide()
-        }
-      }, 1000)
-    },
-
-    render: function () {}
-  })
-
-  return TooltipView
+  render: function () {}
 })
+
+module.exports = TooltipView

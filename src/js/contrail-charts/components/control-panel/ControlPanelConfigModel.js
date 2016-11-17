@@ -1,16 +1,12 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-
-define([
-  'jquery',
-  'underscore',
-  'contrail-charts-config-model'
-], function ($, _, ContrailChartsConfigModel) {
-  var ControlPanelConfigModel = ContrailChartsConfigModel.extend({
-    defaults: {
-    }
-  })
-
-  return ControlPanelConfigModel
+var $ = require('jquery')
+var _ = require('lodash')
+var ContrailChartsConfigModel = require('contrail-charts-config-model')
+var ControlPanelConfigModel = ContrailChartsConfigModel.extend({
+  defaults: {
+  }
 })
+
+module.exports = ControlPanelConfigModel

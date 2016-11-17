@@ -1,10 +1,7 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
+var Backbone = require('backbone')
 
-define([
-  'backbone'
-], function (Backbone) {
-  var ContrailModel = Backbone.Model.extend({})
-  return ContrailModel
-})
+var ContrailModel = Backbone.Model.extend({})
+module.exports = ContrailModel

@@ -181,7 +181,6 @@ complexChartView.setConfig({
         // data - holds the data element
         // accessor - holds the accessor structure which triggered this tooltip
         // tooltipConfig - holds the tooltip configuration
-        console.log('custom tooltip')
         return '<div class="tooltip-content">Custom tooltip for: ' + accessor.label + '</div>'
       }
     }
