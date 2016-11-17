@@ -1,4 +1,3 @@
-
 button {
 	text-align: center;
 	white-space: nowrap;
@@ -185,3 +184,10 @@ button:focus {
 		}
 	}
 }
+
+.pie-chart {
+  .arc path {
+    stroke: white;
+  }
+}
+

@@ -1,19 +1,19 @@
 // Most basic chart.
 var pieData = [
-  { x: "<5", y: 2704659 },
-  { x: "5-13", y: 4499890 },
-  { x: "14-17", y: 2159981 },
-  { x: "18-24", y: 3853788 },
-  { x: "25-44", y: 14106543 },
-  { x: "45-64", y: 8819342 },
-  { x: "≥65", y: 612463 },
+  { x: "System process", y: 4499890 },
+  { x: "Process 1", y: 2704659 },
+  { x: "Process 2", y: 2159981 },
+  { x: "Process 3", y: 3853788 },
+  { x: "Process 4", y: 14106543 },
+  { x: "Process 5", y: 8819342 },
+  { x: "Process 6", y: 612463 },
 ];
 function numberFormatFunction (number) {
   return number.toFixed(2)
 }
 var chartConfig = {
   radialChart: {
-    el: "#pieChart",
+    el: ".pie-chart",
     chartWidth: 960,
     chartHeight: 500,
     radius: 200,
@@ -39,6 +39,6 @@ var chartConfig = {
     },
   },
 }
-var chartView = new coCharts.charts.XYChartView(); // Todo call radialChartView instead.
-chartView.setConfig(chartConfig);
-chartView.setData(pieData);
+var chartView = new coCharts.charts.RadialChartView()
+chartView.setConfig(chartConfig)
+chartView.setData(pieData)

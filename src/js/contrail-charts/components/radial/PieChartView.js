@@ -5,12 +5,12 @@ var $ = require('jquery')
 var _ = require('lodash')
 var ContrailChartsView = require('contrail-charts-view')
 var ContrailChartsDataModel = require('contrail-charts-data-model')
-var RadialChartConfigModel = require('./RadialChartConfigModel')
+var PieChartConfigModel = require('./PieChartConfigModel')
 /**
 * Group of charts rendered in polar coordinates system
 * TODO merge with ChartView as long as XYChart too
 */
-var RadialView = ContrailChartsView.extend({
+var PieChartView = ContrailChartsView.extend({
   tagName: 'div',
   className: 'coCharts-radial-chart',
 
@@ -85,4 +85,4 @@ var RadialView = ContrailChartsView.extend({
   },
 })
 
-module.exports = RadialView
+module.exports = PieChartView

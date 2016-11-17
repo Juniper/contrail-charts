@@ -8,8 +8,8 @@ var TooltipConfigModel = require('contrail-charts/components/tooltip/TooltipConf
 var TooltipView = require('contrail-charts/components/tooltip/TooltipView')
 var CompositeYChartConfigModel = require('contrail-charts/components/xy/CompositeYChartConfigModel')
 var CompositeYChartView = require('contrail-charts/components/xy/CompositeYChartView')
-var RadialChartConfigModel = require('contrail-charts/components/radial/RadialChartConfigModel')
-var RadialChartView = require('contrail-charts/components/radial/RadialChartView')
+var PieChartConfigModel = require('contrail-charts/components/radial/PieChartConfigModel')
+var PieChartView = require('contrail-charts/components/radial/PieChartView')
 
 module.exports = {
   tooltip: {
@@ -33,7 +33,7 @@ module.exports = {
     View: CompositeYChartView
   },
   radialChart: {
-    ConfigModel: RadialChartConfigModel,
-    View: RadialChartView
+    ConfigModel: PieChartConfigModel,
+    View: PieChartView
   }
 }
