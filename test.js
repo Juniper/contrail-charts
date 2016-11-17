@@ -1,3 +1,3 @@
 var open = require("open");
-open("TestRunner.html");
+open("./tests/TestRunner.html");
 

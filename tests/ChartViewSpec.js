@@ -1,7 +1,8 @@
-/* global coCharts, describe, it, expect, spyOn */
-// define( ['contrail-charts'], function( coCharts ) {
-// var coCharts = require( 'contrail-charts' )
+/*
+ * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ */
 
+/* global coCharts, describe, it, expect, spyOn */
 describe('coCharts', function () {
   it('coCharts is defined', function () {
     expect(coCharts).toBeDefined()
@@ -68,4 +69,3 @@ describe('coCharts.charts.XYChartView', function () {
   })
 })
 
-// })
