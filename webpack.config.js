@@ -6,11 +6,12 @@ var env = require('yargs').argv.mode
 
 var fileName = 'contrail-charts'
 var libraryName = 'coCharts'
+var framework = 'backbone'
 
 var plugins = []
 var outputFile
 
-if (env === 'lib') {
+if (env === 'build') {
   plugins.push(new UglifyJsPlugin({ minimize: true }))
   outputFile = fileName + '.min.js'
 } else {
@@ -21,10 +22,10 @@ if (env === 'lib') {
 plugins.push(new ExtractTextPlugin('css/' + fileName + '.css'))
 
 var config = {
-  entry: path.join(__dirname, '/src/js/contrail-charts.js'),
+  entry: path.join(__dirname, '/src/js/contrail-charts/index.js'),
   devtool: 'source-map',
   output: {
-    path: path.join(__dirname, '/lib'),
+    path: path.join(__dirname, '/build'),
     filename: 'js/' + outputFile,
     library: libraryName,
     libraryTarget: 'umd',
@@ -53,11 +54,21 @@ var config = {
   externals: {
     jquery: { amd: 'jquery', root: 'jQuery' },
     d3: { amd: 'd3v4', root: 'd3' },
-    underscore: { amd: 'underscore', root: '_' },
+    lodash: { amd: 'lodash', root: '_' },
     backbone: { amd: 'backbone', root: 'Backbone' }
   },
   resolve: {
     root: path.resolve('./src/js'),
+    alias: {
+      'contrail-model': 'contrail-charts/plugins/' + framework + '/ContrailModel',
+      'contrail-view': 'contrail-charts/plugins/' + framework + '/ContrailView',
+      'contrail-events': 'contrail-charts/plugins/' + framework + '/ContrailEvents',
+
+      'contrail-charts-data-model': 'contrail-charts/plugins/contrail/ContrailChartsDataModel',
+      'contrail-charts-config-model': 'contrail-charts/plugins/contrail/ContrailChartsConfigModel',
+      'contrail-charts-view': 'contrail-charts/plugins/contrail/ContrailChartsView',
+      'contrail-charts-events': 'contrail-charts/plugins/contrail/ContrailChartsEvents'
+    },
     extensions: ['', '.js']
   },
   plugins: plugins

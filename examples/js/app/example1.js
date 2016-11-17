@@ -1,9 +1,12 @@
+/*
+ * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ */
+
 define([
-  'd3', 'underscore',
+  'd3', // Example use of older d3 versions.
+  'underscore',
   'contrail-charts'
 ], function (d3, _, coCharts) {
-  console.log('d3: ', d3)
-
   // Complex example
   var complexData = []
   _.each(d3.range(100), function (i) {
@@ -17,13 +20,13 @@ define([
       e: (Math.random() - 0.5) * 10
     })
   })
-  var complexChartView = new coCharts.XYChartView()
+  var complexChartView = new coCharts.charts.XYChartView()
   complexChartView.setData(complexData)
   complexChartView.setConfig({
     bindingHandler: {
       bindings: [
         {
-          sourceComponent: 'mainChart',
+          sourceComponent: 'xyChart',
           sourceModel: 'config',
           sourcePath: 'plot',
           targetComponent: 'controlPanel',
@@ -32,8 +35,8 @@ define([
         }
       ]
     },
-    mainChart: {
-      el: '#complexChart-mainChart',
+    xyChart: {
+      el: '#complexChart-xyChart',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
@@ -186,10 +189,10 @@ define([
     { x: 1475763930000, y: 4 },
     { x: 1475764930000, y: 5 }
   ]
-  var simpleChartView = new coCharts.XYChartView()
+  var simpleChartView = new coCharts.charts.XYChartView()
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
-    mainChart: {
+    xyChart: {
       el: '#simpleChart',
       plot: {
         x: {

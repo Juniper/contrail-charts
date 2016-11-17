@@ -17,13 +17,12 @@ for (var i = 0; i < 100; i++) {
     e: (Math.random() - 0.5) * 10
   })
 }
-var complexChartView = new coCharts.XYChartView()
-complexChartView.setData(complexData)
+var complexChartView = new coCharts.charts.XYChartView()
 complexChartView.setConfig({
   bindingHandler: {
     bindings: [
       {
-        sourceComponent: 'mainChart',
+        sourceComponent: 'xyChart',
         sourceModel: 'config',
         sourcePath: 'plot',
         targetComponent: 'controlPanel',
@@ -32,8 +31,8 @@ complexChartView.setConfig({
       }
     ]
   },
-  mainChart: {
-    el: '#complexChart-mainChart',
+  xyChart: {
+    el: '#complexChart-xyChart',
     marginInner: 10,
     marginLeft: 80,
     marginRight: 80,
@@ -182,7 +181,6 @@ complexChartView.setConfig({
         // data - holds the data element
         // accessor - holds the accessor structure which triggered this tooltip
         // tooltipConfig - holds the tooltip configuration
-        console.log('custom tooltip')
         return '<div class="tooltip-content">Custom tooltip for: ' + accessor.label + '</div>'
       }
     }
@@ -202,6 +200,37 @@ complexChartView.setConfig({
           name: 'accessorData',
           width: '350px'
         }
+      },
+      {
+        name: 'sendMessage',
+        title: 'Send Message',
+        iconClass: 'fa fa-edit',
+        events: {
+          click: function () {
+            console.log('Send Message clicked.')
+            this.eventObject.trigger('message', {
+              componentId: 'XYChartView',
+              action: 'new',
+              messages: [
+                {
+                  title: 'New Message',
+                  message: 'A message was added.'
+                }
+              ]
+            })
+          }
+        }
+      },
+      {
+        name: 'clearMessage',
+        title: 'Clear Message',
+        iconClass: 'fa fa-eraser',
+        events: {
+          click: function () {
+            console.log('Clear Message clicked.')
+            this.eventObject.trigger('clearMessage', 'XYChartView')
+          }
+        }
       }
     ]
   },
@@ -210,6 +239,7 @@ complexChartView.setConfig({
     enabled: true
   }
 })
+complexChartView.setData(complexData)
 complexChartView.render()
 complexChartView.renderMessage({
   componentId: 'XYChartView',
@@ -236,10 +266,9 @@ var simpleData = [
   { x: 1475763930000, y: 4 },
   { x: 1475764930000, y: 5 }
 ]
-var simpleChartView = new coCharts.XYChartView()
-simpleChartView.setData(simpleData)
+var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
-  mainChart: {
+  xyChart: {
     el: '#simpleChart',
     plot: {
       x: {
@@ -254,4 +283,4 @@ simpleChartView.setConfig({
     }
   }
 })
-simpleChartView.render()
+simpleChartView.setData(simpleData)

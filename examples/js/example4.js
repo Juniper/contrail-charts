@@ -15,7 +15,7 @@ for (var i = 0; i < 100; i++) {
 }
 
 var chartConfig = {
-  mainChart: {
+  xyChart: {
     el: '#chart',
     marginInner: 25,
     rRange: [3, 50],
@@ -93,7 +93,7 @@ var chartConfig = {
   }
 }
 
-var chartView = new coCharts.XYChartView()
+var chartView = new coCharts.charts.XYChartView()
 chartView.setConfig(chartConfig)
 chartView.setData(complexData)
 chartView.render()
