@@ -201,6 +201,37 @@ complexChartView.setConfig({
           name: 'accessorData',
           width: '350px'
         }
+      },
+      {
+        name: 'sendMessage',
+        title: 'Send Message',
+        iconClass: 'fa fa-edit',
+        events: {
+          click: function () {
+            console.log('Send Message clicked.')
+            this.eventObject.trigger('message', {
+              componentId: 'XYChartView',
+              action: 'new',
+              messages: [
+                {
+                  title: 'New Message',
+                  message: 'A message was added.'
+                }
+              ]
+            })
+          }
+        }
+      },
+      {
+        name: 'clearMessage',
+        title: 'Clear Message',
+        iconClass: 'fa fa-eraser',
+        events: {
+          click: function () {
+            console.log('Clear Message clicked.')
+            this.eventObject.trigger('clearMessage', 'XYChartView')
+          }
+        }
       }
     ]
   },
@@ -236,7 +267,7 @@ var simpleData = [
   { x: 1475763930000, y: 4 },
   { x: 1475764930000, y: 5 }
 ]
-var simpleChartView = new coCharts.XYChartView()
+var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
   xyChart: {
     el: '#simpleChart',

@@ -128,8 +128,17 @@ define([
     },
 
     renderMessage: function (msgObj) {
-      var self = this
-      self.eventObject.trigger('message', msgObj)
+      this.eventObject.trigger('message', msgObj)
+    },
+
+    clearMessage: function (componentId) {
+      // To clear messages for a given component we send a message with 'update' action and an empty array of messages.
+      var msgObj = {
+        componentId: componentId,
+        action: 'update',
+        messages: []
+      }
+      this.eventObject.trigger('message', msgObj)
     },
 
     render: function () {

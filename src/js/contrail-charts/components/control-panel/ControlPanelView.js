@@ -33,11 +33,17 @@ define([
       var self = this
       var $button = $(e.target).closest('.control-panel-item')
       var buttonName = $button.attr('data-name')
-      var button = _.findWhere(self.params.buttons, { name: buttonName })
+      var button = _.findWhere(self.config.get('buttons'), { name: buttonName })
       if (button) {
         self.params.activeButton = button
+        console.log('Found button: ', button)
         if (_.isObject(button.events) && button.events.click) {
-          self.eventObject.trigger(button.events.click, self.params)
+          if (_.isString(button.events.click)) {
+            self.eventObject.trigger(button.events.click, self.params)
+          }
+          else if (_.isFunction(button.events.click)) {
+            _.bind(button.events.click, self)()
+          }
         }
         if (_.has(button, 'panel') && button.panel.name) {
           var $expandedPanel = self.$el.find('.control-panel-expanded-container')

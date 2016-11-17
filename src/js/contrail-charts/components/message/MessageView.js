@@ -20,6 +20,7 @@ define([
 
     _registerListeners: function () {
       this.listenTo(this.eventObject, 'message', this.renderMessage)
+      this.listenTo(this.eventObject, 'clearMessage', this.clearMessage)
     },
 
     render: function () {
@@ -37,7 +38,7 @@ define([
         // update message so remove any previous messages from this component
         self.clearMessage(msgObj.componentId)
       } else if (msgObj.action === 'once') {
-        timerIndex = self.initializeTimer()
+        timerIndex = self._initializeTimer()
       }
       _.each(msgObj.messages, function (msg) {
         var msgDiv = $(self.config.get('generateMessageHTML')(msg))
@@ -54,26 +55,26 @@ define([
     clearMessage: function (componentId) {
       var self = this
       var messageSelector = '.message-row[data-component-id="' + componentId + '"]'
-      self.clearMessageForSelector(messageSelector)
+      self._clearMessageForSelector(messageSelector)
     },
 
-    initializeTimer: function () {
+    _initializeTimer: function () {
       var self = this
       if (!self.params.timerIndex) {
         self.params.timerIndex = 0
       }
       self.params.timerIndex++
-      _.delay(_.bind(self.clearMessageForTimerIndex, self), 5000, self.params.timerIndex)
+      _.delay(_.bind(self._clearMessageForTimerIndex, self), 5000, self.params.timerIndex)
       return self.params.timerIndex
     },
 
-    clearMessageForTimerIndex: function (timerIndex) {
+    _clearMessageForTimerIndex: function (timerIndex) {
       var self = this
       var messageSelector = '.message-row[data-timer-index="' + timerIndex + '"]'
-      self.clearMessageForSelector(messageSelector)
+      self._clearMessageForSelector(messageSelector)
     },
 
-    clearMessageForSelector: function (messageSelector) {
+    _clearMessageForSelector: function (messageSelector) {
       var self = this
       self.$el.find(messageSelector).fadeOut('fast', function () { self.$el.find(messageSelector).remove() })
     }
