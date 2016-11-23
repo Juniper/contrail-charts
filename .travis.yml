@@ -1,0 +1,20 @@
+language: node_js
+
+node_js:
+  - 6.4.0
+
+install:
+  - npm install
+
+before_script:
+  - npm run build
+
+script:
+  - phantomjs tests/run-jasmine.js tests/TestRunner.html
+
+after_script:
+  - process.exit()
+
+cache:
+  directories:
+  - $HOME/.nvm
