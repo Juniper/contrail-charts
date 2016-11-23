@@ -5,14 +5,14 @@ var $ = require('jquery')
 var _ = require('lodash')
 var Events = require('contrail-charts-events')
 var ContrailChartsDataModel = require('contrail-charts-data-model')
-var ContrailView = require('contrail-view') // Todo use contrail-charts-view instead?
+var ContrailChartsView = require('contrail-charts-view')
 var components = require('contrail-charts/components/index')
 var handlers = require('contrail-charts/handlers/index')
 /**
 * Chart with a common X axis and many possible child components rendering data on the Y axis (for example: line, bar, stackedBar).
 * Many different Y axis may be configured.
 */
-var XYChartView = ContrailView.extend({
+var XYChartView = ContrailChartsView.extend({
   initialize: function (options) {
     var self = this
     self.hasExternalBindingHandler = false
@@ -29,10 +29,17 @@ var XYChartView = ContrailView.extend({
   */
   setData: function (data, dataConfig) {
     var self = this
+    if (dataConfig) self.setDataConfig(dataConfig)
+    if (_.isArray(data)) self._dataModel.setData(data)
+  },
+  /**
+   * Set ContrailChartsDataModel config
+   * @param dataConfig
+   */
+  setDataConfig: function (dataConfig) {
+    var self = this
     dataConfig = dataConfig || {}
     self._dataModel.set(dataConfig, { silent: true })
-
-    if (_.isArray(data)) self._dataModel.setData(data)
   },
   /**
   * Provides a global BindingHandler to this chart.
@@ -82,33 +89,26 @@ var XYChartView = ContrailView.extend({
 
   _initComponents: function () {
     var self = this
+    // Todo initilize data model config similar to components.
+    if (self._config.dataConfig) self.setDataConfig(self._config.dataConfig)
+    // If bindingHandler is defined, init it before looping through component registration.
+    if (self._isEnabledComponent('bindingHandler')) {
+      if (!self.bindingHandler) {
+        self.bindingHandler = new handlers.BindingHandler(self._config.bindingHandler)
+      } else {
+        self.bindingHandler.addBindings(self._config.bindingHandler.bindings, self._config.chartId)
+      }
+    }
     _.each(self._config, function (config, name) {
-      if (name === 'bindingHandler' && self._isEnabledComponent('bindingHandler')) {
-        if (!self.bindingHandler) {
-          self.bindingHandler = new handlers.BindingHandler(self._config.bindingHandler)
-        } else {
-          self.bindingHandler.addBindings(self._config.bindingHandler.bindings, self._config.chartId)
-        }
+      // dataConfig and bindingHandler component registration will be handled differently.
+      if (name === 'dataConfig' || name === 'bindingHandler') {
         return
       }
       self._registerComponent(name, config, self._dataProvider)
     })
-    // One way to bind to message events of already created model.
-    // if (self._components.message) self._components.message.registerModelDataStatusEvents(self._dataModel)
     if (self._isEnabledComponent('navigation')) {
-      // self._components.navigation.changeModel(self._dataProvider)
-      // if (self._components.message) self._components.message.registerComponentMessageEvent(self.navigationView.eventObject)
-      // Data aware components should use model of Navigation component
       var dataModel = self._components.navigation.getFocusDataProvider()
       if (self._isEnabledComponent('xyChart')) self._components.xyChart.changeModel(dataModel)
-    }
-    // if (self._components.xyChart) {
-    //  if (!self._components.navigation) self._components.xyChart.changeModel(self._dataProvider)
-    //  if (self._components.message) self._components.message.registerComponentMessageEvent(self.compositeYChartView.eventObject)
-    //  if (self._components.tooltip) self._components.tooltip.registerTriggerEvent(self._components.xyChart.eventObject, 'showTooltip', 'hideTooltip')
-    // }
-    if (self._components.radialChart) {
-      self._components.radialChart.changeModel(self._dataProvider)
     }
     if (self._isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
