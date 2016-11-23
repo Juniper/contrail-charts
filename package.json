@@ -5,6 +5,7 @@
   "main": "src/js/contrail-charts.js",
   "scripts": {
     "build": "webpack --mode=build",
+    "clean-build": "rm -rf build/* && webpack --mode=build",
     "dev": "webpack --progress --colors --watch --mode=dev",
     "test": "node test.js",
     "lint": "eslint src/** || true"
