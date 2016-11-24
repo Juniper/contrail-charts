@@ -3,7 +3,6 @@
  */
 var $ = require('jquery')
 var _ = require('lodash')
-var d3 = require('d3')
 var ContrailChartsView = require('contrail-charts-view')
 
 var TooltipView = ContrailChartsView.extend({

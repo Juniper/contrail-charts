@@ -7,7 +7,7 @@ var _ = require('lodash')
 var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
-var LineChartView  = require('contrail-charts/components/xy/LineChartView')
+var LineChartView = require('contrail-charts/components/xy/LineChartView')
 var BarChartView = require('contrail-charts/components/xy/GroupedBarChartView')
 var StackedBarChartView = require('contrail-charts/components/xy/StackedBarChartView')
 var ScatterBubbleChartView = require('contrail-charts/components/xy/ScatterBubbleChartView')
@@ -114,7 +114,6 @@ var CompositeYChartView = ContrailChartsView.extend({
   */
   calculateActiveAccessorData: function () {
     var self = this
-    var data = self.getData()
     self.params.activeAccessorData = []
     self.params.yAxisInfoArray = []
     // Initialize the drawings activeAccessorData structure

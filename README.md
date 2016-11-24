@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/Juniper/contrail-charts.svg?branch=master)](https://travis-ci.org/Juniper/contrail-charts)
+[![Build Status](https://travis-ci.org/absingla/contrail-charts.svg?branch=master)](https://travis-ci.org/absingla/contrail-charts)
+[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 # Contrail Charts
 
@@ -70,6 +71,7 @@ And we need to plot a line chart for memory 'mem' data over time 'ts'
     simpleChartView.render()
 ```
 
+TODO: provide jsfiddle.
 
 Nice, but the axis is missing. Let's add it. Update the config with axis
 
@@ -93,6 +95,7 @@ and use them inside your plot.y config
     ]
     ...
 ```
+TODO: provide jsfiddle
 
 Let's make it more interesting. Add cpu data also in the same chart, but let's use bar
 ```javascript
@@ -128,3 +131,12 @@ Let's make it more interesting. Add cpu data also in the same chart, but let's u
 ```
 
 Using the same XYChartView we can render line, bar and zoom charts. Head over to examples for more!
+
+# Tests
+
+To run UT,
+
+```npm run test```
+
+under CI infrastructure, we use phantomjs. If you want to run under headless browser
+`npm install -g phantomjs-prebuilt` and do `phantomjs tests/run-jasmine.js tests/TestRunner.html`

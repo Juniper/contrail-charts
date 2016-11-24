@@ -10,6 +10,7 @@ before_script:
   - npm run build
 
 script:
+  - npm run lint
   - phantomjs tests/run-jasmine.js tests/TestRunner.html
 
 after_script:

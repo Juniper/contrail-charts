@@ -3,7 +3,6 @@
  */
 var $ = require('jquery')
 var _ = require('lodash')
-var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
