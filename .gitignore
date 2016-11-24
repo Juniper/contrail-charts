@@ -1,8 +1,6 @@
+build/
+node_modules/
 .sass-cache
-bower_components
-node_modules
 npm-debug.log
 .grunt
 _SpecRunner.html
-/lib
-examples/build
