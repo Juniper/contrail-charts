@@ -128,12 +128,12 @@ var BarChartView = ContrailChartsView.extend({
       .attr('width', function (d) { return d.w })
       .on('mouseover', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('mouseover', d.data, d.x, d.y, d.accessor)
+        self.eventObject.trigger('showTooltip', d.data, d.x, d.y, d.accessor)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('mouseout', d.data, d.x, d.y)
+        self.eventObject.trigger('hideTooltip', d.data, d.x, d.y)
         d3.select(this).classed('active', false)
       })
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)

@@ -20,6 +20,7 @@ var XYChartView = ContrailChartsView.extend({
     self._components = {}
     options = options || {}
     self.eventObject = options.eventObject || _.extend({}, Events)
+    self.eventObject.daniel = true
   },
   /**
   * Provide data for this chart as a simple array of objects.

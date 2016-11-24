@@ -52,7 +52,7 @@ define([
             accessor: 'a',
             label: 'A',
             enabled: true,
-            graph: 'stackedBar',
+            chart: 'stackedBar',
             axis: 'y1',
             tooltip: 'tooltip'
           },
@@ -60,7 +60,7 @@ define([
             accessor: 'b',
             label: 'B',
             enabled: true,
-            graph: 'stackedBar',
+            chart: 'stackedBar',
             axis: 'y1',
             tooltip: 'tooltip'
           },
@@ -68,7 +68,7 @@ define([
             accessor: 'c',
             label: 'C',
             enabled: false,
-            graph: 'stackedBar',
+            chart: 'stackedBar',
             axis: 'y1',
             tooltip: 'tooltip'
           },
@@ -77,7 +77,7 @@ define([
             label: 'Megabytes',
             color: '#d62728',
             enabled: true,
-            graph: 'line',
+            chart: 'line',
             axis: 'y2',
             tooltip: 'tooltip'
           },
@@ -86,7 +86,7 @@ define([
             label: 'Megabytes',
             color: '#9467bd',
             enabled: true,
-            graph: 'line',
+            chart: 'line',
             axis: 'y2',
             tooltip: 'tooltip'
           }
@@ -123,12 +123,12 @@ define([
           {
             accessor: 'a',
             label: 'A',
-            graph: 'stackedBar'
+            chart: 'stackedBar'
           },
           {
             accessor: 'b',
             label: 'B',
-            graph: 'stackedBar'
+            chart: 'stackedBar'
           }
         ]
       }
@@ -201,7 +201,7 @@ define([
         y: [
           {
             accessor: 'y',
-            graph: 'line'
+            chart: 'line'
           }
         ]
       }
