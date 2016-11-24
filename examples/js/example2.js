@@ -37,6 +37,7 @@ complexChartView.setConfig({
     marginLeft: 80,
     marginRight: 80,
     marginBottom: 40,
+    chartHeight: 600,
     plot: {
       x: {
         accessor: 'x',
@@ -110,6 +111,8 @@ complexChartView.setConfig({
     marginLeft: 80,
     marginRight: 80,
     marginBottom: 40,
+    chartHeight: 300,
+    selection: [1475760930000 + 1000000 * 90, 1475760930000 + 1000000 * 100],
     plot: {
       x: {
         accessor: 'x',
@@ -119,14 +122,37 @@ complexChartView.setConfig({
         {
           accessor: 'a',
           label: 'A',
-          chart: 'stackedBar'
+          chart: 'stackedBar',
+          axis: 'y1'
         },
         {
           accessor: 'b',
           label: 'B',
-          chart: 'stackedBar'
+          chart: 'stackedBar',
+          axis: 'y1'
+        },
+        {
+          accessor: 'd',
+          label: 'Megabytes',
+          chart: 'line',
+          axis: 'y2'
         }
       ]
+    },
+    axis: {
+      x: {
+
+      },
+      y1: {
+        position: 'left',
+        formatter: numberFormatFunction,
+        labelMargin: 15
+      },
+      y2: {
+        position: 'right',
+        formatter: numberFormatFunction,
+        labelMargin: 15
+      }
     }
   },
   tooltip: {

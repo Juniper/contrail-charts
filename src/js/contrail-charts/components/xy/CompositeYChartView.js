@@ -373,28 +373,6 @@ var CompositeYChartView = ContrailChartsView.extend({
       .attr('height', self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
   },
 
-  /*
-  getTooltipConfig: function (dataItem) {
-    var self = this
-    var formattedData = {}
-    _.each(dataItem, function (value, key) {
-      if (_.has(self.params.accessorData[key], 'tooltip')) {
-        var formattedKey = key
-        var formattedVal = value
-        if (_.has(self.params.accessorData[key].tooltip, 'nameFormatter')) {
-          formattedKey = self.params.accessorData[key].tooltip.nameFormatter(key)
-        }
-        if (_.has(self.params.accessorData[key].tooltip, 'valueFormatter')) {
-          formattedVal = self.params.accessorData[key].tooltip.valueFormatter(value)
-        }
-        formattedData[formattedKey] = formattedVal
-      }
-    })
-    var tooltipConfig = self.params.getTooltipTemplateConfig(formattedData)
-    return tooltipConfig
-  },
-  */
-
   hasAxisConfig: function (axisName, axisConfigParam) {
     var self = this
     return _.isObject(self.params.axis) && _.isObject(self.params.axis[axisName]) && !_.isUndefined(self.params.axis[axisName][axisConfigParam])
