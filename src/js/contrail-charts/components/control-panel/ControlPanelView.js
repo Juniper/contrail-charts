@@ -17,7 +17,7 @@ var ControlPanelView = ContrailChartsView.extend({
   initialize: function (options) {
     var self = this
     self.config = options.config
-    self.listenTo(this.config, 'change', self.render)
+    self.listenTo(self.config, 'change', self.render)
     self.eventObject = options.eventObject || _.extend({}, Events)
   },
 

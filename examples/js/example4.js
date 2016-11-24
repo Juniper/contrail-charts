@@ -27,7 +27,7 @@ var chartConfig = {
         {
           accessor: 'a',
           label: 'BUBBLE',
-          graph: 'scatterBubble',
+          chart: 'scatterBubble',
           sizeAccessor: 'r',
           sizeAxis: 'rAxis',
           shape: 'circle',
@@ -86,7 +86,7 @@ var chartConfig = {
       y: [
         {
           accessor: 'a',
-          graph: 'line'
+          chart: 'line'
         }
       ]
     }

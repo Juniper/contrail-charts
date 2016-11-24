@@ -128,9 +128,10 @@ var NavigationView = ContrailChartsView.extend({
       model: self.model,
       config: self.config,
       el: self.el,
-      id: self.id
+      id: self.id,
+      eventObject: self.eventObject
     })
-    self.listenTo(self.compositeYChartView.eventObject, 'rendered', self.chartRendered)
+    self.listenTo(self.compositeYChartView, 'rendered', self.chartRendered)
     self.compositeYChartView.render()
   /*
   if( tooltipView ) {
@@ -233,6 +234,7 @@ var NavigationView = ContrailChartsView.extend({
 
   render: function () {
     var self = this
+    self.resetParams()
     if (!self.compositeYChartView) {
       // One time compositeYChartView initialization.
       self.initializeAndRenderCompositeYChartView()

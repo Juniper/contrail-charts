@@ -3,6 +3,7 @@
  */
 var $ = require('jquery')
 var _ = require('lodash')
+var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var TooltipView = ContrailChartsView.extend({
@@ -10,14 +11,13 @@ var TooltipView = ContrailChartsView.extend({
   className: 'coCharts-tooltip-view',
 
   initialize: function (options) {
-    this.config = options.config
-    this.resetParams()
-    this.params.show = 0
-  },
-
-  registerTriggerEvent: function (eventObject, showEventType, hideEventType) {
-    this.listenTo(eventObject, showEventType, this.show)
-    this.listenTo(eventObject, hideEventType, this.hide)
+    var self = this
+    self.show = 0
+    self.config = options.config
+    self.listenTo(self.config, 'change', self.render)
+    self.eventObject = options.eventObject || _.extend({}, Events)
+    self.listenTo(self.eventObject, 'showTooltip', self.showTooltip)
+    self.listenTo(self.eventObject, 'hideTooltip', self.hideTooltip)
   },
 
   generateTooltipHTML: function (data, accessor) {
@@ -32,13 +32,13 @@ var TooltipView = ContrailChartsView.extend({
     return fnGenerateTooltipHTML(data, accessor, tooltipConfig)
   },
 
-  show: function (tooltipData, offsetLeft, offsetTop, accessor) {
+  showTooltip: function (tooltipData, offsetLeft, offsetTop, accessor) {
     var self = this
-    self.params.show++
+    self.show++
     var tooltipElement = $(self.generateTooltipHTML(tooltipData, accessor))
-    $('body').append(this.$el)
-    this.$el.html(tooltipElement)
-    this.$el.show()
+    $('body').append(self.$el)
+    self.$el.html(tooltipElement)
+    self.$el.show()
 
     // Tooltip dimmensions will be available after render.
     var tooltipWidth = tooltipElement.width()
@@ -60,17 +60,20 @@ var TooltipView = ContrailChartsView.extend({
     })
   },
 
-  hide: function (d, x, y) {
+  hideTooltip: function (d, x, y) {
     var self = this
-    self.params.show--
+    self.show--
     _.delay(function () {
-      if (self.params.show <= 0) {
+      if (self.show <= 0) {
         self.$el.hide()
       }
     }, 1000)
   },
 
-  render: function () {}
+  render: function () {
+    var self = this
+    self.resetParams()
+  }
 })
 
 module.exports = TooltipView

@@ -48,7 +48,7 @@ complexChartView.setConfig({
           accessor: 'a',
           label: 'A',
           enabled: true,
-          graph: 'stackedBar',
+          chart: 'stackedBar',
           axis: 'y1',
           tooltip: 'tooltip'
         },
@@ -56,7 +56,7 @@ complexChartView.setConfig({
           accessor: 'b',
           label: 'B',
           enabled: true,
-          graph: 'stackedBar',
+          chart: 'stackedBar',
           axis: 'y1',
           tooltip: 'customTooltip'
         },
@@ -64,7 +64,7 @@ complexChartView.setConfig({
           accessor: 'c',
           label: 'C',
           enabled: false,
-          graph: 'stackedBar',
+          chart: 'stackedBar',
           axis: 'y1',
           tooltip: 'tooltip'
         },
@@ -73,7 +73,7 @@ complexChartView.setConfig({
           label: 'Megabytes',
           color: '#d62728',
           enabled: true,
-          graph: 'line',
+          chart: 'line',
           axis: 'y2',
           tooltip: 'tooltip'
         },
@@ -82,7 +82,7 @@ complexChartView.setConfig({
           label: 'Megabytes',
           color: '#9467bd',
           enabled: true,
-          graph: 'line',
+          chart: 'line',
           axis: 'y2',
           tooltip: 'tooltip'
         }
@@ -119,12 +119,12 @@ complexChartView.setConfig({
         {
           accessor: 'a',
           label: 'A',
-          graph: 'stackedBar'
+          chart: 'stackedBar'
         },
         {
           accessor: 'b',
           label: 'B',
-          graph: 'stackedBar'
+          chart: 'stackedBar'
         }
       ]
     }
@@ -258,6 +258,8 @@ complexChartView.renderMessage({
   ]
 })
 
+console.log('complexChartView: ', complexChartView)
+
 // Most basic chart.
 var simpleData = [
   { x: 1475760930000, y: 0 },
@@ -277,7 +279,7 @@ simpleChartView.setConfig({
       y: [
         {
           accessor: 'y',
-          graph: 'line'
+          chart: 'line'
         }
       ]
     }

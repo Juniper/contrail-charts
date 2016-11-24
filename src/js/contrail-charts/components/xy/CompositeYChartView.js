@@ -81,13 +81,13 @@ var CompositeYChartView = ContrailChartsView.extend({
       if (!_.has(accessor, 'enabled')) {
         accessor.enabled = true
       }
-      if (accessor.graph && accessor.enabled) {
-        var drawingName = accessor.axis + '-' + accessor.graph
+      if (accessor.chart && accessor.enabled) {
+        var drawingName = accessor.axis + '-' + accessor.chart
         var foundDrawing = _.find(self._drawings, function (drawing) { return drawing.getName() === drawingName })
         if (!foundDrawing) {
           // The child drawing with this name does not exist yet. Instantiate the child drawing.
           _.each(self.possibleChildViews, function (ChildView, chartType) {
-            if (chartType === accessor.graph) {
+            if (chartType === accessor.chart) {
               // TODO: a way to provide a different model to every child
               // TODO: pass eventObject to child?
               foundDrawing = new ChildView({
@@ -123,7 +123,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     // Fill the activeAccessorData structure.
     _.each(self.params.plot.y, function (accessor) {
-      var drawing = self.getDrawing(accessor.axis, accessor.graph)
+      var drawing = self.getDrawing(accessor.axis, accessor.chart)
       if (drawing) {
         if (accessor.enabled) {
           self.params.activeAccessorData.push(accessor)
@@ -141,7 +141,7 @@ var CompositeYChartView = ContrailChartsView.extend({
           }
           foundAxisInfo.used++
           foundAxisInfo.accessors.push(accessor.accessor)
-          if (accessor.graph) {
+          if (accessor.chart) {
             // Set the activeAccessorData to the appropriate drawings.
             if (drawing) {
               drawing.params.activeAccessorData.push(accessor)
@@ -507,24 +507,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
   },
 
-  onMouseOver: function (dataItem, x, y, accessor) {
-    var self = this
-    self.eventObject.trigger('showTooltip', dataItem, x, y, accessor)
-  },
-
-  onMouseOut: function (dataItem, x, y) {
-    var self = this
-    self.eventObject.trigger('hideTooltip', dataItem, x, y)
-  },
-
-  startEventListeners: function () {
-    var self = this
-    _.each(self._drawings, function (drawing) {
-      self.listenTo(drawing.eventObject, 'mouseover', self.onMouseOver)
-      self.listenTo(drawing.eventObject, 'mouseout', self.onMouseOut)
-    })
-  },
-
   _onDataModelChange: function () {
     this.render()
   },
@@ -543,8 +525,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    self.startEventListeners()
-    self.eventObject.trigger('rendered')
+    self.trigger('rendered')
   },
 
   render: function () {
