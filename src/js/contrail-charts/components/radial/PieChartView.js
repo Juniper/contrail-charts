@@ -19,6 +19,7 @@ var PieChartView = ContrailChartsView.extend({
     self.config = options.config
 
     self.listenTo(self.config, 'change', self._onConfigModelChange)
+    self._colorRange = ["#3366cc", "#dc3912", "#ff9900", "#109618", "#990099", "#0099c6", "#dd4477", "#66aa00", "#b82e2e", "#316395", "#994499", "#22aa99", "#aaaa11", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"]
   },
 
   changeModel: function (model) {
@@ -31,7 +32,7 @@ var PieChartView = ContrailChartsView.extend({
   render: function () {
     var self = this
     self._color = d3.scaleOrdinal()
-      .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+      .range(self._colorRange);
     self._renderSVG()
   },
 
@@ -51,18 +52,14 @@ var PieChartView = ContrailChartsView.extend({
     var data = self.model.get('data')
 
     var arc = d3.arc()
-      .outerRadius(radius - 10)
-      .innerRadius(0)
-
-    var labelArc = d3.arc()
-      .outerRadius(radius - 40)
-      .innerRadius(radius - 40)
+      .outerRadius(radius)
+      .innerRadius(radius * 0.75)
 
     var pie = d3.pie()
       .sort(null)
       .value(function(d) { return d.y })(data)
 
-    d3.select(self.el).append('svg').attr('class', 'coCharts-svg')
+    d3.select(self.el).append('svg').attr('class', 'coCharts-svg pie-chart')
     self.svgSelection()
       .attr("width", width)
       .attr("height", height)
@@ -75,13 +72,26 @@ var PieChartView = ContrailChartsView.extend({
       .attr("class", "arc");
 
     arcs.append("path")
+      .attr("data-legend", function(d) { return d.data.x })
       .attr("d", arc)
       .style("fill", function(d) { return self._color(d.data.x); });
 
-    arcs.append("text")
-      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")" })
-      .attr("dy", ".35em")
-      .text(function(d) { return d.data.x })
+  var ordinal = d3.scaleOrdinal()
+    .domain(_.map(data, 'x'))
+    .range(self._colorRange);
+
+  self.svgSelection().append("g")
+    .attr("class", "legendOrdinal")
+    .attr("transform", "translate(20,20)");
+
+  var legendOrdinal = d3.legendColor()
+    .shape("path", d3.symbol().type(d3.symbolCircle).size(150)())
+    .shapePadding(10)
+    .scale(ordinal);
+
+  self.svgSelection().select(".legendOrdinal")
+    .call(legendOrdinal);
+          
   },
 })
 

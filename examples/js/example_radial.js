@@ -14,9 +14,9 @@ function numberFormatFunction (number) {
 var chartConfig = {
   radialChart: {
     el: ".pie-chart",
-    chartWidth: 960,
-    chartHeight: 500,
-    radius: 200,
+    chartWidth: 480,
+    chartHeight: 360,
+    radius: 100,
   },
   tooltip: {
     tooltip: {
