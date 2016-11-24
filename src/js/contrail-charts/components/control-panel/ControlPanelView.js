@@ -39,8 +39,7 @@ var ControlPanelView = ContrailChartsView.extend({
       if (_.isObject(button.events) && button.events.click) {
         if (_.isString(button.events.click)) {
           self.eventObject.trigger(button.events.click, self.params)
-        }
-        else if (_.isFunction(button.events.click)) {
+        } else if (_.isFunction(button.events.click)) {
           _.bind(button.events.click, self)()
         }
       }

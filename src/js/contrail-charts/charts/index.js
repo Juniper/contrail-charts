@@ -5,5 +5,5 @@ var RadialChartView = require('./radial-chart/RadialChartView')
 module.exports = {
   MultiChartView: MultiChartView,
   XYChartView: XYChartView,
-  RadialChartView: RadialChartView,
+  RadialChartView: RadialChartView
 }

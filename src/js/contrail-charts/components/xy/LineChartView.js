@@ -16,9 +16,9 @@ var LineChartView = ContrailChartsView.extend({
   renderOrder: 10,
 
   initialize: function (options) {
-    // / The config model
-    this.config = options.config
-    this.axisName = options.axisName
+    var self = this
+    self.config = options.config
+    self.axisName = options.axisName
 
     // The child's params are reset by parent.
     self.eventObject = options.eventObject || _.extend({}, Events)

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
 var Events = require('contrail-charts-events')
@@ -13,12 +12,12 @@ var BarChartView = ContrailChartsView.extend({
   chartType: 'bar',
   renderOrder: 100,
 
-    initialize: function (options) {
-      var self = this
-      self.config = options.config
-      self.axisName = options.axisName
-      self.eventObject = options.eventObject || _.extend({}, Events)
-    },
+  initialize: function (options) {
+    var self = this
+    self.config = options.config
+    self.axisName = options.axisName
+    self.eventObject = options.eventObject || _.extend({}, Events)
+  },
 
   /**
   * Returns the unique name of this drawing so it can identify itself for the parent.

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
 var Events = require('contrail-charts-events')
@@ -13,18 +12,18 @@ var ScatterBubbleChartView = ContrailChartsView.extend({
   chartType: 'scatterBubble',
   renderOrder: 50,
 
-    initialize: function (options) {
-      var self = this
-      self.config = options.config
-      self.axisName = options.axisName
+  initialize: function (options) {
+    var self = this
+    self.config = options.config
+    self.axisName = options.axisName
 
-    // The child's params are reset by parent.
+  // The child's params are reset by parent.
 
-      // TODO: should child react to model and config changes?
-      // this.listenTo(this.model, "change", this.render)
-      // this.listenTo(this.config, "change", this.render)
-      self.eventObject = options.eventObject || _.extend({}, Events)
-    },
+    // TODO: should child react to model and config changes?
+    // this.listenTo(this.model, "change", this.render)
+    // this.listenTo(this.config, "change", this.render)
+    self.eventObject = options.eventObject || _.extend({}, Events)
+  },
 
   /**
   * Returns the unique name of this drawing so it can identify itself for the parent.
