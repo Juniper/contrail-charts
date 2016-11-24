@@ -263,6 +263,9 @@ complexChartView.setConfig({
   message: {
     el: '#messageView',
     enabled: true
+  },
+  legend: {
+    el: '#complexChart-legend'
   }
 })
 complexChartView.setData(complexData)

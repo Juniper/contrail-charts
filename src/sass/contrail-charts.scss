@@ -185,6 +185,24 @@ button:focus {
 	}
 }
 
+.coCharts-legend-view {
+	.legend-group {
+		display: inline-block;
+		padding: 15px;
+
+		.color {
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			border-radius: 16px;
+			margin-right: 10px
+		}
+		.label {
+			font-size: 12px;
+		}
+	}
+}
+
 .pie-chart {
   .arc path {
     stroke: white;

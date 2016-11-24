@@ -4,36 +4,16 @@
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
+
 /**
 * This is the child view for CompositeYChartView.
 */
-var LineChartView = ContrailChartsView.extend({
+var LineChartView = XYChartSubView.extend({
   tagName: 'div',
   className: 'line-chart',
   chartType: 'line',
   renderOrder: 10,
-
-  initialize: function (options) {
-    var self = this
-    self.config = options.config
-    self.axisName = options.axisName
-
-    // The child's params are reset by parent.
-    self.eventObject = options.eventObject || _.extend({}, Events)
-  },
-  /**
-  * Returns the unique name of this drawing so it can identify itself for the parent.
-  * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
-  */
-  getName: function () {
-    return this.axisName + '-' + this.chartType
-  },
-
-  getYScale: function () {
-    return this.params.axis[this.axisName].scale
-  },
 
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
@@ -69,22 +49,10 @@ var LineChartView = ContrailChartsView.extend({
     enteringSelection.append('g').attr('class', 'lines')
   },
 
-  getLineColor: function (accessor) {
-    var self = this
-    if (_.has(accessor, 'color')) {
-      return accessor.color
-    } else {
-      if (!self.params[accessor.axis + 'ColorScale']) {
-        self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
-      }
-      return self.params[accessor.axis + 'ColorScale'](accessor.accessor)
-    }
-  },
-
   getTooltipData: function (data, xPos) {
     var self = this
     var xAccessor = self.params.plot.x.accessor
-    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    var xScale = self.getXScale()
     var xBisector = d3.bisector(function (d) {
       var x = d[xAccessor]
       return x
@@ -108,7 +76,7 @@ var LineChartView = ContrailChartsView.extend({
     var linePathData = []
     var lines = {}
     var yScale = self.getYScale()
-    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    var xScale = self.getXScale()
     var zeroLine = d3.line()
       .x(function (d) {
         return xScale(d[self.params.plot.x.accessor])
@@ -147,7 +115,7 @@ var LineChartView = ContrailChartsView.extend({
         d3.select(this).classed('active', false)
       })
       .transition().ease(d3.easeLinear).duration(self.params.duration)
-      .attr('stroke', function (d) { return self.getLineColor(d.accessor) })
+      .attr('stroke', function (d) { return self.getColor(d.accessor) })
       .attr('d', function (d) { return lines[d.key](data) })
     svgLines.exit().remove()
   },
