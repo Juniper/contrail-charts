@@ -8,6 +8,7 @@ var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var LineChartView = require('contrail-charts/components/xy/LineChartView')
+var AreaChartView = require('contrail-charts/components/xy/AreaChartView')
 var BarChartView = require('contrail-charts/components/xy/GroupedBarChartView')
 var StackedBarChartView = require('contrail-charts/components/xy/StackedBarChartView')
 var ScatterBubbleChartView = require('contrail-charts/components/xy/ScatterBubbleChartView')
@@ -61,7 +62,13 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
   },
 
-  possibleChildViews: { line: LineChartView, bar: BarChartView, stackedBar: StackedBarChartView, scatterBubble: ScatterBubbleChartView },
+  possibleChildViews: {
+    line: LineChartView,
+    area: AreaChartView,
+    bar: BarChartView,
+    stackedBar: StackedBarChartView,
+    scatterBubble: ScatterBubbleChartView
+  },
 
   /**
   * Update the drawings array based on the plot.y.

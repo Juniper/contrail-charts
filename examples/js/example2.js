@@ -313,7 +313,7 @@ simpleChartView.setConfig({
       y: [
         {
           accessor: 'y',
-          chart: 'line'
+          chart: 'area'
         }
       ]
     }
