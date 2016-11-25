@@ -1,0 +1,228 @@
+button {
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	background-image: none;
+}
+
+button:focus {
+	outline: none;
+}
+
+.hide {
+	display: none;
+}
+
+.coCharts-svg {
+	.axis {
+		.domain {
+			display: none;
+		}
+		.tick {
+			line {
+				stroke: #eee;
+			}
+			text {
+				font-size: 10px;
+				fill: #aaa;
+			}
+		}
+		.axis-label {
+			font-size: 10px;
+			fill: #aaa;
+			text-anchor: middle;
+		}
+	}
+	.line-chart {
+		.line {
+			fill: none;
+			stroke-width: 3;
+			opacity: 0.8;
+		}
+	}
+	.area-chart {
+		.area {
+			opacity: 0.8;
+		}
+	}
+	.bar-chart {
+		.bar {
+			opacity: 0.6;
+		}
+		.bar.active {
+			opacity: 0.9;
+		}
+	}
+	.scatter-bubble-chart {
+		.bubble {
+			opacity: 0.55;
+			stroke-width: 0;
+			shape-rendering: geometricPrecision;
+		}
+		.bubble:hover {
+			opacity: 0.85;
+			stroke-width: 2;
+			stroke: #ddd;
+			cursor: pointer;
+			shape-rendering: geometricPrecision;
+		}
+	}
+	.brush {
+		.selection {
+			fill: #aaa;
+		}
+		.handle--custom {
+			fill: #888;
+			stroke: #555;
+		}
+	}
+	.crosshair {
+		.x-line {
+			stroke-width: 1;
+			stroke: #888;
+			shape-rendering: crispEdges;
+		}
+		.x-text {
+			text-anchor: middle;
+			font-size: 11px;
+			font-weight: bold;
+			fill: #888;
+		}
+	}
+}
+
+.coCharts-tooltip-view {
+	.tooltip-content {
+		position: absolute;
+		padding: 10px;
+		border: 1px solid #aaa;
+		background-color: rgba( 255, 255, 255, 0.9 );
+		font-size: 12px;
+		color: #555;
+
+		.tooltip-title {
+			text-align: center;
+			font-weight: bold;
+			font-size: 14px;
+			padding: 0 0 5px 0;
+			border-bottom: 1px solid #ddd;
+			margin-bottom: 5px;
+		}
+		.tooltip-item {
+			.tooltip-item-label {
+				font-weight: bold;
+				margin-right: 10px;
+			}
+			.tooltip-item-value {
+				float: right;
+			}
+		}
+	}
+}
+
+.coCharts-control-panel-view {
+	.control-panel-items {
+		width: 32px;
+		float: right;
+
+		.control-panel-item {
+			width: 100%;
+			font-size: 14px;
+			background-color: #fff;
+			padding: 5px;
+			border: 1px solid #ddd;
+			color: #444;
+			margin: 0 0 5px 0;
+			transition: background-color .25s;
+		}
+		.control-panel-item:hover {
+			background-color: #ddd;
+		}
+	}
+	.control-panel-expanded-container {
+		margin: 0 33px 0 0;
+		border: 1px solid #ddd;
+		background-color: #fff;
+
+		.control-panel-filter-head {
+			padding: 5px 10px 5px 10px;
+			background-color: #ddd;
+			color: #444;
+			font-size: 14px;
+
+			.control-panel-filter-head-icon {
+				margin-right: 10px;
+			}
+			.control-panel-filter-close {
+				float: right;
+				cursor: pointer;
+			}
+		}
+		.control-panel-filter-body {
+			padding: 10px;
+			color: #444;
+			font-size: 14px;
+
+			.control-panel-filter-item {
+				.accessor-data-checkbox {
+					cursor: pointer;
+				}
+				.accessor-data-checkbox-label {
+					cursor: pointer;
+				}
+				.accessor-data-chart-type-select {
+					float: right;
+				}
+			}
+		}
+	}
+}
+
+.coCharts-message-view {
+	.message-row {
+		.message-title {
+			display: inline-block;
+			width: 30%;
+			padding: 5px;
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.message-body {
+			display: inline-block;
+			width: 70%;
+			padding: 5px;
+			font-size: 12px;
+		}
+	}
+}
+
+.coCharts-legend-view {
+	.legend-group {
+		display: inline-block;
+		padding: 10px;
+
+		.color {
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			border-radius: 16px;
+			margin-right: 10px
+		}
+		.label {
+			font-size: 12px;
+		}
+	}
+}
+
+.pie-chart {
+  .arc path {
+    stroke: white;
+  }
+}

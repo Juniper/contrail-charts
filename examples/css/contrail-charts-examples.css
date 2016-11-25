@@ -1,0 +1,50 @@
+/**
+* Styles specific for contrail-examples.
+*/
+html {
+	overflow-y: scroll;
+}
+
+#simpleChart {
+	position: relative;
+	margin: 30px;
+	width: 75%;
+}
+
+#complexChart {
+	position: relative;
+	margin: 30px;
+	width: 75%;
+}
+
+#complexChart-xyChart {
+	position: relative;
+}
+
+#complexChart-controlPanel {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+#complexChart-navigation {
+	margin-bottom: 25px;
+}
+
+#messageView {
+	height: 250px;
+    width: 250px;
+    position: absolute;
+    top: 30px;
+    right: 15px;
+}
+
+#chart1 {
+	width: 45%;
+	display: inline-block;
+}
+
+#chart2 {
+	width: 45%;
+	display: inline-block;
+}
