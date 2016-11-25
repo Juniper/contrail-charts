@@ -131,14 +131,14 @@ var NavigationView = ContrailChartsView.extend({
       el: self.el,
       id: self.id,
       eventObject: self.eventObject,
-      name: 'CompositeYChartViewNavigation'
+      name: 'xyChartNavigation'
     })
-    self.listenTo(self.eventObject, 'rendered:CompositeYChartViewNavigation', self._chartRendered)
+    self.listenTo(self.eventObject, 'rendered:xyChartNavigation', self._chartRendered)
     self.compositeYChartView.render()
   },
 
   /**
-  * This method will be called when the chart is rendered.
+  * This method will be called when the underlying chart is rendered.
   */
   _chartRendered: function () {
     var self = this

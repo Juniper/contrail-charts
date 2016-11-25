@@ -28,7 +28,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.listenTo(self.model, 'change', self._onDataModelChange)
     self.listenTo(self.config, 'change', self._onConfigModelChange)
     self.eventObject = options.eventObject || _.extend({}, Events)
-    self.name = options.name || 'CompositeYChartView'
+    self.name = options.name || 'xyChart'
     self._onWindowResize()
   },
 
@@ -522,7 +522,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    self.eventObject.trigger('rendered:' + self.name, self.params)
+    self.eventObject.trigger('rendered:' + self.name, self.params, self.config)
   },
 
   render: function () {

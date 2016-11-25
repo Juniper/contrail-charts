@@ -54,8 +54,7 @@ var LineChartView = XYChartSubView.extend({
     var xAccessor = self.params.plot.x.accessor
     var xScale = self.getXScale()
     var xBisector = d3.bisector(function (d) {
-      var x = d[xAccessor]
-      return x
+      return d[xAccessor]
     }).left
     var xVal = xScale.invert(xPos)
     // if( _.isDate( xVal ) ) {

@@ -93,8 +93,8 @@ var StackedBarChartView = XYChartSubView.extend({
       .attr('height', 0)
       .attr('width', function (d) { return d.w })
       .on('mouseover', function (d) {
-        // var pos = $( this ).offset() // not working in jquery 3
-        self.eventObject.trigger('showTooltip', d.data, d.x, d.y, d.accessor)
+        var pos = self.$el.offset()
+        self.eventObject.trigger('showTooltip', d.data, d.x + pos.left, d.y + pos.top, d.accessor)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {

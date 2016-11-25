@@ -91,7 +91,7 @@ complexChartView.setConfig({
     },
     axis: {
       x: {
-
+        formatter: d3.timeFormat('%H:%M:%S')
       },
       y1: {
         position: 'left',
@@ -265,7 +265,12 @@ complexChartView.setConfig({
     enabled: true
   },
   legend: {
-    el: '#complexChart-legend'
+    el: '#complexChart-legend',
+    sourceComponent: 'xyChart'
+  },
+  crosshair: {
+    el: '#complexChart-xyChart',
+    sourceComponent: 'xyChart'
   }
 })
 complexChartView.setData(complexData)

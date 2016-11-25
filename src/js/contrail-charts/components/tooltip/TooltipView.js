@@ -41,18 +41,16 @@ var TooltipView = ContrailChartsView.extend({
     self.$el.show()
 
     // Tooltip dimmensions will be available after render.
-    var tooltipWidth = tooltipElement.width()
-    var tooltipHeight = tooltipElement.height()
+    var tooltipWidth = tooltipElement.outerWidth()
+    var tooltipHeight = tooltipElement.outerHeight()
     var windowWidth = $(document).width()
-    var tooltipPositionTop = 0
+    var tooltipPositionTop = offsetTop - tooltipHeight - 10
     var tooltipPositionLeft = offsetLeft
-    if (offsetTop > tooltipHeight / 2) {
-      tooltipPositionTop = offsetTop - tooltipHeight / 2
+    if (tooltipPositionTop < 0) {
+      tooltipPositionTop = 0
     }
-    if ((windowWidth - offsetLeft - 25) < tooltipWidth) {
-      tooltipPositionLeft = offsetLeft - tooltipWidth - 10
-    } else {
-      tooltipPositionLeft += 20
+    if ((offsetLeft + tooltipWidth + 15) > windowWidth) {
+      tooltipPositionLeft = windowWidth - (offsetLeft + tooltipWidth + 15)
     }
     $(tooltipElement).css({
       top: tooltipPositionTop,
