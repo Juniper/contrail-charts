@@ -12,7 +12,8 @@ var plugins = []
 if (env === 'build') {
   plugins.push(new UglifyJsPlugin({
     include: /\.min\.js$/,
-    minimize: true }))
+    minimize: true,
+  }))
 }
 
 // Let's put css under css directory.
@@ -29,21 +30,25 @@ var config = {
     filename: 'js/' + '[name].js',
     library: libraryName,
     libraryTarget: 'umd',
-    umdNamedDefine: false
+    umdNamedDefine: false,
   },
   module: {
     loaders: [
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
-      }
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
+      },
+      {
+        test: /\.html/,
+        loader: "handlebars-loader",
+      },
     ]
   },
   externals: {
     jquery: { amd: 'jquery', root: 'jQuery' },
     d3: { amd: 'd3v4', root: 'd3' },
     lodash: { amd: 'lodash', root: '_' },
-    backbone: { amd: 'backbone', root: 'Backbone' }
+    backbone: { amd: 'backbone', root: 'Backbone' },
   },
   resolve: {
     root: path.resolve('./src/js'),
@@ -55,11 +60,11 @@ var config = {
       'contrail-charts-data-model': 'contrail-charts/plugins/contrail/ContrailChartsDataModel',
       'contrail-charts-config-model': 'contrail-charts/plugins/contrail/ContrailChartsConfigModel',
       'contrail-charts-view': 'contrail-charts/plugins/contrail/ContrailChartsView',
-      'contrail-charts-events': 'contrail-charts/plugins/contrail/ContrailChartsEvents'
+      'contrail-charts-events': 'contrail-charts/plugins/contrail/ContrailChartsEvents',
     },
     extensions: ['', '.js']
   },
-  plugins: plugins
+  plugins: plugins,
 }
 
 module.exports = config

@@ -17,7 +17,7 @@ var XYChartView = ContrailChartsView.extend({
     self.hasExternalBindingHandler = false
     self._dataModel = new ContrailChartsDataModel()
     self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
-    self._components = {}
+    self._components = []
     options = options || {}
     self.eventObject = options.eventObject || _.extend({}, Events)
     self.eventObject.daniel = true
@@ -64,27 +64,9 @@ var XYChartView = ContrailChartsView.extend({
     self._initComponents()
   },
 
-  _registerComponent: function (name, config, model) {
+  getComponentByType: function (type) {
     var self = this
-    var component = self._components[name]
-    if (!self._isEnabledComponent(name)) return false
-    if (!component) {
-      var configModel = new components[name].ConfigModel(config)
-      var viewOptions = _.extend(config, {
-        config: configModel,
-        model: model,
-        eventObject: self.eventObject
-      })
-      self._components[name] = new components[name].View(viewOptions)
-      component = self._components[name]
-
-      if (self._isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-        self.bindingHandler.addComponent(self._config.chartId, name, component)
-      }
-    } else {
-      component.config.set(config)
-    }
-    return component
+    return _.find(self._components, {type: type})
   },
 
   _initComponents: function () {
@@ -94,27 +76,46 @@ var XYChartView = ContrailChartsView.extend({
     // If bindingHandler is defined, init it before looping through component registration.
     if (self._isEnabledComponent('bindingHandler')) {
       if (!self.bindingHandler) {
-        self.bindingHandler = new handlers.BindingHandler(self._config.bindingHandler)
+        self.bindingHandler = new handlers.BindingHandler(_.find(self._config.components, {type: 'bindingHandler'}))
       } else {
-        self.bindingHandler.addBindings(self._config.bindingHandler.bindings, self._config.chartId)
+        self.bindingHandler.addBindings(_.find(self._config.components, 'bindingHandler').bindings, self._config.chartId)
       }
     }
-    _.each(self._config, function (config, name) {
+    _.each(self._config.components, function (component) {
       // dataConfig and bindingHandler component registration will be handled differently.
-      if (name === 'dataConfig' || name === 'bindingHandler') {
+      if (component.type === 'dataConfig' || component.type === 'bindingHandler') {
         return
       }
-      self._registerComponent(name, config, self._dataProvider)
+      self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
     if (self._isEnabledComponent('navigation')) {
-      var dataModel = self._components.navigation.getFocusDataProvider()
-      if (self._isEnabledComponent('xyChart')) self._components.xyChart.changeModel(dataModel)
+      var dataModel = _.find(self._components, {type: 'navigation'}).getFocusDataProvider()
+      if (self._isEnabledComponent('xyChart')) _.find(self._components, {type: 'xyChart'}).changeModel(dataModel)
     }
     if (self._isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
       // Otherwise assume it will be started by the parent chart.
       self.bindingHandler.start()
     }
+  },
+
+  _registerComponent: function (type, config, model, id) {
+    var self = this
+    if (!self._isEnabledComponent(type)) return false
+    var configModel = new components[type].ConfigModel(config)
+    var viewOptions = _.extend(config, {
+      id: id,
+      config: configModel,
+      model: model,
+      eventObject: self.eventObject
+    })
+    var component = new components[type].View(viewOptions)
+    self._components.push(component)
+
+    if (self._isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
+      self.bindingHandler.addComponent(self._config.chartId, type, component)
+    }
+    return component
   },
 
   renderMessage: function (msgObj) {
@@ -131,15 +132,14 @@ var XYChartView = ContrailChartsView.extend({
     this.eventObject.trigger('message', msgObj)
   },
 
-  _isEnabledComponent: function (name) {
+  _isEnabledComponent: function (type) {
     var self = this
-    var enabled = false
-    if (_.isObject(self._config[name])) {
-      if (self._config[name].enable !== false) {
-        enabled = true
-      }
+    var componentConfig = _.find(self._config.components, {type: type})
+    if (!componentConfig) return false
+    if (_.isObject(componentConfig.config)) {
+      return !(componentConfig.config.enable === false)
     }
-    return enabled
+    return false
   },
 
   render: function () {

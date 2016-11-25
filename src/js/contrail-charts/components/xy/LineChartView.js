@@ -138,12 +138,17 @@ var LineChartView = ContrailChartsView.extend({
         var pos = d3.mouse(this) // $(this).offset()
         var offset = $(this).offset()
         var dataItem = self.getTooltipData(d.data, pos[0])
-        self.eventObject.trigger('showTooltip', dataItem, offset.left + pos[0] - xScale.range()[0], offset.top, d.accessor)
+        var tooltipOffset = {
+          top: offset.top,
+          left: offset.left + pos[0] - xScale.range()[0],
+        }
+
+        self.eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
         var pos = $(this).offset()
-        self.eventObject.trigger('hideTooltip', d, pos.left, pos.top)
+        self.eventObject.trigger('hideTooltip')
         d3.select(this).classed('active', false)
       })
       .transition().ease(d3.easeLinear).duration(self.params.duration)

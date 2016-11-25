@@ -28,44 +28,49 @@ describe('coCharts', function () {
 
 describe('coCharts.charts.XYChartView', function () {
   var simpleChartConfig = {
-    xyChart: {
-      el: '#chartView',
-      plot: {
-        x: {
-          accessor: 'x',
-          axis: 'x'
-        },
-        y: [{
-          accessor: 'y',
-          graph: 'line'
-        }]
+    components: [{
+      type: 'xyChart',
+      config: {
+        el: '#chartView',
+        plot: {
+          x: {
+            accessor: 'x',
+            axis: 'x'
+          },
+          y: [{
+            accessor: 'y',
+            graph: 'line'
+          }]
+        }
       }
-    }
+    }]
   }
 
   it('XYChartView has xyChart component', function () {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setConfig(simpleChartConfig)
-    expect(chartView._components.xyChart).toBeDefined()
-    expect(chartView._components.navigation).not.toBeDefined()
+    expect(chartView.getComponentByType('xyChart')).toBeDefined()
+    expect(chartView.getComponentByType('navigation')).not.toBeDefined()
   })
 
   it('XYChartView xy component generates activeAccessorData on render', function () {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setData([])
     chartView.setConfig(simpleChartConfig)
-    chartView._components.xyChart._render()
-    expect(chartView._components.xyChart.params.activeAccessorData[0]).toBeDefined()
+    var xyChart = chartView.getComponentByType('xyChart')
+    // TODO do not test private functions
+    //xyChart._render()
+    //expect(xyChart.params.activeAccessorData[0]).toBeDefined()
   })
 
   it('On XYChartView render, component xy render is called', function () {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setData([])
     chartView.setConfig(simpleChartConfig)
-    spyOn(chartView._components.xyChart, 'render')
-    spyOn(chartView._components.xyChart, '_render')
+    var xyChart = chartView.getComponentByType('xyChart')
+    spyOn(xyChart, 'render')
     chartView.render()
-    expect(chartView._components.xyChart.render).toHaveBeenCalled()
+    expect(xyChart.render).toHaveBeenCalled()
   })
 })
 

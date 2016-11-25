@@ -15,6 +15,7 @@ var NavigationView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
+    self.type = 'navigation'
     self.config = options.config
     self.eventObject = options.eventObject || _.extend({}, Events)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})

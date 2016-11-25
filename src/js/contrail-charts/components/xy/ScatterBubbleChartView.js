@@ -121,12 +121,16 @@ var ScatterBubbleChartView = ContrailChartsView.extend({
       .attr('r', 0)
       .on('mouseover', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('showTooltip', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71, d.accessor)
+        var offset = {
+          left: d.x + d.r * 0.71,
+          top: d.y - d.r * 0.71,
+        }
+        self.eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('hideTooltip', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71)
+        self.eventObject.trigger('hideTooltip')
         d3.select(this).classed('active', false)
       })
   },
