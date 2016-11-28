@@ -3,51 +3,13 @@
  */
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
 
-var ScatterBubbleChartView = ContrailChartsView.extend({
+var ScatterBubbleChartView = XYChartSubView.extend({
   tagName: 'div',
   className: 'scatter-bubble-chart',
   chartType: 'scatterBubble',
   renderOrder: 50,
-
-  initialize: function (options) {
-    var self = this
-    self.config = options.config
-    self.axisName = options.axisName
-
-  // The child's params are reset by parent.
-
-    // TODO: should child react to model and config changes?
-    // this.listenTo(this.model, "change", this.render)
-    // this.listenTo(this.config, "change", this.render)
-    self.eventObject = options.eventObject || _.extend({}, Events)
-  },
-
-  /**
-  * Returns the unique name of this drawing so it can identify itself for the parent.
-  * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
-  */
-  getName: function () {
-    return this.axisName + '-' + this.chartType
-  },
-
-  getYScale: function () {
-    return this.params.axis[this.axisName].scale
-  },
-
-  getBubbleColor: function (accessor, key) {
-    var self = this
-    if (_.has(accessor, 'color')) {
-      return accessor.color
-    } else {
-      if (!self.params[accessor.axis + 'ColorScale']) {
-        self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
-      }
-      return self.params[accessor.axis + 'ColorScale'](key)
-    }
-  },
 
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
@@ -82,21 +44,7 @@ var ScatterBubbleChartView = ContrailChartsView.extend({
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
    */
-  calculateScales: function () {
-    // Calculate the r scales. Calculatation done by parent based on shape domains.
-    // A scatter bubble chart adds additional axis - one for every bubble shape - for example rcircle, rsquare, ...
-    /*
-    var self = this
-    _.each( self.params.activeAccessorData, function( accessor, key ) {
-        if( accessor.sizeAccessor ) {
-            var scaleName = "r" + accessor.sizeAccessor + "Scale"
-            var sizeDomainName = "r" + accessor.sizeAccessor + "Domain"
-            var innerRange = [ 2, Math.max( 2, self.params.innerMargin ) ]
-            self.params[scaleName] = d3.scaleLinear().domain( self.params[sizeDomainName] ).range( innerRange )
-        }
-    })
-    */
-  },
+  calculateScales: function () {},
 
   /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
@@ -121,12 +69,12 @@ var ScatterBubbleChartView = ContrailChartsView.extend({
       .attr('r', 0)
       .on('mouseover', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('mouseover', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71, d.accessor)
+        self.eventObject.trigger('showTooltip', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71, d.accessor)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('mouseout', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71)
+        self.eventObject.trigger('hideTooltip', d.data, d.x + d.r * 0.71, d.y - d.r * 0.71)
         d3.select(this).classed('active', false)
       })
   },
@@ -161,7 +109,7 @@ var ScatterBubbleChartView = ContrailChartsView.extend({
           y: yScale(y),
           shape: accessor.shape,
           r: rScale(d[accessor.sizeAccessor]),
-          color: self.getBubbleColor(accessor, key),
+          color: self.getColor(accessor),
           accessor: accessor,
           data: d
         }

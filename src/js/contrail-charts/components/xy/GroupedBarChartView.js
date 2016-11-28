@@ -3,45 +3,13 @@
  */
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
 
-var BarChartView = ContrailChartsView.extend({
+var BarChartView = XYChartSubView.extend({
   tagName: 'div',
   className: 'bar-chart',
   chartType: 'bar',
   renderOrder: 100,
-
-  initialize: function (options) {
-    var self = this
-    self.config = options.config
-    self.axisName = options.axisName
-    self.eventObject = options.eventObject || _.extend({}, Events)
-  },
-
-  /**
-  * Returns the unique name of this drawing so it can identify itself for the parent.
-  * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
-  */
-  getName: function () {
-    return this.axisName + '-' + this.chartType
-  },
-
-  getYScale: function () {
-    return this.params.axis[this.axisName].scale
-  },
-
-  getBarColor: function (accessor, key) {
-    var self = this
-    if (_.has(accessor, 'color')) {
-      return accessor.color
-    } else {
-      if (!self.params[accessor.axis + 'ColorScale']) {
-        self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
-      }
-      return self.params[accessor.axis + 'ColorScale'](key)
-    }
-  },
 
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
@@ -80,7 +48,7 @@ var BarChartView = ContrailChartsView.extend({
     var self = this
     var data = self.getData()
     var yScale = self.getYScale()
-    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    var xScale = self.getXScale()
 
     // Create a flat data structure
     var flatData = []
@@ -110,7 +78,7 @@ var BarChartView = ContrailChartsView.extend({
           y: yScale(y),
           h: yScale.range()[0] - yScale(y),
           w: innerBandWidth,
-          color: self.getBarColor(accessor, key),
+          color: self.getColor(accessor),
           accessor: accessor,
           data: d
         }
@@ -128,12 +96,12 @@ var BarChartView = ContrailChartsView.extend({
       .attr('width', function (d) { return d.w })
       .on('mouseover', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('mouseover', d.data, d.x, d.y, d.accessor)
+        self.eventObject.trigger('showTooltip', d.data, d.x, d.y, d.accessor)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('mouseout', d.data, d.x, d.y)
+        self.eventObject.trigger('hideTooltip', d.data, d.x, d.y)
         d3.select(this).classed('active', false)
       })
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)

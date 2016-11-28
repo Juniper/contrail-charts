@@ -23,11 +23,11 @@ var chartConfigs = [
         y: [
           {
             accessor: 'a',
-            graph: 'bar'
+            chart: 'bar'
           },
           {
             accessor: 'b',
-            graph: 'bar'
+            chart: 'bar'
           }
         ]
       }
@@ -44,7 +44,7 @@ var chartConfigs = [
         y: [
           {
             accessor: 'c',
-            graph: 'line'
+            chart: 'line'
           }
         ]
       }
@@ -59,7 +59,7 @@ var chartConfigs = [
         y: [
           {
             accessor: 'c',
-            graph: 'line'
+            chart: 'line'
           }
         ]
       }

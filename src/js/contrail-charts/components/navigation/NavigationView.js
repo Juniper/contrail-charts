@@ -20,6 +20,7 @@ var NavigationView = ContrailChartsView.extend({
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.brush = null
     self.compositeYChartView = null
+    self.throttledTriggerWindowChangedEvent = _.bind(_.throttle(self._triggerWindowChangedEvent, 100), self)
   },
 
   changeModel: function (model) {
@@ -39,7 +40,7 @@ var NavigationView = ContrailChartsView.extend({
     this._isModelChanged = true
   },
 
-  handleModelChange: function (e) {
+  _handleModelChange: function (e) {
     var self = this
     var x = self.params.plot.x.accessor
     var xScale = self.params.axis[self.params.plot.x.axis].scale
@@ -92,7 +93,7 @@ var NavigationView = ContrailChartsView.extend({
     svg.select('g.brush').remove()
     self.brush = null
     self.config.unset('focusDomain', { silent: true })
-    var x = this.params.xAccessor
+    var x = this.params.plot.x.accessor
     var newFocusDomain = {}
     newFocusDomain[x] = []
     self._focusDataProvider.resetRangeFor(newFocusDomain)
@@ -128,84 +129,87 @@ var NavigationView = ContrailChartsView.extend({
       model: self.model,
       config: self.config,
       el: self.el,
-      id: self.id
+      id: self.id,
+      eventObject: self.eventObject,
+      name: 'xyChartNavigation'
     })
-    self.listenTo(self.compositeYChartView.eventObject, 'rendered', self.chartRendered)
+    self.listenTo(self.eventObject, 'rendered:xyChartNavigation', self._chartRendered)
     self.compositeYChartView.render()
-  /*
-  if( tooltipView ) {
-      tooltipView.registerTriggerEvent( compositeYChartView.eventObject, "showTooltip", "hideTooltip" )
-  }
-  */
   },
 
   /**
-  * This method will be called when the chart is rendered.
+  * This method will be called when the underlying chart is rendered.
   */
-  chartRendered: function () {
+  _chartRendered: function () {
     var self = this
     self.params = self.compositeYChartView.params
     if (self._isModelChanged) {
-      self.handleModelChange()
+      self._handleModelChange()
       self._isModelChanged = false
     }
     self.renderBrush()
   // self.renderPageLinks()
   },
 
+  _triggerWindowChangedEvent: function (focusDomain) {
+    var self = this
+    var x = self.params.plot.x.accessor
+    self._focusDataProvider.setRangeFor(focusDomain)
+    self.eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
+  },
+
+  _handleBrushSelection: function (dataWindow) {
+    var self = this
+    var x = self.params.plot.x.accessor
+    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    var brushHandleCenter = (self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner) / 2
+    var svg = self.svgSelection()
+    var xMin = xScale.invert(dataWindow[0])
+    var xMax = xScale.invert(dataWindow[1])
+    if (_.isDate(xMin)) {
+      xMin = xMin.getTime()
+    }
+    if (_.isDate(xMax)) {
+      xMax = xMax.getTime()
+    }
+    var focusDomain = {}
+    focusDomain[x] = [xMin, xMax]
+    self.config.set({ focusDomain: focusDomain }, { silent: true })
+    self.throttledTriggerWindowChangedEvent(focusDomain)
+    var gHandles = svg.select('g.brush').selectAll('.handle--custom')
+    gHandles
+      .classed('hide', false)
+      .attr('transform', function (d, i) { return 'translate(' + dataWindow[i] + ',' + brushHandleCenter + ') scale(1,2)' })
+  },
+
   /**
-  * This needs to be called after compositeYChartView render.
+  * This needs to be called after compositeYChartView is rendered because we need the params computed.
   */
   renderBrush: function () {
     var self = this
-    var x = self.params.plot.x.accessor
     var xScale = self.params.axis[self.params.plot.x.axis].scale
     var svg = self.svgSelection()
     if (!self.brush) {
       var marginInner = self.params.marginInner
       var brushHandleHeight = 16 // self.params.yRange[0] - self.params.yRange[1]
-      var brushHandleCenter = (self.params.yRange[0] - self.params.yRange[1] + 2 * marginInner) / 2
       self.brush = d3.brushX()
         .extent([
           [self.params.xRange[0] - marginInner, self.params.yRange[1] - marginInner],
           [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
         .handleSize(10)
         .on('brush', function () {
-          var dataWindow = d3.event.selection
-          var xMin = xScale.invert(dataWindow[0])
-          var xMax = xScale.invert(dataWindow[1])
-          if (_.isDate(xMin)) {
-            xMin = xMin.getTime()
-          }
-          if (_.isDate(xMax)) {
-            xMax = xMax.getTime()
-          }
-          var focusDomain = {}
-          focusDomain[x] = [xMin, xMax]
-          self.config.set({ focusDomain: focusDomain }, { silent: true })
-          self._focusDataProvider.setRangeFor(focusDomain)
-          self.eventObject.trigger('windowChanged', xMin, xMax)
-
-          var gHandles = svg.select('g.brush').selectAll('.handle--custom')
-          if (dataWindow) {
-            gHandles
-              .classed('hide', false)
-              .attr('transform', function (d, i) { return 'translate(' + dataWindow[i] + ',' + brushHandleCenter + ') scale(1,2)' })
-          } else {
-            gHandles.classed('hide', true)
-            self.removeBrush()
-            self.renderBrush()
-          }
+          self._handleBrushSelection(d3.event.selection)
         })
         .on('end', function () {
           var dataWindow = d3.event.selection
           if (!dataWindow) {
             self.removeBrush()
             self.renderBrush()
+          } else {
+            self._handleBrushSelection(d3.event.selection)
           }
         })
       var gBrush = svg.append('g').attr('class', 'brush').call(self.brush)
-
       gBrush.selectAll('.handle--custom')
         .data([{type: 'w'}, {type: 'e'}])
         .enter().append('path')
@@ -220,6 +224,10 @@ var NavigationView = ContrailChartsView.extend({
           .outerRadius(brushHandleHeight / 2)
           .startAngle(0)
           .endAngle(function (d, i) { return i ? Math.PI : -Math.PI }))
+      if (_.isArray(self.params.selection)) {
+        var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
+        self.brush.move(brushGroup, [xScale(self.params.selection[0]), xScale(self.params.selection[1])])
+      }
     }
   },
 
@@ -233,6 +241,7 @@ var NavigationView = ContrailChartsView.extend({
 
   render: function () {
     var self = this
+    self.resetParams()
     if (!self.compositeYChartView) {
       // One time compositeYChartView initialization.
       self.initializeAndRenderCompositeYChartView()

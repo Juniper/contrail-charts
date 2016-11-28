@@ -37,7 +37,7 @@ describe('coCharts.charts.XYChartView', function () {
         },
         y: [{
           accessor: 'y',
-          graph: 'line'
+          chart: 'line'
         }]
       }
     }

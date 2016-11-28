@@ -37,6 +37,7 @@ complexChartView.setConfig({
     marginLeft: 80,
     marginRight: 80,
     marginBottom: 40,
+    chartHeight: 600,
     plot: {
       x: {
         accessor: 'x',
@@ -48,7 +49,7 @@ complexChartView.setConfig({
           accessor: 'a',
           label: 'A',
           enabled: true,
-          graph: 'stackedBar',
+          chart: 'stackedBar',
           axis: 'y1',
           tooltip: 'tooltip'
         },
@@ -56,7 +57,7 @@ complexChartView.setConfig({
           accessor: 'b',
           label: 'B',
           enabled: true,
-          graph: 'stackedBar',
+          chart: 'stackedBar',
           axis: 'y1',
           tooltip: 'customTooltip'
         },
@@ -64,7 +65,7 @@ complexChartView.setConfig({
           accessor: 'c',
           label: 'C',
           enabled: false,
-          graph: 'stackedBar',
+          chart: 'stackedBar',
           axis: 'y1',
           tooltip: 'tooltip'
         },
@@ -73,7 +74,7 @@ complexChartView.setConfig({
           label: 'Megabytes',
           color: '#d62728',
           enabled: true,
-          graph: 'line',
+          chart: 'line',
           axis: 'y2',
           tooltip: 'tooltip'
         },
@@ -82,7 +83,7 @@ complexChartView.setConfig({
           label: 'Megabytes',
           color: '#9467bd',
           enabled: true,
-          graph: 'line',
+          chart: 'line',
           axis: 'y2',
           tooltip: 'tooltip'
         }
@@ -90,7 +91,7 @@ complexChartView.setConfig({
     },
     axis: {
       x: {
-
+        formatter: d3.timeFormat('%H:%M:%S')
       },
       y1: {
         position: 'left',
@@ -110,6 +111,8 @@ complexChartView.setConfig({
     marginLeft: 80,
     marginRight: 80,
     marginBottom: 40,
+    chartHeight: 300,
+    selection: [1475760930000 + 1000000 * 90, 1475760930000 + 1000000 * 100],
     plot: {
       x: {
         accessor: 'x',
@@ -119,14 +122,37 @@ complexChartView.setConfig({
         {
           accessor: 'a',
           label: 'A',
-          graph: 'stackedBar'
+          chart: 'stackedBar',
+          axis: 'y1'
         },
         {
           accessor: 'b',
           label: 'B',
-          graph: 'stackedBar'
+          chart: 'stackedBar',
+          axis: 'y1'
+        },
+        {
+          accessor: 'd',
+          label: 'Megabytes',
+          chart: 'line',
+          axis: 'y2'
         }
       ]
+    },
+    axis: {
+      x: {
+
+      },
+      y1: {
+        position: 'left',
+        formatter: numberFormatFunction,
+        labelMargin: 15
+      },
+      y2: {
+        position: 'right',
+        formatter: numberFormatFunction,
+        labelMargin: 15
+      }
     }
   },
   tooltip: {
@@ -237,6 +263,14 @@ complexChartView.setConfig({
   message: {
     el: '#messageView',
     enabled: true
+  },
+  legend: {
+    el: '#complexChart-legend',
+    sourceComponent: 'xyChart'
+  },
+  crosshair: {
+    el: '#complexChart-xyChart',
+    sourceComponent: 'xyChart'
   }
 })
 complexChartView.setData(complexData)
@@ -258,6 +292,8 @@ complexChartView.renderMessage({
   ]
 })
 
+console.log('complexChartView: ', complexChartView)
+
 // Most basic chart.
 var simpleData = [
   { x: 1475760930000, y: 0 },
@@ -277,7 +313,7 @@ simpleChartView.setConfig({
       y: [
         {
           accessor: 'y',
-          graph: 'line'
+          chart: 'area'
         }
       ]
     }
