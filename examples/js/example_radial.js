@@ -11,33 +11,32 @@ var pieData = [
 function numberFormatFunction (number) {
   return number.toFixed(2)
 }
+
 var chartConfig = {
-  radialChart: {
-    el: ".pie-chart",
-    chartWidth: 480,
-    chartHeight: 360,
-    radius: 100,
-  },
-  tooltip: {
-    tooltip: {
-      data: [
+  components: [{
+    type: 'radialChart',
+    config: {
+      el: ".pie-chart",
+      chartWidth: 480,
+      chartHeight: 360,
+      radius: 100,
+      label: 'x',
+      value: 'y',
+    },
+  }, {
+    type: 'tooltip',
+    config: {
+      dataConfig: [
         {
-          accessor: 'x',
+          accessor: 'y',
           labelFormatter: function (key) {
-            return 'Time'
-          },
-          valueFormatter: numberFormatFunction
-        },
-        {
-          accessor: 'a',
-          labelFormatter: function (key) {
-            return 'A'
+            return key
           },
           valueFormatter: numberFormatFunction
         },
       ],
     },
-  },
+  }]
 }
 var chartView = new coCharts.charts.RadialChartView()
 chartView.setConfig(chartConfig)

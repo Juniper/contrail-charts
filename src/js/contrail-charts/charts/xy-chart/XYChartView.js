@@ -75,9 +75,9 @@ var XYChartView = ContrailChartsView.extend({
     // If bindingHandler is defined, init it before looping through component registration.
     if (self._isEnabledComponent('bindingHandler')) {
       if (!self.bindingHandler) {
-        self.bindingHandler = new handlers.BindingHandler(_.find(self._config.components, {type: 'bindingHandler'}))
+        self.bindingHandler = new handlers.BindingHandler(self.getComponentByType('bindingHandler'))
       } else {
-        self.bindingHandler.addBindings(_.find(self._config.components, 'bindingHandler').bindings, self._config.chartId)
+        self.bindingHandler.addBindings(self.getComponentByType('bindingHandler').bindings, self._config.chartId)
       }
     }
     _.each(self._config.components, function (component) {
@@ -88,8 +88,8 @@ var XYChartView = ContrailChartsView.extend({
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
     if (self._isEnabledComponent('navigation')) {
-      var dataModel = _.find(self._components, {type: 'navigation'}).getFocusDataProvider()
-      if (self._isEnabledComponent('xyChart')) _.find(self._components, {type: 'xyChart'}).changeModel(dataModel)
+      var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
+      if (self._isEnabledComponent('xyChart')) self.getComponentByType('xyChart').changeModel(dataModel)
     }
     if (self._isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
