@@ -33,38 +33,69 @@ complexChartView.setConfig({
         }
       ]
     },
-    axis: {
-      x: {
-        formatter: d3.timeFormat('%H:%M:%S')
-      },
-      y1: {
-        position: 'left',
-        formatter: numberFormatFunction,
-        labelMargin: 15
-      },
-      y2: {
-        position: 'right',
-        formatter: numberFormatFunction,
-        labelMargin: 15
-      }
-    }
-  },
-  navigation: {
-    el: '#complexChart-navigation',
-    marginInner: 10,
-    marginLeft: 80,
-    marginRight: 80,
-    marginBottom: 40,
-    chartHeight: 300,
-    selection: [1475760930000 + 1000000 * 90, 1475760930000 + 1000000 * 100],
-    plot: {
-      x: {
-        accessor: 'x',
-        label: 'Time'
+  }, {
+    type: 'xyChart',
+    config: {
+      el: '#complexChart-xyChart',
+      marginInner: 10,
+      marginLeft: 80,
+      marginRight: 80,
+      marginBottom: 40,
+      chartHeight: 600,
+      plot: {
+        x: {
+          accessor: 'x',
+          label: 'Time',
+          axis: 'x'
+        },
+        y: [
+          {
+            accessor: 'a',
+            label: 'A',
+            enabled: true,
+            chart: 'stackedBar',
+            axis: 'y1',
+            tooltip: 'defaultTooltip'
+          },
+          {
+            accessor: 'b',
+            label: 'B',
+            enabled: true,
+            chart: 'stackedBar',
+            axis: 'y1',
+            tooltip: 'customTooltip'
+          },
+          {
+            accessor: 'c',
+            label: 'C',
+            enabled: false,
+            chart: 'stackedBar',
+            axis: 'y1',
+            tooltip: 'defaultTooltip'
+          },
+          {
+            accessor: 'd',
+            label: 'Megabytes',
+            color: '#d62728',
+            enabled: true,
+            chart: 'line',
+            axis: 'y2',
+            tooltip: 'defaultTooltip'
+          },
+          {
+            accessor: 'e',
+            label: 'Megabytes',
+            color: '#9467bd',
+            enabled: true,
+            chart: 'line',
+            axis: 'y2',
+            tooltip: 'defaultTooltip'
+          }
+        ]
       },
       axis: {
         x: {
-
+          formatter: d3.timeFormat('%H:%M:%S'),
         },
         y1: {
           position: 'left',
@@ -184,7 +215,7 @@ complexChartView.setConfig({
     type: 'tooltip',
     config: {
       template: function (data) {
-        return '<div class="tooltip-content">Custom tooltip for: ' + data.label + '</div>'
+        return '<div class="tooltip-content">Custom tooltip</div>'
       }
     }
   }, {
@@ -236,21 +267,27 @@ complexChartView.setConfig({
             }
           }
         }
-      }
-    ]
-  },
-  message: {
-    el: '#messageView',
-    enabled: true
-  },
-  legend: {
-    el: '#complexChart-legend',
-    sourceComponent: 'xyChart'
-  },
-  crosshair: {
-    el: '#complexChart-xyChart',
-    sourceComponent: 'xyChart'
-  }
+      ]
+    },
+  }, {
+    type: 'message',
+    config: {
+      el: '#messageView',
+      enabled: true,
+    }
+  }, {
+    type: 'legend',
+    config: {
+      el: '#complexChart-legend',
+      sourceComponent: 'xyChart'
+    },
+  }, {
+    type: 'crosshair',
+    config: {
+      el: '#complexChart-xyChart',
+      sourceComponent: 'xyChart',
+    },
+  }]
 })
 complexChartView.setData(complexData)
 complexChartView.render()
@@ -283,18 +320,21 @@ var simpleData = [
 ]
 var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
-  xyChart: {
-    el: '#simpleChart',
-    plot: {
-      x: {
-        accessor: 'x'
-      },
-      y: [
-        {
-          accessor: 'y',
-          chart: 'area'
-        }
-      ]
+  components: [{
+    type: 'xyChart',
+    config: {
+      el: '#simpleChart',
+      plot: {
+        x: {
+          accessor: 'x'
+        },
+        y: [
+          {
+            accessor: 'y',
+            chart: 'area',
+          }
+        ]
+      }
     }
   }]
 })
