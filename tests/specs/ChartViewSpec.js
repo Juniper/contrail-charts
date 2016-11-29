@@ -39,9 +39,20 @@ describe('coCharts.charts.XYChartView', function () {
           },
           y: [{
             accessor: 'y',
-            graph: 'line'
+            chart: 'line'
           }]
         }
+    xyChart: {
+      el: '#chartView',
+      plot: {
+        x: {
+          accessor: 'x',
+          axis: 'x'
+        },
+        y: [{
+          accessor: 'y',
+          chart: 'line'
+        }]
       }
     }]
   }

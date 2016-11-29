@@ -8,6 +8,7 @@ var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var LineChartView = require('contrail-charts/components/xy/LineChartView')
+var AreaChartView = require('contrail-charts/components/xy/AreaChartView')
 var BarChartView = require('contrail-charts/components/xy/GroupedBarChartView')
 var StackedBarChartView = require('contrail-charts/components/xy/StackedBarChartView')
 var ScatterBubbleChartView = require('contrail-charts/components/xy/ScatterBubbleChartView')
@@ -29,6 +30,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.listenTo(self.model, 'change', self._onDataModelChange)
     self.listenTo(self.config, 'change', self._onConfigModelChange)
     self.eventObject = options.eventObject || _.extend({}, Events)
+    self.name = options.name || 'xyChart'
     self._onWindowResize()
   },
 
@@ -61,7 +63,13 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
   },
 
-  possibleChildViews: { line: LineChartView, bar: BarChartView, stackedBar: StackedBarChartView, scatterBubble: ScatterBubbleChartView },
+  possibleChildViews: {
+    line: LineChartView,
+    area: AreaChartView,
+    bar: BarChartView,
+    stackedBar: StackedBarChartView,
+    scatterBubble: ScatterBubbleChartView
+  },
 
   /**
   * Update the drawings array based on the plot.y.
@@ -96,8 +104,8 @@ var CompositeYChartView = ContrailChartsView.extend({
                 config: self.config,
                 eventObject: self.eventObject,
                 el: self.el,
-                id: self.id,
-                axisName: accessor.axis
+                axisName: accessor.axis,
+                parent: self
               })
               self._drawings.push(foundDrawing)
             }
@@ -107,6 +115,15 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     // Order the drawings so the highest order drawings get rendered first.
     self._drawings.sort(function (a, b) { return b.renderOrder - a.renderOrder })
+  },
+
+  getColor: function (accessor) {
+    var self = this
+    if (_.has(accessor, 'color')) {
+      return accessor.color
+    } else {
+      return self.params.colorScale(accessor.accessor)
+    }
   },
 
   /**
@@ -202,6 +219,14 @@ var CompositeYChartView = ContrailChartsView.extend({
       if (_.isFunction(drawing.calculateScales)) {
         drawing.calculateScales()
       }
+    })
+  },
+
+  calculateColorScale: function () {
+    var self = this
+    self.params.colorScale = this.config.get('colorScale') || d3.scaleOrdinal(d3.schemeCategory20)
+    _.each(self.params.plot.y, function (accessor) {
+      accessor.color = self.getColor(accessor)
     })
   },
 
@@ -501,10 +526,11 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.calculateActiveAccessorData()
     self.calculateDimmensions()
     self.calculateScales()
+    self.calculateColorScale()
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    self.trigger('rendered')
+    self.eventObject.trigger('rendered:' + self.name, self.params, self.config)
   },
 
   render: function () {

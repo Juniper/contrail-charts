@@ -47,6 +47,11 @@ button:focus {
 			opacity: 0.8;
 		}
 	}
+	.area-chart {
+		.area {
+			opacity: 0.8;
+		}
+	}
 	.bar-chart {
 		.bar {
 			opacity: 0.6;
@@ -76,6 +81,19 @@ button:focus {
 		.handle--custom {
 			fill: #888;
 			stroke: #555;
+		}
+	}
+	.crosshair {
+		.x-line {
+			stroke-width: 1;
+			stroke: #888;
+			shape-rendering: crispEdges;
+		}
+		.x-text {
+			text-anchor: middle;
+			font-size: 11px;
+			font-weight: bold;
+			fill: #888;
 		}
 	}
 }
@@ -185,9 +203,26 @@ button:focus {
 	}
 }
 
+.coCharts-legend-view {
+	.legend-group {
+		display: inline-block;
+		padding: 10px;
+
+		.color {
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			border-radius: 16px;
+			margin-right: 10px
+		}
+		.label {
+			font-size: 12px;
+		}
+	}
+}
+
 .pie-chart {
   .arc path {
     stroke: white;
   }
 }
-

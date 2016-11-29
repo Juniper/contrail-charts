@@ -21,6 +21,7 @@ var NavigationView = ContrailChartsView.extend({
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.brush = null
     self.compositeYChartView = null
+    self.throttledTriggerWindowChangedEvent = _.bind(_.throttle(self._triggerWindowChangedEvent, 100), self)
   },
 
   changeModel: function (model) {
@@ -130,14 +131,15 @@ var NavigationView = ContrailChartsView.extend({
       config: self.config,
       el: self.el,
       id: self.id,
-      eventObject: self.eventObject
+      eventObject: self.eventObject,
+      name: 'xyChartNavigation'
     })
-    self.listenTo(self.compositeYChartView, 'rendered', self._chartRendered)
+    self.listenTo(self.eventObject, 'rendered:xyChartNavigation', self._chartRendered)
     self.compositeYChartView.render()
   },
 
   /**
-  * This method will be called when the chart is rendered.
+  * This method will be called when the underlying chart is rendered.
   */
   _chartRendered: function () {
     var self = this
@@ -150,14 +152,21 @@ var NavigationView = ContrailChartsView.extend({
   // self.renderPageLinks()
   },
 
+  _triggerWindowChangedEvent: function (focusDomain) {
+    var self = this
+    var x = self.params.plot.x.accessor
+    self._focusDataProvider.setRangeFor(focusDomain)
+    self.eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
+  },
+
   _handleBrushSelection: function (dataWindow) {
     var self = this
     var x = self.params.plot.x.accessor
     var xScale = self.params.axis[self.params.plot.x.axis].scale
     var brushHandleCenter = (self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner) / 2
     var svg = self.svgSelection()
-    var xMin = dataWindow[0]
-    var xMax = dataWindow[1]
+    var xMin = xScale.invert(dataWindow[0])
+    var xMax = xScale.invert(dataWindow[1])
     if (_.isDate(xMin)) {
       xMin = xMin.getTime()
     }
@@ -167,17 +176,15 @@ var NavigationView = ContrailChartsView.extend({
     var focusDomain = {}
     focusDomain[x] = [xMin, xMax]
     self.config.set({ focusDomain: focusDomain }, { silent: true })
-    self._focusDataProvider.setRangeFor(focusDomain)
-    self.eventObject.trigger('windowChanged', xMin, xMax)
-
+    self.throttledTriggerWindowChangedEvent(focusDomain)
     var gHandles = svg.select('g.brush').selectAll('.handle--custom')
     gHandles
       .classed('hide', false)
-      .attr('transform', function (d, i) { return 'translate(' + xScale(dataWindow[i]) + ',' + brushHandleCenter + ') scale(1,2)' })
+      .attr('transform', function (d, i) { return 'translate(' + dataWindow[i] + ',' + brushHandleCenter + ') scale(1,2)' })
   },
 
   /**
-  * This needs to be called after compositeYChartView render.
+  * This needs to be called after compositeYChartView is rendered because we need the params computed.
   */
   renderBrush: function () {
     var self = this
@@ -192,15 +199,15 @@ var NavigationView = ContrailChartsView.extend({
           [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
         .handleSize(10)
         .on('brush', function () {
-          var xMin = xScale.invert(d3.event.selection[0])
-          var xMax = xScale.invert(d3.event.selection[1])
-          self._handleBrushSelection([xMin, xMax])
+          self._handleBrushSelection(d3.event.selection)
         })
         .on('end', function () {
           var dataWindow = d3.event.selection
           if (!dataWindow) {
             self.removeBrush()
             self.renderBrush()
+          } else {
+            self._handleBrushSelection(d3.event.selection)
           }
         })
       var gBrush = svg.append('g').attr('class', 'brush').call(self.brush)
@@ -221,7 +228,6 @@ var NavigationView = ContrailChartsView.extend({
       if (_.isArray(self.params.selection)) {
         var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
         self.brush.move(brushGroup, [xScale(self.params.selection[0]), xScale(self.params.selection[1])])
-        // self._handleBrushSelection(self.params.selection)
       }
     }
   },

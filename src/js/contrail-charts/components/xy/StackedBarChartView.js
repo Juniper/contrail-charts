@@ -3,45 +3,13 @@
  */
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
 
-var StackedBarChartView = ContrailChartsView.extend({
+var StackedBarChartView = XYChartSubView.extend({
   tagName: 'div',
   className: 'bar-chart',
   chartType: 'stackedBar',
   renderOrder: 100,
-
-  initialize: function (options) {
-    var self = this
-    self.config = options.config
-    self.axisName = options.axisName
-    self.eventObject = options.eventObject || _.extend({}, Events)
-  },
-
-  /**
-  * Returns the unique name of this drawing so it can identify itself for the parent.
-  * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
-  */
-  getName: function () {
-    return this.axisName + '-' + this.chartType
-  },
-
-  getYScale: function () {
-    return this.params.axis[this.axisName].scale
-  },
-
-  getBarColor: function (accessor, key) {
-    var self = this
-    if (_.has(accessor, 'color')) {
-      return accessor.color
-    } else {
-      if (!self.params[accessor.axis + 'ColorScale']) {
-        self.params[accessor.axis + 'ColorScale'] = d3.scaleOrdinal(d3.schemeCategory20)
-      }
-      return self.params[accessor.axis + 'ColorScale'](key)
-    }
-  },
 
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
@@ -83,7 +51,7 @@ var StackedBarChartView = ContrailChartsView.extend({
     var self = this
     var data = self.getData()
     var yScale = self.getYScale()
-    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    var xScale = self.getXScale()
 
     // Create a flat data structure
     var flatData = []
@@ -108,7 +76,7 @@ var StackedBarChartView = ContrailChartsView.extend({
           y: yScale(stackedY + d[key]),
           h: yScale.range()[0] - yScale(d[key]),
           w: bandWidth,
-          color: self.getBarColor(accessor, key),
+          color: self.getColor(accessor),
           accessor: accessor,
           data: d
         }
@@ -125,8 +93,8 @@ var StackedBarChartView = ContrailChartsView.extend({
       .attr('height', 0)
       .attr('width', function (d) { return d.w })
       .on('mouseover', function (d) {
-        // var pos = $( this ).offset() // not working in jquery 3
-        self.eventObject.trigger('showTooltip', {left: d.x, top: d.y}, d.data, d.accessor.tooltip)
+        var pos = self.$el.offset()
+        self.eventObject.trigger('showTooltip', {left: d.x + pos.left, top: d.y + pos.top}, d.data, d.accessor.tooltip)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {

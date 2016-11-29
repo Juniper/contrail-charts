@@ -9,11 +9,11 @@ var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
 /**
 * This is the child view for CompositeYChartView.
 */
-var LineChartView = XYChartSubView.extend({
+var AreaChartView = XYChartSubView.extend({
   tagName: 'div',
-  className: 'line-chart',
-  chartType: 'line',
-  renderOrder: 10,
+  className: 'area-chart',
+  chartType: 'area',
+  renderOrder: 50,
 
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
@@ -95,32 +95,33 @@ var LineChartView = XYChartSubView.extend({
         .curve(self.config.get('curve'))
       linePathData.push({ key: key, accessor: accessor, data: data })
     })
-
-    var svgLines = svg.selectAll('.line').data(linePathData, function (d) { return d.key })
+    var x0 = xScale.range()[0]
+    var x1 = xScale.range()[1]
+    var y0 = yScale.range()[0]
+    var y1 = y0
+    var svgLines = svg.selectAll('.area').data(linePathData, function (d) { return d.key })
     svgLines.enter().append('path')
-      .attr('class', function (d) { return 'line line-' + d.key })
+      .attr('class', function (d) { return 'area area-' + d.key })
       .attr('d', function (d) { return zeroLine(data) })
       .merge(svgLines)
       .on('mouseover', function (d) {
         var pos = d3.mouse(this)
         var offset = self.$el.offset()
         var dataItem = self.getTooltipData(d.data, pos[0])
-        var tooltipOffset = {
-          top: offset.top + pos[1],
-          left: offset.left + pos[0] - xScale.range()[0],
-        }
-
-        self.eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
+        self.eventObject.trigger('showTooltip', dataItem, offset.left + pos[0] - xScale.range()[0], offset.top + pos[1], d.accessor)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
         var pos = $(this).offset()
-        self.eventObject.trigger('hideTooltip')
+        self.eventObject.trigger('hideTooltip', d, pos.left, pos.top)
         d3.select(this).classed('active', false)
       })
       .transition().ease(d3.easeLinear).duration(self.params.duration)
-      .attr('stroke', function (d) { return self.getColor(d.accessor) })
-      .attr('d', function (d) { return lines[d.key](data) })
+      .attr('fill', function (d) { return self.getColor(d.accessor) })
+      .attr('d', function (d) {
+        var line = 'L' + lines[d.key](data).substr(1)
+        return 'M' + x0 + ',' + y0 + line + 'L' + x1 + ',' + y1 + 'Z'
+      })
     svgLines.exit().remove()
   },
 
@@ -133,4 +134,4 @@ var LineChartView = XYChartSubView.extend({
   }
 })
 
-module.exports = LineChartView
+module.exports = AreaChartView
