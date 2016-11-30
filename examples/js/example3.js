@@ -14,6 +14,7 @@ for (var i = 0; i < 100; i++) {
 var chartConfigs = [
   {
     chartId: 'chart1',
+    type: 'XYChartView',
     components: [{
       type: 'compositeY',
       config: {
@@ -37,6 +38,7 @@ var chartConfigs = [
     }]
   }, {
     chartId: 'chart2',
+    type: 'XYChartView',
     components: [{
       type: 'compositeY',
       config: {
@@ -76,27 +78,32 @@ var chartConfigs = [
 
 var chartView = new coCharts.charts.MultiChartView()
 chartView.setConfig({
-  bindingHandler: {
-    bindings: [
-      {
-        sourceChart: 'chart2',
-        sourceComponent: 'navigation',
-        sourceModel: 'events',
-        sourcePath: 'windowChanged',
-        targetChart: 'chart1',
-        targetComponent: 'compositeY',
-        targetModel: 'config',
-        action: function (sourceModel, targetModel, xMin, xMax) {
-          var axis = targetModel.get('axis') || {}
-          axis.x = axis.x || {}
-          axis.x.domain = [xMin, xMax]
-          targetModel.set({ axis: axis }, { silent: true })
-          targetModel.trigger('change')
+  chartId: 'parentChart',
+  handlers: [{
+    type: 'bindingHandler',
+    config: {
+      bindings: [
+        {
+          sourceChart: 'chart2',
+          sourceComponent: 'navigation',
+          sourceModel: 'events',
+          sourcePath: 'windowChanged',
+          targetChart: 'chart1',
+          targetComponent: 'compositeY',
+          targetModel: 'config',
+          action: function (sourceModel, targetModel, xMin, xMax) {
+            var axis = targetModel.get('axis') || {}
+            axis.x = axis.x || {}
+            axis.x.domain = [xMin, xMax]
+            targetModel.set({ axis: axis }, { silent: true })
+            targetModel.trigger('change')
+          }
         }
-      }
-    ]
-  },
-  charts: chartConfigs
+      ]
+    }
+  }],
+  components: [], // Parent Chart components
+  charts: chartConfigs // Child charts.
 })
 chartView.setData(complexData, {}, 'chart1')
 chartView.setData(complexData, {}, 'chart2')

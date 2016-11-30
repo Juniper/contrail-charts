@@ -15,6 +15,7 @@ var handlers = require('contrail-charts/handlers/index')
 var RadialChartView = ContrailView.extend({
   initialize: function (options) {
     var self = this
+    self.type = 'RadialChartView'
     self.hasExternalBindingHandler = false
     self._dataModel = new ContrailChartsDataModel()
     self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })

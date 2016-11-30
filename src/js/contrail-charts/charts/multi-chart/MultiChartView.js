@@ -2,14 +2,22 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var _ = require('lodash')
-var ContrailView = require('contrail-view') // Todo use contrail-charts-view instead
-var XYChartView = require('contrail-charts/charts/xy-chart/XYChartView')
-var BindingHandler = require('contrail-charts/handlers/BindingHandler')
+var ContrailChartsView = require('contrail-charts-view')
+// Todo doesn't work. loop issue.
+// var charts = require('contrail-charts/charts/index')
+var charts = {
+  XYChartView: require('contrail-charts/charts/xy-chart/XYChartView'),
+  RadialChartView: require('contrail-charts/charts/radial-chart/RadialChartView')
 
-var ChartView = ContrailView.extend({
+}
+var components = require('contrail-charts/components/index')
+var handlers = require('contrail-charts/handlers/index')
+
+var ChartView = ContrailChartsView.extend({
   initialize: function () {
     var self = this
-    self.charts = {}
+    self._charts = {}
+    self._components = []
   },
 
   /**
@@ -20,7 +28,7 @@ var ChartView = ContrailView.extend({
     dataConfig = dataConfig || {}
     chartId = chartId || 'default'
     // Set data to the given chart if it exists.
-    if (self.charts[chartId]) self.charts[chartId].setData(data, dataConfig)
+    if (self._charts[chartId]) self._charts[chartId].setData(data, dataConfig)
   },
 
   /**
@@ -29,55 +37,120 @@ var ChartView = ContrailView.extend({
   */
   setConfig: function (config) {
     var self = this
-    self.chartConfig = config
-    self.componentInit()
+    self._config = config
+    // Initialize parent handlers
+    self._initHandlers()
+    // Initialize child charts
+    self._initCharts()
+    // Initialize parent components
+    self._initComponents()
+  },
+
+  _initHandlers: function () {
+    var self = this
+    _.each(self._config.handlers, function (handler) {
+      self._registerHandler(handler.type, handler.config)
+    })
+  },
+
+  _registerHandler: function (type, config) {
+    var self = this
+    if (!self._isEnabledHandler(type)) return false
+    // Todo create handlers array similar to components.
+    if (type === 'bindingHandler') {
+      if (!self.bindingHandler) {
+        self.bindingHandler = new handlers.BindingHandler(config)
+      } else {
+        self.bindingHandler.addBindings(config.bindings, self._config.chartId)
+      }
+    }
   },
 
   /**
-  * Instantiate the required views (sub charts) if they do not exist yet, set their configurations otherwise.
-  */
-  componentInit: function () {
+   * Initialize child chart views.
+   */
+  _initCharts: function () {
     var self = this
-    // Create a global binding handler if defined in config.
-    if (self.isEnabledComponent('bindingHandler')) {
-      if (!self.bindingHandler) {
-        self.bindingHandler = new BindingHandler(self.chartConfig.bindingHandler)
-      } else {
-        self.bindingHandler.set(self.chartConfig.bindingHandler)
-      }
-    }
-    // Iterate through the self.chartConfig.charts array, initialize the given charts, set their binding handle and config.
-    _.each(self.chartConfig.charts, function (chartConfig) {
-      if (chartConfig.chartId) {
-        if (!self.charts[chartConfig.chartId]) {
-          self.charts[chartConfig.chartId] = new XYChartView()
-        }
-        if (self.isEnabledComponent('bindingHandler')) {
-          self.charts[chartConfig.chartId].setBindingHandler(self.bindingHandler)
-        }
-        self.charts[chartConfig.chartId].setConfig(chartConfig)
-      }
+    // Iterate through the self._config.charts array, initialize the given charts, set their binding handle and config.
+    _.each(self._config.charts, function (chart) {
+      self._registerChart(chart)
     })
-    if (self.isEnabledComponent('bindingHandler')) {
+  },
+
+  _registerChart: function (chart) {
+    var self = this
+    if (chart.chartId) {
+      if (!self._charts[chart.chartId]) {
+        self._charts[chart.chartId] = new charts[chart.type]()
+      }
+      if (self._isEnabledHandler('bindingHandler')) {
+        self._charts[chart.chartId].setBindingHandler(self.bindingHandler)
+      }
+      self._charts[chart.chartId].setConfig(chart)
+    }
+  },
+
+  _initComponents: function () {
+    var self = this
+    _.each(self._config.components, function (component) {
+      self._registerComponent(component.type, component.config, self._dataProvider, component.id)
+    })
+    if (self._isEnabledComponent('navigation')) {
+      var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
+    }
+    if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
+      // Only start the binding handler if it is not an external one.
+      // Otherwise assume it will be started by the parent chart.
       self.bindingHandler.start()
     }
   },
 
-  isEnabledComponent: function (configName) {
+  _registerComponent: function (type, config, model, id) {
     var self = this
-    var enabled = false
-    if (_.isObject(self.chartConfig[configName])) {
-      if (self.chartConfig[configName].enable !== false) {
-        enabled = true
-      }
+    if (!self._isEnabledComponent(type)) return false
+    var configModel = new components[type].ConfigModel(config)
+    var viewOptions = _.extend(config, {
+      id: id,
+      config: configModel,
+      model: model,
+      eventObject: self.eventObject
+    })
+    var component = new components[type].View(viewOptions)
+    self._components.push(component)
+
+    if (self._isEnabledHandler('bindingHandler') || self.hasExternalBindingHandler) {
+      self.bindingHandler.addComponent(self._config.chartId, type, component)
     }
-    return enabled
+    return component
+  },
+
+  _isEnabled: function (config, type) {
+    var foundConfig = _.find(config, {type: type})
+    if (!foundConfig) return false
+    if (_.isObject(foundConfig.config)) {
+      return !(foundConfig.config.enable === false)
+    }
+    return false
+  },
+
+  _isEnabledComponent: function (type) {
+    var self = this
+    return self._isEnabled(self._config.components, type)
+  },
+
+  _isEnabledHandler: function (type) {
+    var self = this
+    return self._isEnabled(self._config.handlers, type)
   },
 
   render: function () {
     var self = this
-    _.each(self.charts, function (chart) {
+    _.each(self._charts, function (chart) {
       chart.render()
+    })
+    _.each(self._components, function (component) {
+      component.render()
     })
   }
 })

@@ -14,6 +14,7 @@ var handlers = require('contrail-charts/handlers/index')
 var XYChartView = ContrailChartsView.extend({
   initialize: function (options) {
     var self = this
+    self.type = 'XYChartView'
     self.hasExternalBindingHandler = false
     self._dataModel = new ContrailChartsDataModel()
     self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
