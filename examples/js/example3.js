@@ -14,56 +14,63 @@ for (var i = 0; i < 100; i++) {
 var chartConfigs = [
   {
     chartId: 'chart1',
-    xyChart: {
-      el: '#chart1',
-      plot: {
-        x: {
-          accessor: 'x'
-        },
-        y: [
-          {
-            accessor: 'a',
-            chart: 'bar'
+    components: [{
+      type: 'xyChart',
+      config: {
+        el: '#chart1',
+        plot: {
+          x: {
+            accessor: 'x'
           },
-          {
-            accessor: 'b',
-            chart: 'bar'
-          }
-        ]
+          y: [
+            {
+              accessor: 'a',
+              chart: 'bar'
+            },
+            {
+              accessor: 'b',
+              chart: 'bar'
+            }
+          ]
+        }
       }
-    }
-  },
-  {
+    }]
+  }, {
     chartId: 'chart2',
-    xyChart: {
-      el: '#chart2',
-      plot: {
-        x: {
-          accessor: 'x'
-        },
-        y: [
-          {
-            accessor: 'c',
-            chart: 'line'
-          }
-        ]
+    components: [{
+      type: 'xyChart',
+      config: {
+        el: '#chart2',
+        plot: {
+          x: {
+            accessor: 'x'
+          },
+          y: [
+            {
+              accessor: 'c',
+              chart: 'line'
+            }
+          ]
+        }
+      },
+    }, {
+      type: 'navigation',
+      config: {
+        el: '#chart2-navigation',
+        chartHeight: 200,
+        plot: {
+          x: {
+            accessor: 'x'
+          },
+          y: [
+            {
+              accessor: 'c',
+              chart: 'line'
+            }
+          ]
+        }
       }
-    },
-    navigation: {
-      el: '#chart2-navigation',
-      chartHeight: 200,
-      plot: {
-        x: {
-          accessor: 'x'
-        },
-        y: [
-          {
-            accessor: 'c',
-            chart: 'line'
-          }
-        ]
-      }
-    }
+    }]
   }
 ]
 

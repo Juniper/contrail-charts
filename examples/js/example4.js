@@ -15,35 +15,37 @@ for (var i = 0; i < 100; i++) {
 }
 
 var chartConfig = {
-  xyChart: {
-    el: '#chart',
-    marginInner: 25,
-    rRange: [3, 50],
-    plot: {
-      x: {
-        accessor: 'x'
+  components: [{
+    type: 'xyChart',
+    config: {
+      el: '#chart',
+      marginInner: 25,
+      rRange: [3, 50],
+      plot: {
+        x: {
+          accessor: 'x'
+        },
+        y: [
+          {
+            accessor: 'a',
+            chart: 'scatterBubble',
+            sizeAccessor: 'r',
+            sizeAxis: 'rAxis',
+            shape: 'circle',
+          }
+        ]
       },
-      y: [
-        {
-          accessor: 'a',
-          label: 'BUBBLE',
-          chart: 'scatterBubble',
-          sizeAccessor: 'r',
-          sizeAxis: 'rAxis',
-          shape: 'circle',
-          tooltip: 'tooltip'
+      axis: {
+        rAxis: {
+          range: [3, 50]
         }
-      ]
-    },
-    axis: {
-      rAxis: {
-        range: [3, 50]
       }
-    }
-  },
-  tooltip: {
-    tooltip: {
-      data: [
+    },
+  }, {
+    type: 'tooltip',
+    config: {
+      title: 'BUBBLE',
+      dataConfig: [
         {
           accessor: 'x',
           labelFormatter: function (key) {
@@ -72,25 +74,27 @@ var chartConfig = {
           },
           valueFormatter: numberFormatFunction
         }
-      ]
+      ],
+    },
+  }, {
+    type: 'navigation',
+    config: {
+      el: '#chart-navigation',
+      marginInner: 5,
+      chartHeight: 200,
+      plot: {
+        x: {
+          accessor: 'x'
+        },
+        y: [
+          {
+            accessor: 'a',
+            chart: 'line'
+          }
+        ]
+      }
     }
-  },
-  navigation: {
-    el: '#chart-navigation',
-    marginInner: 5,
-    chartHeight: 200,
-    plot: {
-      x: {
-        accessor: 'x'
-      },
-      y: [
-        {
-          accessor: 'a',
-          chart: 'line'
-        }
-      ]
-    }
-  }
+  }]
 }
 
 var chartView = new coCharts.charts.XYChartView()

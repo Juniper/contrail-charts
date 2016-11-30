@@ -99,8 +99,8 @@ button:focus {
 }
 
 .coCharts-tooltip-view {
+  position: absolute;
 	.tooltip-content {
-		position: absolute;
 		padding: 10px;
 		border: 1px solid #aaa;
 		background-color: rgba( 255, 255, 255, 0.9 );

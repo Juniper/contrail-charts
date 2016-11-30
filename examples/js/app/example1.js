@@ -23,119 +23,122 @@ define([
   var complexChartView = new coCharts.charts.XYChartView()
   complexChartView.setData(complexData)
   complexChartView.setConfig({
-    bindingHandler: {
-      bindings: [
-        {
-          sourceComponent: 'xyChart',
-          sourceModel: 'config',
-          sourcePath: 'plot',
-          targetComponent: 'controlPanel',
-          targetModel: 'config',
-          action: 'sync'
-        }
-      ]
-    },
-    xyChart: {
-      el: '#complexChart-xyChart',
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
-      plot: {
-        x: {
-          accessor: 'x',
-          label: 'Time',
-          axis: 'x'
-        },
-        y: [
+    handlers: [{
+      type: 'bindingHandler',
+      config: {
+        bindings: [
           {
-            accessor: 'a',
-            label: 'A',
-            enabled: true,
-            chart: 'stackedBar',
-            axis: 'y1',
-            tooltip: 'tooltip'
-          },
-          {
-            accessor: 'b',
-            label: 'B',
-            enabled: true,
-            chart: 'stackedBar',
-            axis: 'y1',
-            tooltip: 'tooltip'
-          },
-          {
-            accessor: 'c',
-            label: 'C',
-            enabled: false,
-            chart: 'stackedBar',
-            axis: 'y1',
-            tooltip: 'tooltip'
-          },
-          {
-            accessor: 'd',
-            label: 'Megabytes',
-            color: '#d62728',
-            enabled: true,
-            chart: 'line',
-            axis: 'y2',
-            tooltip: 'tooltip'
-          },
-          {
-            accessor: 'e',
-            label: 'Megabytes',
-            color: '#9467bd',
-            enabled: true,
-            chart: 'line',
-            axis: 'y2',
-            tooltip: 'tooltip'
+            sourceComponent: 'xyChart',
+            sourceModel: 'config',
+            sourcePath: 'plot',
+            targetComponent: 'controlPanel',
+            targetModel: 'config',
+            action: 'sync'
           }
         ]
-      },
-      axis: {
-        x: {
+      }
+    }],
+    components: [{
+      type: 'xyChart',
+      config: {
+        el: '#complexChart-xyChart',
+        marginInner: 10,
+        marginLeft: 80,
+        marginRight: 80,
+        marginBottom: 40,
+        plot: {
+          x: {
+            accessor: 'x',
+            label: 'Time',
+            axis: 'x'
+          },
+          y: [
+            {
+              accessor: 'a',
+              label: 'A',
+              enabled: true,
+              chart: 'stackedBar',
+              axis: 'y1',
+            },
+            {
+              accessor: 'b',
+              label: 'B',
+              enabled: true,
+              chart: 'stackedBar',
+              axis: 'y1',
+            },
+            {
+              accessor: 'c',
+              label: 'C',
+              enabled: false,
+              chart: 'stackedBar',
+              axis: 'y1',
+            },
+            {
+              accessor: 'd',
+              label: 'Megabytes',
+              color: '#d62728',
+              enabled: true,
+              chart: 'line',
+              axis: 'y2',
+            },
+            {
+              accessor: 'e',
+              label: 'Megabytes',
+              color: '#9467bd',
+              enabled: true,
+              chart: 'line',
+              axis: 'y2',
+            }
+          ]
+        },
+        axis: {
+          x: {
 
-        },
-        y1: {
-          position: 'left',
-          formatter: d3.format('.0f'),
-          labelMargin: 15
-        },
-        y2: {
-          position: 'right',
-          formatter: d3.format('.02f'),
-          labelMargin: 15
-        }
-      }
-    },
-    navigation: {
-      el: '#complexChart-navigation',
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
-      plot: {
-        x: {
-          accessor: 'x',
-          label: 'Time'
-        },
-        y: [
-          {
-            accessor: 'a',
-            label: 'A',
-            chart: 'stackedBar'
           },
-          {
-            accessor: 'b',
-            label: 'B',
-            chart: 'stackedBar'
+          y1: {
+            position: 'left',
+            formatter: d3.format('.0f'),
+            labelMargin: 15
+          },
+          y2: {
+            position: 'right',
+            formatter: d3.format('.02f'),
+            labelMargin: 15
           }
-        ]
-      }
-    },
-    tooltip: {
-      tooltip: {
-        data: [
+        }
+      },
+    }, {
+      type: 'navigation',
+      config: {
+        el: '#complexChart-navigation',
+        marginInner: 10,
+        marginLeft: 80,
+        marginRight: 80,
+        marginBottom: 40,
+        plot: {
+          x: {
+            accessor: 'x',
+            label: 'Time'
+          },
+          y: [
+            {
+              accessor: 'a',
+              label: 'A',
+              chart: 'stackedBar'
+            },
+            {
+              accessor: 'b',
+              label: 'B',
+              chart: 'stackedBar'
+            }
+          ]
+        }
+      },
+    }, {
+      type: 'tooltip',
+      config: {
+        dataConfig: [
           {
             accessor: 'x',
             labelFormatter: function (key) {
@@ -159,25 +162,27 @@ define([
           }
         ]
       }
-    },
-    controlPanel: {
-      el: '#complexChart-controlPanel',
-      enabled: true,
-      buttons: [
-        {
-          name: 'filter',
-          title: 'Filter',
-          iconClass: 'fa fa-filter',
-          events: {
-            click: 'filterVariables'
-          },
-          panel: {
-            name: 'accessorData',
-            width: '350px'
+    }, {
+      type: 'controlPanel',
+      config: {
+        el: '#complexChart-controlPanel',
+        enabled: true,
+        buttons: [
+          {
+            name: 'filter',
+            title: 'Filter',
+            iconClass: 'fa fa-filter',
+            events: {
+              click: 'filterVariables'
+            },
+            panel: {
+              name: 'accessorData',
+              width: '350px'
+            }
           }
-        }
-      ]
-    }
+        ]
+      }
+    }]
   })
   complexChartView.render()
 
@@ -192,20 +197,23 @@ define([
   var simpleChartView = new coCharts.charts.XYChartView()
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
-    xyChart: {
-      el: '#simpleChart',
-      plot: {
-        x: {
-          accessor: 'x'
-        },
-        y: [
-          {
-            accessor: 'y',
-            chart: 'line'
-          }
-        ]
+    components: [{
+      type: 'xyChart',
+      config: {
+        el: '#simpleChart',
+        plot: {
+          x: {
+            accessor: 'x'
+          },
+          y: [
+            {
+              accessor: 'y',
+              chart: 'line'
+            }
+          ]
+        }
       }
-    }
+    }]
   })
   simpleChartView.render()
 })

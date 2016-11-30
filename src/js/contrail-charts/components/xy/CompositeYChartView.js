@@ -19,6 +19,7 @@ var CompositeYChartView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
+    self.type = 'xyChart'
     // TODO: Every model change will trigger a redraw. This might not be desired - dedicated redraw event?
 
     // / The config model

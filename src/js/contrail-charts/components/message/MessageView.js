@@ -12,6 +12,7 @@ var MessageView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
+    self.type = 'message'
     self.config = options.config
     self.eventObject = options.eventObject || _.extend({}, Events)
     self._registerListeners()

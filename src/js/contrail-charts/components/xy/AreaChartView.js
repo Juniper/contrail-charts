@@ -108,7 +108,11 @@ var AreaChartView = XYChartSubView.extend({
         var pos = d3.mouse(this)
         var offset = self.$el.offset()
         var dataItem = self.getTooltipData(d.data, pos[0])
-        self.eventObject.trigger('showTooltip', dataItem, offset.left + pos[0] - xScale.range()[0], offset.top + pos[1], d.accessor)
+        var tooltipOffset = {
+          top: offset.top + pos[1],
+          left: offset.left + pos[0] - xScale.range()[0],
+        }
+        self.eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
