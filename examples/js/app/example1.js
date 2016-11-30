@@ -23,7 +23,7 @@ define([
   var complexChartView = new coCharts.charts.XYChartView()
   complexChartView.setData(complexData)
   complexChartView.setConfig({
-    components: [{
+    handlers: [{
       type: 'bindingHandler',
       config: {
         bindings: [
@@ -36,8 +36,9 @@ define([
             action: 'sync'
           }
         ]
-      },
-    }, {
+      }
+    }],
+    components: [{
       type: 'xyChart',
       config: {
         el: '#complexChart-xyChart',

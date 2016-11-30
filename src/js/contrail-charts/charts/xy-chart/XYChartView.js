@@ -60,6 +60,9 @@ var XYChartView = ContrailChartsView.extend({
     if (!self._config.chartId) {
       self._config.chartId = 'XYChartView'
     }
+    // Todo make dataConfig part of handlers? as dataProvider
+    if (self._config.dataConfig) self.setDataConfig(self._config.dataConfig)
+    self._initHandlers()
     self._initComponents()
   },
 
@@ -68,30 +71,36 @@ var XYChartView = ContrailChartsView.extend({
     return _.find(self._components, {type: type})
   },
 
-  _initComponents: function () {
+  _initHandlers: function () {
     var self = this
-    // Todo initilize data model config similar to components.
-    if (self._config.dataConfig) self.setDataConfig(self._config.dataConfig)
-    // If bindingHandler is defined, init it before looping through component registration.
-    if (self._isEnabledComponent('bindingHandler')) {
+    _.each(self._config.handlers, function (handler) {
+      self._registerHandler(handler.type, handler.config)
+    })
+  },
+
+  _registerHandler: function (type, config) {
+    var self = this
+    if (!self._isEnabledHandler(type)) return false
+    // Todo create handlers array similar to components.
+    if (type === 'bindingHandler') {
       if (!self.bindingHandler) {
-        self.bindingHandler = new handlers.BindingHandler(self.getComponentByType('bindingHandler'))
+        self.bindingHandler = new handlers.BindingHandler(config)
       } else {
-        self.bindingHandler.addBindings(self.getComponentByType('bindingHandler').bindings, self._config.chartId)
+        self.bindingHandler.addBindings(config.bindings, self._config.chartId)
       }
     }
+  },
+
+  _initComponents: function () {
+    var self = this
     _.each(self._config.components, function (component) {
-      // dataConfig and bindingHandler component registration will be handled differently.
-      if (component.type === 'dataConfig' || component.type === 'bindingHandler') {
-        return
-      }
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
     if (self._isEnabledComponent('navigation')) {
       var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
       if (self._isEnabledComponent('xyChart')) self.getComponentByType('xyChart').changeModel(dataModel)
     }
-    if (self._isEnabledComponent('bindingHandler') && !self.hasExternalBindingHandler) {
+    if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
       // Otherwise assume it will be started by the parent chart.
       self.bindingHandler.start()
@@ -111,7 +120,7 @@ var XYChartView = ContrailChartsView.extend({
     var component = new components[type].View(viewOptions)
     self._components.push(component)
 
-    if (self._isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
+    if (self._isEnabledHandler('bindingHandler') || self.hasExternalBindingHandler) {
       self.bindingHandler.addComponent(self._config.chartId, type, component)
     }
     return component
@@ -131,14 +140,23 @@ var XYChartView = ContrailChartsView.extend({
     this.eventObject.trigger('message', msgObj)
   },
 
-  _isEnabledComponent: function (type) {
-    var self = this
-    var componentConfig = _.find(self._config.components, {type: type})
-    if (!componentConfig) return false
-    if (_.isObject(componentConfig.config)) {
-      return !(componentConfig.config.enable === false)
+  _isEnabled: function (config, type) {
+    var foundConfig = _.find(config, {type: type})
+    if (!foundConfig) return false
+    if (_.isObject(foundConfig.config)) {
+      return !(foundConfig.config.enable === false)
     }
     return false
+  },
+
+  _isEnabledComponent: function (type) {
+    var self = this
+    return self._isEnabled(self._config.components, type)
+  },
+
+  _isEnabledHandler: function (type) {
+    var self = this
+    return self._isEnabled(self._config.handlers, type)
   },
 
   render: function () {

@@ -42,17 +42,6 @@ describe('coCharts.charts.XYChartView', function () {
             chart: 'line'
           }]
         }
-    xyChart: {
-      el: '#chartView',
-      plot: {
-        x: {
-          accessor: 'x',
-          axis: 'x'
-        },
-        y: [{
-          accessor: 'y',
-          chart: 'line'
-        }]
       }
     }]
   }
@@ -64,14 +53,17 @@ describe('coCharts.charts.XYChartView', function () {
     expect(chartView.getComponentByType('navigation')).not.toBeDefined()
   })
 
-  it('XYChartView xy component generates activeAccessorData on render', function () {
+  it('XYChartView xy component generates activeAccessorData on render', function (done) {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setData([])
     chartView.setConfig(simpleChartConfig)
     var xyChart = chartView.getComponentByType('xyChart')
-    // TODO do not test private functions
-    //xyChart._render()
-    //expect(xyChart.params.activeAccessorData[0]).toBeDefined()
+    xyChart.render()
+    // Time for component init before assert
+    setTimeout(function () {
+      expect(xyChart.params.activeAccessorData[0]).toBeDefined()
+      done()
+    }, 10)
   })
 
   it('On XYChartView render, component xy render is called', function () {

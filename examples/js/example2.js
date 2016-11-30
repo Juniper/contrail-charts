@@ -19,7 +19,7 @@ for (var i = 0; i < 100; i++) {
 }
 var complexChartView = new coCharts.charts.XYChartView()
 complexChartView.setConfig({
-  components: [{
+  handlers: [{
     type: 'bindingHandler',
     config: {
       bindings: [
@@ -33,7 +33,8 @@ complexChartView.setConfig({
         }
       ]
     },
-  }, {
+  }],
+  components: [{
     type: 'xyChart',
     config: {
       el: '#complexChart-xyChart',
