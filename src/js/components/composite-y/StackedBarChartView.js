@@ -96,7 +96,7 @@ var StackedBarChartView = XYChartSubView.extend({
         var pos = self.$el.offset()
         var tooltipOffset = {
           left: d.x + pos.left,
-          top: d.y + pos.top,
+          top: d.y + pos.top
         }
         self.eventObject.trigger('showTooltip', tooltipOffset, d.data, d.accessor.tooltip)
         d3.select(this).classed('active', true)

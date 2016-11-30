@@ -110,7 +110,7 @@ var AreaChartView = XYChartSubView.extend({
         var dataItem = self.getTooltipData(d.data, pos[0])
         var tooltipOffset = {
           top: offset.top + pos[1],
-          left: offset.left + pos[0] - xScale.range()[0],
+          left: offset.left + pos[0] - xScale.range()[0]
         }
         self.eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
         d3.select(this).classed('active', true)
