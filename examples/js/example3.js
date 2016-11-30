@@ -15,7 +15,7 @@ var chartConfigs = [
   {
     chartId: 'chart1',
     components: [{
-      type: 'xyChart',
+      type: 'compositeY',
       config: {
         el: '#chart1',
         plot: {
@@ -38,7 +38,7 @@ var chartConfigs = [
   }, {
     chartId: 'chart2',
     components: [{
-      type: 'xyChart',
+      type: 'compositeY',
       config: {
         el: '#chart2',
         plot: {
@@ -84,7 +84,7 @@ chartView.setConfig({
         sourceModel: 'events',
         sourcePath: 'windowChanged',
         targetChart: 'chart1',
-        targetComponent: 'xyChart',
+        targetComponent: 'compositeY',
         targetModel: 'config',
         action: function (sourceModel, targetModel, xMin, xMax) {
           var axis = targetModel.get('axis') || {}

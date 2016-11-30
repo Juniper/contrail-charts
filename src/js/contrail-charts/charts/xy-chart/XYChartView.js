@@ -98,7 +98,7 @@ var XYChartView = ContrailChartsView.extend({
     })
     if (self._isEnabledComponent('navigation')) {
       var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
-      if (self._isEnabledComponent('xyChart')) self.getComponentByType('xyChart').changeModel(dataModel)
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.

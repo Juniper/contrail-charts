@@ -7,11 +7,11 @@ var _ = require('lodash')
 var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
-var LineChartView = require('contrail-charts/components/xy/LineChartView')
-var AreaChartView = require('contrail-charts/components/xy/AreaChartView')
-var BarChartView = require('contrail-charts/components/xy/GroupedBarChartView')
-var StackedBarChartView = require('contrail-charts/components/xy/StackedBarChartView')
-var ScatterBubbleChartView = require('contrail-charts/components/xy/ScatterBubbleChartView')
+var LineChartView = require('contrail-charts/components/composite-y/LineChartView')
+var AreaChartView = require('contrail-charts/components/composite-y/AreaChartView')
+var BarChartView = require('contrail-charts/components/composite-y/GroupedBarChartView')
+var StackedBarChartView = require('contrail-charts/components/composite-y/StackedBarChartView')
+var ScatterBubbleChartView = require('contrail-charts/components/composite-y/ScatterBubbleChartView')
 
 var CompositeYChartView = ContrailChartsView.extend({
   tagName: 'div',
@@ -19,7 +19,7 @@ var CompositeYChartView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.type = 'xyChart'
+    self.type = 'compositeY'
     // TODO: Every model change will trigger a redraw. This might not be desired - dedicated redraw event?
 
     // / The config model
@@ -30,7 +30,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.listenTo(self.model, 'change', self._onDataModelChange)
     self.listenTo(self.config, 'change', self._onConfigModelChange)
     self.eventObject = options.eventObject || _.extend({}, Events)
-    self.name = options.name || 'xyChart'
+    self.name = options.name || 'compositeY'
     self._onWindowResize()
   },
 

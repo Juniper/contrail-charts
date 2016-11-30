@@ -10,8 +10,8 @@ var LegendConfigModel = require('contrail-charts/components/legend/LegendConfigM
 var LegendView = require('contrail-charts/components/legend/LegendView')
 var CrosshairConfigModel = require('contrail-charts/components/crosshair/CrosshairConfigModel')
 var CrosshairView = require('contrail-charts/components/crosshair/CrosshairView')
-var CompositeYChartConfigModel = require('contrail-charts/components/xy/CompositeYChartConfigModel')
-var CompositeYChartView = require('contrail-charts/components/xy/CompositeYChartView')
+var CompositeYChartConfigModel = require('contrail-charts/components/composite-y/CompositeYChartConfigModel')
+var CompositeYChartView = require('contrail-charts/components/composite-y/CompositeYChartView')
 var PieChartConfigModel = require('contrail-charts/components/radial/PieChartConfigModel')
 var PieChartView = require('contrail-charts/components/radial/PieChartView')
 
@@ -40,7 +40,7 @@ module.exports = {
     ConfigModel: ControlPanelConfigModel,
     View: ControlPanelView
   },
-  xyChart: {
+  compositeY: {
     ConfigModel: CompositeYChartConfigModel,
     View: CompositeYChartView
   },
