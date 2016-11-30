@@ -7,11 +7,11 @@ var _ = require('lodash')
 var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
-var LineChartView = require('contrail-charts/components/composite-y/LineChartView')
-var AreaChartView = require('contrail-charts/components/composite-y/AreaChartView')
-var BarChartView = require('contrail-charts/components/composite-y/GroupedBarChartView')
-var StackedBarChartView = require('contrail-charts/components/composite-y/StackedBarChartView')
-var ScatterBubbleChartView = require('contrail-charts/components/composite-y/ScatterBubbleChartView')
+var LineChartView = require('components/composite-y/LineChartView')
+var AreaChartView = require('components/composite-y/AreaChartView')
+var BarChartView = require('components/composite-y/GroupedBarChartView')
+var StackedBarChartView = require('components/composite-y/StackedBarChartView')
+var ScatterBubbleChartView = require('components/composite-y/ScatterBubbleChartView')
 
 var CompositeYChartView = ContrailChartsView.extend({
   tagName: 'div',

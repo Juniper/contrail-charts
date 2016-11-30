@@ -4,14 +4,14 @@
 var _ = require('lodash')
 var ContrailChartsView = require('contrail-charts-view')
 // Todo doesn't work. loop issue.
-// var charts = require('contrail-charts/charts/index')
+// var charts = require('charts/index')
 var charts = {
-  XYChartView: require('contrail-charts/charts/xy-chart/XYChartView'),
-  RadialChartView: require('contrail-charts/charts/radial-chart/RadialChartView')
+  XYChartView: require('charts/xy-chart/XYChartView'),
+  RadialChartView: require('charts/radial-chart/RadialChartView')
 
 }
-var components = require('contrail-charts/components/index')
-var handlers = require('contrail-charts/handlers/index')
+var components = require('components/index')
+var handlers = require('handlers/index')
 
 var ChartView = ContrailChartsView.extend({
   initialize: function () {

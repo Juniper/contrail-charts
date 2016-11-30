@@ -6,8 +6,8 @@ var _ = require('lodash')
 var Events = require('contrail-charts-events')
 var ContrailChartsDataModel = require('contrail-charts-data-model')
 var ContrailView = require('contrail-view') // Todo use contrail-charts-view instead?
-var components = require('contrail-charts/components/index')
-var handlers = require('contrail-charts/handlers/index')
+var components = require('components/index')
+var handlers = require('handlers/index')
 /**
 * Chart with a common X axis and many possible child components rendering data on the Y axis (for example: line, bar, stackedBar).
 * Many different Y axis may be configured.

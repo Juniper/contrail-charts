@@ -4,7 +4,7 @@
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
-var XYChartSubView = require('contrail-charts/components/composite-y/XYChartSubView')
+var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 /**
 * This is the child view for CompositeYChartView.
