@@ -119,7 +119,7 @@ complexChartView.setConfig({
       marginRight: 80,
       marginBottom: 40,
       chartHeight: 300,
-      selection: [1475760930000 + 1000000 * 90, 1475760930000 + 1000000 * 100],
+      selection: [75, 100],
       plot: {
         x: {
           accessor: 'x',

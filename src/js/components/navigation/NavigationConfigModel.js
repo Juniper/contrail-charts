@@ -33,7 +33,7 @@ var NavigationConfigModel = ContrailChartsConfigModel.extend({
 
     curve: d3.curveCatmullRom.alpha(0.5),
 
-    // The selection to use when first rendered [xMin, xMax].
+    // The selection to use when first rendered [xMin%, xMax%].
     selection: undefined
   }
 })
