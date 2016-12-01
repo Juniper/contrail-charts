@@ -32,6 +32,7 @@ var XYChartView = ContrailChartsView.extend({
     if (dataConfig) self.setDataConfig(dataConfig)
     if (_.isArray(data)) self._dataModel.setData(data)
   },
+  // Todo deprecate setDataConfig. DataModel parser will be set as input parser in dataProvider config.
   /**
    * Set ContrailChartsDataModel config
    * @param dataConfig
@@ -89,6 +90,14 @@ var XYChartView = ContrailChartsView.extend({
       } else {
         self.bindingHandler.addBindings(config.bindings, self._config.chartId)
       }
+    }
+    if (type === 'dataProvider') {
+      // Set dataProvider config. Eg. input data formatter config
+      self._dataProvider.set(config, { silent: true })
+      // Since we're setting the config, trigger a change to parentDataModel to re-compute based on new config.
+      // Triggering the change on parentModel triggers prepareData on all the dataProvider instances of same parentModel.
+      // Todo check if we really need to trigger this or simply call prepareData in current dataProvider?
+      self._dataProvider.getParentModel().trigger('change')
     }
   },
 

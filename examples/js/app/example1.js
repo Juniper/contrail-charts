@@ -37,6 +37,14 @@ define([
           }
         ]
       }
+    }, {
+      type: 'dataProvider',
+      config: {
+        formatData: function (data) {
+          // Sample dataProvider input data formatter.
+          return data
+        }
+      }
     }],
     components: [{
       type: 'compositeY',
