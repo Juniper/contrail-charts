@@ -2,73 +2,48 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var _ = require('lodash')
-var Events = require('contrail-charts-events')
-var ContrailChartsDataModel = require('contrail-charts-data-model')
 var ContrailChartsView = require('contrail-charts-view')
-var components = require('contrail-charts/components/index')
-var handlers = require('contrail-charts/handlers/index')
-/**
-* Chart with a common X axis and many possible child components rendering data on the Y axis (for example: line, bar, stackedBar).
-* Many different Y axis may be configured.
-*/
-var XYChartView = ContrailChartsView.extend({
-  initialize: function (options) {
+// Todo doesn't work. loop issue.
+// var charts = require('charts/index')
+var charts = {
+  XYChartView: require('charts/xy-chart/XYChartView'),
+  RadialChartView: require('charts/radial-chart/RadialChartView')
+
+}
+var components = require('components/index')
+var handlers = require('handlers/index')
+
+var ChartView = ContrailChartsView.extend({
+  initialize: function () {
     var self = this
-    self.hasExternalBindingHandler = false
-    self._dataModel = new ContrailChartsDataModel()
-    self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
+    self._charts = {}
     self._components = []
-    options = options || {}
-    self.eventObject = options.eventObject || _.extend({}, Events)
   },
+
   /**
-  * Provide data for this chart as a simple array of objects.
-  * Additional ContrailChartsDataModel configuration may be provided.
-  * Setting data to a rendered chart will trigger a DataModel change event that will cause the chart to be re-rendered.
+  * Data can be set separately into every chart so every chart can have different data.
   */
-  setData: function (data, dataConfig) {
-    var self = this
-    if (dataConfig) self.setDataConfig(dataConfig)
-    if (_.isArray(data)) self._dataModel.setData(data)
-  },
-  /**
-   * Set ContrailChartsDataModel config
-   * @param dataConfig
-   */
-  setDataConfig: function (dataConfig) {
+  setData: function (data, dataConfig, chartId) {
     var self = this
     dataConfig = dataConfig || {}
-    self._dataModel.set(dataConfig, { silent: true })
+    chartId = chartId || 'default'
+    // Set data to the given chart if it exists.
+    if (self._charts[chartId]) self._charts[chartId].setData(data, dataConfig)
   },
+
   /**
-  * Provides a global BindingHandler to this chart.
-  * If no BindingHandler is provided it will be instantiated by this chart if needed based on its local configuration.
-  */
-  setBindingHandler: function (bindingHandler) {
-    var self = this
-    self.hasExternalBindingHandler = (bindingHandler != null)
-    self.bindingHandler = bindingHandler
-  },
-  /**
-  * Sets the configuration for this chart as a simple object.
-  * Instantiate the required views if they do not exist yet, set their configurations otherwise.
-  * Setting configuration to a rendered chart will trigger a ConfigModel change event that will cause the chart to be re-rendered.
+  * Sets the config for all charts that can be part of this parent chart.
+  * This config needs to be set before setData because when setting data we need the sub chart to be already defined in order to set data into it.
   */
   setConfig: function (config) {
     var self = this
     self._config = config
-    if (!self._config.chartId) {
-      self._config.chartId = 'XYChartView'
-    }
-    // Todo make dataConfig part of handlers? as dataProvider
-    if (self._config.dataConfig) self.setDataConfig(self._config.dataConfig)
+    // Initialize parent handlers
     self._initHandlers()
+    // Initialize child charts
+    self._initCharts()
+    // Initialize parent components
     self._initComponents()
-  },
-
-  getComponentByType: function (type) {
-    var self = this
-    return _.find(self._components, {type: type})
   },
 
   _initHandlers: function () {
@@ -89,6 +64,38 @@ var XYChartView = ContrailChartsView.extend({
         self.bindingHandler.addBindings(config.bindings, self._config.chartId)
       }
     }
+    if (type === 'dataProvider') {
+      // Set dataProvider config. Eg. input data formatter config
+      self._dataProvider.set(config, { silent: true })
+      // Since we're setting the config, trigger a change to parentDataModel to re-compute based on new config.
+      // Triggering the change on parentModel triggers prepareData on all the dataProvider instances of same parentModel.
+      // Todo check if we really need to trigger this or simply call prepareData in current dataProvider?
+      self._dataProvider.getParentModel().trigger('change')
+    }
+  },
+
+  /**
+   * Initialize child chart views.
+   */
+  _initCharts: function () {
+    var self = this
+    // Iterate through the self._config.charts array, initialize the given charts, set their binding handle and config.
+    _.each(self._config.charts, function (chart) {
+      self._registerChart(chart)
+    })
+  },
+
+  _registerChart: function (chart) {
+    var self = this
+    if (chart.chartId) {
+      if (!self._charts[chart.chartId]) {
+        self._charts[chart.chartId] = new charts[chart.type]()
+      }
+      if (self._isEnabledHandler('bindingHandler')) {
+        self._charts[chart.chartId].setBindingHandler(self.bindingHandler)
+      }
+      self._charts[chart.chartId].setConfig(chart)
+    }
   },
 
   _initComponents: function () {
@@ -98,7 +105,7 @@ var XYChartView = ContrailChartsView.extend({
     })
     if (self._isEnabledComponent('navigation')) {
       var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
-      if (self._isEnabledComponent('xyChart')) self.getComponentByType('xyChart').changeModel(dataModel)
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
@@ -126,20 +133,6 @@ var XYChartView = ContrailChartsView.extend({
     return component
   },
 
-  renderMessage: function (msgObj) {
-    this.eventObject.trigger('message', msgObj)
-  },
-
-  clearMessage: function (componentId) {
-    // To clear messages for a given component we send a message with 'update' action and an empty array of messages.
-    var msgObj = {
-      componentId: componentId,
-      action: 'update',
-      messages: []
-    }
-    this.eventObject.trigger('message', msgObj)
-  },
-
   _isEnabled: function (config, type) {
     var foundConfig = _.find(config, {type: type})
     if (!foundConfig) return false
@@ -161,10 +154,13 @@ var XYChartView = ContrailChartsView.extend({
 
   render: function () {
     var self = this
+    _.each(self._charts, function (chart) {
+      chart.render()
+    })
     _.each(self._components, function (component) {
       component.render()
     })
   }
 })
 
-module.exports = XYChartView
+module.exports = ChartView

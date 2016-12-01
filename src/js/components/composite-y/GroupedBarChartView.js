@@ -3,7 +3,7 @@
  */
 var _ = require('lodash')
 var d3 = require('d3')
-var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
+var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 var BarChartView = XYChartSubView.extend({
   tagName: 'div',

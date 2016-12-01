@@ -3,7 +3,7 @@
  */
 var _ = require('lodash')
 var d3 = require('d3')
-var XYChartSubView = require('contrail-charts/components/xy/XYChartSubView')
+var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 var ScatterBubbleChartView = XYChartSubView.extend({
   tagName: 'div',
@@ -71,7 +71,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
         // var pos = $(this).offset() // not working in jquery 3
         var offset = {
           left: d.x + d.r * 0.71,
-          top: d.y - d.r * 0.71,
+          top: d.y - d.r * 0.71
         }
         self.eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
         d3.select(this).classed('active', true)

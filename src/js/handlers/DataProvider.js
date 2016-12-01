@@ -14,18 +14,21 @@ var DataProvider = ContrailModel.extend({
   defaults: {
     _type: 'DataProvider',
 
-    // / The formatted / filtered data
+    // The formatted/filtered data
     data: [],
 
-    // / A lazy store of data ranges for which a range was calculated or for which the range was set manually.
-    // / example: { x: [0, 100], y: [20, 30], r: [5, 20] }
+    // Function to format/filter data. Always applied on parentData
+    formatData: undefined,
+
+    // A lazy store of data ranges for which a range was calculated or for which the range was set manually.
+    // example: { x: [0, 100], y: [20, 30], r: [5, 20] }
     range: {},
 
-    // / Ranges set manually on this data provider.
+    // Ranges set manually on this data provider.
     manualRange: {},
 
-    // / This can be a DataModel or another DataProvider.
-    // / expected functions: getData(), getQueryLimit(), setQueryLimit()
+    // This can be a DataModel or another DataProvider.
+    // expected functions: getData(), getQueryLimit(), setQueryLimit()
     parentDataModel: undefined,
 
     error: false,

@@ -28,7 +28,7 @@ define([
       config: {
         bindings: [
           {
-            sourceComponent: 'xyChart',
+            sourceComponent: 'compositeY',
             sourceModel: 'config',
             sourcePath: 'plot',
             targetComponent: 'controlPanel',
@@ -37,9 +37,17 @@ define([
           }
         ]
       }
+    }, {
+      type: 'dataProvider',
+      config: {
+        formatData: function (data) {
+          // Sample dataProvider input data formatter.
+          return data
+        }
+      }
     }],
     components: [{
-      type: 'xyChart',
+      type: 'compositeY',
       config: {
         el: '#complexChart-xyChart',
         marginInner: 10,
@@ -198,7 +206,7 @@ define([
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
     components: [{
-      type: 'xyChart',
+      type: 'compositeY',
       config: {
         el: '#simpleChart',
         plot: {

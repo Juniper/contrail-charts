@@ -12,9 +12,6 @@ var ContrailChartsDataModel = ContrailModel.extend({
     // / The formatted data
     data: [],
 
-    // Function to parse the data. Act as formatter
-    dataParser: undefined,
-
     // to Save the current state of data fetching
     // Todo: integrate properly with ContrailListModel remoteDataHandler.
     dataStatus: undefined,

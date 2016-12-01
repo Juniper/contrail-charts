@@ -6,8 +6,8 @@ var _ = require('lodash')
 var d3 = require('d3')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
-var DataProvider = require('contrail-charts/handlers/DataProvider')
-var CompositeYChartView = require('contrail-charts/components/xy/CompositeYChartView')
+var DataProvider = require('handlers/DataProvider')
+var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 
 var NavigationView = ContrailChartsView.extend({
   tagName: 'div',

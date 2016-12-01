@@ -21,8 +21,8 @@ plugins.push(new ExtractTextPlugin('css/' + fileName + '.css'))
 
 var config = {
   entry: {
-    'contrail-charts': path.join(__dirname, '/src/js/contrail-charts/index.js'),
-    'contrail-charts.min': path.join(__dirname, '/src/js/contrail-charts/index.js')
+    'contrail-charts': path.join(__dirname, '/src/js/index.js'),
+    'contrail-charts.min': path.join(__dirname, '/src/js/index.js')
   },
   devtool: 'source-map',
   output: {
@@ -53,14 +53,14 @@ var config = {
   resolve: {
     root: path.resolve('./src/js'),
     alias: {
-      'contrail-model': 'contrail-charts/plugins/' + framework + '/ContrailModel',
-      'contrail-view': 'contrail-charts/plugins/' + framework + '/ContrailView',
-      'contrail-events': 'contrail-charts/plugins/' + framework + '/ContrailEvents',
+      'contrail-model': 'plugins/' + framework + '/ContrailModel',
+      'contrail-view': 'plugins/' + framework + '/ContrailView',
+      'contrail-events': 'plugins/' + framework + '/ContrailEvents',
 
-      'contrail-charts-data-model': 'contrail-charts/plugins/contrail/ContrailChartsDataModel',
-      'contrail-charts-config-model': 'contrail-charts/plugins/contrail/ContrailChartsConfigModel',
-      'contrail-charts-view': 'contrail-charts/plugins/contrail/ContrailChartsView',
-      'contrail-charts-events': 'contrail-charts/plugins/contrail/ContrailChartsEvents',
+      'contrail-charts-data-model': 'plugins/contrail/ContrailChartsDataModel',
+      'contrail-charts-config-model': 'plugins/contrail/ContrailChartsConfigModel',
+      'contrail-charts-view': 'plugins/contrail/ContrailChartsView',
+      'contrail-charts-events': 'plugins/contrail/ContrailChartsEvents',
     },
     extensions: ['', '.js']
   },

@@ -24,7 +24,7 @@ complexChartView.setConfig({
     config: {
       bindings: [
         {
-          sourceComponent: 'xyChart',
+          sourceComponent: 'compositeY',
           sourceModel: 'config',
           sourcePath: 'plot',
           targetComponent: 'controlPanel',
@@ -35,7 +35,7 @@ complexChartView.setConfig({
     },
   }],
   components: [{
-    type: 'xyChart',
+    type: 'compositeY',
     config: {
       el: '#complexChart-xyChart',
       marginInner: 10,
@@ -280,13 +280,13 @@ complexChartView.setConfig({
     type: 'legend',
     config: {
       el: '#complexChart-legend',
-      sourceComponent: 'xyChart'
+      sourceComponent: 'compositeY'
     },
   }, {
     type: 'crosshair',
     config: {
       el: '#complexChart-xyChart',
-      sourceComponent: 'xyChart',
+      sourceComponent: 'compositeY',
     },
   }]
 })
@@ -322,7 +322,7 @@ var simpleData = [
 var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
   components: [{
-    type: 'xyChart',
+    type: 'compositeY',
     config: {
       el: '#simpleChart',
       plot: {

@@ -16,7 +16,7 @@ for (var i = 0; i < 100; i++) {
 
 var chartConfig = {
   components: [{
-    type: 'xyChart',
+    type: 'compositeY',
     config: {
       el: '#chart',
       marginInner: 25,

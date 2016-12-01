@@ -13,8 +13,8 @@ describe('coCharts', function () {
     expect(coCharts.charts.XYChartView).toBeDefined()
     expect(coCharts.handlers.BindingHandler).toBeDefined()
     expect(coCharts.handlers.DataProvider).toBeDefined()
-    expect(coCharts.components.xyChart.ConfigModel).toBeDefined()
-    expect(coCharts.components.xyChart.View).toBeDefined()
+    expect(coCharts.components.compositeY.ConfigModel).toBeDefined()
+    expect(coCharts.components.compositeY.View).toBeDefined()
     expect(coCharts.components.controlPanel.ConfigModel).toBeDefined()
     expect(coCharts.components.controlPanel.View).toBeDefined()
     expect(coCharts.components.message.ConfigModel).toBeDefined()
@@ -29,7 +29,7 @@ describe('coCharts', function () {
 describe('coCharts.charts.XYChartView', function () {
   var simpleChartConfig = {
     components: [{
-      type: 'xyChart',
+      type: 'compositeY',
       config: {
         el: '#chartView',
         plot: {
@@ -49,7 +49,7 @@ describe('coCharts.charts.XYChartView', function () {
   it('XYChartView has xyChart component', function () {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setConfig(simpleChartConfig)
-    expect(chartView.getComponentByType('xyChart')).toBeDefined()
+    expect(chartView.getComponentByType('compositeY')).toBeDefined()
     expect(chartView.getComponentByType('navigation')).not.toBeDefined()
   })
 
@@ -57,7 +57,7 @@ describe('coCharts.charts.XYChartView', function () {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setData([])
     chartView.setConfig(simpleChartConfig)
-    var xyChart = chartView.getComponentByType('xyChart')
+    var xyChart = chartView.getComponentByType('compositeY')
     xyChart.render()
     // Time for component init before assert
     setTimeout(function () {
@@ -70,7 +70,7 @@ describe('coCharts.charts.XYChartView', function () {
     var chartView = new coCharts.charts.XYChartView()
     chartView.setData([])
     chartView.setConfig(simpleChartConfig)
-    var xyChart = chartView.getComponentByType('xyChart')
+    var xyChart = chartView.getComponentByType('compositeY')
     spyOn(xyChart, 'render')
     chartView.render()
     expect(xyChart.render).toHaveBeenCalled()
