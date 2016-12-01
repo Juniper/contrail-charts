@@ -213,11 +213,31 @@ button:focus {
 			width: 16px;
 			height: 16px;
 			border-radius: 16px;
-			margin-right: 10px
+			margin-right: 10px;
 		}
 		.label {
 			font-size: 12px;
 		}
+	}
+}
+
+.coCharts-color-picker-view {
+	.color-select {
+		display: block;
+		width: 150px;
+		height: 25px;
+		line-height: 25px;
+		text-align: center;
+		margin-bottom: 5px;
+
+		.label {
+			font-size: 14px;
+			font-weight: bold;
+			color: #fff;
+		}
+	}
+	.color-select:hover {
+		cursor: pointer;
 	}
 }
 

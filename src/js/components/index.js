@@ -10,6 +10,8 @@ var LegendConfigModel = require('components/legend/LegendConfigModel')
 var LegendView = require('components/legend/LegendView')
 var CrosshairConfigModel = require('components/crosshair/CrosshairConfigModel')
 var CrosshairView = require('components/crosshair/CrosshairView')
+var ColorPickerConfigModel = require('components/color-picker/ColorPickerConfigModel')
+var ColorPickerView = require('components/color-picker/ColorPickerView')
 var CompositeYChartConfigModel = require('components/composite-y/CompositeYChartConfigModel')
 var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 var PieChartConfigModel = require('components/radial/PieChartConfigModel')
@@ -27,6 +29,10 @@ module.exports = {
   crosshair: {
     ConfigModel: CrosshairConfigModel,
     View: CrosshairView
+  },
+  colorPicker: {
+    ConfigModel: ColorPickerConfigModel,
+    View: ColorPickerView
   },
   navigation: {
     ConfigModel: NavigationConfigModel,

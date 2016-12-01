@@ -148,7 +148,10 @@ var NavigationView = ContrailChartsView.extend({
       self._handleModelChange()
       self._isModelChanged = false
     }
-    self.renderBrush()
+    setTimeout(function () {
+      self.renderBrush()
+    }, 1000)
+
   // self.renderPageLinks()
   },
 

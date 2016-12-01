@@ -98,6 +98,10 @@ var CrosshairView = ContrailChartsView.extend({
   _bindListeners: function () {
     var self = this
     self.stopListening(self.eventObject)
+    // We assume that when the sourceComponent is rendered it triggers the 'rendered:[componentName]' event passing (sourceParams, sourceConfig) as arguments.
+    // We assume that these are the params of a CompositeY chart.
+    // TODO: How to handle params from different components (ie. Radial)?
+    // They can have a different structure then the 'plot' and 'axis' config attributes in CompositeY.
     self.listenTo(self.eventObject, 'rendered:' + self.params.sourceComponent, self._bindMouseListeners)
   },
 

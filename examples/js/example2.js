@@ -281,13 +281,19 @@ complexChartView.setConfig({
     config: {
       el: '#complexChart-legend',
       sourceComponent: 'compositeY'
-    },
+    }
   }, {
     type: 'crosshair',
     config: {
       el: '#complexChart-xyChart',
-      sourceComponent: 'compositeY',
-    },
+      sourceComponent: 'compositeY'
+    }
+  }, {
+    type: 'colorPicker',
+    config: {
+      el: '#complexChart-color-picker',
+      sourceComponent: 'compositeY'
+    }
   }]
 })
 complexChartView.setData(complexData)
