@@ -1,6 +1,5 @@
 build/
 node_modules/
-lib/
 .sass-cache
 npm-debug.log
 .grunt

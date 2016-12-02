@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var _ = require('lodash')
-var d3 = require('d3')
+var $ = require('jquery')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
@@ -29,11 +29,11 @@ var ColorPickerView = ContrailChartsView.extend({
     return fnGenerateColorPickerHTML(accessors)
   },
 
-  openColorPalette: function(e) {
+  openColorPalette: function (e) {
     var self = this
     var $elem = $(e.target).closest('.color-select')
-    var accessor = _.find(self.accessors, function(a) { return a.accessor == $elem.attr('data-accessor'); })
-    if(!accessor) {
+    var accessor = _.find(self.accessors, function (a) { return a.accessor === $elem.attr('data-accessor') })
+    if (!accessor) {
       return
     }
     self.accessor = accessor
@@ -44,24 +44,24 @@ var ColorPickerView = ContrailChartsView.extend({
     $paletteTitle.append('<span class="color-picker-palette-close"><i class="fa fa-remove"/></span>')
     $paletteContainer.append($paletteTitle)
     var $paletteBody = $('<div class="color-picker-palette-body"></div>')
-    _.each(self.params.palette, function(color) {
+    _.each(self.params.palette, function (color) {
       $paletteBody.append('<span class="color-picker-palette-color" style="background-color: ' + color + '">&nbsp;</span>')
     })
     $paletteContainer.append($paletteBody)
     var elemOffset = $elem.position()
-    elemOffset.left += 155;
+    elemOffset.left += 155
     $paletteContainer.offset(elemOffset)
     self.$el.append($paletteContainer)
   },
 
-  closeColorPalette: function() {
+  closeColorPalette: function () {
     this.$el.find('.color-picker-palette').remove()
   },
 
-  selectColor: function(e) {
+  selectColor: function (e) {
     var self = this
     var $elem = $(e.target).closest('.color-picker-palette-color')
-    var configAccessor = _.find(self.sourceConfig.get('plot').y, function(a) { return a.accessor == self.accessor.accessor; } )
+    var configAccessor = _.find(self.sourceConfig.get('plot').y, function (a) { return a.accessor === self.accessor.accessor })
     if (configAccessor) {
       configAccessor.color = $elem.css('background-color')
       self.sourceConfig.trigger('change', self.sourceConfig)
