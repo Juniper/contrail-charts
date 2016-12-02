@@ -229,6 +229,12 @@ var NavigationView = ContrailChartsView.extend({
           .startAngle(0)
           .endAngle(function (d, i) { return i ? Math.PI : -Math.PI }))
       if (_.isArray(self.params.selection)) {
+        if (!self.params.selection[0]) {
+          self.params.selection[0] = 0
+        }
+        if (!self.params.selection[1]) {
+          self.params.selection[1] = 100
+        }
         var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
         var xMin = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[0] / 100) + xScale.range()[0]
         var xMax = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[1] / 100) + xScale.range()[0]
