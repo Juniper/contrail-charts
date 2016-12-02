@@ -13,7 +13,7 @@ var ColorPickerConfigModel = ContrailChartsConfigModel.extend({
     generateColorPickerHTML: function (accessors) {
       var $container = $('<div></div>')
       _.each(accessors, function (accessor) {
-        var $row = $('<div class="color-select" style="background-color: ' + accessor.color + '"></div>')
+        var $row = $('<div class="color-select" style="background-color: ' + accessor.color + '" data-accessor="' + accessor.accessor + '"></div>')
         $row.append('<span class="label">' + (accessor.label || accessor.accessor) + '</span>')
         $container.append($row)
       })
