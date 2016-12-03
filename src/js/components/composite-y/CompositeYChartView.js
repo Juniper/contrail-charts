@@ -146,7 +146,7 @@ var CompositeYChartView = ContrailChartsView.extend({
         if (accessor.enabled) {
           self.params.activeAccessorData.push(accessor)
           var foundAxisInfo = _.find(self.params.yAxisInfoArray, { name: accessor.axis })
-          var axisPosition = self.hasAxisConfig(accessor.axis, 'position') ? self.params.axis[accessor.axis].position : 'left'
+          var axisPosition = self.hasAxisParam(accessor.axis, 'position') ? self.params.axis[accessor.axis].position : 'left'
           if (!foundAxisInfo) {
             foundAxisInfo = {
               name: accessor.axis,
@@ -275,7 +275,7 @@ var CompositeYChartView = ContrailChartsView.extend({
             }
           }
           // Override axis domain based on axis config.
-          if (self.hasAxisConfig(axisName, 'domain')) {
+          if (self.hasAxisParam(axisName, 'domain')) {
             if (!_.isUndefined(self.params.axis[axisName].domain[0])) {
               domains[axisName][0] = self.params.axis[axisName].domain[0]
             }
@@ -302,7 +302,7 @@ var CompositeYChartView = ContrailChartsView.extend({
       if (!_.has(self.params.axis, axisName)) {
         self.params.axis[axisName] = {}
       }
-      if (!self.hasAxisConfig(axisName, 'position')) {
+      if (!self.hasAxisParam(axisName, 'position')) {
         // Default axis position.
         if (axisName.charAt(0) === 'x') {
           self.params.axis[axisName].position = 'bottom'
@@ -310,19 +310,19 @@ var CompositeYChartView = ContrailChartsView.extend({
           self.params.axis[axisName].position = 'left'
         }
       }
-      if (!self.hasAxisConfig(axisName, 'range')) {
+      if (!self.hasAxisParam(axisName, 'range')) {
         if (['bottom', 'top'].indexOf(self.params.axis[axisName].position) >= 0) {
           self.params.axis[axisName].range = self.params.xRange
         } else if (['left', 'right'].indexOf(self.params.axis[axisName].position) >= 0) {
           self.params.axis[axisName].range = self.params.yRange
         }
       }
-      if (!self.hasAxisConfig(axisName, 'domain')) {
+      if (!self.hasAxisParam(axisName, 'domain')) {
         self.params.axis[axisName].domain = domain
       }
       if (!_.isFunction(self.params.axis[axisName].scale) && self.params.axis[axisName].range) {
         var baseScale = null
-        if (self.hasAxisConfig(axisName, 'scale') && _.isFunction(d3[self.params.axis[axisName]])) {
+        if (self.hasAxisConfig(axisName, 'scale') && _.isFunction(d3[self.config.get('axis')[axisName]])) {
           baseScale = d3[self.params.axis[axisName].scale]()
         } else if (['bottom', 'top'].indexOf(self.params.axis[axisName].position) >= 0) {
           baseScale = d3.scaleTime()
@@ -330,7 +330,7 @@ var CompositeYChartView = ContrailChartsView.extend({
           baseScale = d3.scaleLinear()
         }
         self.params.axis[axisName].scale = baseScale.domain(self.params.axis[axisName].domain).range(self.params.axis[axisName].range)
-        if (self.hasAxisConfig(axisName, 'nice') && self.params.axis[axisName].nice) {
+        if (self.hasAxisParam(axisName, 'nice') && self.params.axis[axisName].nice) {
           self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.xTicks)
         }
       }
@@ -348,11 +348,12 @@ var CompositeYChartView = ContrailChartsView.extend({
   renderSVG: function () {
     var self = this
     var translate = self.params.xRange[0] - self.params.marginInner
+    var rectClipPathId = 'rect-clipPath-' + self.el.id
     var svgs = d3.select(self.el).select('svg')
     if (svgs.empty()) {
       var svg = d3.select(self.el).append('svg').attr('class', 'coCharts-svg')
       svg.append('clipPath')
-        .attr('id', 'rect-clipPath')
+        .attr('id', rectClipPathId)
         .append('rect')
         .attr('x', self.params.xRange[0] - self.params.marginInner)
         .attr('y', self.params.yRange[1] - self.params.marginInner)
@@ -380,7 +381,7 @@ var CompositeYChartView = ContrailChartsView.extend({
       .attr('class', function (drawing) {
         return 'drawing-group drawing-' + drawing.getName() + ' ' + drawing.className
       })
-      .attr('clip-path', 'url(#rect-clipPath)')
+      .attr('clip-path', 'url(#' + rectClipPathId + ')')
     // Every drawing can add a one time (enter) code into it's drawing group.
     svgDrawingGroups.enter().each(function (drawing) {
       if (_.isFunction(drawing.renderSVG)) {
@@ -392,16 +393,22 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.svgSelection()
       .attr('width', self.params.chartWidth)
       .attr('height', self.params.chartHeight)
-      .select('#rect-clipPath').select('rect')
+      .select('#' + rectClipPathId).select('rect')
       .attr('x', self.params.xRange[0] - self.params.marginInner)
       .attr('y', self.params.yRange[1] - self.params.marginInner)
       .attr('width', self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner)
       .attr('height', self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
   },
 
-  hasAxisConfig: function (axisName, axisConfigParam) {
+  hasAxisConfig: function (axisName, axisAttributeName) {
     var self = this
-    return _.isObject(self.params.axis) && _.isObject(self.params.axis[axisName]) && !_.isUndefined(self.params.axis[axisName][axisConfigParam])
+    var axis = self.config.get('axis')
+    return _.isObject(axis) && _.isObject(axis[axisName]) && !_.isUndefined(axis[axisName][axisAttributeName])
+  },
+
+  hasAxisParam: function (axisName, axisAttributeName) {
+    var self = this
+    return _.isObject(self.params.axis) && _.isObject(self.params.axis[axisName]) && !_.isUndefined(self.params.axis[axisName][axisAttributeName])
   },
 
   /**
@@ -415,17 +422,17 @@ var CompositeYChartView = ContrailChartsView.extend({
       .tickPadding(10)
       .ticks(self.params.xTicks)
     if (self.hasAxisConfig('x', 'formatter')) {
-      xAxis = xAxis.tickFormat(self.params.axis.x.formatter)
+      xAxis = xAxis.tickFormat(self.config.get('axis').x.formatter)
     }
     var svg = self.svgSelection().transition().ease(d3.easeLinear).duration(self.params.duration)
     svg.select('.axis.x-axis').call(xAxis)
     // X axis label
     var xLabelData = []
     var xLabelMargin = 5
-    if (self.hasAxisConfig(xAxisName, 'labelMargin')) {
+    if (self.hasAxisParam(xAxisName, 'labelMargin')) {
       xLabelMargin = self.params.axis[xAxisName].labelMargin
     }
-    if (self.hasAxisConfig(xAxisName, 'label')) {
+    if (self.hasAxisParam(xAxisName, 'label')) {
       xLabelData.push(self.params.axis[xAxisName].label)
     }
     var xAxisLabelSvg = self.svgSelection().select('.axis.x-axis').selectAll('.axis-label').data(xLabelData)
@@ -444,7 +451,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     var yLabelTransform = 'rotate(-90)'
     _.each(self.params.yAxisInfoArray, function (axisInfo) {
       var yLabelMargin = 12
-      if (self.hasAxisConfig(axisInfo.name, 'labelMargin')) {
+      if (self.hasAxisParam(axisInfo.name, 'labelMargin')) {
         yLabelMargin = self.params.axis[axisInfo.name].labelMargin
       }
       yLabelX = 0 - self.params.marginLeft + yLabelMargin
@@ -470,7 +477,7 @@ var CompositeYChartView = ContrailChartsView.extend({
         axisInfo.yAxis = axisInfo.yAxis.tickValues(referenceTickValues)
       }
       if (self.hasAxisConfig(axisInfo.name, 'formatter')) {
-        axisInfo.yAxis = axisInfo.yAxis.tickFormat(self.params.axis[axisInfo.name].formatter)
+        axisInfo.yAxis = axisInfo.yAxis.tickFormat(self.config.get('axis')[axisInfo.name].formatter)
       }
       svg.select('.axis.y-axis.' + axisInfo.name + '-axis').call(axisInfo.yAxis)
       // Y axis label

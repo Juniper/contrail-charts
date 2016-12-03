@@ -18,31 +18,38 @@ var CrosshairView = ContrailChartsView.extend({
     self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
-  _mouseMoveHandler: function (sourceParams, sourceConfig, mouse) {
+  _findXDataValue: function (mouseX, xAccessor) {
     var self = this
-    if (mouse[0] < sourceParams.xRange[0] || mouse[0] > sourceParams.xRange[1] || mouse[1] < sourceParams.yRange[1] || mouse[1] > sourceParams.yRange[0]) {
-      return
-    }
-    var svg = self.svgSelection()
     var data = self.getData()
-    var xAccessor = sourceParams.plot.x.accessor
-    var xScale = sourceParams.axis[sourceParams.plot.x.axis].scale
     var xBisector = d3.bisector(function (d) {
       return d[xAccessor]
     }).right
-    var xVal = xScale.invert(mouse[0])
-    var indexRight = xBisector(data, xVal, 0, data.length - 1)
+    var indexRight = xBisector(data, mouseX, 0, data.length - 1)
     var indexLeft = indexRight - 1
     if (indexLeft < 0) indexLeft = 0
     var index = indexRight
-    if (Math.abs(xVal - data[indexLeft][xAccessor]) < Math.abs(xVal - data[indexRight][xAccessor])) {
+    if (Math.abs(mouseX - data[indexLeft][xAccessor]) < Math.abs(mouseX - data[indexRight][xAccessor])) {
       index = indexLeft
     }
-    var xElemVal = data[index][xAccessor]
+    return data[index][xAccessor]
+  },
+
+  _mouseMoveHandler: function (sourceParams, sourceConfig, mouse) {
+    var self = this
+    if (!self.getData().length) {
+      return self.removeCrosshair()
+    }
+    if (mouse[0] < sourceParams.xRange[0] || mouse[0] > sourceParams.xRange[1] || mouse[1] < sourceParams.yRange[1] || mouse[1] > sourceParams.yRange[0]) {
+      return self.removeCrosshair()
+    }
+    var svg = self.svgSelection()
+    var xScale = sourceParams.axis[sourceParams.plot.x.axis].scale
+    var xElemVal = self._findXDataValue(xScale.invert(mouse[0]), sourceParams.plot.x.accessor)
     var xFormat = sourceConfig.get('axis')[sourceParams.plot.x.axis].formatter
     if (!_.isFunction(xFormat)) {
       xFormat = d3.timeFormat('%H:%M')
     }
+    // Draw crosshair
     var svgCrosshair = svg.selectAll('.crosshair').data([{ x: mouse[0], y: mouse[1] }])
     var svgCrosshairEnter = svgCrosshair.enter().append('g')
       .attr('class', 'crosshair')
@@ -78,12 +85,31 @@ var CrosshairView = ContrailChartsView.extend({
     svg.on('mousemove', function () {
       throttledMouseMoveHandler(sourceParams, sourceConfig, d3.mouse(this))
     })
+    svg.on('mouseout', function () {
+      // The mouse could have left the svg but entered an svg child.
+      // We still get a mouseout event in this case so still need to verify if mouse coordinates are out of bounds.
+      var mouse = d3.mouse(this)
+      if (mouse[0] < sourceParams.xRange[0] || mouse[0] > sourceParams.xRange[1] || mouse[1] < sourceParams.yRange[1] || mouse[1] > sourceParams.yRange[0]) {
+        self.removeCrosshair()
+      }
+    })
   },
 
   _bindListeners: function () {
     var self = this
     self.stopListening(self.eventObject)
+    // We assume that when the sourceComponent is rendered it triggers the 'rendered:[componentName]' event passing (sourceParams, sourceConfig) as arguments.
+    // We assume that these are the params of a CompositeY chart.
+    // TODO: How to handle params from different components (ie. Radial)?
+    // They can have a different structure then the 'plot' and 'axis' config attributes in CompositeY.
     self.listenTo(self.eventObject, 'rendered:' + self.params.sourceComponent, self._bindMouseListeners)
+  },
+
+  removeCrosshair: function () {
+    var self = this
+    var svg = self.svgSelection()
+    var svgCrosshair = svg.selectAll('.crosshair').data([])
+    svgCrosshair.exit().remove()
   },
 
   render: function () {

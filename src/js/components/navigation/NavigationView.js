@@ -148,7 +148,10 @@ var NavigationView = ContrailChartsView.extend({
       self._handleModelChange()
       self._isModelChanged = false
     }
-    self.renderBrush()
+    setTimeout(function () {
+      self.renderBrush()
+    }, 1000)
+
   // self.renderPageLinks()
   },
 
@@ -226,8 +229,16 @@ var NavigationView = ContrailChartsView.extend({
           .startAngle(0)
           .endAngle(function (d, i) { return i ? Math.PI : -Math.PI }))
       if (_.isArray(self.params.selection)) {
+        if (!self.params.selection[0]) {
+          self.params.selection[0] = 0
+        }
+        if (!self.params.selection[1]) {
+          self.params.selection[1] = 100
+        }
         var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
-        self.brush.move(brushGroup, [xScale(self.params.selection[0]), xScale(self.params.selection[1])])
+        var xMin = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[0] / 100) + xScale.range()[0]
+        var xMax = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[1] / 100) + xScale.range()[0]
+        self.brush.move(brushGroup, [xMin, xMax])
       }
     }
   },

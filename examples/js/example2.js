@@ -3,6 +3,9 @@
 function numberFormatFunction (number) {
   return number.toFixed(2)
 }
+function numberFormatFunction3 (number) {
+  return number.toFixed(3)
+}
 
 // Complex example
 var complexData = []
@@ -105,7 +108,7 @@ complexChartView.setConfig({
         },
         y2: {
           position: 'right',
-          formatter: numberFormatFunction,
+          formatter: numberFormatFunction3,
           labelMargin: 15
         }
       }
@@ -118,8 +121,8 @@ complexChartView.setConfig({
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 300,
-      selection: [1475760930000 + 1000000 * 90, 1475760930000 + 1000000 * 100],
+      chartHeight: 200,
+      selection: [75, 100],
       plot: {
         x: {
           accessor: 'x',
@@ -157,7 +160,7 @@ complexChartView.setConfig({
         },
         y2: {
           position: 'right',
-          formatter: numberFormatFunction,
+          formatter: numberFormatFunction3,
           labelMargin: 15
         }
       }
@@ -281,13 +284,19 @@ complexChartView.setConfig({
     config: {
       el: '#complexChart-legend',
       sourceComponent: 'compositeY'
-    },
+    }
   }, {
     type: 'crosshair',
     config: {
       el: '#complexChart-xyChart',
-      sourceComponent: 'compositeY',
-    },
+      sourceComponent: 'compositeY'
+    }
+  }, {
+    type: 'colorPicker',
+    config: {
+      el: '#complexChart-color-picker',
+      sourceComponent: 'compositeY'
+    }
   }]
 })
 complexChartView.setData(complexData)
@@ -313,11 +322,11 @@ console.log('complexChartView: ', complexChartView)
 
 // Most basic chart.
 var simpleData = [
-  { x: 1475760930000, y: 0 },
-  { x: 1475761930000, y: 3 },
-  { x: 1475762930000, y: 2 },
-  { x: 1475763930000, y: 4 },
-  { x: 1475764930000, y: 5 }
+  { x: (new Date(2016, 11, 1)).getTime(), y: 0 },
+  { x: (new Date(2016, 11, 2)).getTime(), y: 3 },
+  { x: (new Date(2016, 11, 3)).getTime(), y: 2 },
+  { x: (new Date(2016, 11, 4)).getTime(), y: 4 },
+  { x: (new Date(2016, 11, 5)).getTime(), y: 5 }
 ]
 var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
@@ -335,6 +344,11 @@ simpleChartView.setConfig({
             chart: 'area',
           }
         ]
+      },
+      axis: {
+        x: {
+          domain: [(new Date(2016, 11, 2)).getTime(), (new Date(2016, 11, 4)).getTime()]
+        }
       }
     }
   }]

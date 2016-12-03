@@ -124,6 +124,7 @@ define([
         marginLeft: 80,
         marginRight: 80,
         marginBottom: 40,
+        chartHeight: 200,
         plot: {
           x: {
             accessor: 'x',
