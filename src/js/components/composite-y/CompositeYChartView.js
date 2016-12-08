@@ -276,11 +276,11 @@ var CompositeYChartView = ContrailChartsView.extend({
           }
           // Override axis domain based on axis config.
           if (self.hasAxisParam(axisName, 'domain')) {
-            if (!_.isUndefined(self.params.axis[axisName].domain[0])) {
-              domains[axisName][0] = self.params.axis[axisName].domain[0]
+            if (!_.isUndefined(self.config.get('axis')[axisName].domain[0])) {
+              domains[axisName][0] = self.config.get('axis')[axisName].domain[0]
             }
-            if (!_.isUndefined(self.params.axis[axisName].domain[1])) {
-              domains[axisName][1] = self.params.axis[axisName].domain[1]
+            if (!_.isUndefined(self.config.get('axis')[axisName].domain[1])) {
+              domains[axisName][1] = self.config.get('axis')[axisName].domain[1]
             }
           }
         })
@@ -317,9 +317,7 @@ var CompositeYChartView = ContrailChartsView.extend({
           self.params.axis[axisName].range = self.params.yRange
         }
       }
-      if (!self.hasAxisParam(axisName, 'domain')) {
-        self.params.axis[axisName].domain = domain
-      }
+      self.params.axis[axisName].domain = domain
       if (!_.isFunction(self.params.axis[axisName].scale) && self.params.axis[axisName].range) {
         var baseScale = null
         if (self.hasAxisConfig(axisName, 'scale') && _.isFunction(d3[self.config.get('axis')[axisName]])) {
