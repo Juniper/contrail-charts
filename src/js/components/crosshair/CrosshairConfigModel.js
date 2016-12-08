@@ -4,7 +4,8 @@
 var ContrailChartsConfigModel = require('contrail-charts-config-model')
 var CrosshairConfigModel = ContrailChartsConfigModel.extend({
   defaults: {
-    duration: 100
+    duration: 100,
+    bubbleR: 5
   }
 })
 
