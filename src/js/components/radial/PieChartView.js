@@ -26,7 +26,6 @@ var PieChartView = ContrailChartsView.extend({
     self.eventObject = options.eventObject || _.extend({}, Events)
 
     self.listenTo(self.config, 'change', self._onConfigModelChange)
-    self._colorRange = ['#3366cc', '#dc3912', '#ff9900', '#109618', '#990099', '#0099c6', '#dd4477', '#66aa00', '#b82e2e', '#316395', '#994499', '#22aa99', '#aaaa11', '#6633cc', '#e67300', '#8b0707', '#651067', '#329262', '#5574a6', '#3b3eac']
   },
 
   changeModel: function (model) {
@@ -38,8 +37,6 @@ var PieChartView = ContrailChartsView.extend({
 
   render: function () {
     var self = this
-    self._color = d3.scaleOrdinal()
-      .range(self._colorRange);
     self._renderSVG()
   },
 
@@ -93,7 +90,6 @@ var PieChartView = ContrailChartsView.extend({
 
     arcs.append('path')
       .attr('d', arc)
-      .style('fill', function(d) { return self._color(d.data[labelAccessor]) })
 
   var ordinal = d3.scaleOrdinal()
     .domain(_.map(data, 'x'))
@@ -111,6 +107,10 @@ var PieChartView = ContrailChartsView.extend({
   self.svgSelection().select('.legendOrdinal')
     .call(legendOrdinal)
   },
+      .style('fill', function(d) {
+        return self.config.getColor(d.data[labelAccessor])
+      })
+  }
 })
 
 module.exports = PieChartView

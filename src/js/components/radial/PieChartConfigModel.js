@@ -14,11 +14,13 @@ var PieChartConfigModel = ContrailChartsConfigModel.extend({
     // / The chart height. If not provided will be caculated by View.
     chartHeight: undefined,
 
-    //initialize: function (config) {
-      //var self = this
-      //self.set('radius', Math.min(width, height) / 2;)
-    //},
-  }
+    colorScale: d3.scaleOrdinal(d3.schemeCategory20),
+  },
+
+  getColor: function (accessor) {
+    var self = this
+    return self.attributes.colorScale(accessor)
+  },
 })
 
 module.exports = PieChartConfigModel
