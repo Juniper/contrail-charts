@@ -179,16 +179,8 @@ var DataProvider = ContrailModel.extend({
       variableRange = [parentRange[variableName][0], parentRange[variableName][1]]
     } else {
       // Otherwise calculate the range from data.
-      min = Infinity
-      max = -Infinity
-      _.each(data, function (d) {
-        if (_.has(d, variableName)) {
-          if (d[variableName] < min) min = d[variableName]
-          if (d[variableName] > max) max = d[variableName]
-        }
-      })
       if (data.length) {
-        variableRange = [min, max]
+        variableRange = d3.extent(data, function (d) { return d[variableName] })
       } else {
         // No data available so assume a [0..1] range.
         variableRange = [0, 1]
