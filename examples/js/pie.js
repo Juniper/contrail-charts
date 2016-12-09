@@ -9,7 +9,7 @@ var pieData = [
   { x: "Process 6", y: 612463 },
 ];
 function numberFormatter (number) {
-  return number.toFixed(2)
+  return d3.format(",.0f")(number)
 }
 function getLabel (serie) {
   return serie.x
@@ -39,10 +39,8 @@ var chartConfig = {
       dataConfig: [
         {
           accessor: 'y',
-          labelFormatter: function (key) {
-            return key
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: getLabel,
+          formatter: numberFormatter,
         },
       ],
     },

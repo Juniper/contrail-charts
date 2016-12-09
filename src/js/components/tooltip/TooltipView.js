@@ -63,8 +63,8 @@ var TooltipView = ContrailChartsView.extend({
     var template = self.config.get('template') || _template
     tooltipData.items = _.map(dataConfig, function (datumConfig) {
       return {
-        label: datumConfig.labelFormatter(data[datumConfig.label]),
-        value: datumConfig.valueFormatter(data[datumConfig.accessor])
+        label: self.model.getLabel(data, datumConfig),
+        value: self.model.getFormattedValue(data, datumConfig),
       }
     })
     tooltipData.title = self.config.get('title')

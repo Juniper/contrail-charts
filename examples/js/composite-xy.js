@@ -1,5 +1,8 @@
 /* global coCharts */
 
+function timeFormatter (value) { 
+  return d3.timeFormat('%H:%M:%S')(value) 
+} 
 function numberFormatter (number) {
   return number.toFixed(2)
 }
@@ -49,51 +52,51 @@ complexChartView.setConfig({
       plot: {
         x: {
           accessor: 'x',
-          label: 'Time',
+          labelFormatter: 'Time',
           axis: 'x'
         },
         y: [
           {
             accessor: 'a',
-            label: 'A',
+            labelFormatter: 'A',
             enabled: true,
             chart: 'stackedBar',
             axis: 'y1',
-            tooltip: 'defaultTooltip'
+            tooltip: 'defaultTooltip',
           },
           {
             accessor: 'b',
-            label: 'B',
+            labelFormatter: 'B',
             enabled: true,
             chart: 'stackedBar',
             axis: 'y1',
-            tooltip: 'customTooltip'
+            tooltip: 'customTooltip',
           },
           {
             accessor: 'c',
-            label: 'C',
+            labelFormatter: 'C',
             enabled: false,
             chart: 'stackedBar',
             axis: 'y1',
-            tooltip: 'defaultTooltip'
+            tooltip: 'defaultTooltip',
           },
           {
             accessor: 'd',
-            label: 'Megabytes',
+            labelFormatter: 'Megabytes',
             color: '#d62728',
             enabled: true,
             chart: 'line',
             axis: 'y2',
-            tooltip: 'defaultTooltip'
+            tooltip: 'defaultTooltip',
           },
           {
             accessor: 'e',
-            label: 'Megabytes',
+            labelFormatter: 'Megabytes',
             color: '#9467bd',
             enabled: true,
             chart: 'line',
             axis: 'y2',
-            tooltip: 'defaultTooltip'
+            tooltip: 'defaultTooltip',
           }
         ]
       },
@@ -126,24 +129,24 @@ complexChartView.setConfig({
       plot: {
         x: {
           accessor: 'x',
-          label: 'Time'
+          labelFormatter: 'Time'
         },
         y: [
           {
             accessor: 'a',
-            label: 'A',
+            labelFormatter: 'A',
             chart: 'stackedBar',
             axis: 'y1'
           },
           {
             accessor: 'b',
-            label: 'B',
+            labelFormatter: 'B',
             chart: 'stackedBar',
             axis: 'y1'
           },
           {
             accessor: 'd',
-            label: 'Megabytes',
+            labelFormatter: 'Megabytes',
             chart: 'line',
             axis: 'y2'
           }
@@ -172,45 +175,33 @@ complexChartView.setConfig({
       dataConfig: [
         {
           accessor: 'x',
-          labelFormatter: function (key) {
-            return 'Time'
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: 'Time',
+          formatter: timeFormatter,
         },
         {
           accessor: 'a',
-          labelFormatter: function (key) {
-            return 'A'
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: 'A',
+          formatter: numberFormatter,
         },
         {
           accessor: 'b',
-          labelFormatter: function (key) {
-            return 'B'
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: 'B',
+          formatter: numberFormatter,
         },
         {
           accessor: 'c',
-          labelFormatter: function (key) {
-            return 'C'
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: 'C',
+          formatter: numberFormatter,
         },
         {
           accessor: 'd',
-          labelFormatter: function (key) {
-            return 'D'
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: 'D',
+          formatter: numberFormatter,
         },
         {
           accessor: 'e',
-          labelFormatter: function (key) {
-            return 'E'
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: 'E',
+          formatter: numberFormatter,
         }
       ]
     },

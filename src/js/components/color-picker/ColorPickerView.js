@@ -41,7 +41,7 @@ var ColorPickerView = ContrailChartsView.extend({
     self.closeColorPalette()
     var $paletteContainer = $('<div class="color-picker-palette"></div>')
     var $paletteTitle = $('<div class="color-picker-palette-header"></div>')
-    $paletteTitle.append('<span class="color-picker-palette-title">' + (accessor.label || accessor.accessor) + '</span>')
+    $paletteTitle.append('<span class="color-picker-palette-title">' + (accessor.labelFormatter || accessor.accessor) + '</span>')
     $paletteTitle.append('<span class="color-picker-palette-close"><i class="fa fa-remove"/></span>')
     $paletteContainer.append($paletteTitle)
     var $paletteBody = $('<div class="color-picker-palette-body"></div>')
