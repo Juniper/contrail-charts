@@ -54,7 +54,7 @@ var PieChartView = ContrailChartsView.extend({
     var height = self.config.get('chartHeight')
     var radius = self.config.get('radius')
     var data = e.currentTarget.__data__.data
-    var valueAccessor = self.config.get('value')
+    var valueAccessor = self.config.get('serie').getValue
     self.eventObject.trigger('showTooltip', {left: width /2 - radius * 0.8 , top: height /2}, data)
     //d3.select(this).classed('active', true)
   },
@@ -63,8 +63,7 @@ var PieChartView = ContrailChartsView.extend({
     var self = this
     var width = self.config.get('chartWidth')
     var height = self.config.get('chartHeight')
-    var valueAccessor = self.config.get('value')
-    var labelAccessor = self.config.get('label')
+    var serieConfig = self.config.get('serie')
     var radius = self.config.get('radius')
     var data = self.model.get('data')
 
@@ -74,7 +73,7 @@ var PieChartView = ContrailChartsView.extend({
 
     var pie = d3.pie()
       .sort(null)
-      .value(function(d) { return d[valueAccessor] })(data)
+      .value(function(d) { return serieConfig.getValue(d) })(data)
 
     d3.select(self.el).append('svg').attr('class', 'coCharts-svg pie-chart')
     self.svgSelection()
@@ -90,25 +89,8 @@ var PieChartView = ContrailChartsView.extend({
 
     arcs.append('path')
       .attr('d', arc)
-
-  var ordinal = d3.scaleOrdinal()
-    .domain(_.map(data, 'x'))
-    .range(self._colorRange);
-
-  self.svgSelection().append('g')
-    .attr('class', 'legendOrdinal')
-    .attr('transform', 'translate(20,20)')
-
-  var legendOrdinal = d3.legendColor()
-    .shape('path', d3.symbol().type(d3.symbolCircle).size(150)())
-    .shapePadding(10)
-    .scale(ordinal)
-
-  self.svgSelection().select('.legendOrdinal')
-    .call(legendOrdinal)
-  },
       .style('fill', function(d) {
-        return self.config.getColor(d.data[labelAccessor])
+        return self.config.getColor(serieConfig.getLabel(d.data))
       })
   }
 })

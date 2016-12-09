@@ -19,7 +19,7 @@ var RadialChartView = ContrailView.extend({
     var self = this
     self.hasExternalBindingHandler = false
     self._dataModel = new ContrailChartsDataModel()
-    self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
+    self._dataProvider = new handlers.SerieProvider({ parent: self._dataModel })
     self._components = []
     options = options || {}
     self.eventObject = options.eventObject || _.extend({}, Events)
@@ -70,6 +70,11 @@ var RadialChartView = ContrailView.extend({
     })
     if (self._isEnabledComponent('radialChart')) {
       self.getComponentByType('radialChart').changeModel(self._dataProvider)
+      if (self._isEnabledComponent('legendUniversal')) {
+        var legend = self.getComponentByType('legendUniversal')
+        var radialChart = self.getComponentByType('radialChart')
+        legend.config.setParent(radialChart.config)
+      }
     }
   },
 

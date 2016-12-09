@@ -21,6 +21,13 @@ var PieChartConfigModel = ContrailChartsConfigModel.extend({
     var self = this
     return self.attributes.colorScale(accessor)
   },
+
+  getLabels: function (dataProvider) {
+    var self = this
+    var labelFormatter = self.get('serie').getLabel
+    return dataProvider.getLabels(labelFormatter)
+  },
+
 })
 
 module.exports = PieChartConfigModel
