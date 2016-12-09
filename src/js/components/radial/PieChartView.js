@@ -12,6 +12,7 @@ var PieChartConfigModel = require('./PieChartConfigModel')
 * TODO merge with ChartView as long as XYChart too
 */
 var PieChartView = ContrailChartsView.extend({
+  type: 'radialChart',
   tagName: 'div',
   className: 'coCharts-radial-chart',
 
@@ -21,7 +22,6 @@ var PieChartView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.type = 'radialChart'
     self.config = options.config
     self.eventObject = options.eventObject || _.extend({}, Events)
 

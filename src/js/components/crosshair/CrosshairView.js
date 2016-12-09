@@ -7,6 +7,7 @@ var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var CrosshairView = ContrailChartsView.extend({
+  type: 'crosshair',
   tagName: 'div',
   className: 'coCharts-crosshair-view',
 

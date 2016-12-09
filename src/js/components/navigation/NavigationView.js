@@ -10,12 +10,12 @@ var DataProvider = require('handlers/DataProvider')
 var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 
 var NavigationView = ContrailChartsView.extend({
+  type: 'navigation',
   tagName: 'div',
   className: 'navigation-view',
 
   initialize: function (options) {
     var self = this
-    self.type = 'navigation'
     self.config = options.config
     self.eventObject = options.eventObject || _.extend({}, Events)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})

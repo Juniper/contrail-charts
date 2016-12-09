@@ -12,9 +12,10 @@ var handlers = require('handlers/index')
 * Many different Y axis may be configured.
 */
 var XYChartView = ContrailChartsView.extend({
+  type: 'XYChartView',
+
   initialize: function (options) {
     var self = this
-    self.type = 'XYChartView'
     self.hasExternalBindingHandler = false
     self._dataModel = new ContrailChartsDataModel()
     self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
