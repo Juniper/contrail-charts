@@ -8,6 +8,7 @@ var ContrailChartsConfigModel = require('contrail-charts-config-model')
 
 var PieChartConfigModel = ContrailChartsConfigModel.extend({
   defaults: {
+    type: 'pie',
     // The chart width. If not provided will be caculated by View.
     chartWidth: undefined,
 

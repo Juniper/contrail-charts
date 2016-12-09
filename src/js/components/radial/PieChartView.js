@@ -61,6 +61,7 @@ var PieChartView = ContrailChartsView.extend({
 
   _renderSVG: function () {
     var self = this
+    var chartType = self.config.get('type')
     var width = self.config.get('chartWidth')
     var height = self.config.get('chartHeight')
     var serieConfig = self.config.get('serie')
@@ -69,7 +70,7 @@ var PieChartView = ContrailChartsView.extend({
 
     var arc = d3.arc()
       .outerRadius(radius)
-      .innerRadius(radius * 0.75)
+      .innerRadius(radius * (chartType === 'pie' ? 0 : 0.75))
 
     var pie = d3.pie()
       .sort(null)

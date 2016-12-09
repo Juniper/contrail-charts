@@ -23,6 +23,7 @@ var chartConfig = {
     type: 'radialChart',
     config: {
       el: '.pie-chart',
+      type: 'donut',
       chartWidth: 480,
       chartHeight: 360,
       radius: 100,
