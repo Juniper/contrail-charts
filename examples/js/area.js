@@ -26,6 +26,10 @@ simpleChartView.setConfig({
       axis: {
         x: {
           domain: [(new Date(2016, 11, 2)).getTime(), (new Date(2016, 11, 4)).getTime()]
+        },
+        y: {
+          domain: [undefined, 10],
+          ticks: 20
         }
       }
     }
