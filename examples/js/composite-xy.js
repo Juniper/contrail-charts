@@ -151,7 +151,6 @@ complexChartView.setConfig({
       },
       axis: {
         x: {
-
         },
         y1: {
           position: 'left',

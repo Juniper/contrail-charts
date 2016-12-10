@@ -276,11 +276,11 @@ var CompositeYChartView = ContrailChartsView.extend({
           }
           // Override axis domain based on axis config.
           if (self.hasAxisParam(axisName, 'domain')) {
-            if (!_.isUndefined(self.params.axis[axisName].domain[0])) {
-              domains[axisName][0] = self.params.axis[axisName].domain[0]
+            if (!_.isUndefined(self.config.get('axis')[axisName].domain[0])) {
+              domains[axisName][0] = self.config.get('axis')[axisName].domain[0]
             }
-            if (!_.isUndefined(self.params.axis[axisName].domain[1])) {
-              domains[axisName][1] = self.params.axis[axisName].domain[1]
+            if (!_.isUndefined(self.config.get('axis')[axisName].domain[1])) {
+              domains[axisName][1] = self.config.get('axis')[axisName].domain[1]
             }
           }
         })
@@ -317,9 +317,7 @@ var CompositeYChartView = ContrailChartsView.extend({
           self.params.axis[axisName].range = self.params.yRange
         }
       }
-      if (!self.hasAxisParam(axisName, 'domain')) {
-        self.params.axis[axisName].domain = domain
-      }
+      self.params.axis[axisName].domain = domain
       if (!_.isFunction(self.params.axis[axisName].scale) && self.params.axis[axisName].range) {
         var baseScale = null
         if (self.hasAxisConfig(axisName, 'scale') && _.isFunction(d3[self.config.get('axis')[axisName]])) {
@@ -331,7 +329,11 @@ var CompositeYChartView = ContrailChartsView.extend({
         }
         self.params.axis[axisName].scale = baseScale.domain(self.params.axis[axisName].domain).range(self.params.axis[axisName].range)
         if (self.hasAxisParam(axisName, 'nice') && self.params.axis[axisName].nice) {
-          self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.xTicks)
+          if (self.hasAxisParam(axisName, 'ticks')) {
+            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.axis[xAxisName].ticks)
+          } else {
+            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice()
+          }
         }
       }
     })
@@ -420,7 +422,9 @@ var CompositeYChartView = ContrailChartsView.extend({
     var xAxis = d3.axisBottom(self.params.axis[xAxisName].scale)
       .tickSize(self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
       .tickPadding(10)
-      .ticks(self.params.xTicks)
+    if (self.hasAxisParam('x', 'ticks')) {
+      xAxis = xAxis.ticks(self.params.axis[xAxisName].ticks)
+    }
     if (self.hasAxisConfig('x', 'formatter')) {
       xAxis = xAxis.tickFormat(self.config.get('axis').x.formatter)
     }
@@ -461,17 +465,24 @@ var CompositeYChartView = ContrailChartsView.extend({
         yLabelTransform = 'rotate(90)'
         axisInfo.yAxis = d3.axisRight(self.params.axis[axisInfo.name].scale)
           .tickSize((self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner))
-          .tickPadding(5).ticks(self.params.yTicks)
+          .tickPadding(5)
       } else {
         axisInfo.yAxis = d3.axisLeft(self.params.axis[axisInfo.name].scale)
           .tickSize(-(self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner))
-          .tickPadding(5).ticks(self.params.yTicks)
+          .tickPadding(5)
+      }
+      if (self.hasAxisParam(axisInfo.name, 'ticks')) {
+        axisInfo.yAxis = axisInfo.yAxis.ticks(self.params.axis[axisInfo.name].ticks)
       }
       if (!referenceYScale) {
         referenceYScale = self.params.axis[axisInfo.name].scale
       } else {
         // This is not the first Y axis so adjust the tick values to the first axis tick values.
-        var referenceTickValues = _.map(referenceYScale.ticks(self.params.yTicks), function (tickValue) {
+        var ticks = referenceYScale.ticks(self.params.yTicks)
+        if (self.hasAxisParam(axisInfo.name, 'ticks')) {
+          ticks = referenceYScale.ticks(self.params.axis[axisInfo.name].ticks)
+        }
+        var referenceTickValues = _.map(ticks, function (tickValue) {
           return axisInfo.yAxis.scale().invert(referenceYScale(tickValue))
         })
         axisInfo.yAxis = axisInfo.yAxis.tickValues(referenceTickValues)

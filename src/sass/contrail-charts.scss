@@ -95,6 +95,12 @@ button:focus {
 			font-weight: bold;
 			fill: #888;
 		}
+		.bubbles {
+			circle {
+				stroke-width: 1;
+				stroke: #fff;
+			}
+		}
 	}
 }
 
