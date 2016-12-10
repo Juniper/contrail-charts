@@ -8,6 +8,8 @@ var TooltipConfigModel = require('components/tooltip/TooltipConfigModel')
 var TooltipView = require('components/tooltip/TooltipView')
 var LegendConfigModel = require('components/legend/LegendConfigModel')
 var LegendView = require('components/legend/LegendView')
+var LegendUniversalConfigModel = require('components/legend-universal/LegendConfigModel')
+var LegendUniversalView = require('components/legend-universal/LegendView')
 var CrosshairConfigModel = require('components/crosshair/CrosshairConfigModel')
 var CrosshairView = require('components/crosshair/CrosshairView')
 var ColorPickerConfigModel = require('components/color-picker/ColorPickerConfigModel')
@@ -25,6 +27,10 @@ module.exports = {
   legend: {
     ConfigModel: LegendConfigModel,
     View: LegendView
+  },
+  legendUniversal: {
+    ConfigModel: LegendUniversalConfigModel,
+    View: LegendUniversalView,
   },
   crosshair: {
     ConfigModel: CrosshairConfigModel,

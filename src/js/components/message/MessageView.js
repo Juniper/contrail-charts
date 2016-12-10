@@ -7,12 +7,12 @@ var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var MessageView = ContrailChartsView.extend({
+  type: 'message',
   tagName: 'div',
   className: 'coCharts-message-view',
 
   initialize: function (options) {
     var self = this
-    self.type = 'message'
     self.config = options.config
     self.eventObject = options.eventObject || _.extend({}, Events)
     self._registerListeners()

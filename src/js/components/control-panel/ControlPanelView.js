@@ -7,6 +7,7 @@ var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var ControlPanelView = ContrailChartsView.extend({
+  type: 'controlPanel',
   tagName: 'div',
   className: 'coCharts-control-panel-view',
 
@@ -16,7 +17,6 @@ var ControlPanelView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.type = 'controlPanel'
     self.config = options.config
     self.listenTo(self.config, 'change', self.render)
     self.eventObject = options.eventObject || _.extend({}, Events)
