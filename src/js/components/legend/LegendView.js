@@ -6,6 +6,7 @@ var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var LegendView = ContrailChartsView.extend({
+  type: 'legend',
   tagName: 'div',
   className: 'coCharts-legend-view',
 

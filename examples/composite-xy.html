@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>MultiChart example</title>
+		<title>Composite Chart with Line and Stacked Bar</title>
 		<!-- third-party-libs -->
 		<script src="../node_modules/jquery/dist/jquery.js"></script>
 		<script src="../node_modules/lodash/lodash.js"></script>
@@ -16,10 +16,16 @@
 		<link href="css/contrail-charts-examples.css" rel="stylesheet">
 	</head>
 	<body>
-		<div id="chart1"></div>
-		<div id="chart2"></div>
-		<div id="chart2-navigation"></div>
+		<div id="messageView"></div>
+		<div id="complexChart">
+			<div id="complexChart-legend"></div>
+			<div id="complexChart-xyChart"></div>
+			<div id="complexChart-controlPanel"></div>
+			<div id="complexChart-color-picker"></div>
+			<div id="complexChart-navigation"></div>
+		</div>
+		<div id="simpleChart"></div>
 		<script src="../build/js/contrail-charts.js"></script>
-		<script src="js/example3.js"></script>
+		<script src="js/composite-xy.js"></script>
 	</body>
 </html>

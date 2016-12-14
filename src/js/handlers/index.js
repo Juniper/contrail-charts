@@ -1,7 +1,9 @@
 var BindingHandler = require('./BindingHandler')
+var SerieProvider = require('./SerieProvider')
 var DataProvider = require('./DataProvider')
 
 module.exports = {
   BindingHandler: BindingHandler,
-  DataProvider: DataProvider
+  SerieProvider: SerieProvider,
+  DataProvider: DataProvider,
 }

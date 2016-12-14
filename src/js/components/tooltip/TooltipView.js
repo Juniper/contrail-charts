@@ -8,13 +8,13 @@ var ContrailChartsView = require('contrail-charts-view')
 var _template = require('./tooltip.html')
 
 var TooltipView = ContrailChartsView.extend({
+  type: 'tooltip',
   tagName: 'div',
   className: 'coCharts-tooltip-view',
 
   initialize: function (options) {
     var self = this
     self.id = options.id
-    self.type = 'tooltip'
     self.config = options.config
     self.listenTo(self.config, 'change', self.resetParams)
     self.eventObject = options.eventObject || _.extend({}, Events)
@@ -50,9 +50,7 @@ var TooltipView = ContrailChartsView.extend({
 
   hide: function () {
     var self = this
-    _.delay(function () {
-      self.$el.hide()
-    }, 1000)
+    self.$el.hide()
   },
 
   render: function (data) {

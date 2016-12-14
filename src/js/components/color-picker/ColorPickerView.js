@@ -7,6 +7,7 @@ var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var ColorPickerView = ContrailChartsView.extend({
+  type: 'colorPicker',
   tagName: 'div',
   className: 'coCharts-color-picker-view',
 

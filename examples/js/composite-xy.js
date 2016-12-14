@@ -1,9 +1,9 @@
 /* global coCharts */
 
-function numberFormatFunction (number) {
+function numberFormatter (number) {
   return number.toFixed(2)
 }
-function numberFormatFunction3 (number) {
+function numberFormatter3 (number) {
   return number.toFixed(3)
 }
 
@@ -103,12 +103,12 @@ complexChartView.setConfig({
         },
         y1: {
           position: 'left',
-          formatter: numberFormatFunction,
+          formatter: numberFormatter,
           labelMargin: 15
         },
         y2: {
           position: 'right',
-          formatter: numberFormatFunction3,
+          formatter: numberFormatter3,
           labelMargin: 15
         }
       }
@@ -151,16 +151,15 @@ complexChartView.setConfig({
       },
       axis: {
         x: {
-
         },
         y1: {
           position: 'left',
-          formatter: numberFormatFunction,
+          formatter: numberFormatter,
           labelMargin: 15
         },
         y2: {
           position: 'right',
-          formatter: numberFormatFunction3,
+          formatter: numberFormatter3,
           labelMargin: 15
         }
       }
@@ -175,42 +174,42 @@ complexChartView.setConfig({
           labelFormatter: function (key) {
             return 'Time'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'a',
           labelFormatter: function (key) {
             return 'A'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'b',
           labelFormatter: function (key) {
             return 'B'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'c',
           labelFormatter: function (key) {
             return 'C'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'd',
           labelFormatter: function (key) {
             return 'D'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'e',
           labelFormatter: function (key) {
             return 'E'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter
         }
       ]
     },
@@ -246,7 +245,6 @@ complexChartView.setConfig({
           iconClass: 'fa fa-edit',
           events: {
             click: function () {
-              console.log('Send Message clicked.')
               this.eventObject.trigger('message', {
                 componentId: 'XYChartView',
                 action: 'new',
@@ -266,7 +264,6 @@ complexChartView.setConfig({
           iconClass: 'fa fa-eraser',
           events: {
             click: function () {
-              console.log('Clear Message clicked.')
               this.eventObject.trigger('clearMessage', 'XYChartView')
             }
           }
@@ -317,40 +314,3 @@ complexChartView.renderMessage({
     }
   ]
 })
-
-console.log('complexChartView: ', complexChartView)
-
-// Most basic chart.
-var simpleData = [
-  { x: (new Date(2016, 11, 1)).getTime(), y: 0 },
-  { x: (new Date(2016, 11, 2)).getTime(), y: 3 },
-  { x: (new Date(2016, 11, 3)).getTime(), y: 2 },
-  { x: (new Date(2016, 11, 4)).getTime(), y: 4 },
-  { x: (new Date(2016, 11, 5)).getTime(), y: 5 }
-]
-var simpleChartView = new coCharts.charts.XYChartView()
-simpleChartView.setConfig({
-  components: [{
-    type: 'compositeY',
-    config: {
-      el: '#simpleChart',
-      plot: {
-        x: {
-          accessor: 'x'
-        },
-        y: [
-          {
-            accessor: 'y',
-            chart: 'area',
-          }
-        ]
-      },
-      axis: {
-        x: {
-          domain: [(new Date(2016, 11, 2)).getTime(), (new Date(2016, 11, 4)).getTime()]
-        }
-      }
-    }
-  }]
-})
-simpleChartView.setData(simpleData)

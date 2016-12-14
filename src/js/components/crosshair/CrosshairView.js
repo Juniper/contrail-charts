@@ -7,6 +7,7 @@ var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var CrosshairView = ContrailChartsView.extend({
+  type: 'crosshair',
   tagName: 'div',
   className: 'coCharts-crosshair-view',
 
@@ -18,7 +19,7 @@ var CrosshairView = ContrailChartsView.extend({
     self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
-  _findXDataValue: function (mouseX, xAccessor) {
+  _findXDataElem: function (mouseX, xAccessor) {
     var self = this
     var data = self.getData()
     var xBisector = d3.bisector(function (d) {
@@ -31,12 +32,20 @@ var CrosshairView = ContrailChartsView.extend({
     if (Math.abs(mouseX - data[indexLeft][xAccessor]) < Math.abs(mouseX - data[indexRight][xAccessor])) {
       index = indexLeft
     }
-    return data[index][xAccessor]
+    return data[index]
   },
 
+  /**
+  * Requirements:
+  * sourceParams.xRange, sourceParams.yRange, sourceParams.plot.x.accessor, sourceParams.plot.x.axis,
+  * sourceParams.plot.y[].accessor, sourceParams.plot.y[].color, sourceParams.plot.y[].axis
+  * sourceParams.axis.[x_axis_name].scale, sourceConfig.axis.[x_axis_name].formatter,
+  * sourceParams.axis.[y_axis_name].scale, sourceParams.axis.[y_axis_name].formatter
+  */
   _mouseMoveHandler: function (sourceParams, sourceConfig, mouse) {
     var self = this
-    if (!self.getData().length) {
+    var data = self.getData()
+    if (!data.length) {
       return self.removeCrosshair()
     }
     if (mouse[0] < sourceParams.xRange[0] || mouse[0] > sourceParams.xRange[1] || mouse[1] < sourceParams.yRange[1] || mouse[1] > sourceParams.yRange[0]) {
@@ -44,12 +53,12 @@ var CrosshairView = ContrailChartsView.extend({
     }
     var svg = self.svgSelection()
     var xScale = sourceParams.axis[sourceParams.plot.x.axis].scale
-    var xElemVal = self._findXDataValue(xScale.invert(mouse[0]), sourceParams.plot.x.accessor)
+    var xElem = self._findXDataElem(xScale.invert(mouse[0]), sourceParams.plot.x.accessor)
     var xFormat = sourceConfig.get('axis')[sourceParams.plot.x.axis].formatter
     if (!_.isFunction(xFormat)) {
       xFormat = d3.timeFormat('%H:%M')
     }
-    // Draw crosshair
+    // Draw crosshair line
     var svgCrosshair = svg.selectAll('.crosshair').data([{ x: mouse[0], y: mouse[1] }])
     var svgCrosshairEnter = svgCrosshair.enter().append('g')
       .attr('class', 'crosshair')
@@ -63,18 +72,33 @@ var CrosshairView = ContrailChartsView.extend({
       .attr('class', 'x-text')
       .attr('x', function (d) { return d.x })
       .attr('y', sourceParams.yRange[0] + 15)
-      .text(xFormat(xElemVal))
+      .text(xFormat(xElem[sourceParams.plot.x.accessor]))
+    svgCrosshairEnter.append('g')
+      .attr('class', 'bubbles')
     var svgCrosshairEdit = svgCrosshairEnter.merge(svgCrosshair)
       .transition().ease(d3.easeLinear).duration(self.params.duration)
     svgCrosshairEdit.select('.x-line')
-      .attr('x1', Math.round(xScale(xElemVal)))
-      .attr('x2', Math.round(xScale(xElemVal)))
+      .attr('x1', Math.round(xScale(xElem[sourceParams.plot.x.accessor])))
+      .attr('x2', Math.round(xScale(xElem[sourceParams.plot.x.accessor])))
       .attr('y1', sourceParams.yRange[0])
       .attr('y2', sourceParams.yRange[1])
     svgCrosshairEdit.select('.x-text')
-      .attr('x', xScale(xElemVal))
+      .attr('x', xScale(xElem[sourceParams.plot.x.accessor]))
       .attr('y', sourceParams.yRange[0] + 15)
-      .text(xFormat(xElemVal))
+      .text(xFormat(xElem[sourceParams.plot.x.accessor]))
+    // Draw bubbles for all enabled y accessors.
+    var bubblesData = _.filter(sourceParams.plot.y, function (d) { return d.enabled })
+    var svgBubbles = svg.select('.crosshair').select('.bubbles').selectAll('circle').data(bubblesData, function (d) { return d.accessor })
+    svgBubbles.enter().append('circle')
+      .attr('cx', xScale(xElem[sourceParams.plot.x.accessor]))
+      .attr('cy', sourceParams.yRange[0])
+      .attr('fill', function (d) { return d.color })
+      .attr('r', 0)
+      .merge(svgBubbles)
+      .transition().ease(d3.easeLinear).duration(self.params.duration)
+      .attr('cx', xScale(xElem[sourceParams.plot.x.accessor]))
+      .attr('cy', function (d) { return sourceParams.axis[d.axis].scale(xElem[d.accessor]) })
+      .attr('r', self.params.bubbleR)
     svgCrosshair.exit().remove()
   },
 

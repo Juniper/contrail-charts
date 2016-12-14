@@ -10,18 +10,30 @@ var DataProvider = require('handlers/DataProvider')
 var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 
 var NavigationView = ContrailChartsView.extend({
+  type: 'navigation',
   tagName: 'div',
   className: 'navigation-view',
 
   initialize: function (options) {
     var self = this
-    self.type = 'navigation'
     self.config = options.config
     self.eventObject = options.eventObject || _.extend({}, Events)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
+    self._isModelChanged = false
     self.brush = null
     self.compositeYChartView = null
     self.throttledTriggerWindowChangedEvent = _.bind(_.throttle(self._triggerWindowChangedEvent, 100), self)
+    $(window).resize(function () {
+      // Change the model change flag so that when the underlying chart rendered event fires the brush will be re-computed.
+      self._isModelChanged = true
+      if (self.brush) {
+        var marginInner = self.params.marginInner
+        self.brush = self.brush.extent([
+            [self.params.xRange[0] - marginInner, self.params.yRange[1] - marginInner],
+            [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
+        self.svgSelection().select('g.brush').call(self.brush)
+      }
+    })
   },
 
   changeModel: function (model) {
@@ -41,7 +53,7 @@ var NavigationView = ContrailChartsView.extend({
     this._isModelChanged = true
   },
 
-  _handleModelChange: function (e) {
+  _handleModelChange: function () {
     var self = this
     var x = self.params.plot.x.accessor
     var xScale = self.params.axis[self.params.plot.x.axis].scale
@@ -76,11 +88,10 @@ var NavigationView = ContrailChartsView.extend({
       }
       var newFocusDomain = {}
       newFocusDomain[x] = [xMin, xMax]
-      if (xMin !== prevWindowXMin || xMax !== prevWindowXMax) {
-        self._focusDataProvider.setRangeFor(newFocusDomain)
-        self.config.set({ focusDomain: newFocusDomain }, { silent: true })
-      }
-
+      // if (xMin !== prevWindowXMin || xMax !== prevWindowXMax) {
+      self._focusDataProvider.setRangeAndFilterData(newFocusDomain)
+      self.config.set({ focusDomain: newFocusDomain }, { silent: true })
+      // }
       var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
       self.brush.move(brushGroup, [xScale(xMin), xScale(xMax)])
     } else {
@@ -94,10 +105,8 @@ var NavigationView = ContrailChartsView.extend({
     svg.select('g.brush').remove()
     self.brush = null
     self.config.unset('focusDomain', { silent: true })
-    var x = this.params.plot.x.accessor
     var newFocusDomain = {}
-    newFocusDomain[x] = []
-    self._focusDataProvider.resetRangeFor(newFocusDomain)
+    self._focusDataProvider.setRangeAndFilterData(newFocusDomain)
   },
 
   prevChunkSelected: function () {
@@ -158,7 +167,7 @@ var NavigationView = ContrailChartsView.extend({
   _triggerWindowChangedEvent: function (focusDomain) {
     var self = this
     var x = self.params.plot.x.accessor
-    self._focusDataProvider.setRangeFor(focusDomain)
+    self._focusDataProvider.setRangeAndFilterData(focusDomain)
     self.eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
   },
 
