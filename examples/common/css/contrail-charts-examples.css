@@ -1,50 +1,108 @@
 /**
 * Styles specific for contrail-examples.
 */
-html {
+html, body {
 	overflow-y: scroll;
+	height: 100%;
 }
 
-#simpleChart {
-	position: relative;
-	margin: 30px;
-	width: 75%;
+*, *:before, *:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-#complexChart {
-	position: relative;
-	margin: 30px;
-	width: 75%;
+body {
+	font: 14px/1 'Open Sans', sans-serif;
+	color: #555;
+	background: #eee;
 }
 
-#complexChart-xyChart {
-	position: relative;
+h1 {
+	padding: 50px 0;
+	font-weight: 400;
+	text-align: center;
 }
 
-#complexChart-controlPanel {
-	position: absolute;
-	top: 0px;
-	right: 0px;
+.side-bar {
+	width: 10%;
+	float: left;
 }
 
-#complexChart-navigation {
-	margin-bottom: 25px;
+.page-content {
+	width: 85%;
+	float: left;
 }
 
-#messageView {
-	height: 250px;
-    width: 250px;
-    position: absolute;
-    top: 30px;
-    right: 15px;
+.example-links {
+	padding: 5px;
+}
+.example-links .link {
+	margin-bottom: 10px;
 }
 
-#chart1 {
-	width: 45%;
+.source-html-iframe,
+.source-js-iframe,
+.source-css-iframe {
+	width: 100%;
+	border-style: none;
+	height: 600px;
+	overflow: auto;
+}
+
+.output {
+	width: 100%;
+}
+.output .output-iframe {
+	border-style: none;
+	width: 100%;
+	height: 600px;
+	overflow: auto;
+}
+
+main {
+	min-width: 320px;
+	max-width: 100%px;
+	padding: 50px;
+	margin: 0 auto;
+	background: #fff;
+}
+
+section {
+	display: none;
+	padding: 20px 0 0;
+	border-top: 1px solid #ddd;
+}
+
+input {
+	display: none;
+}
+
+label {
 	display: inline-block;
+	margin: 0 0 -1px;
+	padding: 15px 25px;
+	font-weight: 600;
+	text-align: center;
+	color: #bbb;
+	border: 1px solid transparent;
 }
 
-#chart2 {
-	width: 45%;
-	display: inline-block;
+label:hover {
+	color: #888;
+	cursor: pointer;
+}
+
+input:checked + label {
+	color: #555;
+	border: 1px solid #ddd;
+	border-top: 2px solid orange;
+	border-bottom: 1px solid #fff;
+}
+
+#demoTab:checked ~ #demoContent,
+#htmlTab:checked ~ #htmlContent,
+#cssTab:checked ~ #cssContent,
+#jsTab:checked ~ #jsContent {
+	display: block;
 }
