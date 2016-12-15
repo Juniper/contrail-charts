@@ -23,6 +23,15 @@ var RadialChartView = ContrailView.extend({
     self._components = []
     options = options || {}
     self.eventObject = options.eventObject || _.extend({}, Events)
+    self.listenTo(self._dataProvider, 'change', self._render)
+  },
+
+  render: function () {
+    var self = this
+    _.each(self._components, function (component) {
+      component.render()
+    })
+    self._render()
   },
   /**
   * Provide data for this chart as a simple array of objects.
@@ -86,7 +95,8 @@ var RadialChartView = ContrailView.extend({
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject
+      eventObject: self.eventObject,
+      container: self.$el,
     })
     var component = new components[type].View(viewOptions)
     self._components.push(component)
@@ -106,13 +116,11 @@ var RadialChartView = ContrailView.extend({
     }
     return false
   },
-
-  render: function () {
+  // TODO chart render function should be called after each component render for performance
+  _render: function () {
     var self = this
-    _.each(self._components, function (component) {
-      component.render()
-    })
-  }
+    $(self._config.el).html(self.$el)
+  },
 })
 
 module.exports = RadialChartView

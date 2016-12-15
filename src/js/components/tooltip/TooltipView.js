@@ -3,7 +3,6 @@
  */
 var $ = require('jquery')
 var _ = require('lodash')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var _template = require('./tooltip.html')
 
@@ -14,12 +13,10 @@ var TooltipView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.id = options.id
-    self.config = options.config
+    ContrailChartsView.prototype.initialize.call(self, options)
     self.listenTo(self.config, 'change', self.resetParams)
-    self.eventObject = options.eventObject || _.extend({}, Events)
-    self.listenTo(self.eventObject, 'showTooltip', self.show)
-    self.listenTo(self.eventObject, 'hideTooltip', self.hide)
+    self.listenTo(self._eventObject, 'showTooltip', self.show)
+    self.listenTo(self._eventObject, 'hideTooltip', self.hide)
   },
 
   show: function (offset, data, id) {
@@ -67,8 +64,8 @@ var TooltipView = ContrailChartsView.extend({
     })
     tooltipData.title = self.config.get('title')
     var tooltipElement = $(template(tooltipData))
-    self.$el.html(tooltipElement)
-    $('body').append(self.$el)
+
+    ContrailChartsView.prototype.render.call(self, tooltipElement)
   }
 })
 

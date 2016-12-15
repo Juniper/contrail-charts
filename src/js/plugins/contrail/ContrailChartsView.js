@@ -1,53 +1,61 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
+var $ = require('jquery')
+var _ = require('lodash')
+var d3 = require('d3')
+var Events = require('contrail-charts-events')
+var ContrailView = require('contrail-view')
+/**
+ * View base class.
+ */
+var ContrailChartsView = ContrailView.extend({
+  defaults: {
+    _type: 'ContrailChartsView'
+  },
 
-define([
-  'jquery',
-  'underscore',
-  'd3',
-  'contrail-view'
-], function ($, _, d3, ContrailView) {
+  initialize: function (options) {
+    var self = this
+    self.id = options.id
+    self.config = options.config
+    self._container = options.container
+    self._eventObject = options.eventObject || _.extend({}, Events)
+  },
+
   /**
-   * View base class.
+   * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
+   * The view may modify the params object with calculated values.
    */
-  var ContrailChartsView = ContrailView.extend({
-    defaults: {
-      _type: 'ContrailChartsView'
-    },
+  resetParams: function () {
+    this.params = this.config.initializedComputedParameters()
+  },
 
-    initialize: function (options) {
-      this.config = options.config
-    },
+  resetParamsForChild: function (childIndex) {
+    this.params = this.config.initializedComputedParametersForChild(childIndex)
+  },
 
-    /**
-     * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
-     * The view may modify the params object with calculated values.
-     */
-    resetParams: function () {
-      this.params = this.config.initializedComputedParameters()
-    },
+  /**
+  * This is how the view gets its data.
+  */
+  getData: function () {
+    return this.model.getData()
+  },
 
-    resetParamsForChild: function (childIndex) {
-      this.params = this.config.initializedComputedParametersForChild(childIndex)
-    },
+  /**
+  * This is how the view gets the SVG html element selection for rendering.
+  */
+  svgSelection: function () {
+    var self = this
+    // return d3.select(self.$el.get(0)).select("svg#" + self.id)
+    return d3.select(self.el).select('svg')
+  },
 
-    /**
-    * This is how the view gets its data.
-    */
-    getData: function () {
-      return this.model.getData()
-    },
-
-    /**
-    * This is how the view gets the SVG html element selection for rendering.
-    */
-    svgSelection: function () {
-      var self = this
-      // return d3.select(self.$el.get(0)).select("svg#" + self.id)
-      return d3.select(self.el).select('svg')
-    }
-  })
-
-  return ContrailChartsView
+  render: function (content) {
+    var self = this
+    self._container.find(self.className + ' ' + self.id).remove()
+    if (content) self.$el.html(content)
+    self._container.append(self.$el)
+  },
 })
+
+module.exports = ContrailChartsView

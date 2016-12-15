@@ -3,14 +3,10 @@
  */
 var $ = require('jquery')
 var _ = require('lodash')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var ContrailChartsDataModel = require('contrail-charts-data-model')
 var PieChartConfigModel = require('./PieChartConfigModel')
-/**
-* Group of charts rendered in polar coordinates system
-* TODO merge with ChartView as long as XYChart too
-*/
+
 var PieChartView = ContrailChartsView.extend({
   type: 'radialChart',
   tagName: 'div',
@@ -22,9 +18,9 @@ var PieChartView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(self, options)
 
+    self.listenTo(self.model, 'change', self._onDataModelChange)
     self.listenTo(self.config, 'change', self._onConfigModelChange)
   },
 
@@ -33,11 +29,6 @@ var PieChartView = ContrailChartsView.extend({
     self.stopListening(self.model)
     self.model = model
     self.listenTo(self.model, 'change', self._onDataModelChange)
-  },
-
-  render: function () {
-    var self = this
-    self._renderSVG()
   },
 
   _onDataModelChange: function () {
@@ -55,11 +46,11 @@ var PieChartView = ContrailChartsView.extend({
     var radius = self.config.get('radius')
     var data = e.currentTarget.__data__.data
     var valueAccessor = self.config.get('serie').getValue
-    self.eventObject.trigger('showTooltip', {left: width /2 - radius * 0.8 , top: height /2}, data)
+    self._eventObject.trigger('showTooltip', {left: width /2 - radius * 0.8 , top: height /2}, data)
     //d3.select(this).classed('active', true)
   },
 
-  _renderSVG: function () {
+  render: function () {
     var self = this
     var width = self.config.get('chartWidth')
     var height = self.config.get('chartHeight')
@@ -92,6 +83,8 @@ var PieChartView = ContrailChartsView.extend({
       .style('fill', function(d) {
         return self.config.getColor(serieConfig.getLabel(d.data))
       })
+
+    ContrailChartsView.prototype.render.call(self)
   }
 })
 

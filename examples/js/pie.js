@@ -19,10 +19,10 @@ function getValue (serie) {
 }
 
 var chartConfig = {
+  el: '.pie-chart',
   components: [{
     type: 'radialChart',
     config: {
-      el: '.pie-chart',
       chartWidth: 480,
       chartHeight: 360,
       radius: 100,
@@ -49,7 +49,6 @@ var chartConfig = {
   }, {
     type: 'legendUniversal',
     config: {
-      el: '#pie-chart-legend',
     },
   }]
 }
