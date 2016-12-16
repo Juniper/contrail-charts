@@ -43,6 +43,26 @@ var StackedBarChartView = XYChartSubView.extend({
   calculateScales: function () {},
 
   /**
+  * Override for calculating the Y coordinate of a stacked elem.
+  * Used by CrosshairView render data preparation.
+  */
+  getScreenY: function (dataElem, yAccessor) {
+    var self = this
+    var yScale = self.getYScale()
+    var stackedY = yScale.domain()[0]
+    var found = false
+    _.each(self.params.activeAccessorData, function (accessor) {
+      if (accessor.accessor === yAccessor) {
+        found = true
+      }
+      if (!found) {
+        stackedY += dataElem[accessor.accessor]
+      }
+    })
+    return yScale(stackedY + dataElem[yAccessor])
+  },
+
+  /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
   renderSVG: function (enteringSelection) {},
