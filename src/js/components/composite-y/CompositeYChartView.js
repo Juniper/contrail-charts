@@ -242,6 +242,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     return foundDrawing
   },
 
+  /*
   getDrawings: function (axisName) {
     var self = this
     var foundDrawings = []
@@ -252,6 +253,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     return foundDrawings
   },
+  */
 
   /**
   * Combine the axis domains (extents) from all enabled drawings.
@@ -548,7 +550,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    self.eventObject.trigger('rendered:' + self.name, self.params, self.config)
+    self.eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
   },
 
   render: function () {
