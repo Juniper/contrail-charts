@@ -175,32 +175,32 @@ complexChartView.setConfig({
         {
           accessor: 'x',
           labelFormatter: 'Time',
-          formatter: timeFormatter,
+          valueFormatter: timeFormatter,
         },
         {
           accessor: 'a',
           labelFormatter: 'A',
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'b',
           labelFormatter: 'B',
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'c',
           labelFormatter: 'C',
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'd',
           labelFormatter: 'D',
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'e',
           labelFormatter: 'E',
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         }
       ]
     },

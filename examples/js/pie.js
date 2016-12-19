@@ -31,7 +31,7 @@ var chartConfig = {
       serie: {
         getValue: getValue,
         getLabel: getLabel,
-        formatter: numberFormatter,
+        valueFormatter: numberFormatter,
       }
     },
   }, {
@@ -41,7 +41,7 @@ var chartConfig = {
         {
           accessor: 'y',
           labelFormatter: getLabel,
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
       ],
     },

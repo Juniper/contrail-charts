@@ -78,7 +78,6 @@ var CrosshairView = ContrailChartsView.extend({
     var self = this
     var prepareRenderInfo = this.config.get('prepareRenderInfo')
     self.params.renderInfo = prepareRenderInfo(componentView)
-    console.log('CrosshairView renderInfo: ', self.params.renderInfo)
   },
 
   _bindMouseListeners: function (sourceParams, sourceConfig, componentView) {

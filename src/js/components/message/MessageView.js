@@ -47,7 +47,6 @@ var MessageView = ContrailChartsView.extend({
       if (msgObj.action === 'once') {
         msgDiv.attr('data-timer-index', timerIndex)
       }
-      console.log('Message: ', msgDiv)
       self.$el.append(msgDiv)
     })
   },

@@ -153,21 +153,21 @@ define([
             labelFormatter: function (key) {
               return 'Time'
             },
-            formatter: d3.format('.0f')
+            valueFormatter: d3.format('.0f')
           },
           {
             accessor: 'a',
             labelFormatter: function (key) {
               return 'A'
             },
-            formatter: d3.format('.05f')
+            valueFormatter: d3.format('.05f')
           },
           {
             accessor: 'b',
             labelFormatter: function (key) {
               return 'B'
             },
-            formatter: d3.format('.02f')
+            valueFormatter: d3.format('.02f')
           }
         ]
       }

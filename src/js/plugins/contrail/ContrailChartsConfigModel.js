@@ -37,7 +37,7 @@ var ContrailChartsConfigModel = ContrailModel.extend({
    */ 
   getFormattedValue: function (data, datumConfig) { 
     var self = this 
-    var formatter = datumConfig.formatter 
+    var formatter = datumConfig.valueFormatter 
     var value = self.getValue(data, datumConfig) 
     if (_.isFunction(formatter)) return formatter(value) 
     return value 

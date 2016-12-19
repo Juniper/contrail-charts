@@ -54,28 +54,28 @@ var chartConfig = {
           labelFormatter: function (key) {
             return 'Time'
           },
-          formatter: timeFormatter,
+          valueFormatter: timeFormatter,
         },
         {
           accessor: 'a',
           labelFormatter: function (key) {
             return 'A'
           },
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'y',
           labelFormatter: function (key) {
             return 'Y'
           },
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'r',
           labelFormatter: function (key) {
             return 'R'
           },
-          formatter: numberFormatter,
+          valueFormatter: numberFormatter,
         }
       ],
     },
