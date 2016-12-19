@@ -141,7 +141,7 @@ var DataProvider = ContrailModel.extend({
       range[variableName] = variableRange
       manualRange[variableName] = variableRange
     })
-    self.setDataAndRanges(range, manualRange)
+    self.setRanges(range, manualRange)
   },
 
   resetRangeFor: function (newRange) {
@@ -152,11 +152,16 @@ var DataProvider = ContrailModel.extend({
       delete range[variableName]
       delete manualRange[variableName]
     })
-    self.setDataAndRanges(range, manualRange)
+    self.setRanges(range, manualRange)
   },
 
   resetAllRanges: function () {
-    this.setDataAndRanges({}, {})
+    this.setRanges({}, {})
+  },
+
+  setRangeAndFilterData: function (newRange) {
+    var self = this
+    self.setDataAndRanges(self.filterDataByRange(self.getParentData(), newRange), newRange, newRange)
   },
 
   /**
@@ -171,12 +176,14 @@ var DataProvider = ContrailModel.extend({
     if (_.isArray(manualRange[variableName])) {
       // Use manually set range if available.
       variableRange = [manualRange[variableName][0], manualRange[variableName][1]]
+    /*
     } else if (_.isArray(queryLimit[variableName])) {
       // Use query limit range if available.
       variableRange = [queryLimit[variableName][0], queryLimit[variableName][1]]
     } else if (_.isArray(parentRange[variableName])) {
       // Use parent's range for variable if available.
       variableRange = [parentRange[variableName][0], parentRange[variableName][1]]
+    */
     } else {
       // Otherwise calculate the range from data.
       if (data.length) {
@@ -189,9 +196,39 @@ var DataProvider = ContrailModel.extend({
     return variableRange
   },
 
-  setDataAndRanges: function (range, manualRange) {
+  setDataAndRanges: function (data, range, manualRange) {
     var self = this
-    var data = self.getParentData()
+    if (!data) {
+      data = self.getParentData()
+    }
+    var formatData = self.get('formatData')
+    if (_.isFunction(formatData)) {
+      data = formatData(data, manualRange)
+    }
+    self.set({data: data, range: range, manualRange: manualRange})
+  },
+
+  filterDataByRange: function (data, range) {
+    return _.filter(data, function(d) {
+        var ok = true
+        _.each(range, function(range, key) {
+            if( !_.has( d, key ) ) {
+                ok = false
+            }
+            else {
+                if (d[key] < range[0] || d[key] > range[1]) {
+                    ok = false
+                }
+            }
+        })
+        return ok
+    })
+  },
+
+  setRanges: function (range, manualRange) {
+    var self = this
+    // var data = self.getParentData()
+    var data = self.getData()
     var formatData = self.get('formatData')
     if (!manualRange) {
       manualRange = self.get('manualRange')
@@ -199,23 +236,6 @@ var DataProvider = ContrailModel.extend({
     if (_.isFunction(formatData)) {
       data = formatData(data, manualRange)
     }
-    // Filter data by manualRange.
-    /*
-    var filteredData = _.filter( data, function( d ) {
-        var ok = true
-        _.each( manualRange, function( range, key ) {
-            if( !_.has( d, key ) ) {
-                ok = false
-            }
-            else {
-                if( d[key] < range[0] || d[key] > range[1] ) {
-                    ok = false
-                }
-            }
-        })
-        return ok
-    })
-    */
     self.set({data: data, range: range, manualRange: manualRange})
   },
 
@@ -225,7 +245,7 @@ var DataProvider = ContrailModel.extend({
    */
   prepareData: function () {
     // Set the new data array and reset range - leave the manual range.
-    this.setDataAndRanges({})
+    this.setDataAndRanges(null, {}, {})
   },
 
   triggerError: function () {

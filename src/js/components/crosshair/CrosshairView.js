@@ -19,78 +19,82 @@ var CrosshairView = ContrailChartsView.extend({
     self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
-  _findXDataValue: function (mouseX, xAccessor) {
+  _mouseMoveHandler: function (mouse) {
     var self = this
     var data = self.getData()
-    var xBisector = d3.bisector(function (d) {
-      return d[xAccessor]
-    }).right
-    var indexRight = xBisector(data, mouseX, 0, data.length - 1)
-    var indexLeft = indexRight - 1
-    if (indexLeft < 0) indexLeft = 0
-    var index = indexRight
-    if (Math.abs(mouseX - data[indexLeft][xAccessor]) < Math.abs(mouseX - data[indexRight][xAccessor])) {
-      index = indexLeft
-    }
-    return data[index][xAccessor]
-  },
-
-  _mouseMoveHandler: function (sourceParams, sourceConfig, mouse) {
-    var self = this
-    if (!self.getData().length) {
+    var renderInfo = self.params.renderInfo
+    if (!data.length) {
       return self.removeCrosshair()
     }
-    if (mouse[0] < sourceParams.xRange[0] || mouse[0] > sourceParams.xRange[1] || mouse[1] < sourceParams.yRange[1] || mouse[1] > sourceParams.yRange[0]) {
+    if (mouse[0] < renderInfo.x1 || mouse[0] > renderInfo.x2 || mouse[1] < renderInfo.y1 || mouse[1] > renderInfo.y2) {
       return self.removeCrosshair()
     }
     var svg = self.svgSelection()
-    var xScale = sourceParams.axis[sourceParams.plot.x.axis].scale
-    var xElemVal = self._findXDataValue(xScale.invert(mouse[0]), sourceParams.plot.x.accessor)
-    var xFormat = sourceConfig.get('axis')[sourceParams.plot.x.axis].formatter
-    if (!_.isFunction(xFormat)) {
-      xFormat = d3.timeFormat('%H:%M')
-    }
-    // Draw crosshair
-    var svgCrosshair = svg.selectAll('.crosshair').data([{ x: mouse[0], y: mouse[1] }])
+    var xElem = self.config.get('findDataElem')(mouse[0], data, self.params.sourceComponentView)
+    // Draw crosshair line
+    var svgCrosshair = svg.selectAll('.crosshair').data([renderInfo.line])
     var svgCrosshairEnter = svgCrosshair.enter().append('g')
       .attr('class', 'crosshair')
     svgCrosshairEnter.append('line')
       .attr('class', 'x-line')
-      .attr('x1', function (d) { return d.x })
-      .attr('x2', function (d) { return d.x })
-      .attr('y1', (sourceParams.yRange[0] - sourceParams.yRange[1]) / 2)
-      .attr('y2', (sourceParams.yRange[0] - sourceParams.yRange[1]) / 2)
+      .attr('x1', function (d) { return d.x(xElem) })
+      .attr('x2', function (d) { return d.x(xElem) })
+      .attr('y1', function (d) { return d.y1 })
+      .attr('y2', function (d) { return d.y2 })
     svgCrosshairEnter.append('text')
       .attr('class', 'x-text')
-      .attr('x', function (d) { return d.x })
-      .attr('y', sourceParams.yRange[0] + 15)
-      .text(xFormat(xElemVal))
+      .attr('x', function (d) { return d.x(xElem) })
+      .attr('y', function (d) { return d.y1 + 15 })
+      .text(function (d) { return d.text(xElem) })
+    svgCrosshairEnter.append('g')
+      .attr('class', 'bubbles')
     var svgCrosshairEdit = svgCrosshairEnter.merge(svgCrosshair)
       .transition().ease(d3.easeLinear).duration(self.params.duration)
     svgCrosshairEdit.select('.x-line')
-      .attr('x1', Math.round(xScale(xElemVal)))
-      .attr('x2', Math.round(xScale(xElemVal)))
-      .attr('y1', sourceParams.yRange[0])
-      .attr('y2', sourceParams.yRange[1])
+      .attr('x1', function (d) { return d.x(xElem) })
+      .attr('x2', function (d) { return d.x(xElem) })
+      .attr('y1', function (d) { return d.y1 })
+      .attr('y2', function (d) { return d.y2 })
     svgCrosshairEdit.select('.x-text')
-      .attr('x', xScale(xElemVal))
-      .attr('y', sourceParams.yRange[0] + 15)
-      .text(xFormat(xElemVal))
+      .attr('x', function (d) { return d.x(xElem) })
+      .attr('y', function (d) { return d.y1 + 15 })
+      .text(function (d) { return d.text(xElem) })
+    // Draw bubbles for all enabled y accessors.
+    var svgBubbles = svg.select('.crosshair').select('.bubbles').selectAll('circle').data(renderInfo.circles, function (d) { return d.id })
+    svgBubbles.enter().append('circle')
+      .attr('cx', function (d) { return d.x(xElem) })
+      .attr('cy', function (d) { return d.y(xElem) })
+      .attr('fill', function (d) { return d.color })
+      .attr('r', 0)
+      .merge(svgBubbles)
+      .transition().ease(d3.easeLinear).duration(self.params.duration)
+      .attr('cx', function (d) { return d.x(xElem) })
+      .attr('cy', function (d) { return d.y(xElem) })
+      .attr('r', self.params.bubbleR)
     svgCrosshair.exit().remove()
   },
 
-  _bindMouseListeners: function (sourceParams, sourceConfig) {
+  _prepareRenderInfo: function (componentView) {
+    var self = this
+    var prepareRenderInfo = this.config.get('prepareRenderInfo')
+    self.params.renderInfo = prepareRenderInfo(componentView)
+    console.log('CrosshairView renderInfo: ', self.params.renderInfo)
+  },
+
+  _bindMouseListeners: function (sourceParams, sourceConfig, componentView) {
     var self = this
     var svg = self.svgSelection()
+    self._prepareRenderInfo(componentView)
+    self.params.sourceComponentView = componentView
     var throttledMouseMoveHandler = _.throttle(_.bind(self._mouseMoveHandler, self), 100)
     svg.on('mousemove', function () {
-      throttledMouseMoveHandler(sourceParams, sourceConfig, d3.mouse(this))
+      throttledMouseMoveHandler(d3.mouse(this))
     })
     svg.on('mouseout', function () {
       // The mouse could have left the svg but entered an svg child.
       // We still get a mouseout event in this case so still need to verify if mouse coordinates are out of bounds.
       var mouse = d3.mouse(this)
-      if (mouse[0] < sourceParams.xRange[0] || mouse[0] > sourceParams.xRange[1] || mouse[1] < sourceParams.yRange[1] || mouse[1] > sourceParams.yRange[0]) {
+      if (mouse[0] < self.params.renderInfo.x1 || mouse[0] > self.params.renderInfo.x2 || mouse[1] < self.params.renderInfo.y1 || mouse[1] > self.params.renderInfo.y2) {
         self.removeCrosshair()
       }
     })
