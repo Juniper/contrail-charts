@@ -3,7 +3,6 @@
  */
 var $ = require('jquery')
 var _ = require('lodash')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var MessageView = ContrailChartsView.extend({
@@ -13,14 +12,13 @@ var MessageView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(self, options)
     self._registerListeners()
   },
 
   _registerListeners: function () {
-    this.listenTo(this.eventObject, 'message', this.renderMessage)
-    this.listenTo(this.eventObject, 'clearMessage', this.clearMessage)
+    this.listenTo(this._eventObject, 'message', this.renderMessage)
+    this.listenTo(this._eventObject, 'clearMessage', this.clearMessage)
   },
 
   render: function () {

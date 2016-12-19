@@ -2,17 +2,15 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var _ = require('lodash')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var XYChartSubView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
+    ContrailChartsView.prototype.initialize.call(self, options)
     self.parent = options.parent
     self.axisName = options.axisName
-    self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
   /**

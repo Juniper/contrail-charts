@@ -5,7 +5,6 @@
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var LineChartView = require('components/composite-y/LineChartView')
 var AreaChartView = require('components/composite-y/AreaChartView')
@@ -20,16 +19,12 @@ var CompositeYChartView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
+    ContrailChartsView.prototype.initialize.call(self, options)
     // TODO: Every model change will trigger a redraw. This might not be desired - dedicated redraw event?
-
-    // / The config model
-    self.config = options.config
-
     // / View params hold values from the config and computed values.
     self._debouncedRenderFunction = _.bind(_.debounce(self._render, 10), self)
     self.listenTo(self.model, 'change', self._onDataModelChange)
     self.listenTo(self.config, 'change', self._onConfigModelChange)
-    self.eventObject = options.eventObject || _.extend({}, Events)
     self.name = options.name || 'compositeY'
     self._onWindowResize()
   },
@@ -102,7 +97,7 @@ var CompositeYChartView = ContrailChartsView.extend({
               foundDrawing = new ChildView({
                 model: self.model,
                 config: self.config,
-                eventObject: self.eventObject,
+                eventObject: self._eventObject,
                 el: self.el,
                 axisName: accessor.axis,
                 parent: self
@@ -548,7 +543,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    self.eventObject.trigger('rendered:' + self.name, self.params, self.config)
+    self._eventObject.trigger('rendered:' + self.name, self.params, self.config)
   },
 
   render: function () {

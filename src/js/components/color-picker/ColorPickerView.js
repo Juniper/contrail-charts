@@ -3,7 +3,6 @@
  */
 var _ = require('lodash')
 var $ = require('jquery')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var ColorPickerView = ContrailChartsView.extend({
@@ -13,10 +12,9 @@ var ColorPickerView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
+    ContrailChartsView.prototype.initialize.call(self, options)
     self.show = 0
-    self.config = options.config
     self.listenTo(self.config, 'change', self.render)
-    self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
   events: {
@@ -79,12 +77,12 @@ var ColorPickerView = ContrailChartsView.extend({
 
   _bindListeners: function () {
     var self = this
-    self.stopListening(self.eventObject)
+    self.stopListening(self._eventObject)
     // We assume that when the sourceComponent is rendered it triggers the 'rendered:[componentName]' event passing (sourceParams, sourceConfig) as arguments.
     // We assume that these are the params of a CompositeY chart.
     // TODO: How to handle params from different components (ie. Radial)?
     // They can have a different structure then the 'plot' and 'axis' config attributes in CompositeY.
-    self.listenTo(self.eventObject, 'rendered:' + self.params.sourceComponent, self._renderColorPicker)
+    self.listenTo(self._eventObject, 'rendered:' + self.params.sourceComponent, self._renderColorPicker)
   },
 
   render: function () {

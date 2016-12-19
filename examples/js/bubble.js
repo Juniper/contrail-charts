@@ -79,7 +79,6 @@ var chartConfig = {
   }, {
     type: 'navigation',
     config: {
-      el: '#chart-navigation',
       marginInner: 5,
       chartHeight: 200,
       plot: {

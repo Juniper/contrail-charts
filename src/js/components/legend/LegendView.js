@@ -2,7 +2,6 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var _ = require('lodash')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var LegendView = ContrailChartsView.extend({
@@ -12,10 +11,9 @@ var LegendView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
+    ContrailChartsView.prototype.initialize.call(self, options)
     self.show = 0
-    self.config = options.config
     self.listenTo(self.config, 'change', self.render)
-    self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
   generateLegendHTML: function (accessors) {
@@ -31,8 +29,8 @@ var LegendView = ContrailChartsView.extend({
 
   _bindListeners: function () {
     var self = this
-    self.stopListening(self.eventObject)
-    self.listenTo(self.eventObject, 'rendered:' + self.params.sourceComponent, self._renderLegend)
+    self.stopListening(self._eventObject)
+    self.listenTo(self._eventObject, 'rendered:' + self.params.sourceComponent, self._renderLegend)
   },
 
   render: function () {

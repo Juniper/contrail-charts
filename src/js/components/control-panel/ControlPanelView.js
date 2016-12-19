@@ -3,7 +3,6 @@
  */
 var $ = require('jquery')
 var _ = require('underscore')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 
 var ControlPanelView = ContrailChartsView.extend({
@@ -17,9 +16,8 @@ var ControlPanelView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
+    ContrailChartsView.prototype.initialize.call(self, options)
     self.listenTo(self.config, 'change', self.render)
-    self.eventObject = options.eventObject || _.extend({}, Events)
   },
 
   events: {
@@ -39,7 +37,7 @@ var ControlPanelView = ContrailChartsView.extend({
       console.log('Found button: ', button)
       if (_.isObject(button.events) && button.events.click) {
         if (_.isString(button.events.click)) {
-          self.eventObject.trigger(button.events.click, self.params)
+          self._eventObject.trigger(button.events.click, self.params)
         } else if (_.isFunction(button.events.click)) {
           _.bind(button.events.click, self)()
         }

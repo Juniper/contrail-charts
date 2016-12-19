@@ -4,7 +4,6 @@
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var DataProvider = require('handlers/DataProvider')
 var CompositeYChartView = require('components/composite-y/CompositeYChartView')
@@ -16,8 +15,7 @@ var NavigationView = ContrailChartsView.extend({
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(self, options)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self._isModelChanged = false
     self.brush = null
@@ -140,10 +138,10 @@ var NavigationView = ContrailChartsView.extend({
       config: self.config,
       el: self.el,
       id: self.id,
-      eventObject: self.eventObject,
+      eventObject: self._eventObject,
       name: 'xyChartNavigation'
     })
-    self.listenTo(self.eventObject, 'rendered:xyChartNavigation', self._chartRendered)
+    self.listenTo(self._eventObject, 'rendered:xyChartNavigation', self._chartRendered)
     self.compositeYChartView.render()
   },
 
@@ -168,7 +166,7 @@ var NavigationView = ContrailChartsView.extend({
     var self = this
     var x = self.params.plot.x.accessor
     self._focusDataProvider.setRangeAndFilterData(focusDomain)
-    self.eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
+    self._eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
   },
 
   _handleBrushSelection: function (dataWindow) {

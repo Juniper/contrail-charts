@@ -116,7 +116,6 @@ complexChartView.setConfig({
   }, {
     type: 'navigation',
     config: {
-      el: '#complexChart-navigation',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
@@ -224,7 +223,6 @@ complexChartView.setConfig({
   }, {
     type: 'controlPanel',
     config: {
-      el: '#complexChart-controlPanel',
       enabled: true,
       buttons: [
         {
@@ -279,19 +277,16 @@ complexChartView.setConfig({
   }, {
     type: 'legend',
     config: {
-      el: '#complexChart-legend',
       sourceComponent: 'compositeY'
     }
   }, {
     type: 'crosshair',
     config: {
-      el: '#complexChart-xyChart',
       sourceComponent: 'compositeY'
     }
   }, {
     type: 'colorPicker',
     config: {
-      el: '#complexChart-color-picker',
       sourceComponent: 'compositeY'
     }
   }]

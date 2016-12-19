@@ -126,7 +126,8 @@ var XYChartView = ContrailChartsView.extend({
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject
+      eventObject: self.eventObject,
+      container: self.$el,
     })
     var component = new components[type].View(viewOptions)
     self._components.push(component)
