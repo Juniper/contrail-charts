@@ -52,10 +52,17 @@ var PieChartView = ContrailChartsView.extend({
     var self = this
     var width = self.config.get('chartWidth')
     var height = self.config.get('chartHeight')
-    var radius = self.config.get('radius')
+    var radius = self.config.getInnerRadius()
     var data = e.currentTarget.__data__.data
     var valueAccessor = self.config.get('serie').getValue
-    self.eventObject.trigger('showTooltip', {left: width /2 - radius * 0.8 , top: height /2}, data)
+    const chartOffset = this.$el[0].getBoundingClientRect()
+    const tooltipOffset = {
+      left: chartOffset.left + width /2 - radius * 0.707,
+      top: chartOffset.top + height /2 - radius * 0.707,
+      width: radius * 0.707 * 2,
+      height: radius * 0.707 * 2,
+    }
+    self.eventObject.trigger('showTooltip', tooltipOffset, data)
     //d3.select(this).classed('active', true)
   },
 
@@ -69,7 +76,7 @@ var PieChartView = ContrailChartsView.extend({
 
     var arc = d3.arc()
       .outerRadius(radius)
-      .innerRadius(radius * 0.75)
+      .innerRadius(this.config.getInnerRadius())
 
     var pie = d3.pie()
       .sort(null)
