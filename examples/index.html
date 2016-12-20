@@ -9,49 +9,54 @@
         <script src="../node_modules/jquery/dist/jquery.js"></script>
 	</head>
 	<body>
-    <h1>Contrail Charts Examples</h1>
-    <div>
-        <div id="sideBar" class="side-bar">
-            <ul id="exampleLinks" class="example-links"></ul>
+    <div id="sideBar" class="side-bar">
+        <h1>Contrail Charts Examples</h1>
+        <div id="panel">
+            <div id="filter">
+                <input id="exampleFilter">
+            </div>
+            <div id="content">
+                <ul id="exampleLinks" class="example-links"></ul>
+            </div>
         </div>
-        <div id="pageContent" class="page-content">
-            <main>
-                <input id="demoTab" type="radio" name="contentTabs" checked>
-                <label for="demoTab">Demo</label>
+    </div>
+    <div id="pageContent" class="page-content">
+        <div id="sourceTabs" class="source-tabs">
+            <input id="demoTab" type="radio" name="sourceContentTab" checked>
+            <label for="demoTab">Demo</label>
 
-                <input id="htmlTab" type="radio" name="contentTabs">
-                <label for="htmlTab">HTML</label>
+            <input id="htmlTab" type="radio" name="sourceContentTab">
+            <label for="htmlTab">HTML</label>
 
-                <input id="cssTab" type="radio" name="contentTabs">
-                <label for="cssTab">CSS</label>
+            <input id="cssTab" type="radio" name="sourceContentTab">
+            <label for="cssTab">CSS</label>
 
-                <input id="jsTab" type="radio" name="contentTabs">
-                <label for="jsTab">JS</label>
+            <input id="jsTab" type="radio" name="sourceContentTab">
+            <label for="jsTab">JS</label>
 
-                <section id="demoContent">
-                    <div id="outputView" class="output">
-                        <iframe src="" class="output-iframe"></iframe>
-                    </div>
-                </section>
+            <div id="demoContent" class="tab-content">
+                <div id="outputView" class="output-view">
+                    <iframe src="" class="output-demo-iframe"></iframe>
+                </div>
+            </div>
 
-                <section id="htmlContent">
-                    <div id="htmlSource" class="source-html">
-                        <iframe src="" class="source-html-iframe"></iframe>
-                    </div>
-                </section>
+            <div id="htmlContent" class="tab-content">
+                <div id="htmlSource" class="source-html">
+                    <iframe src="" class="source-html-iframe"></iframe>
+                </div>
+            </div>
 
-                <section id="cssContent">
-                    <div id="cssSource" class="source-css">
-                        <iframe src="" class="source-css-iframe"></iframe>
-                    </div>
-                </section>
+            <div id="cssContent" class="tab-content">
+                <div id="cssSource" class="source-css">
+                    <iframe src="" class="source-css-iframe"></iframe>
+                </div>
+            </div>
 
-                <section id="jsContent">
-                    <div id="jsSource" class="source-js">
-                        <iframe src="" class="source-js-iframe"></iframe>
-                    </div>
-                </section>
-            </main>
+            <div id="jsContent" class="tab-content">
+                <div id="jsSource" class="source-js">
+                    <iframe src="" class="source-js-iframe"></iframe>
+                </div>
+            </div>
         </div>
     </div>
 	</body>

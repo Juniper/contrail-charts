@@ -1,3 +1,7 @@
+/**
+ * Update following to add a new example.
+ * @type {*[]}
+ */
 var examples = [
   {
     html: 'composite-xy/composite-xy.html',
@@ -39,16 +43,17 @@ var examples = [
 
 var $exampleLinks = $('#exampleLinks')
 for (var i = 0; i < examples.length; i++) {
-  var $link = $('<a href="#' + i + '" >' + examples[i].title + '</a>')
+  var $link = $('<a href="#' + i + '" class="link">' + examples[i].title + '</a>')
   $link.click(sideBarLinkOnClick)
-  $exampleLinks.append($('<li class="link">').append($link))
+  $exampleLinks.append($('<li>').append($link))
 }
 
 function sideBarLinkOnClick (e) {
   var index = $(this).attr('href').split('#')[1]
   var example = examples[index]
-  $('#htmlContent').find('.source-html-iframe').load(example.html)
+  $('#outputView').find('.output-demo-iframe').attr('src', example.html)
+  // Todo: Fix html code display
+  // $('#htmlContent').find('.source-html-iframe')
   $('#jsContent').find('.source-js-iframe').attr('src', example.js)
   $('#cssContent').find('.source-css-iframe').attr('src', example.css)
-  $('#outputView .output-iframe').attr('src', example.html)
 }

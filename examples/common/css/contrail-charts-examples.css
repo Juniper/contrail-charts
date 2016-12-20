@@ -19,56 +19,52 @@ body {
 }
 
 h1 {
-	padding: 50px 0;
-	font-weight: 400;
+	padding: 25px 0;
+	font-weight: normal;
+	font-size: 25px;
 	text-align: center;
 }
 
 .side-bar {
-	width: 10%;
-	float: left;
-}
-
-.page-content {
-	width: 85%;
+	width: 15%;
+	min-width: 140px;
+	padding: 0 10px;
 	float: left;
 }
 
 .example-links {
-	padding: 5px;
+	padding: 15px;
 }
-.example-links .link {
+
+.example-links li {
 	margin-bottom: 10px;
 }
 
-.source-html-iframe,
-.source-js-iframe,
-.source-css-iframe {
-	width: 100%;
-	border-style: none;
-	height: 600px;
-	overflow: auto;
+.example-links .link {
+	font-family: 'Open Sans';
+	font-size: 15px;
+	color: #2194CE;
+	text-decoration: none;
+	cursor: pointer;
 }
 
-.output {
-	width: 100%;
-}
-.output .output-iframe {
-	border-style: none;
-	width: 100%;
-	height: 600px;
-	overflow: auto;
+.page-content {
+	width: 85%;
+	min-width: 500px;
+	height: 100%;
+	float: left;
 }
 
-main {
-	min-width: 320px;
-	max-width: 100%px;
-	padding: 50px;
+.source-tabs {
+	width: 100%;
+	height: 100%;
+	padding: 20px;
 	margin: 0 auto;
 	background: #fff;
 }
 
-section {
+.tab-content {
+	height: 100%;
 	display: none;
 	padding: 20px 0 0;
 	border-top: 1px solid #ddd;
@@ -105,4 +101,21 @@ input:checked + label {
 #cssTab:checked ~ #cssContent,
 #jsTab:checked ~ #jsContent {
 	display: block;
+}
+
+.output-view,
+.source-html,
+.source-js,
+.source-css {
+	height: 100%;
+}
+
+.output-demo-iframe,
+.source-html-iframe,
+.source-js-iframe,
+.source-css-iframe {
+	width: 100%;
+	height: calc(100% - 20px);
+	border-style: none;
+	overflow: auto;
 }
