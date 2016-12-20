@@ -58,7 +58,7 @@ var ContrailChartsDataModel = ContrailModel.extend({
   setDataAndLimit: function (data, limit) {
     this.setData(data)
     this.set({limit: limit})
-  }
+  },
 })
 
 module.exports = ContrailChartsDataModel

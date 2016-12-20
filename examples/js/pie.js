@@ -9,7 +9,7 @@ var pieData = [
   { x: "Process 6", y: 612463 },
 ];
 function numberFormatter (number) {
-  return number.toFixed(2)
+  return d3.format(",.0f")(number)
 }
 function getLabel (serie) {
   return serie.x
@@ -23,6 +23,7 @@ var chartConfig = {
     type: 'radialChart',
     config: {
       el: '.pie-chart',
+      type: 'donut',
       chartWidth: 480,
       chartHeight: 360,
       radius: 100,
@@ -30,7 +31,7 @@ var chartConfig = {
       serie: {
         getValue: getValue,
         getLabel: getLabel,
-        formatter: numberFormatter,
+        valueFormatter: numberFormatter,
       }
     },
   }, {
@@ -39,10 +40,8 @@ var chartConfig = {
       dataConfig: [
         {
           accessor: 'y',
-          labelFormatter: function (key) {
-            return key
-          },
-          valueFormatter: numberFormatter
+          labelFormatter: getLabel,
+          valueFormatter: numberFormatter,
         },
       ],
     },

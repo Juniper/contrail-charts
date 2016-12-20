@@ -1,6 +1,9 @@
 /* global coCharts */
 
-function numberFormatFunction (number) {
+function timeFormatter (value) { 
+  return d3.timeFormat('%H:%M:%S')(value) 
+} 
+function numberFormatter (number) {
   return number.toFixed(2)
 }
 
@@ -51,28 +54,28 @@ var chartConfig = {
           labelFormatter: function (key) {
             return 'Time'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: timeFormatter,
         },
         {
           accessor: 'a',
           labelFormatter: function (key) {
             return 'A'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'y',
           labelFormatter: function (key) {
             return 'Y'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter,
         },
         {
           accessor: 'r',
           labelFormatter: function (key) {
             return 'R'
           },
-          valueFormatter: numberFormatFunction
+          valueFormatter: numberFormatter,
         }
       ],
     },

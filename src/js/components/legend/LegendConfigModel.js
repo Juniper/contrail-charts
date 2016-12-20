@@ -13,7 +13,7 @@ var LegendConfigModel = ContrailChartsConfigModel.extend({
       _.each(accessors, function (accessor) {
         var $row = $('<div class="legend-group"></div>')
         $row.append('<span class="color" style="background-color: ' + accessor.color + '">&nbsp;</span>')
-        $row.append('<span class="label">' + (accessor.label || accessor.accessor) + '</span>')
+        $row.append('<span class="label">' + (accessor.labelFormatter || accessor.accessor) + '</span>')
         $container.append($row)
       })
       return $container

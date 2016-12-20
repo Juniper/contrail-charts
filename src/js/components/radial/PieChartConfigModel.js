@@ -8,6 +8,7 @@ var ContrailChartsConfigModel = require('contrail-charts-config-model')
 
 var PieChartConfigModel = ContrailChartsConfigModel.extend({
   defaults: {
+    type: 'pie',
     // The chart width. If not provided will be caculated by View.
     chartWidth: undefined,
 
@@ -18,14 +19,18 @@ var PieChartConfigModel = ContrailChartsConfigModel.extend({
   },
 
   getColor: function (accessor) {
-    var self = this
-    return self.attributes.colorScale(accessor)
+    return this.attributes.colorScale(accessor)
   },
 
   getLabels: function (dataProvider) {
-    var self = this
-    var labelFormatter = self.get('serie').getLabel
+    var labelFormatter = this.get('serie').getLabel
     return dataProvider.getLabels(labelFormatter)
+  },
+
+  getInnerRadius: function () {
+    const chartType = this.get('type')
+    const innerRadiusCoefficient = chartType === 'pie' ? 0 : 0.75
+    return this.get('radius') * innerRadiusCoefficient
   },
 
 })
