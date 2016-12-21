@@ -74,6 +74,15 @@ cpuMemChartView.setConfig({
             label: 'CPU Utilization (%)',
             enabled: true,
             chart: 'stackedBar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             color: '#6baed6',
             axis: 'y1',
             tooltip: 'defaultTooltip'
@@ -83,6 +92,15 @@ cpuMemChartView.setConfig({
             label: 'Memory Usage',
             enabled: true,
             chart: 'line',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             color: '#2ca02c',
             axis: 'y2',
             tooltip: 'customTooltip'

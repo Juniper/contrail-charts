@@ -121,8 +121,8 @@ var ControlPanelView = ContrailChartsView.extend({
       if (accessor.possibleChartTypes) {
         var $chartTypeSelector = $('<select class="accessor-data-chart-type-select" name="' + key + '"></select>')
         _.each(accessor.possibleChartTypes, function (chartType) {
-          var $option = $('<option value="' + chartType.name + '">' + self.config.getLabel(undefined, accessor) + '</option>')
-          if (accessor.chart === chartType.name) {
+          var $option = $('<option value="' + chartType.chart + '">' + self.config.getLabel(undefined, chartType) + '</option>')
+          if (accessor.chart === chartType.chart) {
             $option.prop('selected', true)
           }
           $chartTypeSelector.append($option)
