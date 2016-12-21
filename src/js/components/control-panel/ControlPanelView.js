@@ -100,6 +100,7 @@ var ControlPanelView = ContrailChartsView.extend({
   },
 
   generateExpandedPanel: function (params) {
+    var self = this
     var $container = $('<div class="control-panel-filter-container"></div>')
     var $panelHead = $('<div class="control-panel-filter-head"></div>')
     $panelHead.append('<span class="control-panel-filter-head-icon"><i class="' + params.activeButton.iconClass + '"></i></span>')
@@ -114,13 +115,13 @@ var ControlPanelView = ContrailChartsView.extend({
       if (accessor.enabled) {
         $checkbox.prop('checked', true)
       }
-      var $label = $('<label for="filter-item-input-' + key + '" class="accessor-data-checkbox-label"> ' + accessor.label + '</label>')
+      var $label = $('<label for="filter-item-input-' + key + '" class="accessor-data-checkbox-label"> ' + self.config.getLabel(undefined, accessor) + '</label>')
       $filterItem.append($checkbox)
       $filterItem.append($label)
       if (accessor.possibleChartTypes) {
         var $chartTypeSelector = $('<select class="accessor-data-chart-type-select" name="' + key + '"></select>')
         _.each(accessor.possibleChartTypes, function (chartType) {
-          var $option = $('<option value="' + chartType.name + '">' + chartType.label + '</option>')
+          var $option = $('<option value="' + chartType.name + '">' + self.config.getLabel(undefined, accessor) + '</option>')
           if (accessor.chartType === chartType.name) {
             $option.prop('selected', true)
           }
