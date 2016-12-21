@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 
-define([
+define([ // eslint-disable-line no-undef
   'd3', // Example use of older d3 versions.
   'underscore',
   'contrail-charts'

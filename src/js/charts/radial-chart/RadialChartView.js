@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
 var _ = require('lodash')
 var Events = require('contrail-charts-events')
 var ContrailChartsDataModel = require('contrail-charts-data-model')

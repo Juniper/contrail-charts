@@ -2,6 +2,7 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var _ = require('lodash')
+var d3 = require('d3')
 var ContrailModel = require('contrail-model')
 var ContrailEvents = require('contrail-events')
 /**
@@ -168,22 +169,11 @@ var DataProvider = ContrailModel.extend({
    * Worker function used to calculate a data range for provided varaible name.
    */
   calculateRangeForDataAndVariableName: function (data, variableName) {
-    var min, max
     var variableRange
     var manualRange = this.get('manualRange')
-    var queryLimit = this.getQueryLimit()
-    var parentRange = this.getParentRange()
     if (_.isArray(manualRange[variableName])) {
       // Use manually set range if available.
       variableRange = [manualRange[variableName][0], manualRange[variableName][1]]
-    /*
-    } else if (_.isArray(queryLimit[variableName])) {
-      // Use query limit range if available.
-      variableRange = [queryLimit[variableName][0], queryLimit[variableName][1]]
-    } else if (_.isArray(parentRange[variableName])) {
-      // Use parent's range for variable if available.
-      variableRange = [parentRange[variableName][0], parentRange[variableName][1]]
-    */
     } else {
       // Otherwise calculate the range from data.
       if (data.length) {
@@ -209,19 +199,18 @@ var DataProvider = ContrailModel.extend({
   },
 
   filterDataByRange: function (data, range) {
-    return _.filter(data, function(d) {
-        var ok = true
-        _.each(range, function(range, key) {
-            if( !_.has( d, key ) ) {
-                ok = false
-            }
-            else {
-                if (d[key] < range[0] || d[key] > range[1]) {
-                    ok = false
-                }
-            }
-        })
-        return ok
+    return _.filter(data, function (d) {
+      var ok = true
+      _.each(range, function (range, key) {
+        if (!_.has(d, key)) {
+          ok = false
+        } else {
+          if (d[key] < range[0] || d[key] > range[1]) {
+            ok = false
+          }
+        }
+      })
+      return ok
     })
   },
 
