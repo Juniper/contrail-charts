@@ -38,6 +38,12 @@ var examples = [
     js: 'requirejs/app/example1.js',
     css: 'requirejs/app/example1.css',
     title: 'Using RequireJS'
+  },
+  {
+    html: 'linebar/linebar.html',
+    js: 'linebar/linebar.js',
+    css: 'linebar/linebar.css',
+    title: 'Line Bar chart (CPU/Mem)'
   }
 ]
 

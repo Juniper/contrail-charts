@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Pie Chart</title>
+		<title>Composite Chart with Line and Bar</title>
 		<!-- third-party-libs -->
 		<script src="../../node_modules/jquery/dist/jquery.js"></script>
 		<script src="../../node_modules/lodash/lodash.js"></script>
@@ -13,12 +13,19 @@
 		<link href="../../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 		<!-- third-party-libs -->
 		<link href="../../build/css/contrail-charts.css" rel="stylesheet">
-		<link href="./pie.css" rel="stylesheet">
+		<link href="./linebar.css" rel="stylesheet">
 	</head>
 	<body>
-    <div id="pie-chart-legend"></div>
-		<div class="pie-chart"></div>
+		<div id="cpuMemChart">
+			<div id="cpuMemChart-legend"></div>
+			<div id="cpuMemChart-xyChart">
+				<div id="cpuMemChart-message"></div>
+			</div>
+			<div id="cpuMemChart-controlPanel"></div>
+			<div id="cpuMemChart-color-picker"></div>
+			<div id="cpuMemChart-navigation"></div>
+		</div>
 		<script src="../../build/js/contrail-charts.js"></script>
-		<script src="./pie.js"></script>
+		<script src="./linebar.js"></script>
 	</body>
 </html>
