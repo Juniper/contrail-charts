@@ -1,8 +1,8 @@
 /* global coCharts */
 
-function timeFormatter (value) { 
-  return d3.timeFormat('%H:%M:%S')(value) 
-} 
+function timeFormatter (value) {
+  return d3.timeFormat('%H:%M:%S')(value)
+}
 function numberFormatter (number) {
   return number.toFixed(2)
 }

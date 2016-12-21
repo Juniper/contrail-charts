@@ -1,12 +1,12 @@
 /* global coCharts */
 
-function timeFormatter(value) {
+function timeFormatter (value) {
   return d3.timeFormat('%H:%M:%S')(value)
 }
-function cpuFormatter(number) {
+function cpuFormatter (number) {
   return number.toFixed(2) + '%'
 }
-function memFormatter(number) {
+function memFormatter (number) {
   var bytePrefixes = ['B', 'KB', 'MB', 'GB', 'TB']
   var bytes = parseInt(number * 1024)
   var formattedBytes = '-'

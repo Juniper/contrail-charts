@@ -36,7 +36,6 @@ var ControlPanelView = ContrailChartsView.extend({
     var button = _.findWhere(self.config.get('buttons'), { name: buttonName })
     if (button) {
       self.params.activeButton = button
-      console.log('Found button: ', button)
       if (_.isObject(button.events) && button.events.click) {
         if (_.isString(button.events.click)) {
           self.eventObject.trigger(button.events.click, self.params)

@@ -332,7 +332,7 @@ var CompositeYChartView = ContrailChartsView.extend({
         self.params.axis[axisName].scale = baseScale.domain(self.params.axis[axisName].domain).range(self.params.axis[axisName].range)
         if (self.hasAxisParam(axisName, 'nice') && self.params.axis[axisName].nice) {
           if (self.hasAxisParam(axisName, 'ticks')) {
-            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.axis[xAxisName].ticks)
+            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.axis[axisName].ticks)
           } else {
             self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice()
           }
