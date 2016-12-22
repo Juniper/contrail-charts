@@ -94,7 +94,7 @@ var StackedBarChartView = XYChartSubView.extend({
           className: 'bar bar-' + key,
           x: xScale(x) - bandWidthHalf,
           y: yScale(stackedY + d[key]),
-          h: yScale.range()[0] - yScale(d[key]),
+          h: yScale(stackedY) - yScale(stackedY + d[key]),
           w: bandWidth,
           color: self.getColor(accessor),
           accessor: accessor,
@@ -122,8 +122,7 @@ var StackedBarChartView = XYChartSubView.extend({
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
-        // var pos = $( this ).offset() // not working in jquery 3
-        self.eventObject.trigger('hideTooltip')
+        self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)

@@ -27,53 +27,54 @@ describe('coCharts', function () {
 })
 
 describe('coCharts.charts.XYChartView', function () {
-  var simpleChartConfig = {
-    components: [{
-      type: 'compositeY',
-      config: {
-        el: '#chartView',
-        plot: {
-          x: {
-            accessor: 'x',
-            axis: 'x'
-          },
-          y: [{
-            accessor: 'y',
-            chart: 'line'
-          }]
+  beforeEach(function () {
+    this.simpleChartConfig = {
+      components: [{
+        type: 'compositeY',
+        config: {
+          el: '#chartView',
+          plot: {
+            x: {
+              accessor: 'x',
+              axis: 'x'
+            },
+            y: [{
+              accessor: 'y',
+              chart: 'line'
+            }]
+          }
         }
-      }
-    }]
-  }
+      }]
+    }
+    this.chartView = new coCharts.charts.XYChartView()
+    this.chartView.setConfig(this.simpleChartConfig)
+  })
 
   it('XYChartView has xyChart component', function () {
-    var chartView = new coCharts.charts.XYChartView()
-    chartView.setConfig(simpleChartConfig)
-    expect(chartView.getComponentByType('compositeY')).toBeDefined()
-    expect(chartView.getComponentByType('navigation')).not.toBeDefined()
+    this.chartView.setConfig(this.simpleChartConfig)
+    expect(this.chartView.getComponentByType('compositeY')).toBeDefined()
+    expect(this.chartView.getComponentByType('navigation')).not.toBeDefined()
   })
 
   it('XYChartView xy component generates activeAccessorData on render', function (done) {
-    var chartView = new coCharts.charts.XYChartView()
-    chartView.setData([])
-    chartView.setConfig(simpleChartConfig)
-    var xyChart = chartView.getComponentByType('compositeY')
-    xyChart.render()
+    this.chartView.setData([])
+    this.chartView.setConfig(this.simpleChartConfig)
+    var compositeY = this.chartView.getComponentByType('compositeY')
+    compositeY.render()
     // Time for component init before assert
     setTimeout(function () {
-      expect(xyChart.params.activeAccessorData[0]).toBeDefined()
+      expect(compositeY.params.activeAccessorData[0]).toBeDefined()
       done()
     }, 10)
   })
 
   it('On XYChartView render, component xy render is called', function () {
-    var chartView = new coCharts.charts.XYChartView()
-    chartView.setData([])
-    chartView.setConfig(simpleChartConfig)
-    var xyChart = chartView.getComponentByType('compositeY')
-    spyOn(xyChart, 'render')
-    chartView.render()
-    expect(xyChart.render).toHaveBeenCalled()
+    this.chartView.setData([])
+    this.chartView.setConfig(this.simpleChartConfig)
+    var compositeY = this.chartView.getComponentByType('compositeY')
+    spyOn(compositeY, 'render')
+    this.chartView.render()
+    expect(compositeY.render).toHaveBeenCalled()
   })
 })
 

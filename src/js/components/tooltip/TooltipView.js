@@ -16,6 +16,7 @@ var TooltipView = ContrailChartsView.extend({
     var self = this
     self.id = options.id
     self.config = options.config
+    self.resetParams()
     self.listenTo(self.config, 'change', self.resetParams)
     self.eventObject = options.eventObject || _.extend({}, Events)
     self.listenTo(self.eventObject, 'showTooltip', self.show)
@@ -24,13 +25,16 @@ var TooltipView = ContrailChartsView.extend({
 
   show: function (offset, data, id) {
     var self = this
-    if (id && id !== self.id) return
+    if (id !== self.id) return
+    if (_.isArray(self.params.acceptFilters) && self.params.acceptFilters.length > 0) {
+      if (!_.includes(self.params.acceptFilters, id)) return
+    }
     self.render(data)
     self.$el.show()
 
     // Tooltip dimmensions will be available after render.
     var tooltipWidth = self.$el.outerWidth()
-    var tooltipHeight = self.$el.outerHeight()
+    // var tooltipHeight = self.$el.outerHeight()
     var windowWidth = $(document).width()
     var tooltipPositionTop = offset.top < 0 ? 0 : offset.top
     var tooltipPositionLeft = offset.left
@@ -41,12 +45,13 @@ var TooltipView = ContrailChartsView.extend({
       top: tooltipPositionTop,
       left: tooltipPositionLeft,
       width: offset.width,
-      height: offset.height,
+      height: offset.height
     })
   },
 
-  hide: function () {
+  hide: function (id) {
     var self = this
+    if (id !== self.id) return
     self.$el.hide()
   },
 

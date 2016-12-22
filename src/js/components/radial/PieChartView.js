@@ -1,12 +1,13 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
+var d3 = require('d3')
 var _ = require('lodash')
 var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
-var ContrailChartsDataModel = require('contrail-charts-data-model')
-var PieChartConfigModel = require('./PieChartConfigModel')
+// Todo why config model is not used?
+// var ContrailChartsDataModel = require('contrail-charts-data-model')
+// var PieChartConfigModel = require('./PieChartConfigModel')
 /**
 * Group of charts rendered in polar coordinates system
 * TODO merge with ChartView as long as XYChart too
@@ -54,16 +55,16 @@ var PieChartView = ContrailChartsView.extend({
     var height = self.config.get('chartHeight')
     var radius = self.config.getInnerRadius()
     var data = e.currentTarget.__data__.data
-    var valueAccessor = self.config.get('serie').getValue
+    // var valueAccessor = self.config.get('serie').getValue
     const chartOffset = this.$el[0].getBoundingClientRect()
     const tooltipOffset = {
-      left: chartOffset.left + width /2 - radius * 0.707,
-      top: chartOffset.top + height /2 - radius * 0.707,
+      left: chartOffset.left + width / 2 - radius * 0.707,
+      top: chartOffset.top + height / 2 - radius * 0.707,
       width: radius * 0.707 * 2,
       height: radius * 0.707 * 2,
     }
     self.eventObject.trigger('showTooltip', tooltipOffset, data)
-    //d3.select(this).classed('active', true)
+    // d3.select(this).classed('active', true)
   },
 
   _renderSVG: function () {
@@ -80,23 +81,23 @@ var PieChartView = ContrailChartsView.extend({
 
     var pie = d3.pie()
       .sort(null)
-      .value(function(d) { return serieConfig.getValue(d) })(data)
+      .value(function (d) { return serieConfig.getValue(d) })(data)
 
     d3.select(self.el).append('svg').attr('class', 'coCharts-svg pie-chart')
     self.svgSelection()
       .attr('width', width)
       .attr('height', height)
     var group = self.svgSelection().append('g')
-        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+        .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
     var arcs = group.selectAll('arc')
       .data(pie)
       .enter().append('g')
-      .attr('class', 'arc');
+      .attr('class', 'arc')
 
     arcs.append('path')
       .attr('d', arc)
-      .style('fill', function(d) {
+      .style('fill', function (d) {
         return self.config.getColor(serieConfig.getLabel(d.data))
       })
   }

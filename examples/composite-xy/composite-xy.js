@@ -60,25 +60,61 @@ complexChartView.setConfig({
             accessor: 'a',
             labelFormatter: 'A',
             enabled: true,
-            chart: 'stackedBar',
+            chart: 'bar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y1',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'b',
             labelFormatter: 'B',
             enabled: true,
-            chart: 'stackedBar',
+            chart: 'bar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y1',
-            tooltip: 'customTooltip',
+            //tooltip: 'customTooltip',
           },
           {
             accessor: 'c',
             labelFormatter: 'C',
             enabled: false,
-            chart: 'stackedBar',
+            chart: 'bar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y1',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'd',
@@ -86,8 +122,20 @@ complexChartView.setConfig({
             color: '#d62728',
             enabled: true,
             chart: 'line',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y2',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'e',
@@ -95,19 +143,32 @@ complexChartView.setConfig({
             color: '#9467bd',
             enabled: true,
             chart: 'line',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y2',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           }
         ]
       },
       axis: {
         x: {
-          formatter: d3.timeFormat('%H:%M:%S'),
+          formatter: d3.timeFormat('%H:%M:%S')
         },
         y1: {
           position: 'left',
           formatter: numberFormatter,
-          labelMargin: 15
+          labelMargin: 15,
+          domain: [-10, undefined]
         },
         y2: {
           position: 'right',
@@ -258,6 +319,16 @@ complexChartView.setConfig({
               this.eventObject.trigger('clearMessage', 'XYChartView')
             }
           }
+        },
+        {
+          name: 'refresh',
+          title: 'Refresh',
+          iconClass: 'fa fa-refresh',
+          events: {
+            click: function () {
+              this.eventObject.trigger('refresh')
+            }
+          }
         }
       ]
     },
@@ -277,7 +348,8 @@ complexChartView.setConfig({
     type: 'crosshair',
     config: {
       el: '#complexChart-xyChart',
-      sourceComponent: 'compositeY'
+      sourceComponent: 'compositeY',
+      tooltip: 'defaultTooltip'
     }
   }, {
     type: 'colorPicker',
