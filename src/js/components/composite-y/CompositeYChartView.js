@@ -32,6 +32,17 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.eventObject = options.eventObject || _.extend({}, Events)
     self.name = options.name || 'compositeY'
     self._onWindowResize()
+    self.listenTo(self.eventObject, 'selectColor', self.selectColor)
+  },
+
+  // Action handler
+  selectColor: function (accessorName, color) {
+    var self = this
+    var configAccessor = _.find(self.config.get('plot').y, function (a) { return a.accessor === accessorName })
+    if (configAccessor) {
+      configAccessor.color = color
+      self.config.trigger('change', self.config)
+    }
   },
 
   changeModel: function (model) {

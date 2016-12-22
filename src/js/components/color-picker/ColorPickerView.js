@@ -62,11 +62,8 @@ var ColorPickerView = ContrailChartsView.extend({
   selectColor: function (e) {
     var self = this
     var $elem = $(e.target).closest('.color-picker-palette-color')
-    var configAccessor = _.find(self.sourceConfig.get('plot').y, function (a) { return a.accessor === self.accessor.accessor })
-    if (configAccessor) {
-      configAccessor.color = $elem.css('background-color')
-      self.sourceConfig.trigger('change', self.sourceConfig)
-    }
+    var color = $elem.css('background-color')
+    self.eventObject.trigger('selectColor', self.accessor.accessor, color)
   },
 
   _renderColorPicker: function (sourceParams, sourceConfig) {
