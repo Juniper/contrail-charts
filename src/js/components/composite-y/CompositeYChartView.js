@@ -46,7 +46,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     }
   },
 
-  refresh: function() {
+  refresh: function () {
     this.config.trigger('change', this.config)
   },
 

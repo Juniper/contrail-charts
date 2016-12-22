@@ -72,7 +72,6 @@ var BarChartView = XYChartSubView.extend({
 
     // Create a flat data structure
     var flatData = []
-    var j
     var numOfAccessors = _.keys(self.params.activeAccessorData).length
     var xValues = _.map(self.getData(), self.params.plot.x.accessor)
     var xValuesExtent = d3.extent(xValues)

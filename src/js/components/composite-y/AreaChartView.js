@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
 var XYChartSubView = require('components/composite-y/XYChartSubView')
@@ -116,7 +115,6 @@ var AreaChartView = XYChartSubView.extend({
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
-        var pos = $(this).offset()
         self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
