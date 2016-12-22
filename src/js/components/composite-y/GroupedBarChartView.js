@@ -51,6 +51,13 @@ var BarChartView = XYChartSubView.extend({
     return xScale(dataElem[xAccessor]) + delta
   },
 
+  getScreenY: function (dataElem, yAccessor) {
+    var self = this
+    var yScale = self.getYScale()
+    var zeroValue = yScale.domain()[0]
+    return yScale(zeroValue + dataElem[yAccessor])
+  },
+
   /**
    * Renders an empty chart.
    * Changes chart dimensions if it already exists.
@@ -78,18 +85,19 @@ var BarChartView = XYChartSubView.extend({
     var bandWidthHalf = (bandWidth / 2)
     var innerBandScale = d3.scaleBand().domain(d3.range(numOfAccessors)).range([-bandWidthHalf, bandWidthHalf]).paddingInner(0.05).paddingOuter(0.05)
     var innerBandWidth = innerBandScale.bandwidth()
+    var zeroValue = yScale.domain()[0]
     self.params.axis[self.params.plot.x.axis].innerBandScale = innerBandScale
     _.each(data, function (d) {
       var x = d[self.params.plot.x.accessor]
       _.each(self.params.activeAccessorData, function (accessor, j) {
         var key = accessor.accessor
-        var y = yScale.domain()[0] + d[key]
+        var y = zeroValue + d[key]
         var obj = {
           id: x + '-' + key,
           className: 'bar bar-' + key,
           x: xScale(x) + innerBandScale(j),
           y: yScale(y),
-          h: yScale(yScale.domain()[0]) - yScale(y),
+          h: yScale(zeroValue) - yScale(y),
           w: innerBandWidth,
           color: self.getColor(accessor),
           accessor: accessor,

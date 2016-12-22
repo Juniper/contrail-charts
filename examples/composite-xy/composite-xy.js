@@ -262,6 +262,16 @@ complexChartView.setConfig({
               this.eventObject.trigger('clearMessage', 'XYChartView')
             }
           }
+        },
+        {
+          name: 'refresh',
+          title: 'Refresh',
+          iconClass: 'fa fa-refresh',
+          events: {
+            click: function () {
+              this.eventObject.trigger('refresh')
+            }
+          }
         }
       ]
     },
