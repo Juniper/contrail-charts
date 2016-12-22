@@ -63,7 +63,7 @@ complexChartView.setConfig({
             //chart: 'stackedBar',
             chart: 'bar',
             axis: 'y1',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'b',
@@ -72,7 +72,7 @@ complexChartView.setConfig({
             //chart: 'stackedBar',
             chart: 'bar',
             axis: 'y1',
-            tooltip: 'customTooltip',
+            //tooltip: 'customTooltip',
           },
           {
             accessor: 'c',
@@ -81,7 +81,7 @@ complexChartView.setConfig({
             //chart: 'stackedBar',
             chart: 'bar',
             axis: 'y1',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'd',
@@ -90,7 +90,7 @@ complexChartView.setConfig({
             enabled: true,
             chart: 'line',
             axis: 'y2',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'e',
@@ -99,7 +99,7 @@ complexChartView.setConfig({
             enabled: true,
             chart: 'line',
             axis: 'y2',
-            tooltip: 'defaultTooltip',
+            //tooltip: 'defaultTooltip',
           }
         ]
       },
@@ -291,7 +291,8 @@ complexChartView.setConfig({
     type: 'crosshair',
     config: {
       el: '#complexChart-xyChart',
-      sourceComponent: 'compositeY'
+      sourceComponent: 'compositeY',
+      tooltip: 'defaultTooltip'
     }
   }, {
     type: 'colorPicker',

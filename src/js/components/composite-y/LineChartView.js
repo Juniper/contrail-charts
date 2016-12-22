@@ -113,7 +113,7 @@ var LineChartView = XYChartSubView.extend({
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
-        self.eventObject.trigger('hideTooltip')
+        self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
       .transition().ease(d3.easeLinear).duration(self.params.duration)

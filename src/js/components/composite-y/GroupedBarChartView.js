@@ -121,7 +121,7 @@ var BarChartView = XYChartSubView.extend({
       })
       .on('mouseout', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('hideTooltip')
+        self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)

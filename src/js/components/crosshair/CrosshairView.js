@@ -72,6 +72,15 @@ var CrosshairView = ContrailChartsView.extend({
       .attr('cy', function (d) { return d.y(xElem) })
       .attr('r', self.params.bubbleR)
     svgCrosshair.exit().remove()
+    if (self.params.tooltip) {
+      // Show tooltip
+      var pos = self.$el.offset()
+      var tooltipOffset = {
+        left: mouse[0] + pos.left + 30,
+        top: mouse[1] + pos.top + 30
+      }
+      self.eventObject.trigger('showTooltip', tooltipOffset, xElem, self.params.tooltip)
+    }
   },
 
   _prepareRenderInfo: function (componentView) {
@@ -114,6 +123,10 @@ var CrosshairView = ContrailChartsView.extend({
     var svg = self.svgSelection()
     var svgCrosshair = svg.selectAll('.crosshair').data([])
     svgCrosshair.exit().remove()
+    if (self.params.tooltip) {
+      // Hide tooltip
+      self.eventObject.trigger('hideTooltip', self.params.tooltip)
+    }
   },
 
   render: function () {

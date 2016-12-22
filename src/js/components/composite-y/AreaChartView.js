@@ -117,7 +117,7 @@ var AreaChartView = XYChartSubView.extend({
       })
       .on('mouseout', function (d) {
         var pos = $(this).offset()
-        self.eventObject.trigger('hideTooltip', d, pos.left, pos.top)
+        self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
       .transition().ease(d3.easeLinear).duration(self.params.duration)
