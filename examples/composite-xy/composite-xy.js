@@ -60,8 +60,19 @@ complexChartView.setConfig({
             accessor: 'a',
             labelFormatter: 'A',
             enabled: true,
-            //chart: 'stackedBar',
             chart: 'bar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y1',
             //tooltip: 'defaultTooltip',
           },
@@ -69,8 +80,19 @@ complexChartView.setConfig({
             accessor: 'b',
             labelFormatter: 'B',
             enabled: true,
-            //chart: 'stackedBar',
             chart: 'bar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y1',
             //tooltip: 'customTooltip',
           },
@@ -78,8 +100,19 @@ complexChartView.setConfig({
             accessor: 'c',
             labelFormatter: 'C',
             enabled: false,
-            //chart: 'stackedBar',
             chart: 'bar',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y1',
             //tooltip: 'defaultTooltip',
           },
@@ -89,6 +122,18 @@ complexChartView.setConfig({
             color: '#d62728',
             enabled: true,
             chart: 'line',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y2',
             //tooltip: 'defaultTooltip',
           },
@@ -98,6 +143,18 @@ complexChartView.setConfig({
             color: '#9467bd',
             enabled: true,
             chart: 'line',
+            possibleChartTypes: [
+              {
+                label: 'Stacked Bar',
+                chart: 'stackedBar'
+              }, {
+                label: 'Bar',
+                chart: 'bar'
+              }, {
+                label: 'Line',
+                chart: 'line'
+              }
+            ],
             axis: 'y2',
             //tooltip: 'defaultTooltip',
           }
