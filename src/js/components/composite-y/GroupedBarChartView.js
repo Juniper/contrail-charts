@@ -38,6 +38,19 @@ var BarChartView = XYChartSubView.extend({
    */
   calculateScales: function () {},
 
+  getScreenX: function (dataElem, xAccessor, yAccessor) {
+    var self = this
+    var xScale = this.getXScale()
+    var delta = 0
+    _.each(self.params.activeAccessorData, function (accessor, j) {
+      if (accessor.accessor === yAccessor) {
+        var innerBandScale = self.params.axis[self.params.plot.x.axis].innerBandScale
+        delta = innerBandScale(j) + innerBandScale.bandwidth() / 2
+      }
+    })
+    return xScale(dataElem[xAccessor]) + delta
+  },
+
   /**
    * Renders an empty chart.
    * Changes chart dimensions if it already exists.
@@ -63,27 +76,26 @@ var BarChartView = XYChartSubView.extend({
     }
     var bandWidth = (0.95 * ((xRange[1] - xRange[0]) / len) - 1)
     var bandWidthHalf = (bandWidth / 2)
-    var innerBandScale = d3.scaleBand().domain(d3.range(numOfAccessors)).range([0, bandWidth]).paddingInner(0.05).paddingOuter(0.05)
-    var innerBandWidth = (innerBandScale.bandwidth())
+    var innerBandScale = d3.scaleBand().domain(d3.range(numOfAccessors)).range([-bandWidthHalf, bandWidthHalf]).paddingInner(0.05).paddingOuter(0.05)
+    var innerBandWidth = innerBandScale.bandwidth()
+    self.params.axis[self.params.plot.x.axis].innerBandScale = innerBandScale
     _.each(data, function (d) {
-      j = 0
       var x = d[self.params.plot.x.accessor]
-      _.each(self.params.activeAccessorData, function (accessor) {
+      _.each(self.params.activeAccessorData, function (accessor, j) {
         var key = accessor.accessor
-        var y = d[key]
+        var y = yScale.domain()[0] + d[key]
         var obj = {
           id: x + '-' + key,
           className: 'bar bar-' + key,
-          x: xScale(x) - bandWidthHalf + innerBandScale(j),
+          x: xScale(x) + innerBandScale(j),
           y: yScale(y),
-          h: yScale.range()[0] - yScale(y),
+          h: yScale(yScale.domain()[0]) - yScale(y),
           w: innerBandWidth,
           color: self.getColor(accessor),
           accessor: accessor,
           data: d
         }
         flatData.push(obj)
-        j++
       })
     })
     // Render the flat data structure

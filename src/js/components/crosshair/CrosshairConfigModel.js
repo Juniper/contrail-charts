@@ -60,7 +60,7 @@ var CrosshairConfigModel = ContrailChartsConfigModel.extend({
           var circleObject = {}
           circleObject.id = accessor.accessor
           circleObject.x = function (dataElem) {
-            return plotTypeComponent.getScreenX(dataElem, componentView.params.plot.x.accessor)
+            return plotTypeComponent.getScreenX(dataElem, componentView.params.plot.x.accessor, accessor.accessor)
           }
           circleObject.y = function (dataElem) {
             return plotTypeComponent.getScreenY(dataElem, accessor.accessor)
