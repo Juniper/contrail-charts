@@ -449,8 +449,12 @@ var CompositeYChartView = ContrailChartsView.extend({
     if (self.hasAxisParam(xAxisName, 'labelMargin')) {
       xLabelMargin = self.params.axis[xAxisName].labelMargin
     }
+    var xLabel = self.params.plot.x.labelFormatter || self.params.plot.x.label
     if (self.hasAxisParam(xAxisName, 'label')) {
-      xLabelData.push(self.params.axis[xAxisName].label)
+      xLabel = self.params.axis[xAxisName].label
+    }
+    if (xLabel) {
+      xLabelData.push(xLabel)
     }
     var xAxisLabelSvg = self.svgSelection().select('.axis.x-axis').selectAll('.axis-label').data(xLabelData)
     xAxisLabelSvg.enter()
@@ -510,16 +514,17 @@ var CompositeYChartView = ContrailChartsView.extend({
       // There will be one label per unique accessor label displayed on this axis.
       _.each(axisInfo.accessors, function (key) {
         var foundActiveAccessorData = _.find(self.params.activeAccessorData, { accessor: key })
-        if (foundActiveAccessorData && foundActiveAccessorData.label) {
-          var foundYLabelData = _.find(yLabelData, { label: foundActiveAccessorData.label })
-          if (!foundYLabelData) {
-            var yLabelXDelta = 12 * i
-            if (axisInfo.position === 'right') {
-              yLabelXDelta = -yLabelXDelta
-            }
-            yLabelData.push({ label: foundActiveAccessorData.label, x: yLabelX + yLabelXDelta })
-            i++
+        if (!foundActiveAccessorData) return
+        var label = foundActiveAccessorData.labelFormatter || foundActiveAccessorData.label
+        if (!label) return
+        var foundYLabelData = _.find(yLabelData, { label: label })
+        if (!foundYLabelData) {
+          var yLabelXDelta = 12 * i
+          if (axisInfo.position === 'right') {
+            yLabelXDelta = -yLabelXDelta
           }
+          yLabelData.push({ label: label, x: yLabelX + yLabelXDelta })
+          i++
         }
       })
       var yAxisLabelSvg = self.svgSelection().select('.axis.y-axis.' + axisInfo.name + '-axis').selectAll('.axis-label').data(yLabelData, function (d) { return d.label })

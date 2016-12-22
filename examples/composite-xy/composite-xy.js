@@ -102,7 +102,7 @@ complexChartView.setConfig({
       },
       axis: {
         x: {
-          formatter: d3.timeFormat('%H:%M:%S'),
+          formatter: d3.timeFormat('%H:%M:%S')
         },
         y1: {
           position: 'left',
