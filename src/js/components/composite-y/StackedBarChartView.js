@@ -94,7 +94,7 @@ var StackedBarChartView = XYChartSubView.extend({
           className: 'bar bar-' + key,
           x: xScale(x) - bandWidthHalf,
           y: yScale(stackedY + d[key]),
-          h: yScale.range()[0] - yScale(d[key]),
+          h: yScale(stackedY) - yScale(stackedY + d[key]),
           w: bandWidth,
           color: self.getColor(accessor),
           accessor: accessor,

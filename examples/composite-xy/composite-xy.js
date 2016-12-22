@@ -107,7 +107,8 @@ complexChartView.setConfig({
         y1: {
           position: 'left',
           formatter: numberFormatter,
-          labelMargin: 15
+          labelMargin: 15,
+          domain: [-10, undefined]
         },
         y2: {
           position: 'right',
