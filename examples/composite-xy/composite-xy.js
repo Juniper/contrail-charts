@@ -60,7 +60,7 @@ complexChartView.setConfig({
             accessor: 'a',
             labelFormatter: 'A',
             enabled: true,
-            chart: 'bar',
+            chart: 'stackedBar',
             possibleChartTypes: [
               {
                 label: 'Stacked Bar',
@@ -80,7 +80,7 @@ complexChartView.setConfig({
             accessor: 'b',
             labelFormatter: 'B',
             enabled: true,
-            chart: 'bar',
+            chart: 'stackedBar',
             possibleChartTypes: [
               {
                 label: 'Stacked Bar',
@@ -100,7 +100,7 @@ complexChartView.setConfig({
             accessor: 'c',
             labelFormatter: 'C',
             enabled: false,
-            chart: 'bar',
+            chart: 'stackedBar',
             possibleChartTypes: [
               {
                 label: 'Stacked Bar',
