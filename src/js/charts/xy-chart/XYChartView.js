@@ -111,6 +111,10 @@ var XYChartView = ContrailChartsView.extend({
       var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
+    if (self._isEnabledComponent('timeline')) {
+      var dataModel = self.getComponentByType('timeline').getFocusDataProvider()
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
+    }
     if (self._isEnabledComponent('crosshair')) {
       /*
       // If crosshair component is activated then do not react on other tooltips

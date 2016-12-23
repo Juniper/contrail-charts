@@ -4,6 +4,8 @@ var MessageConfigModel = require('components/message/MessageConfigModel')
 var MessageView = require('components/message/MessageView')
 var NavigationConfigModel = require('components/navigation/NavigationConfigModel')
 var NavigationView = require('components/navigation/NavigationView')
+var TimelineConfigModel = require('components/timeline/TimelineConfigModel')
+var TimelineView = require('components/timeline/TimelineView')
 var TooltipConfigModel = require('components/tooltip/TooltipConfigModel')
 var TooltipView = require('components/tooltip/TooltipView')
 var LegendConfigModel = require('components/legend/LegendConfigModel')
@@ -43,6 +45,10 @@ module.exports = {
   navigation: {
     ConfigModel: NavigationConfigModel,
     View: NavigationView
+  },
+  timeline: {
+    ConfigModel: TimelineConfigModel,
+    View: TimelineView
   },
   message: {
     ConfigModel: MessageConfigModel,
