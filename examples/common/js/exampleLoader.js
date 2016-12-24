@@ -44,6 +44,12 @@ var examples = [
     js: 'linebar/linebar.js',
     css: 'linebar/linebar.css',
     title: 'Line Bar chart (CPU/Mem)'
+  },
+  {
+    html: 'composite-xy-timeline/composite-xy-timeline.html',
+    js: 'composite-xy-timeline/composite-xy-timeline.js',
+    css: 'composite-xy-timeline/composite-xy-timeline.css',
+    title: 'Simple Timeline navigation'
   }
 ]
 
