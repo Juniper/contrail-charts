@@ -22,7 +22,7 @@ var TooltipView = ContrailChartsView.extend({
 
   show: function (offset, data, id) {
     var self = this
-    if (id !== self.id) return
+    if (id && id !== self.id) return
     if (_.isArray(self.params.acceptFilters) && self.params.acceptFilters.length > 0) {
       if (!_.includes(self.params.acceptFilters, id)) return
     }

@@ -75,7 +75,7 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y1',
-            //tooltip: 'defaultTooltip',
+            tooltip: 'defaultTooltip',
           },
           {
             accessor: 'b',
@@ -95,7 +95,7 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y1',
-            //tooltip: 'customTooltip',
+            tooltip: 'customTooltip',
           },
           {
             accessor: 'c',
@@ -115,7 +115,7 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y1',
-            //tooltip: 'defaultTooltip',
+            tooltip: 'defaultTooltip',
           },
           {
             accessor: 'd',
@@ -136,7 +136,7 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y2',
-            //tooltip: 'defaultTooltip',
+            tooltip: 'defaultTooltip',
           },
           {
             accessor: 'e',
@@ -157,7 +157,7 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y2',
-            //tooltip: 'defaultTooltip',
+            tooltip: 'defaultTooltip',
           }
         ]
       },
