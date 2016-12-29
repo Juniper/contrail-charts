@@ -32,6 +32,7 @@ var NavigationView = ContrailChartsView.extend({
         self.svgSelection().select('g.brush').call(self.brush)
       }
     })
+    self.listenTo(self.model, 'change', self.render)
   },
 
   changeModel: function (model) {
@@ -136,7 +137,8 @@ var NavigationView = ContrailChartsView.extend({
     self.compositeYChartView = new CompositeYChartView({
       model: self.model,
       config: self.config,
-      el: self.el,
+      container: self.$el,
+      // TODO id should be unique per component
       id: self.id,
       eventObject: self._eventObject,
       name: 'xyChartNavigation'
@@ -264,6 +266,7 @@ var NavigationView = ContrailChartsView.extend({
     if (!self.compositeYChartView) {
       // One time compositeYChartView initialization.
       self.initializeAndRenderCompositeYChartView()
+      ContrailChartsView.prototype.render.call(self)
     // From this moment the compositeYChartView is independent from NavigationView. It will react to config / model changes on it's own.
     }
     return self
