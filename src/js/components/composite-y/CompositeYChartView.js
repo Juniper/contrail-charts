@@ -181,7 +181,6 @@ var CompositeYChartView = ContrailChartsView.extend({
       }
     })
   },
-
   /**
    * Calculates the chart dimensions and margins.
    * Use the dimensions provided in the config. If not provided use all available width of container and 3/4 of this width for height.
@@ -191,6 +190,8 @@ var CompositeYChartView = ContrailChartsView.extend({
   calculateDimmensions: function () {
     var self = this
     if (!self.params.chartWidth) {
+      // TODO element width may be unavailable before first render
+      // consider case for the chart to occupy all available width
       self.params.chartWidth = self.$el.width()
     }
     if (self.params.chartWidthDelta) {
@@ -363,7 +364,7 @@ var CompositeYChartView = ContrailChartsView.extend({
   renderSVG: function () {
     var self = this
     var translate = self.params.xRange[0] - self.params.marginInner
-    var rectClipPathId = 'rect-clipPath-' + self.el.id
+    var rectClipPathId = 'rect-clipPath-' + self.cid
     var svgs = d3.select(self.el).select('svg')
     if (svgs.empty()) {
       var svg = d3.select(self.el).append('svg').attr('class', 'coCharts-svg')
@@ -566,6 +567,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
+    ContrailChartsView.prototype.render.call(self)
     self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
   },
 

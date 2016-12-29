@@ -40,14 +40,15 @@ complexChartView.setConfig({
       ]
     },
   }],
+  container: '#complexChart',
   components: [{
     type: 'compositeY',
     config: {
-      el: '#complexChart-xyChart',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
+      chartWidth: 800,
       chartHeight: 600,
       plot: {
         x: {
@@ -354,7 +355,6 @@ complexChartView.setConfig({
   }]
 })
 complexChartView.setData(complexData)
-complexChartView.render()
 complexChartView.renderMessage({
   componentId: 'XYChartView',
   action: 'once',

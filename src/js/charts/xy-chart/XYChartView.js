@@ -60,6 +60,7 @@ var XYChartView = ContrailChartsView.extend({
   setConfig: function (config) {
     var self = this
     self._config = config
+    self.setElement(config.container)
     if (!self._config.chartId) {
       self._config.chartId = 'XYChartView'
     }
@@ -104,15 +105,16 @@ var XYChartView = ContrailChartsView.extend({
 
   _initComponents: function () {
     var self = this
+    var dataModel
     _.each(self._config.components, function (component) {
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
     if (self._isEnabledComponent('navigation')) {
-      var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
+      dataModel = self.getComponentByType('navigation').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
     if (self._isEnabledComponent('timeline')) {
-      var dataModel = self.getComponentByType('timeline').getFocusDataProvider()
+      dataModel = self.getComponentByType('timeline').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
     if (self._isEnabledComponent('crosshair')) {
@@ -143,7 +145,7 @@ var XYChartView = ContrailChartsView.extend({
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject,
+      eventObject: self._eventObject,
       container: self.$el,
     })
     var component = new components[type].View(viewOptions)
