@@ -14,6 +14,7 @@ var TooltipView = ContrailChartsView.extend({
   initialize: function (options) {
     var self = this
     ContrailChartsView.prototype.initialize.call(self, options)
+    self.resetParams()
     self.listenTo(self.config, 'change', self.resetParams)
     self.listenTo(self._eventObject, 'showTooltip', self.show)
     self.listenTo(self._eventObject, 'hideTooltip', self.hide)
@@ -21,32 +22,33 @@ var TooltipView = ContrailChartsView.extend({
 
   show: function (offset, data, id) {
     var self = this
-    if (id && id !== self.id) return
+    if (id !== self.id) return
+    if (_.isArray(self.params.acceptFilters) && self.params.acceptFilters.length > 0) {
+      if (!_.includes(self.params.acceptFilters, id)) return
+    }
     self.render(data)
     self.$el.show()
 
     // Tooltip dimmensions will be available after render.
     var tooltipWidth = self.$el.outerWidth()
-    var tooltipHeight = self.$el.outerHeight()
+    // var tooltipHeight = self.$el.outerHeight()
     var windowWidth = $(document).width()
-    var tooltipPositionTop = offset.top - tooltipHeight - 100
+    var tooltipPositionTop = offset.top < 0 ? 0 : offset.top
     var tooltipPositionLeft = offset.left
-    if (tooltipPositionTop < 0) {
-      tooltipPositionTop = 0
-    }
-    if ((offset.left + tooltipWidth + 15) > windowWidth) {
-      tooltipPositionLeft = windowWidth - (offset.left + tooltipWidth + 15)
-    } else {
-      tooltipPositionLeft += 20
+    if ((offset.left + tooltipWidth) > windowWidth) {
+      tooltipPositionLeft = windowWidth - (offset.left + tooltipWidth)
     }
     self.$el.css({
       top: tooltipPositionTop,
-      left: tooltipPositionLeft
+      left: tooltipPositionLeft,
+      width: offset.width,
+      height: offset.height
     })
   },
 
-  hide: function () {
+  hide: function (id) {
     var self = this
+    if (id !== self.id) return
     self.$el.hide()
   },
 
@@ -58,8 +60,8 @@ var TooltipView = ContrailChartsView.extend({
     var template = self.config.get('template') || _template
     tooltipData.items = _.map(dataConfig, function (datumConfig) {
       return {
-        label: datumConfig.labelFormatter(data[datumConfig.label]),
-        value: datumConfig.valueFormatter(data[datumConfig.accessor])
+        label: self.config.getLabel(data, datumConfig),
+        value: self.config.getFormattedValue(data, datumConfig),
       }
     })
     tooltipData.title = self.config.get('title')

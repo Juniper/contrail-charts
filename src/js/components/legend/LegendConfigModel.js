@@ -9,11 +9,12 @@ var LegendConfigModel = ContrailChartsConfigModel.extend({
   defaults: {
     sourceComponent: 'compositeY',
     generateLegendHTML: function (accessors) {
+      var self = this
       var $container = $('<div></div>')
       _.each(accessors, function (accessor) {
         var $row = $('<div class="legend-group"></div>')
         $row.append('<span class="color" style="background-color: ' + accessor.color + '">&nbsp;</span>')
-        $row.append('<span class="label">' + (accessor.label || accessor.accessor) + '</span>')
+        $row.append('<span class="label">' + self.getLabel(undefined, accessor) + '</span>')
         $container.append($row)
       })
       return $container

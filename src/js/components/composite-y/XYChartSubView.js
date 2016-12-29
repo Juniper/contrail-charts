@@ -31,6 +31,16 @@ var XYChartSubView = ContrailChartsView.extend({
 
   getColor: function (accessor) {
     return accessor.color
+  },
+
+  getScreenX: function (dataElem, xAccessor) {
+    var xScale = this.getXScale()
+    return xScale(dataElem[xAccessor])
+  },
+
+  getScreenY: function (dataElem, yAccessor) {
+    var yScale = this.getYScale()
+    return yScale(dataElem[yAccessor])
   }
 })
 

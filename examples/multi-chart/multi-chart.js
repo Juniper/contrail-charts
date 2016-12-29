@@ -58,7 +58,6 @@ var chartConfigs = [
     }, {
       type: 'navigation',
       config: {
-        el: '#chart2-navigation',
         chartHeight: 200,
         plot: {
           x: {

@@ -43,6 +43,26 @@ var StackedBarChartView = XYChartSubView.extend({
   calculateScales: function () {},
 
   /**
+  * Override for calculating the Y coordinate of a stacked elem.
+  * Used by CrosshairView render data preparation.
+  */
+  getScreenY: function (dataElem, yAccessor) {
+    var self = this
+    var yScale = self.getYScale()
+    var stackedY = yScale.domain()[0]
+    var found = false
+    _.each(self.params.activeAccessorData, function (accessor) {
+      if (accessor.accessor === yAccessor) {
+        found = true
+      }
+      if (!found) {
+        stackedY += dataElem[accessor.accessor]
+      }
+    })
+    return yScale(stackedY + dataElem[yAccessor])
+  },
+
+  /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
   renderSVG: function (enteringSelection) {},
@@ -74,7 +94,7 @@ var StackedBarChartView = XYChartSubView.extend({
           className: 'bar bar-' + key,
           x: xScale(x) - bandWidthHalf,
           y: yScale(stackedY + d[key]),
-          h: yScale.range()[0] - yScale(d[key]),
+          h: yScale(stackedY) - yScale(stackedY + d[key]),
           w: bandWidth,
           color: self.getColor(accessor),
           accessor: accessor,
@@ -102,8 +122,7 @@ var StackedBarChartView = XYChartSubView.extend({
         d3.select(this).classed('active', true)
       })
       .on('mouseout', function (d) {
-        // var pos = $( this ).offset() // not working in jquery 3
-        self._eventObject.trigger('hideTooltip')
+        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)

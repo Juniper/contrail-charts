@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
 var _ = require('lodash')
 var Events = require('contrail-charts-events')
 var ContrailChartsDataModel = require('contrail-charts-data-model')
@@ -22,7 +21,7 @@ var RadialChartView = ContrailView.extend({
     self._dataProvider = new handlers.SerieProvider({ parent: self._dataModel })
     self._components = []
     options = options || {}
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    self._eventObject = options.eventObject || _.extend({}, Events)
     self.listenTo(self._dataProvider, 'change', self._render)
   },
 
@@ -95,7 +94,7 @@ var RadialChartView = ContrailView.extend({
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject,
+      eventObject: self._eventObject,
       container: self.$el,
     })
     var component = new components[type].View(viewOptions)

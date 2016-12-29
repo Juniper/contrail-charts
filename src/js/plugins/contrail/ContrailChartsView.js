@@ -1,17 +1,16 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
-var _ = require('lodash')
-var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailView = require('contrail-view')
+const _ = require('lodash')
+const d3 = require('d3')
+const Events = require('contrail-charts-events')
+const ContrailView = require('contrail-view')
 /**
  * View base class.
  */
-var ContrailChartsView = ContrailView.extend({
+module.exports = ContrailView.extend({
   defaults: {
-    _type: 'ContrailChartsView'
+    _type: 'ContrailChartsView',
   },
 
   initialize: function (options) {
@@ -33,7 +32,6 @@ var ContrailChartsView = ContrailView.extend({
   resetParamsForChild: function (childIndex) {
     this.params = this.config.initializedComputedParametersForChild(childIndex)
   },
-
   /**
   * This is how the view gets its data.
   */
@@ -49,13 +47,4 @@ var ContrailChartsView = ContrailView.extend({
     // return d3.select(self.$el.get(0)).select("svg#" + self.id)
     return d3.select(self.el).select('svg')
   },
-
-  render: function (content) {
-    var self = this
-    self._container.find(self.className + ' ' + self.id).remove()
-    if (content) self.$el.html(content)
-    self._container.append(self.$el)
-  },
 })
-
-module.exports = ContrailChartsView

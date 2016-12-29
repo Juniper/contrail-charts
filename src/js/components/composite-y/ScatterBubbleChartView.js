@@ -78,7 +78,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
       })
       .on('mouseout', function (d) {
         // var pos = $(this).offset() // not working in jquery 3
-        self._eventObject.trigger('hideTooltip')
+        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
         d3.select(this).classed('active', false)
       })
   },

@@ -18,7 +18,7 @@ var LegendView = ContrailChartsView.extend({
 
   generateLegendHTML: function (accessors) {
     var fnGenerateLegendHTML = this.config.get('generateLegendHTML')
-    return fnGenerateLegendHTML(accessors)
+    return fnGenerateLegendHTML.bind(this.config)(accessors)
   },
 
   _renderLegend: function (sourceParams) {

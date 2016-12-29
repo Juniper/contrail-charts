@@ -4,18 +4,61 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Contrail Charts Examples Index</title>
-		<link href="css/contrail-charts-examples.css" rel="stylesheet">
+		<title>Contrail Charts Examples</title>
+		<link href="common/css/contrail-charts-examples.css" rel="stylesheet">
+        <script src="../node_modules/jquery/dist/jquery.js"></script>
 	</head>
 	<body>
-    <h1>Contrail Charts Examples Index</h1>
-    <ul>
-      <li><a href="requirejs.html">Using RequireJS</a></li>
-      <li><a href="area.html">Area Chart</a></li>
-      <li><a href="composite-xy.html">Composite Bar Chart</a></li>
-      <li><a href="multi-chart.html">Multi Chart View with focus area</a></li>
-      <li><a href="bubble.html">Bubble Chart</a></li>
-      <li><a href="pie.html">Pie Chart</a></li>
-    </ul>
+    <div id="sideBar" class="side-bar">
+        <h1>Contrail Charts Examples</h1>
+        <div id="panel">
+            <div id="filter">
+                <input id="exampleFilter">
+            </div>
+            <div id="content">
+                <ul id="exampleLinks" class="example-links"></ul>
+            </div>
+        </div>
+    </div>
+    <div id="pageContent" class="page-content">
+        <div id="sourceTabs" class="source-tabs">
+            <input id="demoTab" type="radio" name="sourceContentTab" checked>
+            <label for="demoTab">Demo</label>
+
+            <input id="htmlTab" type="radio" name="sourceContentTab">
+            <label for="htmlTab">HTML</label>
+
+            <input id="cssTab" type="radio" name="sourceContentTab">
+            <label for="cssTab">CSS</label>
+
+            <input id="jsTab" type="radio" name="sourceContentTab">
+            <label for="jsTab">JS</label>
+
+            <div id="demoContent" class="tab-content">
+                <div id="outputView" class="output-view">
+                    <iframe src="" class="output-demo-iframe"></iframe>
+                </div>
+            </div>
+
+            <div id="htmlContent" class="tab-content">
+                <div id="htmlSource" class="source-html">
+                    <iframe src="" class="source-html-iframe"></iframe>
+                </div>
+            </div>
+
+            <div id="cssContent" class="tab-content">
+                <div id="cssSource" class="source-css">
+                    <iframe src="" class="source-css-iframe"></iframe>
+                </div>
+            </div>
+
+            <div id="jsContent" class="tab-content">
+                <div id="jsSource" class="source-js">
+                    <iframe src="" class="source-js-iframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
 	</body>
+    <script src="common/js/exampleLoader.js"></script>
 </html>

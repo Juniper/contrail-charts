@@ -27,6 +27,22 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.listenTo(self.config, 'change', self._onConfigModelChange)
     self.name = options.name || 'compositeY'
     self._onWindowResize()
+    self.listenTo(self._eventObject, 'selectColor', self.selectColor)
+    self.listenTo(self._eventObject, 'refresh', self.refresh)
+  },
+
+  // Action handler
+  selectColor: function (accessorName, color) {
+    var self = this
+    var configAccessor = _.find(self.config.get('plot').y, function (a) { return a.accessor === accessorName })
+    if (configAccessor) {
+      configAccessor.color = color
+      self.config.trigger('change', self.config)
+    }
+  },
+
+  refresh: function () {
+    this.config.trigger('change', this.config)
   },
 
   changeModel: function (model) {
@@ -237,6 +253,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     return foundDrawing
   },
 
+  /*
   getDrawings: function (axisName) {
     var self = this
     var foundDrawings = []
@@ -247,6 +264,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     return foundDrawings
   },
+  */
 
   /**
   * Combine the axis domains (extents) from all enabled drawings.
@@ -325,7 +343,7 @@ var CompositeYChartView = ContrailChartsView.extend({
         self.params.axis[axisName].scale = baseScale.domain(self.params.axis[axisName].domain).range(self.params.axis[axisName].range)
         if (self.hasAxisParam(axisName, 'nice') && self.params.axis[axisName].nice) {
           if (self.hasAxisParam(axisName, 'ticks')) {
-            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.axis[xAxisName].ticks)
+            self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice(self.params.axis[axisName].ticks)
           } else {
             self.params.axis[axisName].scale = self.params.axis[axisName].scale.nice()
           }
@@ -431,8 +449,12 @@ var CompositeYChartView = ContrailChartsView.extend({
     if (self.hasAxisParam(xAxisName, 'labelMargin')) {
       xLabelMargin = self.params.axis[xAxisName].labelMargin
     }
+    var xLabel = self.params.plot.x.labelFormatter || self.params.plot.x.label
     if (self.hasAxisParam(xAxisName, 'label')) {
-      xLabelData.push(self.params.axis[xAxisName].label)
+      xLabel = self.params.axis[xAxisName].label
+    }
+    if (xLabel) {
+      xLabelData.push(xLabel)
     }
     var xAxisLabelSvg = self.svgSelection().select('.axis.x-axis').selectAll('.axis-label').data(xLabelData)
     xAxisLabelSvg.enter()
@@ -492,16 +514,17 @@ var CompositeYChartView = ContrailChartsView.extend({
       // There will be one label per unique accessor label displayed on this axis.
       _.each(axisInfo.accessors, function (key) {
         var foundActiveAccessorData = _.find(self.params.activeAccessorData, { accessor: key })
-        if (foundActiveAccessorData && foundActiveAccessorData.label) {
-          var foundYLabelData = _.find(yLabelData, { label: foundActiveAccessorData.label })
-          if (!foundYLabelData) {
-            var yLabelXDelta = 12 * i
-            if (axisInfo.position === 'right') {
-              yLabelXDelta = -yLabelXDelta
-            }
-            yLabelData.push({ label: foundActiveAccessorData.label, x: yLabelX + yLabelXDelta })
-            i++
+        if (!foundActiveAccessorData) return
+        var label = foundActiveAccessorData.labelFormatter || foundActiveAccessorData.label
+        if (!label) return
+        var foundYLabelData = _.find(yLabelData, { label: label })
+        if (!foundYLabelData) {
+          var yLabelXDelta = 12 * i
+          if (axisInfo.position === 'right') {
+            yLabelXDelta = -yLabelXDelta
           }
+          yLabelData.push({ label: label, x: yLabelX + yLabelXDelta })
+          i++
         }
       })
       var yAxisLabelSvg = self.svgSelection().select('.axis.y-axis.' + axisInfo.name + '-axis').selectAll('.axis-label').data(yLabelData, function (d) { return d.label })
@@ -543,7 +566,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    self._eventObject.trigger('rendered:' + self.name, self.params, self.config)
+    self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
   },
 
   render: function () {

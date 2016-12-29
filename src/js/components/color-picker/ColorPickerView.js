@@ -25,7 +25,7 @@ var ColorPickerView = ContrailChartsView.extend({
 
   generateColorPickerHTML: function (accessors) {
     var fnGenerateColorPickerHTML = this.config.get('generateColorPickerHTML')
-    return fnGenerateColorPickerHTML(accessors)
+    return fnGenerateColorPickerHTML.bind(this.config)(accessors)
   },
 
   openColorPalette: function (e) {
@@ -39,7 +39,7 @@ var ColorPickerView = ContrailChartsView.extend({
     self.closeColorPalette()
     var $paletteContainer = $('<div class="color-picker-palette"></div>')
     var $paletteTitle = $('<div class="color-picker-palette-header"></div>')
-    $paletteTitle.append('<span class="color-picker-palette-title">' + (accessor.label || accessor.accessor) + '</span>')
+    $paletteTitle.append('<span class="color-picker-palette-title">' + self.config.getLabel(undefined, accessor) + '</span>')
     $paletteTitle.append('<span class="color-picker-palette-close"><i class="fa fa-remove"/></span>')
     $paletteContainer.append($paletteTitle)
     var $paletteBody = $('<div class="color-picker-palette-body"></div>')
@@ -60,12 +60,8 @@ var ColorPickerView = ContrailChartsView.extend({
   selectColor: function (e) {
     var self = this
     var $elem = $(e.target).closest('.color-picker-palette-color')
-    var configAccessor = _.find(self.sourceConfig.get('plot').y, function (a) { return a.accessor === self.accessor.accessor })
-    if (configAccessor) {
-      configAccessor.color = $elem.css('background-color')
-      self.sourceConfig.trigger('change', self.sourceConfig)
-      console.log('self.accessor: ', self.accessor)
-    }
+    var color = $elem.css('background-color')
+    self._eventObject.trigger('selectColor', self.accessor.accessor, color)
   },
 
   _renderColorPicker: function (sourceParams, sourceConfig) {

@@ -34,7 +34,6 @@ var ControlPanelView = ContrailChartsView.extend({
     var button = _.findWhere(self.config.get('buttons'), { name: buttonName })
     if (button) {
       self.params.activeButton = button
-      console.log('Found button: ', button)
       if (_.isObject(button.events) && button.events.click) {
         if (_.isString(button.events.click)) {
           self._eventObject.trigger(button.events.click, self.params)
@@ -98,6 +97,7 @@ var ControlPanelView = ContrailChartsView.extend({
   },
 
   generateExpandedPanel: function (params) {
+    var self = this
     var $container = $('<div class="control-panel-filter-container"></div>')
     var $panelHead = $('<div class="control-panel-filter-head"></div>')
     $panelHead.append('<span class="control-panel-filter-head-icon"><i class="' + params.activeButton.iconClass + '"></i></span>')
@@ -112,14 +112,14 @@ var ControlPanelView = ContrailChartsView.extend({
       if (accessor.enabled) {
         $checkbox.prop('checked', true)
       }
-      var $label = $('<label for="filter-item-input-' + key + '" class="accessor-data-checkbox-label"> ' + accessor.label + '</label>')
+      var $label = $('<label for="filter-item-input-' + key + '" class="accessor-data-checkbox-label"> ' + self.config.getLabel(undefined, accessor) + '</label>')
       $filterItem.append($checkbox)
       $filterItem.append($label)
       if (accessor.possibleChartTypes) {
         var $chartTypeSelector = $('<select class="accessor-data-chart-type-select" name="' + key + '"></select>')
         _.each(accessor.possibleChartTypes, function (chartType) {
-          var $option = $('<option value="' + chartType.name + '">' + chartType.label + '</option>')
-          if (accessor.chart === chartType.name) {
+          var $option = $('<option value="' + chartType.chart + '">' + self.config.getLabel(undefined, chartType) + '</option>')
+          if (accessor.chart === chartType.chart) {
             $option.prop('selected', true)
           }
           $chartTypeSelector.append($option)

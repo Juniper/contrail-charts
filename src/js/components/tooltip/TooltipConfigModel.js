@@ -4,6 +4,10 @@
 var ContrailChartsConfigModel = require('contrail-charts-config-model')
 
 var TooltipConfigModel = ContrailChartsConfigModel.extend({
+  defaults: {
+    // Which tooltip ids to accept. If empty accept all.
+    acceptFilters: []
+  }
 })
 
 module.exports = TooltipConfigModel

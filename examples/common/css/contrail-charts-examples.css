@@ -1,0 +1,121 @@
+/**
+* Styles specific for contrail-examples.
+*/
+html, body {
+	overflow-y: scroll;
+	height: 100%;
+}
+
+*, *:before, *:after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font: 14px/1 'Open Sans', sans-serif;
+	color: #555;
+	background: #eee;
+}
+
+h1 {
+	padding: 25px 0;
+	font-weight: normal;
+	font-size: 25px;
+	text-align: center;
+}
+
+.side-bar {
+	width: 15%;
+	min-width: 140px;
+	padding: 0 10px;
+	float: left;
+}
+
+.example-links {
+	padding: 15px;
+}
+
+.example-links li {
+	margin-bottom: 10px;
+}
+
+.example-links .link {
+	font-family: 'Open Sans';
+	font-size: 15px;
+	color: #2194CE;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.page-content {
+	width: 85%;
+	min-width: 500px;
+	height: 100%;
+	float: left;
+}
+
+.source-tabs {
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+	margin: 0 auto;
+	background: #fff;
+}
+
+.tab-content {
+	height: 100%;
+	display: none;
+	padding: 20px 0 0;
+	border-top: 1px solid #ddd;
+}
+
+input {
+	display: none;
+}
+
+label {
+	display: inline-block;
+	margin: 0 0 -1px;
+	padding: 15px 25px;
+	font-weight: 600;
+	text-align: center;
+	color: #bbb;
+	border: 1px solid transparent;
+}
+
+label:hover {
+	color: #888;
+	cursor: pointer;
+}
+
+input:checked + label {
+	color: #555;
+	border: 1px solid #ddd;
+	border-top: 2px solid orange;
+	border-bottom: 1px solid #fff;
+}
+
+#demoTab:checked ~ #demoContent,
+#htmlTab:checked ~ #htmlContent,
+#cssTab:checked ~ #cssContent,
+#jsTab:checked ~ #jsContent {
+	display: block;
+}
+
+.output-view,
+.source-html,
+.source-js,
+.source-css {
+	height: 100%;
+}
+
+.output-demo-iframe,
+.source-html-iframe,
+.source-js-iframe,
+.source-css-iframe {
+	width: 100%;
+	height: calc(100% - 20px);
+	border-style: none;
+	overflow: auto;
+}
