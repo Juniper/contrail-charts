@@ -48,7 +48,6 @@ complexChartView.setConfig({
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartWidth: 800,
       chartHeight: 600,
       plot: {
         x: {

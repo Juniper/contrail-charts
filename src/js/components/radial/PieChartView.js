@@ -44,6 +44,7 @@ var PieChartView = ContrailChartsView.extend({
 
   _onHover: function (e) {
     var self = this
+    // TODO consider case with missing width config in order to occupy all available space
     var width = self.config.get('chartWidth')
     var height = self.config.get('chartHeight')
     var radius = self.config.getInnerRadius()

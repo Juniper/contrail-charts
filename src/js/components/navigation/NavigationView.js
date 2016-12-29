@@ -27,8 +27,8 @@ var NavigationView = ContrailChartsView.extend({
       if (self.brush) {
         var marginInner = self.params.marginInner
         self.brush = self.brush.extent([
-            [self.params.xRange[0] - marginInner, self.params.yRange[1] - marginInner],
-            [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
+          [self.params.xRange[0] - marginInner, self.params.yRange[1] - marginInner],
+          [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
         self.svgSelection().select('g.brush').call(self.brush)
       }
     })

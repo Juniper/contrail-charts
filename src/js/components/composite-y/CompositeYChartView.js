@@ -192,7 +192,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     if (!self.params.chartWidth) {
       // TODO element width may be unavailable before first render
       // consider case for the chart to occupy all available width
-      self.params.chartWidth = self.$el.width()
+      self.params.chartWidth = self._container.width()
     }
     if (self.params.chartWidthDelta) {
       self.params.chartWidth += self.params.chartWidthDelta
