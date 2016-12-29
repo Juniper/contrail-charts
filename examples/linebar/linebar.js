@@ -53,10 +53,10 @@ cpuMemChartView.setConfig({
       ]
     }
   }],
+  container: '#cpuMemChart',
   components: [{
     type: 'compositeY',
     config: {
-      el: '#cpuMemChart-xyChart',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,

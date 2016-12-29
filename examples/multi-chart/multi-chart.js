@@ -15,10 +15,10 @@ var chartConfigs = [
   {
     chartId: 'chart1',
     type: 'XYChartView',
+    container: '#chart1',
     components: [{
       type: 'compositeY',
       config: {
-        el: '#chart1',
         plot: {
           x: {
             accessor: 'x'
@@ -39,10 +39,10 @@ var chartConfigs = [
   }, {
     chartId: 'chart2',
     type: 'XYChartView',
+    container: '#chart2',
     components: [{
       type: 'compositeY',
       config: {
-        el: '#chart2',
         plot: {
           x: {
             accessor: 'x'

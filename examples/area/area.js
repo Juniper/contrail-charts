@@ -8,10 +8,10 @@ var simpleData = [
 ]
 var simpleChartView = new coCharts.charts.XYChartView()
 simpleChartView.setConfig({
+  container: '#simpleChart',
   components: [{
     type: 'compositeY',
     config: {
-      el: '#simpleChart',
       plot: {
         x: {
           accessor: 'x'
