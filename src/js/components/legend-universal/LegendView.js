@@ -2,7 +2,6 @@
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
 var $ = require('jquery')
-var _ = require('lodash')
 var ContrailChartsView = require('contrail-charts-view')
 var _template = require('./legend.html')
 

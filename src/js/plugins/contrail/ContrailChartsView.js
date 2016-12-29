@@ -20,7 +20,6 @@ module.exports = ContrailView.extend({
     self._container = options.container
     self._eventObject = options.eventObject || _.extend({}, Events)
   },
-
   /**
    * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
    * The view may modify the params object with calculated values.
@@ -38,13 +37,20 @@ module.exports = ContrailView.extend({
   getData: function () {
     return this.model.getData()
   },
-
   /**
   * This is how the view gets the SVG html element selection for rendering.
   */
   svgSelection: function () {
     var self = this
-    // return d3.select(self.$el.get(0)).select("svg#" + self.id)
     return d3.select(self.el).select('svg')
+  },
+
+  render: function (content) {
+    var self = this
+    self._container.find(self.className + ' ' + self.id).remove()
+    if (content) {
+      self.$el.html(content)
+    }
+    self._container.append(self.$el)
   },
 })

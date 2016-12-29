@@ -52,6 +52,7 @@ var RadialChartView = ContrailView.extend({
   setConfig: function (config) {
     var self = this
     self._config = config
+    self.setElement(config.container)
     if (!self._config.chartId) {
       self._config.chartId = 'RadialChartView'
     }
@@ -115,10 +116,9 @@ var RadialChartView = ContrailView.extend({
     }
     return false
   },
-  // TODO chart render function should be called after each component render for performance
+
   _render: function () {
-    var self = this
-    $(self._config.el).html(self.$el)
+    // TODO chart render function should be called after each component render for performance
   },
 })
 

@@ -19,10 +19,10 @@ function getValue (serie) {
 }
 
 var chartConfig = {
+  container: '.chart',
   components: [{
     type: 'radialChart',
     config: {
-      el: '.pie-chart',
       type: 'donut',
       chartWidth: 480,
       chartHeight: 360,
