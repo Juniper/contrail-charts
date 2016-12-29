@@ -181,7 +181,7 @@ var TimelineView = ContrailChartsView.extend({
     }
   },
 
-  calculateDimmensions: function () {
+  calculateDimensions: function () {
     var self = this
     if (!self.params.chartWidth) {
       self.params.chartWidth = self.$el.width()
@@ -315,7 +315,7 @@ var TimelineView = ContrailChartsView.extend({
   render: function () {
     var self = this
     self.resetParams()
-    self.calculateDimmensions()
+    self.calculateDimensions()
     self.calculateScales()
     self.renderSVG()
     self.renderAxis()

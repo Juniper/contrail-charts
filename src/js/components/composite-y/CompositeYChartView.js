@@ -187,7 +187,7 @@ var CompositeYChartView = ContrailChartsView.extend({
    * This method should be called before rendering because the available dimensions could have changed.
    * Params: chartWidth, chartHeight, margin, marginTop, marginBottom, marginLeft, marginRight, marginInner.
    */
-  calculateDimmensions: function () {
+  calculateDimensions: function () {
     var self = this
     if (!self.params.chartWidth) {
       // TODO element width may be unavailable before first render
@@ -561,7 +561,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     self._updateChildDrawings()
     self.resetParams()
     self.calculateActiveAccessorData()
-    self.calculateDimmensions()
+    self.calculateDimensions()
     self.calculateScales()
     self.calculateColorScale()
     self.renderSVG()

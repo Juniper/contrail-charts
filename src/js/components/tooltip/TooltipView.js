@@ -29,7 +29,7 @@ var TooltipView = ContrailChartsView.extend({
     self.render(data)
     self.$el.show()
 
-    // Tooltip dimmensions will be available after render.
+    // Tooltip dimensions will be available after render.
     var tooltipWidth = self.$el.outerWidth()
     // var tooltipHeight = self.$el.outerHeight()
     var windowWidth = $(document).width()
