@@ -17,6 +17,7 @@ module.exports = ContrailView.extend({
     var self = this
     self.id = options.id
     self.config = options.config
+    self._order = options.order
     self._container = options.container
     self._eventObject = options.eventObject || _.extend({}, Events)
   },
@@ -47,10 +48,18 @@ module.exports = ContrailView.extend({
 
   render: function (content) {
     var self = this
-    self._container.find(self.className + ' ' + self.id).remove()
+    const id = _.isUndefined(self.id) ? '' : self.id
+    self._container.find(self.className + ' ' + id).remove()
     if (content) {
       self.$el.html(content)
     }
-    self._container.append(self.$el)
+    self.el.dataset['order'] = self._order
+    if (self._container.is(':empty')) {
+      self._container.append(self.$el)
+    } else {
+      _.each(self._container.children(), (el) => {
+        if (el.dataset['order'] > self._order) return self.$el.insertBefore(el)
+      })
+    }
   },
 })

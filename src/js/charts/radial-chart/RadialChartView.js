@@ -66,7 +66,8 @@ var RadialChartView = ContrailView.extend({
 
   _initComponents: function () {
     var self = this
-    _.each(self._config.components, function (component) {
+    _.each(self._config.components, function (component, index) {
+      component.config.order = index
       if (component.type === 'bindingHandler' && self._isEnabledComponent('bindingHandler')) {
         if (!self.bindingHandler) {
           self.bindingHandler = new handlers.BindingHandler(self._config.bindingHandler)

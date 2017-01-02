@@ -106,7 +106,8 @@ var XYChartView = ContrailChartsView.extend({
   _initComponents: function () {
     var self = this
     var dataModel
-    _.each(self._config.components, function (component) {
+    _.each(self._config.components, function (component, index) {
+      component.config.order = index
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
     if (self._isEnabledComponent('navigation')) {
