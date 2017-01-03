@@ -4,10 +4,8 @@
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var DataProvider = require('handlers/DataProvider')
-var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 
 var TimelineView = ContrailChartsView.extend({
   type: 'timeline',
@@ -76,10 +74,6 @@ var TimelineView = ContrailChartsView.extend({
     self._focusDataProvider.setRangeAndFilterData(newFocusDomain)
   },
 
-  getFocusDataProvider: function () {
-    return this._focusDataProvider
-  },
-
   _triggerWindowChangedEvent: function (focusDomain) {
     var self = this
     var x = self.params.plot.x.accessor
@@ -91,7 +85,6 @@ var TimelineView = ContrailChartsView.extend({
     var self = this
     var x = self.params.plot.x.accessor
     var xScale = self.params.axis[self.params.plot.x.axis].scale
-    var brushHandleHeight = self.params.brushHandleHeight
     var brushHandleScaleX = self.params.brushHandleScaleX
     var brushHandleScaleY = self.params.brushHandleScaleY
     var brushHandleCenter = self.params.yRange[1] + (self.params.yRange[0] - self.params.yRange[1]) / 2
@@ -290,7 +283,7 @@ var TimelineView = ContrailChartsView.extend({
     xAxisLabelSvg.exit().remove()
   },
 
-  renderBar: function() {
+  renderBar: function () {
     var self = this
     var axisName = self.params.plot.x.axis
     var xScale = self.params.axis[axisName].scale
@@ -306,9 +299,9 @@ var TimelineView = ContrailChartsView.extend({
       .attr('height', 1)
       .merge(svgBars).transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('x', xScale.range()[0])
-      .attr('y', function(d) { return d.c })
+      .attr('y', function (d) { return d.c })
       .attr('width', xScale.range()[1] - xScale.range()[0])
-      .attr('height', function(d) { return d.h })
+      .attr('height', function (d) { return d.h })
     svgBars.exit().remove()
   },
 
