@@ -197,6 +197,7 @@ cpuMemChartView.setConfig({
       ]
     }
   }, {
+    id: 'cpuMemChart-controlPanel',
     type: 'controlPanel',
     config: {
       enabled: true,
@@ -218,7 +219,7 @@ cpuMemChartView.setConfig({
   }, {
     type: 'message',
     config: {
-      enabled: true
+      enabled: true,
     }
   }, {
     type: 'crosshair',
@@ -228,7 +229,7 @@ cpuMemChartView.setConfig({
   }, {
     type: 'colorPicker',
     config: {
-      sourceComponent: 'compositeY'
+      sourceComponent: 'cpuMemCompositeY',
     }
   }]
 })
@@ -240,7 +241,7 @@ cpuMemChartView.renderMessage({
     {
       level: 'info',
       title: '',
-      message: 'Loading..'
+      message: 'Loading...'
     }
   ]
 })

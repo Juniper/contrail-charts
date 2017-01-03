@@ -270,6 +270,7 @@ complexChartView.setConfig({
       }
     }
   }, {
+    id: 'complexChart-controlPanel',
     type: 'controlPanel',
     config: {
       enabled: true,

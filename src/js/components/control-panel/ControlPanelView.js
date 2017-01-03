@@ -14,17 +14,17 @@ var ControlPanelView = ContrailChartsView.extend({
     accessorData: 'SOME_TEMPLATE_ID'
   },
 
-  initialize: function (options) {
-    var self = this
-    ContrailChartsView.prototype.initialize.call(self, options)
-    self.listenTo(self.config, 'change', self.render)
-  },
-
   events: {
     'click .control-panel-item': 'controlPanelItemClicked',
     'click .control-panel-filter-close': 'controlPanelExpandedCloseButtonClicked',
     'change .accessor-data-checkbox': 'accessorDataCheckboxChanged',
     'change .accessor-data-chart-type-select': 'accessorDataSelectChanged'
+  },
+
+  initialize: function (options) {
+    var self = this
+    ContrailChartsView.prototype.initialize.call(self, options)
+    self.listenTo(self.config, 'change', self.render)
   },
 
   controlPanelItemClicked: function (e) {
@@ -162,6 +162,7 @@ var ControlPanelView = ContrailChartsView.extend({
     self.resetParams()
     self.$el.html(self.generateItems(self.params))
     self.$el.append('<div class="control-panel-expanded-container hide"></div>')
+    ContrailChartsView.prototype.render.call(this)
   }
 })
 
