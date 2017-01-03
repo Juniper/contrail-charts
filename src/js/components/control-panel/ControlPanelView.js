@@ -162,7 +162,6 @@ var ControlPanelView = ContrailChartsView.extend({
     self.resetParams()
     self.$el.html(self.generateItems(self.params))
     self.$el.append('<div class="control-panel-expanded-container hide"></div>')
-    self.$el.addClass(self.className)
   }
 })
 

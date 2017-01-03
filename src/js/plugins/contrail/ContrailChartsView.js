@@ -51,6 +51,7 @@ module.exports = ContrailView.extend({
     const id = _.isUndefined(this.id) ? '' : this.id
     const selector = id ? '#' + id : '.' + this.className
     if (!_.isEmpty(this._container.find(selector))) return
+    this.$el.addClass(this.className)
     this.el.dataset['order'] = this._order
     if (this._container.is(':empty')) {
       this._container.append(this.$el)

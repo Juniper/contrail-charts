@@ -83,7 +83,6 @@ var ColorPickerView = ContrailChartsView.extend({
 
   render: function () {
     var self = this
-    self.$el.addClass(self.className)
     self.resetParams()
     self._bindListeners()
   }

@@ -16,7 +16,6 @@ const Self = ContrailChartsView.extend({
   },
 
   render: function () {
-    this.$el.addClass(this.className)
     const template = this.config.get('template') || _template
     const content = $(template(this.config.getData(this.model)))
 
