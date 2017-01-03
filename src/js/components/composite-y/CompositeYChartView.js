@@ -128,15 +128,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     self._drawings.sort(function (a, b) { return b.renderOrder - a.renderOrder })
   },
 
-  getColor: function (accessor) {
-    var self = this
-    if (_.has(accessor, 'color')) {
-      return accessor.color
-    } else {
-      return self.params.colorScale(accessor.accessor)
-    }
-  },
-
   /**
   * Calculates the activeAccessorData that holds only the verified and enabled accessors from the 'plot' structure.
   * Params: activeAccessorData, yAxisInfoArray
@@ -236,9 +227,8 @@ var CompositeYChartView = ContrailChartsView.extend({
 
   calculateColorScale: function () {
     var self = this
-    self.params.colorScale = this.config.get('colorScale') || d3.scaleOrdinal(d3.schemeCategory20)
     _.each(self.params.plot.y, function (accessor) {
-      accessor.color = self.getColor(accessor)
+      accessor.color = self.config.getColor(accessor)
     })
   },
 
@@ -577,7 +567,7 @@ var CompositeYChartView = ContrailChartsView.extend({
       self._debouncedRenderFunction()
     }
     return self
-  }
+  },
 })
 
 module.exports = CompositeYChartView

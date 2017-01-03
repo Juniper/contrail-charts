@@ -55,6 +55,12 @@ cpuMemChartView.setConfig({
   }],
   container: '#cpuMemChart',
   components: [{
+    type: 'legend',
+    config: {
+      sourceComponent: 'cpuMemCompositeY'
+    }
+  }, {
+    id: 'cpuMemCompositeY',
     type: 'compositeY',
     config: {
       marginInner: 10,
@@ -213,11 +219,6 @@ cpuMemChartView.setConfig({
     type: 'message',
     config: {
       enabled: true
-    }
-  }, {
-    type: 'legend',
-    config: {
-      sourceComponent: 'compositeY'
     }
   }, {
     type: 'crosshair',

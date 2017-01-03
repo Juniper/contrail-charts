@@ -14,12 +14,11 @@ module.exports = ContrailView.extend({
   },
 
   initialize: function (options) {
-    var self = this
-    self.id = options.id
-    self.config = options.config
-    self._order = options.order
-    self._container = options.container
-    self._eventObject = options.eventObject || _.extend({}, Events)
+    this.id = options.id
+    this.config = options.config
+    this._order = options.order
+    this._container = options.container
+    this._eventObject = options.eventObject || _.extend({}, Events)
   },
   /**
    * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
@@ -42,23 +41,24 @@ module.exports = ContrailView.extend({
   * This is how the view gets the SVG html element selection for rendering.
   */
   svgSelection: function () {
-    var self = this
-    return d3.select(self.el).select('svg')
+    return d3.select(this.el).select('svg')
   },
 
   render: function (content) {
-    var self = this
-    const id = _.isUndefined(self.id) ? '' : self.id
-    self._container.find(self.className + ' ' + id).remove()
-    if (content) {
-      self.$el.html(content)
-    }
-    self.el.dataset['order'] = self._order
-    if (self._container.is(':empty')) {
-      self._container.append(self.$el)
+    if (content) this.$el.html(content)
+
+    // append element to container first time
+    const id = _.isUndefined(this.id) ? '' : this.id
+    const selector = id ? '#' + id : '.' + this.className
+    if (!_.isEmpty(this._container.find(selector))) return
+    this.el.dataset['order'] = this._order
+    if (this._container.is(':empty')) {
+      this._container.append(this.$el)
     } else {
-      _.each(self._container.children(), (el) => {
-        if (el.dataset['order'] > self._order) return self.$el.insertBefore(el)
+      const elements = this._container.children()
+      _.each(elements, (el) => {
+        if (this._order < el.dataset['order']) return this.$el.insertBefore(el)
+        if (_.last(elements) === el) this.$el.insertAfter(el)
       })
     }
   },

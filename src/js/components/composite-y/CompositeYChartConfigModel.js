@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
 */
+var _ = require('lodash')
 var d3 = require('d3')
 var ContrailChartsConfigModel = require('contrail-charts-config-model')
 
@@ -15,6 +16,7 @@ var CompositeYChartConfigModel = ContrailChartsConfigModel.extend({
     // / The chart height. If not provided will be caculated by View.
     chartHeight: undefined,
 
+    colorScale: d3.scaleOrdinal(d3.schemeCategory20),
     // / Duration of chart transitions.
     duration: 300,
 
@@ -32,7 +34,19 @@ var CompositeYChartConfigModel = ContrailChartsConfigModel.extend({
     marginInner: undefined,
 
     curve: d3.curveCatmullRom.alpha(0.5)
-  }
+  },
+
+  getColor: function (accessor) {
+    if (_.has(accessor, 'color')) {
+      return accessor.color
+    } else {
+      return this.attributes.colorScale(accessor.accessor)
+    }
+  },
+
+  getAccessors: function () {
+    return this.get('plot').y
+  },
 })
 
 module.exports = CompositeYChartConfigModel

@@ -21,6 +21,7 @@ function getValue (serie) {
 var chartConfig = {
   container: '.chart',
   components: [{
+    id: 'pieChart',
     type: 'radialChart',
     config: {
       type: 'donut',
@@ -48,6 +49,7 @@ var chartConfig = {
   }, {
     type: 'legendUniversal',
     config: {
+      sourceComponent: 'pieChart',
     },
   }]
 }

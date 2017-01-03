@@ -70,6 +70,10 @@ var XYChartView = ContrailChartsView.extend({
     self._initComponents()
   },
 
+  getComponent: function (id) {
+    return _.find(this._components, {id: id})
+  },
+
   getComponentByType: function (type) {
     var self = this
     return _.find(self._components, {type: type})
@@ -130,6 +134,11 @@ var XYChartView = ContrailChartsView.extend({
         })
       }
       */
+    }
+    if (self._isEnabledComponent('legend')) {
+      var legend = self.getComponentByType('legend')
+      var sourceComponent = self.getComponent(legend.config.get('sourceComponent'))
+      legend.config.setParent(sourceComponent.config)
     }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.

@@ -59,6 +59,10 @@ var RadialChartView = ContrailView.extend({
     self._initComponents()
   },
 
+  getComponent: function (id) {
+    return _.find(this._components, {id: id})
+  },
+  // TODO should return all instances not first only
   getComponentByType: function (type) {
     var self = this
     return _.find(self._components, {type: type})
@@ -80,11 +84,11 @@ var RadialChartView = ContrailView.extend({
     })
     if (self._isEnabledComponent('radialChart')) {
       self.getComponentByType('radialChart').changeModel(self._dataProvider)
-      if (self._isEnabledComponent('legendUniversal')) {
-        var legend = self.getComponentByType('legendUniversal')
-        var radialChart = self.getComponentByType('radialChart')
-        legend.config.setParent(radialChart.config)
-      }
+    }
+    if (self._isEnabledComponent('legendUniversal')) {
+      var legend = self.getComponentByType('legendUniversal')
+      var sourceComponent = self.getComponent(legend.config.get('sourceComponent'))
+      legend.config.setParent(sourceComponent.config)
     }
   },
 

@@ -42,6 +42,12 @@ complexChartView.setConfig({
   }],
   container: '#complexChart',
   components: [{
+    type: 'legend',
+    config: {
+      sourceComponent: 'complexChartCompositeY'
+    }
+  }, {
+    id: 'complexChartCompositeY',
     type: 'compositeY',
     config: {
       marginInner: 10,
@@ -75,8 +81,7 @@ complexChartView.setConfig({
             ],
             axis: 'y1',
             tooltip: 'defaultTooltip',
-          },
-          {
+          }, {
             accessor: 'b',
             labelFormatter: 'B',
             enabled: true,
@@ -95,8 +100,7 @@ complexChartView.setConfig({
             ],
             axis: 'y1',
             tooltip: 'customTooltip',
-          },
-          {
+          }, {
             accessor: 'c',
             labelFormatter: 'C',
             enabled: false,
@@ -115,8 +119,7 @@ complexChartView.setConfig({
             ],
             axis: 'y1',
             tooltip: 'defaultTooltip',
-          },
-          {
+          }, {
             accessor: 'd',
             labelFormatter: 'Megabytes',
             color: '#d62728',
@@ -136,8 +139,7 @@ complexChartView.setConfig({
             ],
             axis: 'y2',
             tooltip: 'defaultTooltip',
-          },
-          {
+          }, {
             accessor: 'e',
             labelFormatter: 'Megabytes',
             color: '#9467bd',
@@ -236,28 +238,23 @@ complexChartView.setConfig({
           accessor: 'x',
           labelFormatter: 'Time',
           valueFormatter: timeFormatter,
-        },
-        {
+        }, {
           accessor: 'a',
           labelFormatter: 'A',
           valueFormatter: numberFormatter,
-        },
-        {
+        }, {
           accessor: 'b',
           labelFormatter: 'B',
           valueFormatter: numberFormatter,
-        },
-        {
+        }, {
           accessor: 'c',
           labelFormatter: 'C',
           valueFormatter: numberFormatter,
-        },
-        {
+        }, {
           accessor: 'd',
           labelFormatter: 'D',
           valueFormatter: numberFormatter,
-        },
-        {
+        }, {
           accessor: 'e',
           labelFormatter: 'E',
           valueFormatter: numberFormatter,
@@ -288,8 +285,7 @@ complexChartView.setConfig({
             name: 'accessorData',
             width: '350px'
           }
-        },
-        {
+        }, {
           name: 'sendMessage',
           title: 'Send Message',
           iconClass: 'fa fa-edit',
@@ -307,8 +303,7 @@ complexChartView.setConfig({
               })
             }
           }
-        },
-        {
+        }, {
           name: 'clearMessage',
           title: 'Clear Message',
           iconClass: 'fa fa-eraser',
@@ -317,8 +312,7 @@ complexChartView.setConfig({
               this._eventObject.trigger('clearMessage', 'XYChartView')
             }
           }
-        },
-        {
+        }, {
           name: 'refresh',
           title: 'Refresh',
           iconClass: 'fa fa-refresh',
@@ -334,11 +328,6 @@ complexChartView.setConfig({
     type: 'message',
     config: {
       enabled: true,
-    }
-  }, {
-    type: 'legend',
-    config: {
-      sourceComponent: 'compositeY'
     }
   }, {
     type: 'crosshair',
