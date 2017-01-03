@@ -58,7 +58,10 @@ module.exports = ContrailView.extend({
     } else {
       const elements = this._container.children()
       _.each(elements, (el) => {
-        if (this._order < el.dataset['order']) return this.$el.insertBefore(el)
+        if (this._order < el.dataset['order']) {
+          this.$el.insertBefore(el)
+          return false
+        }
         if (_.last(elements) === el) this.$el.insertAfter(el)
       })
     }

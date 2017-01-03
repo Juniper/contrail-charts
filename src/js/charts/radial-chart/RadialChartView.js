@@ -82,13 +82,16 @@ var RadialChartView = ContrailView.extend({
       }
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
+    // set parent config model
+    _.each(self._components, function (component, index) {
+      const sourceComponentId = component.config.get('sourceComponent')
+      if (sourceComponentId) {
+        const sourceComponent = self.getComponent(sourceComponentId)
+        component.config.setParent(sourceComponent.config)
+      }
+    })
     if (self._isEnabledComponent('radialChart')) {
       self.getComponentByType('radialChart').changeModel(self._dataProvider)
-    }
-    if (self._isEnabledComponent('legendUniversal')) {
-      var legend = self.getComponentByType('legendUniversal')
-      var sourceComponent = self.getComponent(legend.config.get('sourceComponent'))
-      legend.config.setParent(sourceComponent.config)
     }
   },
 

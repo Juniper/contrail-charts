@@ -233,7 +233,6 @@ cpuMemChartView.setConfig({
   }]
 })
 cpuMemChartView.setData(tsData)
-cpuMemChartView.render()
 cpuMemChartView.renderMessage({
   componentId: 'XYChartView',
   action: 'once',

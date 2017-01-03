@@ -114,6 +114,14 @@ var XYChartView = ContrailChartsView.extend({
       component.config.order = index
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
+    // set parent config model
+    _.each(self._components, function (component, index) {
+      const sourceComponentId = component.config.get('sourceComponent')
+      if (sourceComponentId) {
+        const sourceComponent = self.getComponent(sourceComponentId)
+        component.config.setParent(sourceComponent.config)
+      }
+    })
     if (self._isEnabledComponent('navigation')) {
       dataModel = self.getComponentByType('navigation').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
@@ -121,24 +129,6 @@ var XYChartView = ContrailChartsView.extend({
     if (self._isEnabledComponent('timeline')) {
       dataModel = self.getComponentByType('timeline').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
-    }
-    if (self._isEnabledComponent('crosshair')) {
-      /*
-      // If crosshair component is activated then do not react on other tooltips
-      // No need to hardcode this. If user does not want to mix tooltip with crosshair the should not include tooltip in plot config.
-      var crosshairComponent = self.getComponentByType('crosshair')
-      if (crosshairComponent.config.get('tooltip')) {
-        var tooltipComponents = _.filter(self._components, { type: 'tooltip' })
-        _.each(tooltipComponents, function(tooltipComponent) {
-          tooltipComponent.params.acceptFilters.push(crosshairComponent.config.get('tooltip'))
-        })
-      }
-      */
-    }
-    if (self._isEnabledComponent('legend')) {
-      var legend = self.getComponentByType('legend')
-      var sourceComponent = self.getComponent(legend.config.get('sourceComponent'))
-      legend.config.setParent(sourceComponent.config)
     }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
