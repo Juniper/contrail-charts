@@ -334,13 +334,12 @@ complexChartView.setConfig({
   }, {
     type: 'crosshair',
     config: {
-      sourceComponent: 'compositeY',
-      tooltip: 'defaultTooltip'
+      tooltip: 'defaultTooltip',
     }
   }, {
     type: 'colorPicker',
     config: {
-      sourceComponent: 'complexChartCompositeY'
+      sourceComponent: 'complexChartCompositeY',
     }
   }]
 })

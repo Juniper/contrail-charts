@@ -10,8 +10,12 @@ var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 
 var NavigationView = ContrailChartsView.extend({
   type: 'navigation',
-  tagName: 'div',
   className: 'navigation-view',
+
+  events: {
+    'click .prev>a': 'prevChunkSelected',
+    'click .next>a': 'nextChunkSelected'
+  },
 
   initialize: function (options) {
     var self = this
@@ -34,6 +38,12 @@ var NavigationView = ContrailChartsView.extend({
     })
     self.listenTo(self.model, 'change', self.render)
   },
+  /**
+   * Override ContrailChartsView.svgSelection which uses container's shared svg
+   */
+  svgSelection: function () {
+    return d3.select(this.el).select('svg')
+  },
 
   changeModel: function (model) {
     var self = this
@@ -41,11 +51,6 @@ var NavigationView = ContrailChartsView.extend({
     self.model = model
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.listenTo(self.model, 'change', self._onModelChange)
-  },
-
-  events: {
-    'click .prev>a': 'prevChunkSelected',
-    'click .next>a': 'nextChunkSelected'
   },
 
   _onModelChange: function () {

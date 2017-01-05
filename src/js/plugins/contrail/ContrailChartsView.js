@@ -37,11 +37,22 @@ module.exports = ContrailView.extend({
   getData: function () {
     return this.model.getData()
   },
+
+  initSVG: function () {
+    const svg = this.svgSelection()
+    if (svg.empty()) {
+      return d3.select(this._container[0])
+        .append('svg')
+        .classed('coCharts-svg', true)
+        .classed(this.className, true)
+    }
+    return svg
+  },
   /**
-  * This is how the view gets the SVG html element selection for rendering.
+  * @return Object d3 Selection of svg element shared between components in this container
   */
   svgSelection: function () {
-    return d3.select(this.el).select('svg')
+    return d3.select(this._container[0]).select(':scope > svg')
   },
 
   render: function (content) {
@@ -49,7 +60,7 @@ module.exports = ContrailView.extend({
 
     // append element to container first time
     const id = _.isUndefined(this.id) ? '' : this.id
-    const selector = id ? '#' + id : '.' + this.className
+    const selector = id ? `#${id}` : `.${this.className}`
     if (!_.isEmpty(this._container.find(selector))) return
     this.$el.addClass(this.className)
     this.el.dataset['order'] = this._order

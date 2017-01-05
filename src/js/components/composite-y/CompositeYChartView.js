@@ -114,6 +114,7 @@ var CompositeYChartView = ContrailChartsView.extend({
                 model: self.model,
                 config: self.config,
                 eventObject: self._eventObject,
+                container: self._container,
                 el: self.el,
                 axisName: accessor.axis,
                 parent: self
@@ -346,18 +347,17 @@ var CompositeYChartView = ContrailChartsView.extend({
       drawing.params.axis = self.params.axis
     })
   },
-
   /**
    * Renders the svg element with axis and drawing groups.
    * Resizes chart dimensions if chart already exists.
    */
   renderSVG: function () {
     var self = this
+    let svg = self.svgSelection()
     var translate = self.params.xRange[0] - self.params.marginInner
     var rectClipPathId = 'rect-clipPath-' + self.cid
-    var svgs = d3.select(self.el).select('svg')
-    if (svgs.empty()) {
-      var svg = d3.select(self.el).append('svg').attr('class', 'coCharts-svg')
+    if (svg.empty()) {
+      svg = this.initSVG()
       svg.append('clipPath')
         .attr('id', rectClipPathId)
         .append('rect')
@@ -370,7 +370,7 @@ var CompositeYChartView = ContrailChartsView.extend({
         .attr('transform', 'translate(0,' + (self.params.yRange[1] - self.params.marginInner) + ')')
     }
     // Handle Y axis
-    var svgYAxis = self.svgSelection().selectAll('.axis.y-axis').data(self.params.yAxisInfoArray, function (d) {
+    var svgYAxis = svg.selectAll('.axis.y-axis').data(self.params.yAxisInfoArray, function (d) {
       return d.name
     })
     svgYAxis.exit().remove()
@@ -380,7 +380,7 @@ var CompositeYChartView = ContrailChartsView.extend({
       .merge(svgYAxis)
       .attr('transform', 'translate(' + translate + ',0)')
     // Handle drawing groups
-    var svgDrawingGroups = self.svgSelection().selectAll('.drawing-group').data(self._drawings, function (c) {
+    var svgDrawingGroups = svg.selectAll('.drawing-group').data(self._drawings, function (c) {
       return c.getName()
     })
     svgDrawingGroups.enter().append('g')
@@ -396,7 +396,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     svgDrawingGroups.exit().remove()
     // Handle (re)size.
-    self.svgSelection()
+    svg
       .attr('width', self.params.chartWidth)
       .attr('height', self.params.chartHeight)
       .select('#' + rectClipPathId).select('rect')
@@ -404,6 +404,22 @@ var CompositeYChartView = ContrailChartsView.extend({
       .attr('y', self.params.yRange[1] - self.params.marginInner)
       .attr('width', self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner)
       .attr('height', self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
+
+    const throttledShowCrosshair = _.throttle(() => {
+      const point = d3.mouse(svg.node())
+      this._eventObject.trigger('showCrosshair', this.getCrosshairData(point), point, this.getCrosshairConfig())
+    }, 100)
+    if (self.name === 'compositeY') {
+      svg.on('mousemove', throttledShowCrosshair.bind(this))
+      svg.on('mouseout', function () {
+        // The mouse could have left the svg but entered an svg child.
+        // We still get a mouseout event in this case so still need to verify if mouse coordinates are out of bounds.
+        // var mouse = d3.mouse(this)
+        // if (mouse[0] < self.params.data.x1 || mouse[0] > self.params.data.x2 || mouse[1] < self.params.data.y1 || mouse[1] > self.params.data.y2) {
+          // self.hide()
+        // }
+      })
+    }
   },
 
   hasAxisConfig: function (axisName, axisAttributeName) {
@@ -557,8 +573,68 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    ContrailChartsView.prototype.render.call(self)
+    this.svgSelection().node().dataset['order'] = this._order
     self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
+  },
+
+  getCrosshairData: function (point) {
+    const data = this.getData()
+    const xScale = this.params.axis[this.params.plot.x.axis].scale
+    const xAccessor = this.params.plot.x.accessor
+    const mouseX = xScale.invert(point[0])
+    const xBisector = d3.bisector(function (d) {
+      return d[xAccessor]
+    }).right
+    const indexRight = xBisector(data, mouseX, 0, data.length - 1)
+    let indexLeft = indexRight - 1
+    if (indexLeft < 0) indexLeft = 0
+    let index = indexRight
+    if (Math.abs(mouseX - data[indexLeft][xAccessor]) < Math.abs(mouseX - data[indexRight][xAccessor])) {
+      index = indexLeft
+    }
+    return data[index]
+  },
+  // TODO move to CrosshairConfig
+  getCrosshairConfig: function () {
+    const data = { circles: [] }
+    const globalXScale = this.params.axis[this.params.plot.x.axis].scale
+    // Prepare crosshair bounding box
+    data.x1 = this.params.xRange[0]
+    data.x2 = this.params.xRange[1]
+    data.y1 = this.params.yRange[1]
+    data.y2 = this.params.yRange[0]
+    // Prepare x label formatter
+    data.xFormat = this.config.get('axis')[this.params.plot.x.axis].formatter
+    if (!_.isFunction(data.xFormat)) {
+      data.xFormat = d3.timeFormat('%H:%M')
+    }
+    // Prepare line coordinates
+    data.line = {}
+    data.line.x = (dataElem) => {
+      return globalXScale(dataElem[this.params.plot.x.accessor])
+    }
+    data.line.y1 = this.params.yRange[0]
+    data.line.y2 = this.params.yRange[1]
+    // Preoare x label text
+    data.line.text = (dataElem) => {
+      return data.xFormat(dataElem[this.params.plot.x.accessor])
+    }
+    // Prepare circle data
+    _.each(this._drawings, (plotTypeComponent) => {
+      _.each(plotTypeComponent.params.activeAccessorData, (accessor) => {
+        var circleObject = {}
+        circleObject.id = accessor.accessor
+        circleObject.x = (dataElem) => {
+          return plotTypeComponent.getScreenX(dataElem, this.params.plot.x.accessor, accessor.accessor)
+        }
+        circleObject.y = (dataElem) => {
+          return plotTypeComponent.getScreenY(dataElem, accessor.accessor)
+        }
+        circleObject.color = accessor.color
+        data.circles.push(circleObject)
+      })
+    })
+    return data
   },
 
   render: function () {
