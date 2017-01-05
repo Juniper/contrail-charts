@@ -615,7 +615,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     }
     data.line.y1 = this.params.yRange[0]
     data.line.y2 = this.params.yRange[1]
-    // Preoare x label text
+    // Prepare x label text
     data.line.text = (dataElem) => {
       return data.xFormat(dataElem[this.params.plot.x.accessor])
     }
@@ -643,6 +643,12 @@ var CompositeYChartView = ContrailChartsView.extend({
       self._debouncedRenderFunction()
     }
     return self
+  },
+
+  disableTooltip: function () {
+    _.each(this._drawings, (drawing) => {
+      drawing.disableTooltip()
+    })
   },
 })
 

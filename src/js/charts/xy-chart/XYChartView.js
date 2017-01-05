@@ -130,6 +130,9 @@ var XYChartView = ContrailChartsView.extend({
       dataModel = self.getComponentByType('timeline').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
+    if (self._isEnabledComponent('crosshair')) {
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').disableTooltip()
+    }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
       // Otherwise assume it will be started by the parent chart.

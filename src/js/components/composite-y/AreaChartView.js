@@ -9,7 +9,6 @@ var XYChartSubView = require('components/composite-y/XYChartSubView')
 * This is the child view for CompositeYChartView.
 */
 var AreaChartView = XYChartSubView.extend({
-  tagName: 'div',
   className: 'area-chart',
   chartType: 'area',
   renderOrder: 50,
@@ -103,21 +102,8 @@ var AreaChartView = XYChartSubView.extend({
       .attr('class', function (d) { return 'area area-' + d.key })
       .attr('d', function (d) { return zeroLine(data) })
       .merge(svgLines)
-      .on('mouseover', function (d) {
-        var pos = d3.mouse(this)
-        var offset = self.$el.offset()
-        var dataItem = self.getTooltipData(d.data, pos[0])
-        var tooltipOffset = {
-          top: offset.top + pos[1],
-          left: offset.left + pos[0] - xScale.range()[0]
-        }
-        self._eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
-        d3.select(this).classed('active', true)
-      })
-      .on('mouseout', function (d) {
-        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
-        d3.select(this).classed('active', false)
-      })
+      .on('mouseover', self._onMouseover.bind(self))
+      .on('mouseout', self._onMouseout.bind(self))
       .transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('fill', function (d) { return self.getColor(d.accessor) })
       .attr('d', function (d) {
@@ -133,6 +119,27 @@ var AreaChartView = XYChartSubView.extend({
       self.renderData()
     })
     return self
+  },
+
+  _onMouseover: function (d) {
+    if (this._tooltipEnabled) {
+      const pos = d3.mouse(this)
+      const offset = this.$el.offset()
+      const dataItem = this.getTooltipData(d.data, pos[0])
+      const tooltipOffset = {
+        top: offset.top + pos[1],
+        left: offset.left + pos[0] - this.getXScale().range()[0],
+      }
+      this._eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', true)
+  },
+
+  _onMouseout: function (d) {
+    if (this._tooltipEnabled) {
+      this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', false)
   }
 })
 

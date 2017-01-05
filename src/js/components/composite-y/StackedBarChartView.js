@@ -6,7 +6,6 @@ var d3 = require('d3')
 var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 var StackedBarChartView = XYChartSubView.extend({
-  tagName: 'div',
   className: 'bar-chart',
   chartType: 'stackedBar',
   renderOrder: 100,
@@ -112,19 +111,8 @@ var StackedBarChartView = XYChartSubView.extend({
       .attr('y', yScale.range()[0])
       .attr('height', 0)
       .attr('width', function (d) { return d.w })
-      .on('mouseover', function (d) {
-        var pos = self.$el.offset()
-        var tooltipOffset = {
-          left: d.x + pos.left,
-          top: d.y + pos.top
-        }
-        self._eventObject.trigger('showTooltip', tooltipOffset, d.data, d.accessor.tooltip)
-        d3.select(this).classed('active', true)
-      })
-      .on('mouseout', function (d) {
-        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
-        d3.select(this).classed('active', false)
-      })
+      .on('mouseover', self._onMouseover.bind(self))
+      .on('mouseout', self._onMouseout.bind(self))
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('fill', function (d) { return d.color })
       .attr('x', function (d) { return d.x })
@@ -140,7 +128,26 @@ var StackedBarChartView = XYChartSubView.extend({
       self.renderData()
     })
     return self
-  }
+  },
+
+  _onMouseover: function (d) {
+    if (this._tooltipEnabled) {
+      const pos = this.$el.offset()
+      const tooltipOffset = {
+        left: d.x + pos.left,
+        top: d.y + pos.top
+      }
+      this._eventObject.trigger('showTooltip', tooltipOffset, d.data, d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', true)
+  },
+
+  _onMouseout: function (d) {
+    if (this._tooltipEnabled) {
+      this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', false)
+  },
 })
 
 module.exports = StackedBarChartView

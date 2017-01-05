@@ -6,7 +6,6 @@ var d3 = require('d3')
 var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 var ScatterBubbleChartView = XYChartSubView.extend({
-  tagName: 'div',
   className: 'scatter-bubble-chart',
   chartType: 'scatterBubble',
   renderOrder: 50,
@@ -67,20 +66,8 @@ var ScatterBubbleChartView = XYChartSubView.extend({
       .attr('cy', d.y)
       .attr('fill', d.color)
       .attr('r', 0)
-      .on('mouseover', function (d) {
-        // var pos = $(this).offset() // not working in jquery 3
-        var offset = {
-          left: d.x + d.r * 0.71,
-          top: d.y - d.r * 0.71
-        }
-        self._eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
-        d3.select(this).classed('active', true)
-      })
-      .on('mouseout', function (d) {
-        // var pos = $(this).offset() // not working in jquery 3
-        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
-        d3.select(this).classed('active', false)
-      })
+      .on('mouseover', self._onMouseover.bind(self))
+      .on('mouseout', self._onMouseout.bind(self))
   },
 
   shapeEditCircle: function (d, selection) {
@@ -141,7 +128,24 @@ var ScatterBubbleChartView = XYChartSubView.extend({
       self.renderData()
     })
     return self
-  }
+  },
+
+  _onMouseover: function (d) {
+    if (this._tooltipEnabled) {
+      const offset = {
+        left: d.x + d.r * 0.71,
+        top: d.y - d.r * 0.71
+      }
+      this._eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
+    }
+  },
+
+  _onMouseout: function (d) {
+    if (this._tooltipEnabled) {
+      this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', false)
+  },
 })
 
 module.exports = ScatterBubbleChartView

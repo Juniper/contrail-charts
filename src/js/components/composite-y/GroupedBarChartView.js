@@ -6,7 +6,6 @@ var d3 = require('d3')
 var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 var BarChartView = XYChartSubView.extend({
-  tagName: 'div',
   className: 'bar-chart',
   chartType: 'bar',
   renderOrder: 100,
@@ -113,16 +112,8 @@ var BarChartView = XYChartSubView.extend({
       .attr('y', yScale.range()[0])
       .attr('height', 0)
       .attr('width', function (d) { return d.w })
-      .on('mouseover', function (d) {
-        // var pos = $(this).offset() // not working in jquery 3
-        self._eventObject.trigger('showTooltip', {left: d.x, top: d.y}, d.data, d.accessor.tooltip)
-        d3.select(this).classed('active', true)
-      })
-      .on('mouseout', function (d) {
-        // var pos = $(this).offset() // not working in jquery 3
-        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
-        d3.select(this).classed('active', false)
-      })
+      .on('mouseover', self._onMouseover.bind(self))
+      .on('mouseout', self._onMouseout.bind(self))
       .merge(svgBarGroups).transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('fill', function (d) { return d.color })
       .attr('x', function (d) { return d.x })
@@ -138,7 +129,21 @@ var BarChartView = XYChartSubView.extend({
       self.renderData()
     })
     return self
-  }
+  },
+
+  _onMouseover: function (d) {
+    if (this._tooltipEnabled) {
+      this._eventObject.trigger('showTooltip', {left: d.x, top: d.y}, d.data, d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', true)
+  },
+
+  _onMouseout: function (d) {
+    if (this._tooltipEnabled) {
+      this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', false)
+  },
 })
 
 module.exports = BarChartView
