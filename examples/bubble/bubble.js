@@ -1,4 +1,4 @@
-/* global coCharts */
+/* global coCharts d3 */
 
 function timeFormatter (value) {
   return d3.timeFormat('%H:%M:%S')(value) // eslint-disable-line no-undef
@@ -29,7 +29,6 @@ var chartConfig = {
           accessor: 'x'
         },
         y: [
-        ///*
           {
             accessor: 'a',
             chart: 'scatterBubble',
@@ -38,7 +37,6 @@ var chartConfig = {
             shape: 'circle',
             axis: 'y1'
           },
-          //*/
           {
             accessor: 'y',
             chart: 'scatterBubble',
@@ -115,31 +113,31 @@ var chartConfig = {
           labelFormatter: function (key) {
             return 'Time'
           },
-          valueFormatter: timeFormatter,
+          valueFormatter: timeFormatter
         },
         {
           accessor: 'a',
           labelFormatter: function (key) {
             return 'A'
           },
-          valueFormatter: numberFormatter,
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'y',
           labelFormatter: function (key) {
             return 'Y'
           },
-          valueFormatter: numberFormatter,
+          valueFormatter: numberFormatter
         },
         {
           accessor: 'r',
           labelFormatter: function (key) {
             return 'R'
           },
-          valueFormatter: numberFormatter,
+          valueFormatter: numberFormatter
         }
-      ],
-    },
+      ]
+    }
   }, {
     type: 'navigation',
     config: {

@@ -53,7 +53,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
     enteringSelection.append('g').attr('class', 'bubbles')
   },
 
-  _bindMouseOverEvents(selection) {
+  _bindMouseOverEvents (selection) {
     let self = this
     selection.on('mouseover', function (d) {
       // var pos = $(this).offset() // not working in jquery 3
@@ -96,7 +96,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
   /**
   * Shape drawing functions. The draw on the entering and edit selections. One drawing function per accessor shape.
   */
-  prepareShapeRenderFunctions() {
+  prepareShapeRenderFunctions () {
     let self = this
     self.shapeEnterFunctions = { circle: self._shapeEnterCircle }
     self.shapeEditFunctions = { circle: self._shapeEditCircle }
