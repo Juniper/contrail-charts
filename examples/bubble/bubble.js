@@ -29,21 +29,82 @@ var chartConfig = {
           accessor: 'x'
         },
         y: [
+        ///*
           {
             accessor: 'a',
             chart: 'scatterBubble',
             sizeAccessor: 'r',
             sizeAxis: 'rAxis',
             shape: 'circle',
+            axis: 'y1'
+          },
+          //*/
+          {
+            accessor: 'y',
+            chart: 'scatterBubble',
+            sizeAccessor: 'r',
+            sizeAxis: 'rAxis',
+            shape: 'square',
+            axis: 'y2'
           }
         ]
       },
       axis: {
         rAxis: {
           range: [3, 50]
+        },
+        y1: {
+          position: 'left',
+          formatter: numberFormatter,
+          labelMargin: 15
+        },
+        y2: {
+          position: 'right',
+          formatter: numberFormatter,
+          labelMargin: 15
+        }
+      },
+      shapeEnterFunctions: {
+        // Override the way circle shape is drawn
+        circle: function (d, selection) {
+          return selection.append('circle')
+            .attr('class', d.className)
+            .attr('cx', d.x)
+            .attr('cy', d.y)
+            .attr('fill', d.color)
+            .attr('r', 0)
+        },
+        // New custom shape
+        square: function (d, selection) {
+          return selection.append('rect')
+            .attr('class', d.className)
+            .attr('x', d.x)
+            .attr('y', d.y)
+            .attr('fill', d.color)
+            .attr('width', 0)
+            .attr('height', 0)
+        }
+      },
+      shapeEditFunctions: {
+        // Override the way circle shape is drawn
+        circle: function (d, selection) {
+          selection.transition().ease(d3.easeLinear).duration(300)
+            .attr('cx', d.x)
+            .attr('cy', d.y)
+            .attr('fill', '#ff0000')
+            .attr('r', d.r)
+        },
+        // New custom shape
+        square: function (d, selection) {
+          selection.transition().ease(d3.easeLinear).duration(300)
+            .attr('x', d.x)
+            .attr('y', d.y)
+            .attr('fill', '#00ff00')
+            .attr('width', d.r)
+            .attr('height', d.r)
         }
       }
-    },
+    }
   }, {
     type: 'tooltip',
     config: {

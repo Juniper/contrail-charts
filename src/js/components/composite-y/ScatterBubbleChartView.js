@@ -53,37 +53,39 @@ var ScatterBubbleChartView = XYChartSubView.extend({
     enteringSelection.append('g').attr('class', 'bubbles')
   },
 
-  /**
-  * Shape drawing functions. The draw on the entering and edit selections. One drawing function per accessor shape.
-  */
-  shapeEnterFunctions: { circle: 'shapeEnterCircle' },
-  shapeEditFunctions: { circle: 'shapeEditCircle' },
+  _bindMouseOverEvents(selection) {
+    let self = this
+    selection.on('mouseover', function (d) {
+      // var pos = $(this).offset() // not working in jquery 3
+      var offset = {
+        left: d.x + d.r * 0.71,
+        top: d.y - d.r * 0.71
+      }
+      self.eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
+      d3.select(this).classed('active', true)
+    })
+    selection.on('mouseout', function (d) {
+      // var pos = $(this).offset() // not working in jquery 3
+      self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
+      d3.select(this).classed('active', false)
+    })
+  },
 
-  shapeEnterCircle: function (d, selection) {
-    var self = this
-    selection.append('circle')
+  /**
+  * Default shape drawing functions. They draw circles.
+  * Use config.shapeEnterFunctions and config.shapeEditFunctions to define custom shape drawing functions.
+  * Example: shapeEnterFunctions: { square: function (d, selection) { return selection.append('rect') ... } }
+  */
+  _shapeEnterCircle: function (d, selection) {
+    return selection.append('circle')
       .attr('class', d.className)
       .attr('cx', d.x)
       .attr('cy', d.y)
       .attr('fill', d.color)
       .attr('r', 0)
-      .on('mouseover', function (d) {
-        // var pos = $(this).offset() // not working in jquery 3
-        var offset = {
-          left: d.x + d.r * 0.71,
-          top: d.y - d.r * 0.71
-        }
-        self.eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
-        d3.select(this).classed('active', true)
-      })
-      .on('mouseout', function (d) {
-        // var pos = $(this).offset() // not working in jquery 3
-        self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
-        d3.select(this).classed('active', false)
-      })
   },
 
-  shapeEditCircle: function (d, selection) {
+  _shapeEditCircle: function (d, selection) {
     selection.transition().ease(d3.easeLinear).duration(300)
       .attr('cx', d.x)
       .attr('cy', d.y)
@@ -91,11 +93,28 @@ var ScatterBubbleChartView = XYChartSubView.extend({
       .attr('r', d.r)
   },
 
+  /**
+  * Shape drawing functions. The draw on the entering and edit selections. One drawing function per accessor shape.
+  */
+  prepareShapeRenderFunctions() {
+    let self = this
+    self.shapeEnterFunctions = { circle: self._shapeEnterCircle }
+    self.shapeEditFunctions = { circle: self._shapeEditCircle }
+    if (self.config.has('shapeEnterFunctions')) {
+      _.extend(self.shapeEnterFunctions, self.config.get('shapeEnterFunctions'))
+    }
+    if (self.config.has('shapeEditFunctions')) {
+      _.extend(self.shapeEditFunctions, self.config.get('shapeEditFunctions'))
+    }
+  },
+
   renderData: function () {
     var self = this
     var data = self.getData()
     var yScale = self.getYScale()
     var xScale = self.params.axis[self.params.plot.x.axis].scale
+
+    self.prepareShapeRenderFunctions()
 
     // Create a flat data structure
     var flatData = []
@@ -123,12 +142,13 @@ var ScatterBubbleChartView = XYChartSubView.extend({
     var svgBubbles = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
     svgBubbles.enter()
       .each(function (d, i, selection) {
-        _.bind(self[self.shapeEnterFunctions[d.shape]], self)(d, d3.select(this))
+        let enter = self.shapeEnterFunctions[d.shape](d, d3.select(this))
+        self._bindMouseOverEvents(enter)
       })
     svgBubbles = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
     svgBubbles
       .each(function (d) {
-        self[self.shapeEditFunctions[d.shape]](d, d3.select(this))
+        self.shapeEditFunctions[d.shape](d, d3.select(this))
       })
     svgBubbles.exit().transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('r', 0)
