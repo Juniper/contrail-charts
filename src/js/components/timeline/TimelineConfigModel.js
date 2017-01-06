@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var d3 = require('d3')
-var ContrailChartsConfigModel = require('contrail-charts-config-model')
+const ContrailChartsConfigModel = require('contrail-charts-config-model')
 
-var NavigationConfigModel = ContrailChartsConfigModel.extend({
+const NavigationConfigModel = ContrailChartsConfigModel.extend({
   defaults: {
     // / The chart width. If not provided will be caculated by View.
     chartWidth: undefined,
@@ -33,7 +32,7 @@ var NavigationConfigModel = ContrailChartsConfigModel.extend({
     brushHandleScaleY: 1.2,
 
     // The selection to use when first rendered [xMin%, xMax%].
-    selection: undefined
+    selection: undefined,
   }
 })
 

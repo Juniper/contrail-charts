@@ -37,7 +37,9 @@ module.exports = ContrailView.extend({
   getData: function () {
     return this.model.getData()
   },
-
+  /**
+   * First component which uses shared svg container appends svg element to container
+   */
   initSVG: function () {
     let svg = this.svgSelection()
     if (svg.empty()) {
@@ -45,6 +47,7 @@ module.exports = ContrailView.extend({
         .append('svg')
         .classed('coCharts-svg', true)
     }
+    // Each component adds its class to shared svg to indicate initialized state
     svg.classed(this.className, true)
     return svg
   },

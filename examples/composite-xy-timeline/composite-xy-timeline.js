@@ -40,10 +40,11 @@ complexChartView.setConfig({
       ]
     },
   }],
+  container: '#complexChart',
   components: [{
+    id: 'complexChartCompositeY',
     type: 'compositeY',
     config: {
-      el: '#complexChart-xyChart',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
@@ -74,7 +75,6 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y1',
-            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'b',
@@ -94,7 +94,6 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y1',
-            //tooltip: 'customTooltip',
           },
           {
             accessor: 'c',
@@ -114,7 +113,6 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y1',
-            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'd',
@@ -135,7 +133,6 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y2',
-            //tooltip: 'defaultTooltip',
           },
           {
             accessor: 'e',
@@ -156,7 +153,6 @@ complexChartView.setConfig({
               }
             ],
             axis: 'y2',
-            //tooltip: 'defaultTooltip',
           }
         ]
       },
@@ -180,7 +176,6 @@ complexChartView.setConfig({
   }, {
     type: 'timeline',
     config: {
-      el: '#complexChart-timeline',
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
@@ -200,147 +195,7 @@ complexChartView.setConfig({
         }
       }
     }
-  }, {
-    id: 'defaultTooltip',
-    type: 'tooltip',
-    config: {
-      dataConfig: [
-        {
-          accessor: 'x',
-          labelFormatter: 'Time',
-          valueFormatter: timeFormatter,
-        },
-        {
-          accessor: 'a',
-          labelFormatter: 'A',
-          valueFormatter: numberFormatter,
-        },
-        {
-          accessor: 'b',
-          labelFormatter: 'B',
-          valueFormatter: numberFormatter,
-        },
-        {
-          accessor: 'c',
-          labelFormatter: 'C',
-          valueFormatter: numberFormatter,
-        },
-        {
-          accessor: 'd',
-          labelFormatter: 'D',
-          valueFormatter: numberFormatter,
-        },
-        {
-          accessor: 'e',
-          labelFormatter: 'E',
-          valueFormatter: numberFormatter,
-        }
-      ]
-    },
-  }, {
-    id: 'customTooltip',
-    type: 'tooltip',
-    config: {
-      template: function (data) {
-        return '<div class="tooltip-content">Custom tooltip</div>'
-      }
-    }
-  }, {
-    type: 'controlPanel',
-    config: {
-      el: '#complexChart-controlPanel',
-      enabled: true,
-      buttons: [
-        {
-          name: 'filter',
-          title: 'Filter',
-          iconClass: 'fa fa-filter',
-          events: {
-            click: 'filterVariables'
-          },
-          panel: {
-            name: 'accessorData',
-            width: '350px'
-          }
-        },
-        {
-          name: 'sendMessage',
-          title: 'Send Message',
-          iconClass: 'fa fa-edit',
-          events: {
-            click: function () {
-              this._eventObject.trigger('message', {
-                componentId: 'XYChartView',
-                action: 'new',
-                messages: [
-                  {
-                    title: 'New Message',
-                    message: 'A message was added.'
-                  }
-                ]
-              })
-            }
-          }
-        },
-        {
-          name: 'clearMessage',
-          title: 'Clear Message',
-          iconClass: 'fa fa-eraser',
-          events: {
-            click: function () {
-              this._eventObject.trigger('clearMessage', 'XYChartView')
-            }
-          }
-        },
-        {
-          name: 'refresh',
-          title: 'Refresh',
-          iconClass: 'fa fa-refresh',
-          events: {
-            click: function () {
-              this._eventObject.trigger('refresh')
-            }
-          }
-        }
-      ]
-    },
-  }, {
-    type: 'message',
-    config: {
-      el: '#messageView',
-      enabled: true,
-    }
-  }, {
-    type: 'legend',
-    config: {
-      el: '#complexChart-legend',
-      sourceComponent: 'compositeY'
-    }
-  }, {
-    type: 'crosshair',
-    config: {
-      tooltip: 'defaultTooltip'
-    }
-  }, {
-    type: 'colorPicker',
-    config: {
-      el: '#complexChart-color-picker',
-      sourceComponent: 'compositeY'
-    }
   }]
 })
 complexChartView.setData(complexData)
 complexChartView.render()
-complexChartView.renderMessage({
-  componentId: 'XYChartView',
-  action: 'once',
-  messages: [{
-    level: 'info',
-    title: 'Message 1',
-    message: 'This is an example message. It will disapear after 5 seconds.'
-  }, {
-    level: 'info',
-    title: 'Message 2',
-    message: 'This is another example message.'
-  }]
-})
