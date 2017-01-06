@@ -14,7 +14,6 @@ var ScatterBubbleChartView = require('components/composite-y/ScatterBubbleChartV
 
 var CompositeYChartView = ContrailChartsView.extend({
   type: 'compositeY',
-  tagName: 'div',
   className: 'coCharts-xy-chart',
 
   initialize: function (options) {
@@ -33,11 +32,10 @@ var CompositeYChartView = ContrailChartsView.extend({
 
   // Action handler
   selectColor: function (accessorName, color) {
-    var self = this
-    var configAccessor = _.find(self.config.get('plot').y, function (a) { return a.accessor === accessorName })
+    const configAccessor = _.find(this.config.get('plot').y, (a) => a.accessor === accessorName)
     if (configAccessor) {
       configAccessor.color = color
-      self.config.trigger('change', self.config)
+      this.config.trigger('change', this.config)
     }
   },
 
@@ -54,14 +52,6 @@ var CompositeYChartView = ContrailChartsView.extend({
       drawing.model = model
     })
     self._onDataModelChange()
-  },
-
-  _onWindowResize: function () {
-    var self = this
-    var throttled = _.throttle(function () {
-      self.render()
-    }, 100)
-    $(window).resize(throttled)
   },
 
   resetParams: function () {
@@ -81,54 +71,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     stackedBar: StackedBarChartView,
     scatterBubble: ScatterBubbleChartView
   },
-
-  /**
-  * Update the drawings array based on the plot.y.
-  */
-  _updateChildDrawings: function () {
-    var self = this
-    var plot = self.config.get('plot')
-    self._drawings = []
-    if (!plot.x.axis) {
-      // Default x axis name.
-      plot.x.axis = 'x'
-    }
-    _.each(plot.y, function (accessor) {
-      if (!accessor.axis) {
-        // Default y axis name.
-        accessor.axis = 'y'
-      }
-      if (!_.has(accessor, 'enabled')) {
-        accessor.enabled = true
-      }
-      if (accessor.chart && accessor.enabled) {
-        var drawingName = accessor.axis + '-' + accessor.chart
-        var foundDrawing = _.find(self._drawings, function (drawing) { return drawing.getName() === drawingName })
-        if (!foundDrawing) {
-          // The child drawing with this name does not exist yet. Instantiate the child drawing.
-          _.each(self.possibleChildViews, function (ChildView, chartType) {
-            if (chartType === accessor.chart) {
-              // TODO: a way to provide a different model to every child
-              // TODO: pass eventObject to child?
-              foundDrawing = new ChildView({
-                model: self.model,
-                config: self.config,
-                eventObject: self._eventObject,
-                container: self._container,
-                el: self.el,
-                axisName: accessor.axis,
-                parent: self
-              })
-              self._drawings.push(foundDrawing)
-            }
-          })
-        }
-      }
-    })
-    // Order the drawings so the highest order drawings get rendered first.
-    self._drawings.sort(function (a, b) { return b.renderOrder - a.renderOrder })
-  },
-
   /**
   * Calculates the activeAccessorData that holds only the verified and enabled accessors from the 'plot' structure.
   * Params: activeAccessorData, yAxisInfoArray
@@ -206,7 +148,6 @@ var CompositeYChartView = ContrailChartsView.extend({
       }
     })
   },
-
   /**
    * Use the scales provided in the config or calculate them to fit data in view.
    * Assumes to have the range values available in the DataProvider (model) and the chart dimensions available in params.
@@ -244,20 +185,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     return foundDrawing
   },
-
-  /*
-  getDrawings: function (axisName) {
-    var self = this
-    var foundDrawings = []
-    _.each(self._drawings, function (drawing) {
-      if (_.contains(drawing.params.handledAxisNames, axisName)) {
-        foundDrawings.push(drawing)
-      }
-    })
-    return foundDrawings
-  },
-  */
-
   /**
   * Combine the axis domains (extents) from all enabled drawings.
   */
@@ -293,7 +220,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
     return domains
   },
-
   /**
   * Save all scales in the params and drawing.params structures.
   */
@@ -356,7 +282,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     let svg = self.svgSelection()
     var translate = self.params.xRange[0] - self.params.marginInner
     var rectClipPathId = 'rect-clipPath-' + self.cid
-    if (svg.empty()) {
+    if (svg.empty() || !svg.classed(this.className)) {
       svg = this.initSVG()
       svg.append('clipPath')
         .attr('id', rectClipPathId)
@@ -411,14 +337,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     }, 100)
     if (self.name === 'compositeY') {
       svg.on('mousemove', throttledShowCrosshair.bind(this))
-      svg.on('mouseout', function () {
-        // The mouse could have left the svg but entered an svg child.
-        // We still get a mouseout event in this case so still need to verify if mouse coordinates are out of bounds.
-        // var mouse = d3.mouse(this)
-        // if (mouse[0] < self.params.data.x1 || mouse[0] > self.params.data.x2 || mouse[1] < self.params.data.y1 || mouse[1] > self.params.data.y2) {
-          // self.hide()
-        // }
-      })
     }
   },
 
@@ -432,7 +350,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     var self = this
     return _.isObject(self.params.axis) && _.isObject(self.params.axis[axisName]) && !_.isUndefined(self.params.axis[axisName][axisAttributeName])
   },
-
   /**
    * Renders the axis.
    */
@@ -554,29 +471,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     })
   },
 
-  _onDataModelChange: function () {
-    this.render()
-  },
-
-  _onConfigModelChange: function () {
-    this.render()
-  },
-
-  _render: function () {
-    var self = this
-    self._updateChildDrawings()
-    self.resetParams()
-    self.calculateActiveAccessorData()
-    self.calculateDimensions()
-    self.calculateScales()
-    self.calculateColorScale()
-    self.renderSVG()
-    self.renderAxis()
-    self.renderData()
-    this.svgSelection().node().dataset['order'] = this._order
-    self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
-  },
-
   getCrosshairData: function (point) {
     const data = this.getData()
     const xScale = this.params.axis[this.params.plot.x.axis].scale
@@ -639,9 +533,7 @@ var CompositeYChartView = ContrailChartsView.extend({
 
   render: function () {
     var self = this
-    if (self.config) {
-      self._debouncedRenderFunction()
-    }
+    if (self.config) self._debouncedRenderFunction()
     return self
   },
 
@@ -649,6 +541,84 @@ var CompositeYChartView = ContrailChartsView.extend({
     _.each(this._drawings, (drawing) => {
       drawing.disableTooltip()
     })
+  },
+  /**
+  * Update the drawings array based on the plot.y.
+  */
+  _updateChildDrawings: function () {
+    var self = this
+    var plot = self.config.get('plot')
+    self._drawings = []
+    if (!plot.x.axis) {
+      // Default x axis name.
+      plot.x.axis = 'x'
+    }
+    _.each(plot.y, function (accessor) {
+      if (!accessor.axis) {
+        // Default y axis name.
+        accessor.axis = 'y'
+      }
+      if (!_.has(accessor, 'enabled')) {
+        accessor.enabled = true
+      }
+      if (accessor.chart && accessor.enabled) {
+        var drawingName = accessor.axis + '-' + accessor.chart
+        var foundDrawing = _.find(self._drawings, function (drawing) { return drawing.getName() === drawingName })
+        if (!foundDrawing) {
+          // The child drawing with this name does not exist yet. Instantiate the child drawing.
+          _.each(self.possibleChildViews, function (ChildView, chartType) {
+            if (chartType === accessor.chart) {
+              // TODO: a way to provide a different model to every child
+              // TODO: pass eventObject to child?
+              foundDrawing = new ChildView({
+                model: self.model,
+                config: self.config,
+                eventObject: self._eventObject,
+                container: self._container,
+                el: self.el,
+                axisName: accessor.axis,
+                parent: self
+              })
+              self._drawings.push(foundDrawing)
+            }
+          })
+        }
+      }
+    })
+    // Order the drawings so the highest order drawings get rendered first.
+    self._drawings.sort(function (a, b) { return b.renderOrder - a.renderOrder })
+  },
+
+  _render: function () {
+    var self = this
+    self._updateChildDrawings()
+    self.resetParams()
+    self.calculateActiveAccessorData()
+    self.calculateDimensions()
+    self.calculateScales()
+    self.calculateColorScale()
+    self.renderSVG()
+    self.renderAxis()
+    self.renderData()
+    this.svgSelection().node().dataset['order'] = this._order
+    self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
+  },
+  // Event handlers
+
+  _onDataModelChange: function () {
+    this.render()
+  },
+
+  _onConfigModelChange: function () {
+    this.render()
+  },
+
+  _onWindowResize: function () {
+    var self = this
+    var throttled = _.throttle(function () {
+      self.render()
+    }, 100)
+    $(window).resize(throttled)
   },
 })
 

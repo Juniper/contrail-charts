@@ -39,13 +39,13 @@ module.exports = ContrailView.extend({
   },
 
   initSVG: function () {
-    const svg = this.svgSelection()
+    let svg = this.svgSelection()
     if (svg.empty()) {
-      return d3.select(this._container[0])
+      svg = d3.select(this._container[0])
         .append('svg')
         .classed('coCharts-svg', true)
-        .classed(this.className, true)
     }
+    svg.classed(this.className, true)
     return svg
   },
   /**
