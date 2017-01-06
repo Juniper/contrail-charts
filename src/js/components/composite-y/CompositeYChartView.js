@@ -332,11 +332,12 @@ var CompositeYChartView = ContrailChartsView.extend({
       .attr('width', self.params.xRange[1] - self.params.xRange[0] + 2 * self.params.marginInner)
       .attr('height', self.params.yRange[0] - self.params.yRange[1] + 2 * self.params.marginInner)
 
-    const throttledShowCrosshair = _.throttle(() => {
-      const point = d3.mouse(svg.node())
+    const throttledShowCrosshair = _.throttle((point) => {
       this._eventObject.trigger('showCrosshair', this.getCrosshairData(point), point, this.getCrosshairConfig())
     }, 100)
-    if (self.config.get('crosshairEnabled')) svg.on('mousemove', throttledShowCrosshair.bind(this))
+    if (self.config.get('crosshairEnabled')) {
+      svg.on('mousemove', function () { throttledShowCrosshair(d3.mouse(this)) })
+    }
   },
 
   hasAxisConfig: function (axisName, axisAttributeName) {
