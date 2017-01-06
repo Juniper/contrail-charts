@@ -319,8 +319,6 @@ complexChartView.setConfig({
   }, {
     type: 'crosshair',
     config: {
-      el: '#complexChart-xyChart',
-      sourceComponent: 'compositeY',
       tooltip: 'defaultTooltip'
     }
   }, {
@@ -336,16 +334,13 @@ complexChartView.render()
 complexChartView.renderMessage({
   componentId: 'XYChartView',
   action: 'once',
-  messages: [
-    {
-      level: 'info',
-      title: 'Message 1',
-      message: 'This is an example message. It will disapear after 5 seconds.'
-    },
-    {
-      level: 'info',
-      title: 'Message 2',
-      message: 'This is another example message.'
-    }
-  ]
+  messages: [{
+    level: 'info',
+    title: 'Message 1',
+    message: 'This is an example message. It will disapear after 5 seconds.'
+  }, {
+    level: 'info',
+    title: 'Message 2',
+    message: 'This is another example message.'
+  }]
 })

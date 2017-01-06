@@ -31,7 +31,7 @@ for (var i = 0; i < 100; i++) {
   tsData.push({
     'T': 1475760930000 + 1000000 * i,
     'cpu_stats.cpu_one_min_avg': Math.random() * 100, // Value between 0-100
-    'cpu_stats.rss': Math.random() * (8 * 1048576 - 1024) + 1024 // Value between 8GB - 1MB
+    'cpu_stats.rss': Math.random() * (8 * 1048576 - 1024) + 1024, // Value between 8GB - 1MB
   })
 }
 
@@ -92,8 +92,7 @@ cpuMemChartView.setConfig({
             color: '#6baed6',
             axis: 'y1',
             tooltip: 'defaultTooltip'
-          },
-          {
+          }, {
             accessor: 'cpu_stats.rss',
             label: 'Memory Usage',
             enabled: true,
@@ -148,8 +147,7 @@ cpuMemChartView.setConfig({
             chart: 'stackedBar',
             color: '#6baed6',
             axis: 'y1'
-          },
-          {
+          }, {
             accessor: 'cpu_stats.rss',
             labelFormatter: 'Memory',
             chart: 'line',
@@ -183,13 +181,11 @@ cpuMemChartView.setConfig({
           accessor: 'T',
           labelFormatter: 'Time',
           valueFormatter: timeFormatter
-        },
-        {
+        }, {
           accessor: 'cpu_stats.cpu_one_min_avg',
           labelFormatter: 'CPU',
           valueFormatter: cpuFormatter
-        },
-        {
+        }, {
           accessor: 'cpu_stats.rss',
           labelFormatter: 'Memory',
           valueFormatter: memFormatter
@@ -224,7 +220,6 @@ cpuMemChartView.setConfig({
   }, {
     type: 'crosshair',
     config: {
-      sourceComponent: 'compositeY'
     }
   }, {
     type: 'colorPicker',
@@ -237,11 +232,9 @@ cpuMemChartView.setData(tsData)
 cpuMemChartView.renderMessage({
   componentId: 'XYChartView',
   action: 'once',
-  messages: [
-    {
-      level: 'info',
-      title: '',
-      message: 'Loading...'
-    }
-  ]
+  messages: [{
+    level: 'info',
+    title: '',
+    message: 'Loading ...'
+  }]
 })
