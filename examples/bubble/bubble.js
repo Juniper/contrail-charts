@@ -11,9 +11,11 @@ var complexData = []
 for (var i = 0; i < 100; i++) {
   complexData.push({
     x: 1475760930000 + 1000000 * i,
-    a: (Math.random() - 0.5) * 50,
-    y: Math.random() * 100,
-    r: Math.random() * 10
+    c: (Math.random() - 0.5) * 50,
+    s: Math.random() * 100,
+    t: Math.random() * 100,
+    r: Math.random() * 10,
+    nav: (Math.random() - 0.5) * 50
   })
 }
 
@@ -30,7 +32,7 @@ var chartConfig = {
         },
         y: [
           {
-            accessor: 'a',
+            accessor: 'c',
             chart: 'scatterBubble',
             sizeAccessor: 'r',
             sizeAxis: 'rAxis',
@@ -38,11 +40,19 @@ var chartConfig = {
             axis: 'y1'
           },
           {
-            accessor: 'y',
+            accessor: 's',
             chart: 'scatterBubble',
-            sizeAccessor: 'r',
+            sizeAccessor: 's',
             sizeAxis: 'rAxis',
             shape: 'square',
+            axis: 'y2'
+          },
+          {
+            accessor: 't',
+            chart: 'scatterBubble',
+            sizeAccessor: 's',
+            sizeAxis: 'rAxis',
+            shape: 'triangle',
             axis: 'y2'
           }
         ]
@@ -62,46 +72,19 @@ var chartConfig = {
           labelMargin: 15
         }
       },
-      shapeEnterFunctions: {
-        // Override the way circle shape is drawn
-        circle: function (d, selection) {
-          return selection.append('circle')
-            .attr('class', d.className)
-            .attr('cx', d.x)
-            .attr('cy', d.y)
-            .attr('fill', d.color)
-            .attr('r', 0)
-        },
-        // New custom shape
-        square: function (d, selection) {
-          return selection.append('rect')
-            .attr('class', d.className)
-            .attr('x', d.x)
-            .attr('y', d.y)
-            .attr('fill', d.color)
-            .attr('width', 0)
-            .attr('height', 0)
-        }
-      },
-      shapeEditFunctions: {
-        // Override the way circle shape is drawn
-        circle: function (d, selection) {
-          selection.transition().ease(d3.easeLinear).duration(300)
-            .attr('cx', d.x)
-            .attr('cy', d.y)
-            .attr('fill', '#ff0000')
-            .attr('r', d.r)
-        },
-        // New custom shape
-        square: function (d, selection) {
-          selection.transition().ease(d3.easeLinear).duration(300)
-            .attr('x', d.x)
-            .attr('y', d.y)
-            .attr('fill', '#00ff00')
-            .attr('width', d.r)
-            .attr('height', d.r)
-        }
-      }
+      // Sample shape function for shape other than circle, square and triangle
+      // shapeEnterFunctions: {
+      //   // New custom shape
+      //   diamond: function (d, selection) {
+      //     //create and return diamond shape.
+      //   }
+      // },
+      // shapeEditFunctions: {
+      //   // Override the way diamond shape is drawn
+      //   diamond: function (d, selection) {
+      //   // Add any transition or update on shape.
+      //   }
+      // }
     }
   }, {
     type: 'tooltip',
@@ -116,16 +99,23 @@ var chartConfig = {
           valueFormatter: timeFormatter
         },
         {
-          accessor: 'a',
+          accessor: 'c',
           labelFormatter: function (key) {
-            return 'A'
+            return 'C'
           },
           valueFormatter: numberFormatter
         },
         {
-          accessor: 'y',
+          accessor: 's',
           labelFormatter: function (key) {
-            return 'Y'
+            return 'S'
+          },
+          valueFormatter: numberFormatter
+        },
+        {
+          accessor: 't',
+          labelFormatter: function (key) {
+            return 'T'
           },
           valueFormatter: numberFormatter
         },
@@ -150,7 +140,7 @@ var chartConfig = {
         },
         y: [
           {
-            accessor: 'a',
+            accessor: 'nav',
             chart: 'line'
           }
         ]
