@@ -122,6 +122,8 @@ var ScatterBubbleChartView = XYChartSubView.extend({
 
   _shapeEditTriangle: function (d, selection) {
     selection.transition().ease(d3.easeLinear).duration(300)
+      .attr('fill', d.color)
+      .attr('transform', 'translate(' + d.x + ',' + d.y + ')')
       .attr('d', d3.symbol().type(d3.symbolTriangle).size(d.r))
   },
 
