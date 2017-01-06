@@ -22,10 +22,11 @@ var CompositeYChartView = ContrailChartsView.extend({
     // TODO: Every model change will trigger a redraw. This might not be desired - dedicated redraw event?
     // / View params hold values from the config and computed values.
     self._debouncedRenderFunction = _.bind(_.debounce(self._render, 10), self)
-    self.listenTo(self.model, 'change', self._onDataModelChange)
-    self.listenTo(self.config, 'change', self._onConfigModelChange)
     self.name = options.name || 'compositeY'
     self._onWindowResize()
+
+    self.listenTo(self.model, 'change', self._onDataModelChange)
+    self.listenTo(self.config, 'change', self._onConfigModelChange)
     self.listenTo(self._eventObject, 'selectColor', self.selectColor)
     self.listenTo(self._eventObject, 'refresh', self.refresh)
   },
@@ -335,9 +336,7 @@ var CompositeYChartView = ContrailChartsView.extend({
       const point = d3.mouse(svg.node())
       this._eventObject.trigger('showCrosshair', this.getCrosshairData(point), point, this.getCrosshairConfig())
     }, 100)
-    if (self.name === 'compositeY') {
-      svg.on('mousemove', throttledShowCrosshair.bind(this))
-    }
+    if (self.config.get('crosshairEnabled')) svg.on('mousemove', throttledShowCrosshair.bind(this))
   },
 
   hasAxisConfig: function (axisName, axisAttributeName) {
@@ -536,12 +535,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     if (self.config) self._debouncedRenderFunction()
     return self
   },
-
-  disableTooltip: function () {
-    _.each(this._drawings, (drawing) => {
-      drawing.disableTooltip()
-    })
-  },
   /**
   * Update the drawings array based on the plot.y.
   */
@@ -603,6 +596,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     this.svgSelection().node().dataset['order'] = this._order
     self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
   },
+
   // Event handlers
 
   _onDataModelChange: function () {

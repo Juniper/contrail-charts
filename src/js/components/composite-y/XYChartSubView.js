@@ -39,14 +39,6 @@ const XYChartSubView = ContrailChartsView.extend({
     const yScale = this.getYScale()
     return yScale(dataElem[yAccessor])
   },
-
-  enableTooltip: function () {
-    this._tooltipEnabled = true
-  },
-
-  disableTooltip: function () {
-    this._tooltipEnabled = false
-  },
 })
 
 module.exports = XYChartSubView

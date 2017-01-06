@@ -34,13 +34,11 @@ var StackedBarChartView = XYChartSubView.extend({
     self.params.handledAxisNames = _.keys(domains)
     return domains
   },
-
   /**
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
    */
   calculateScales: function () {},
-
   /**
   * Override for calculating the Y coordinate of a stacked elem.
   * Used by CrosshairView render data preparation.
@@ -60,7 +58,6 @@ var StackedBarChartView = XYChartSubView.extend({
     })
     return yScale(stackedY + dataElem[yAccessor])
   },
-
   /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
@@ -130,8 +127,10 @@ var StackedBarChartView = XYChartSubView.extend({
     return self
   },
 
+  // Event handlers
+
   _onMouseover: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       const pos = this.$el.offset()
       const tooltipOffset = {
         left: d.x + pos.left,
@@ -143,7 +142,7 @@ var StackedBarChartView = XYChartSubView.extend({
   },
 
   _onMouseout: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
     }
     d3.select(d3.event.currentTarget).classed('active', false)

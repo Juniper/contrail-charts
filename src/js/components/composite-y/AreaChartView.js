@@ -122,7 +122,7 @@ var AreaChartView = XYChartSubView.extend({
   },
 
   _onMouseover: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       const pos = d3.mouse(this)
       const offset = this.$el.offset()
       const dataItem = this.getTooltipData(d.data, pos[0])
@@ -136,7 +136,7 @@ var AreaChartView = XYChartSubView.extend({
   },
 
   _onMouseout: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
     }
     d3.select(d3.event.currentTarget).classed('active', false)

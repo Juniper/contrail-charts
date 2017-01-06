@@ -9,7 +9,6 @@ var ScatterBubbleChartView = XYChartSubView.extend({
   className: 'scatter-bubble-chart',
   chartType: 'scatterBubble',
   renderOrder: 50,
-
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
   * Assumes the params.activeAccessorData for this child view is filled by the parent with the relevent yAccessors for this child only.
@@ -38,20 +37,17 @@ var ScatterBubbleChartView = XYChartSubView.extend({
     self.params.handledAxisNames = _.keys(domains)
     return domains
   },
-
   /**
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
    */
   calculateScales: function () {},
-
   /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
   renderSVG: function (enteringSelection) {
     enteringSelection.append('g').attr('class', 'bubbles')
   },
-
   /**
   * Shape drawing functions. The draw on the entering and edit selections. One drawing function per accessor shape.
   */
@@ -131,7 +127,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
   },
 
   _onMouseover: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       const offset = {
         left: d.x + d.r * 0.71,
         top: d.y - d.r * 0.71
@@ -141,7 +137,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
   },
 
   _onMouseout: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
     }
     d3.select(d3.event.currentTarget).classed('active', false)

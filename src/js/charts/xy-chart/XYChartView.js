@@ -130,8 +130,11 @@ var XYChartView = ContrailChartsView.extend({
       dataModel = self.getComponentByType('timeline').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
+    if (self._isEnabledComponent('tooltip')) {
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').config.toggleComponent('tooltip', true)
+    }
     if (self._isEnabledComponent('crosshair')) {
-      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').disableTooltip()
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').config.toggleComponent('crosshair', true)
     }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.

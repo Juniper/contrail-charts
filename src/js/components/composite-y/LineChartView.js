@@ -33,13 +33,11 @@ var LineChartView = XYChartSubView.extend({
     self.params.handledAxisNames = _.keys(domains)
     return domains
   },
-
   /**
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
    */
   calculateScales: function () {},
-
   /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
@@ -115,8 +113,10 @@ var LineChartView = XYChartSubView.extend({
     return self
   },
 
+  // Event handlers
+
   _onMouseover: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       const pos = d3.mouse(d3.event.currentTarget)
       const offset = this.$el.offset()
       const dataItem = this.getTooltipData(d.data, pos[0])
@@ -131,7 +131,7 @@ var LineChartView = XYChartSubView.extend({
   },
 
   _onMouseout: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
     }
     d3.select(d3.event.currentTarget).classed('active', false)

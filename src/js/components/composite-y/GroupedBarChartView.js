@@ -30,7 +30,6 @@ var BarChartView = XYChartSubView.extend({
     self.params.handledAxisNames = _.keys(domains)
     return domains
   },
-
   /**
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
@@ -56,7 +55,6 @@ var BarChartView = XYChartSubView.extend({
     var zeroValue = yScale.domain()[0]
     return yScale(zeroValue + dataElem[yAccessor])
   },
-
   /**
    * Renders an empty chart.
    * Changes chart dimensions if it already exists.
@@ -131,15 +129,17 @@ var BarChartView = XYChartSubView.extend({
     return self
   },
 
+  // Event handlers
+
   _onMouseover: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       this._eventObject.trigger('showTooltip', {left: d.x, top: d.y}, d.data, d.accessor.tooltip)
     }
     d3.select(d3.event.currentTarget).classed('active', true)
   },
 
   _onMouseout: function (d) {
-    if (this._tooltipEnabled) {
+    if (this.config.get('tooltipEnabled')) {
       this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
     }
     d3.select(d3.event.currentTarget).classed('active', false)
