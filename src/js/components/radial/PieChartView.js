@@ -50,7 +50,7 @@ class Self extends ContrailChartsView.extend({
       .attr('width', width)
       .attr('height', height)
     const group = svg.append('g')
-      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+      .attr('transform', `translate(${width / 2}, ${height / 2})`)
 
     const arcs = group.selectAll('arc')
       .data(pie)

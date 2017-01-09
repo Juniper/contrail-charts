@@ -122,7 +122,7 @@ var LineChartView = XYChartSubView.extend({
       const dataItem = this.getTooltipData(d.data, pos[0])
       const tooltipOffset = {
         top: offset.top + pos[1],
-        left: offset.left + pos[0] - this.getXScale.range()[0]
+        left: offset.left + pos[0] - this.getXScale().range()[0]
       }
 
       this._eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)

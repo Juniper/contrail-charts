@@ -40,42 +40,21 @@ module.exports = ContrailView.extend({
   /**
    * First component which uses shared svg container appends svg element to container
    */
-  initSVG: function () {
+  initSVG: function (sort) {
     let svg = this.svgSelection()
-    let parentD3Container = d3.select(this._container[0])
     if (svg.empty()) {
-      // Shared SVG container doesn't exist. But other containers may exist. Insert in right position.
-      if (this._container.is(':empty')) {
-        svg = parentD3Container.append('div')
-          .classed('coCharts-shared-svg', true)
-          .attr('data-order', this._order)
-          .append('svg')
-          .classed('coCharts-svg', true)
-      } else {
-        // Todo instead of re-ordering insert it after the right sibling
-        svg = parentD3Container.append('div')
-          .classed('coCharts-shared-svg', true)
-          .attr('data-order', this._order)
-          .append('svg')
-          .classed('coCharts-svg', true)
-        parentD3Container.selectAll(':scope > [data-order]')
-          .datum(function () { return this.dataset.order })
-          .sort()
-      }
-      // Save the order in parent container.
-      this._container._shared_svg_order = this._order
-    }
-    // Shared SVG already exist. Check the existing order
-    // The order will be always that of the smaller one
-    if (this._container._shared_svg_order && this._container._shared_svg_order > this._order) {
-      parentD3Container.select(':scope > .coCharts-shared-svg')
+      svg = d3.select(this._container[0])
+        .append('svg')
+        .classed('coCharts-svg', true)
         .attr('data-order', this._order)
-      // Update the order in parent container.
-      this._container._shared_svg_order = this._order
-      // Re-order now
-      parentD3Container.selectAll(':scope > [data-order]')
+    }
+    if (sort && !_.isNil(this._order)) {
+      svg.attr('data-order', this._order)
+      d3.select(this._container[0])
+        .selectAll(':scope > [data-order]')
         .datum(function () { return this.dataset.order })
         .sort()
+        .datum(null)
     }
     // Each component adds its class to shared svg to indicate initialized state
     svg.classed(this.className, true)
@@ -85,7 +64,7 @@ module.exports = ContrailView.extend({
   * @return Object d3 Selection of svg element shared between components in this container
   */
   svgSelection: function () {
-    return d3.select(this._container[0]).select(':scope > .coCharts-shared-svg svg')
+    return d3.select(this._container[0]).select(':scope > svg')
   },
 
   render: function (content) {

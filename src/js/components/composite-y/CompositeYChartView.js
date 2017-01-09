@@ -284,7 +284,7 @@ var CompositeYChartView = ContrailChartsView.extend({
     var translate = self.params.xRange[0] - self.params.marginInner
     var rectClipPathId = 'rect-clipPath-' + self.cid
     if (svg.empty() || !svg.classed(this.className)) {
-      svg = this.initSVG()
+      svg = this.initSVG(true)
       svg.append('clipPath')
         .attr('id', rectClipPathId)
         .append('rect')
@@ -594,7 +594,6 @@ var CompositeYChartView = ContrailChartsView.extend({
     self.renderSVG()
     self.renderAxis()
     self.renderData()
-    this.svgSelection().node().dataset['order'] = this._order
     self._eventObject.trigger('rendered:' + self.name, self.params, self.config, self)
   },
 
