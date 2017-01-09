@@ -110,6 +110,7 @@ button:focus {
 
 .coCharts-tooltip-view {
   position: absolute;
+  pointer-events: none;
 	.tooltip-content {
 		padding: 10px;
 		border: 1px solid #aaa;
