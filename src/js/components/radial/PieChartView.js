@@ -16,6 +16,7 @@ class Self extends ContrailChartsView.extend({
 }) {
   constructor (options = {}) {
     super(options)
+    this._highlightRadius = 10
     this.listenTo(this.model, 'change', this._onDataModelChange)
     this.listenTo(this.config, 'change', this._onConfigModelChange)
   }
@@ -50,18 +51,20 @@ class Self extends ContrailChartsView.extend({
       .attr('width', width)
       .attr('height', height)
     const group = svg.append('g')
+      .classed('pie-chart', true)
       .attr('transform', `translate(${width / 2}, ${height / 2})`)
 
-    const arcs = group.selectAll('arc')
+    group.selectAll('arc')
       .data(pie)
-      .enter().append('g')
-      .attr('class', 'arc')
-      .on('mouseover', this._onHover.bind(this))
-
-    arcs.append('path')
+      .enter().append('path')
+      .classed('arc', true)
       .attr('d', arc)
       .style('fill', (d) => this.config.getColor(serieConfig.getLabel(d.data)))
+      .on('mouseover', this._onHover.bind(this))
+      .on('mouseout', this._onMouseout.bind(this))
   }
+
+  // Event handlers
 
   _onDataModelChange () {
     this.render()
@@ -71,21 +74,37 @@ class Self extends ContrailChartsView.extend({
     this.render()
   }
 
-  _onHover (e) {
+  _onHover (sector) {
     // TODO consider case with missing width config in order to occupy all available space
+    const serieConfig = this.config.get('serie')
     const width = this.config.get('chartWidth')
     const height = this.config.get('chartHeight')
-    const radius = this.config.getInnerRadius()
+    const outerRadius = this.config.get('radius')
+    const innerRadius = this.config.getInnerRadius()
     // const valueAccessor = this.config.get('serie').getValue
     const chartOffset = this.svgSelection().node().getBoundingClientRect()
     const tooltipOffset = {
-      left: chartOffset.left + width / 2 - radius * 0.707,
-      top: chartOffset.top + height / 2 - radius * 0.707,
-      width: radius * 0.707 * 2,
-      height: radius * 0.707 * 2,
+      left: chartOffset.left + width / 2 - innerRadius * 0.707,
+      top: chartOffset.top + height / 2 - innerRadius * 0.707,
+      width: innerRadius * 0.707 * 2,
+      height: innerRadius * 0.707 * 2,
     }
-    this._eventObject.trigger('showTooltip', tooltipOffset, e.data)
-    d3.select(d3.event.currentTarget).classed('active', true)
+    const arc = d3.arc(sector)
+      .innerRadius(outerRadius)
+      .outerRadius(outerRadius + this._highlightRadius)
+      .startAngle(sector.startAngle)
+      .endAngle(sector.endAngle)
+    this.svgSelection().select('.pie-chart')
+      .append('path')
+      .classed('arc', true)
+      .classed('highlight', true)
+      .attr('d', arc)
+      .style('fill', this.config.getColor(serieConfig.getLabel(sector.data)))
+    this._eventObject.trigger('showTooltip', tooltipOffset, sector.data)
+  }
+
+  _onMouseout (e) {
+    this.svgSelection().select('.highlight').remove()
   }
 }
 

@@ -286,7 +286,10 @@ button:focus {
 }
 
 .pie-chart {
-  .arc path {
+  path.arc {
     stroke: white;
+  }
+  path.highlight  {
+    opacity: 0.3;
   }
 }
