@@ -122,7 +122,7 @@ var ChartView = ContrailChartsView.extend({
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject
+      eventObject: self._eventObject
     })
     var component = new components[type].View(viewOptions)
     self._components.push(component)

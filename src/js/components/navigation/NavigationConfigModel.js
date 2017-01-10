@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
+var _ = require('lodash')
 var d3 = require('d3')
 var ContrailChartsConfigModel = require('contrail-charts-config-model')
 
@@ -15,6 +16,7 @@ var NavigationConfigModel = ContrailChartsConfigModel.extend({
     // / The chart height. If not provided will be caculated by View.
     chartHeight: undefined,
 
+    colorScale: d3.scaleOrdinal(d3.schemeCategory20),
     // / Duration of chart transitions.
     duration: 300,
 
@@ -35,7 +37,15 @@ var NavigationConfigModel = ContrailChartsConfigModel.extend({
 
     // The selection to use when first rendered [xMin%, xMax%].
     selection: undefined
-  }
+  },
+
+  getColor: function (accessor) {
+    if (_.has(accessor, 'color')) {
+      return accessor.color
+    } else {
+      return this.attributes.colorScale(accessor.accessor)
+    }
+  },
 })
 
 module.exports = NavigationConfigModel

@@ -4,20 +4,22 @@
 var $ = require('jquery')
 var _ = require('lodash')
 var d3 = require('d3')
-var Events = require('contrail-charts-events')
 var ContrailChartsView = require('contrail-charts-view')
 var DataProvider = require('handlers/DataProvider')
 var CompositeYChartView = require('components/composite-y/CompositeYChartView')
 
 var NavigationView = ContrailChartsView.extend({
   type: 'navigation',
-  tagName: 'div',
   className: 'navigation-view',
+
+  events: {
+    'click .prev>a': 'prevChunkSelected',
+    'click .next>a': 'nextChunkSelected'
+  },
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(self, options)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self._isModelChanged = false
     self.brush = null
@@ -29,11 +31,18 @@ var NavigationView = ContrailChartsView.extend({
       if (self.brush) {
         var marginInner = self.params.marginInner
         self.brush = self.brush.extent([
-            [self.params.xRange[0] - marginInner, self.params.yRange[1] - marginInner],
-            [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
+          [self.params.xRange[0] - marginInner, self.params.yRange[1] - marginInner],
+          [self.params.xRange[1] + marginInner, self.params.yRange[0] + marginInner]])
         self.svgSelection().select('g.brush').call(self.brush)
       }
     })
+    self.listenTo(self.model, 'change', self.render)
+  },
+  /**
+   * Override ContrailChartsView.svgSelection which uses container's shared svg
+   */
+  svgSelection: function () {
+    return d3.select(this.el).select('svg')
   },
 
   changeModel: function (model) {
@@ -42,11 +51,6 @@ var NavigationView = ContrailChartsView.extend({
     self.model = model
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.listenTo(self.model, 'change', self._onModelChange)
-  },
-
-  events: {
-    'click .prev>a': 'prevChunkSelected',
-    'click .next>a': 'nextChunkSelected'
   },
 
   _onModelChange: function () {
@@ -138,12 +142,13 @@ var NavigationView = ContrailChartsView.extend({
     self.compositeYChartView = new CompositeYChartView({
       model: self.model,
       config: self.config,
-      el: self.el,
+      container: self.$el,
+      // TODO id should be unique per component
       id: self.id,
-      eventObject: self.eventObject,
+      eventObject: self._eventObject,
       name: 'xyChartNavigation'
     })
-    self.listenTo(self.eventObject, 'rendered:xyChartNavigation', self._chartRendered)
+    self.listenTo(self._eventObject, 'rendered:xyChartNavigation', self._chartRendered)
     self.compositeYChartView.render()
   },
 
@@ -168,7 +173,7 @@ var NavigationView = ContrailChartsView.extend({
     var self = this
     var x = self.params.plot.x.accessor
     self._focusDataProvider.setRangeAndFilterData(focusDomain)
-    self.eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
+    self._eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
   },
 
   _handleBrushSelection: function (dataWindow) {
@@ -266,6 +271,7 @@ var NavigationView = ContrailChartsView.extend({
     if (!self.compositeYChartView) {
       // One time compositeYChartView initialization.
       self.initializeAndRenderCompositeYChartView()
+      ContrailChartsView.prototype.render.call(self)
     // From this moment the compositeYChartView is independent from NavigationView. It will react to config / model changes on it's own.
     }
     return self

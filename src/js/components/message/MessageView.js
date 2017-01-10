@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
-var _ = require('lodash')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+const _ = require('lodash')
+const d3 = require('d3')
+const ContrailChartsView = require('contrail-charts-view')
+const _template = require('./message.html')
 
 var MessageView = ContrailChartsView.extend({
   type: 'message',
@@ -12,71 +12,37 @@ var MessageView = ContrailChartsView.extend({
   className: 'coCharts-message-view',
 
   initialize: function (options) {
-    var self = this
-    self.config = options.config
-    self.eventObject = options.eventObject || _.extend({}, Events)
-    self._registerListeners()
+    ContrailChartsView.prototype.initialize.call(this, options)
+    this.render()
+    this.listenTo(this._eventObject, 'message', this.show)
+    this.listenTo(this._eventObject, 'clearMessage', this.clear)
   },
 
-  _registerListeners: function () {
-    this.listenTo(this.eventObject, 'message', this.renderMessage)
-    this.listenTo(this.eventObject, 'clearMessage', this.clearMessage)
-  },
-
-  render: function () {
-    var self = this
-    self.resetParams()
-    self.$el.addClass(self.className)
-  },
-
-  renderMessage: function (msgObj) {
-    var self = this
-    var timerIndex = 0
+  show: function (data) {
+    let msgObj = _.extend({}, data)
     msgObj.componentId = msgObj.componentId || 'default'
     msgObj.action = msgObj.action || 'update' // 'new', 'once', 'update'. future: 'dismiss', 'block'
     if (msgObj.action === 'update') {
       // update message so remove any previous messages from this component
-      self.clearMessage(msgObj.componentId)
-    } else if (msgObj.action === 'once') {
-      timerIndex = self._initializeTimer()
+      this.clear(msgObj.componentId)
     }
-    _.each(msgObj.messages, function (msg) {
-      var msgDiv = $(self.config.get('generateMessageHTML')(msg))
-      msgDiv.addClass('message-row')
-      msgDiv.attr('data-component-id', msgObj.componentId)
-      if (msgObj.action === 'once') {
-        msgDiv.attr('data-timer-index', timerIndex)
-      }
-      self.$el.append(msgDiv)
+    this.$el.html(_template(msgObj))
+
+    d3.selectAll('[data-action="once"')
+      .style('opacity', 1)
+      .transition()
+      .duration(5000)
+      .style('opacity', 1e-06)
+      .remove()
+  },
+
+  clear: function (componentId) {
+    var messageSelector = '.message-row[data-component-id="' + componentId + '"]'
+    this.$(messageSelector).fadeOut('fast', () => {
+      this.$(messageSelector).remove()
     })
   },
 
-  clearMessage: function (componentId) {
-    var self = this
-    var messageSelector = '.message-row[data-component-id="' + componentId + '"]'
-    self._clearMessageForSelector(messageSelector)
-  },
-
-  _initializeTimer: function () {
-    var self = this
-    if (!self.params.timerIndex) {
-      self.params.timerIndex = 0
-    }
-    self.params.timerIndex++
-    _.delay(_.bind(self._clearMessageForTimerIndex, self), 5000, self.params.timerIndex)
-    return self.params.timerIndex
-  },
-
-  _clearMessageForTimerIndex: function (timerIndex) {
-    var self = this
-    var messageSelector = '.message-row[data-timer-index="' + timerIndex + '"]'
-    self._clearMessageForSelector(messageSelector)
-  },
-
-  _clearMessageForSelector: function (messageSelector) {
-    var self = this
-    self.$el.find(messageSelector).fadeOut('fast', function () { self.$el.find(messageSelector).remove() })
-  }
 })
 
 module.exports = MessageView

@@ -46,10 +46,10 @@ define([ // eslint-disable-line no-undef
         }
       }
     }],
+    container: '#complexChart',
     components: [{
       type: 'compositeY',
       config: {
-        el: '#complexChart-xyChart',
         marginInner: 10,
         marginLeft: 80,
         marginRight: 80,
@@ -119,7 +119,6 @@ define([ // eslint-disable-line no-undef
     }, {
       type: 'navigation',
       config: {
-        el: '#complexChart-navigation',
         marginInner: 10,
         marginLeft: 80,
         marginRight: 80,
@@ -174,7 +173,6 @@ define([ // eslint-disable-line no-undef
     }, {
       type: 'controlPanel',
       config: {
-        el: '#complexChart-controlPanel',
         enabled: true,
         buttons: [
           {
@@ -206,10 +204,10 @@ define([ // eslint-disable-line no-undef
   var simpleChartView = new coCharts.charts.XYChartView()
   simpleChartView.setData(simpleData)
   simpleChartView.setConfig({
+    container: '#simpleChart',
     components: [{
       type: 'compositeY',
       config: {
-        el: '#simpleChart',
         plot: {
           x: {
             accessor: 'x'

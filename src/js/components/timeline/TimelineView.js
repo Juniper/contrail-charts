@@ -1,23 +1,19 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var $ = require('jquery')
-var _ = require('lodash')
-var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
-var DataProvider = require('handlers/DataProvider')
-var CompositeYChartView = require('components/composite-y/CompositeYChartView')
+const $ = require('jquery')
+const _ = require('lodash')
+const d3 = require('d3')
+const ContrailChartsView = require('contrail-charts-view')
+const DataProvider = require('handlers/DataProvider')
 
 var TimelineView = ContrailChartsView.extend({
   type: 'timeline',
-  tagName: 'div',
   className: 'timeline-view',
 
   initialize: function (options) {
     var self = this
-    self.config = options.config
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(self, options)
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.brush = null
     self.throttledTriggerWindowChangedEvent = _.bind(_.throttle(self._triggerWindowChangedEvent, 100), self)
@@ -34,85 +30,15 @@ var TimelineView = ContrailChartsView.extend({
     self._focusDataProvider = new DataProvider({parentDataModel: self.model})
     self.listenTo(self.model, 'change', self._onModelChange)
   },
-
-  _onModelChange: function () {
-    this.render()
-    this._handleModelChange()
-  },
-
-  _handleModelChange: function () {
-    var self = this
-    var xScale = self.params.axis[self.params.plot.x.axis].scale
-    if (self.brush) {
-      self.brush = self.brush.extent([
-          [self.params.xRange[0], self.params.yRange[1] + 10],
-          [self.params.xRange[1], self.params.yRange[0] - 10]])
-      self.svgSelection().select('g.brush').call(self.brush)
-    }
-    if (_.isArray(self.params.selection)) {
-      if (!self.params.selection[0]) {
-        self.params.selection[0] = 0
-      }
-      if (!self.params.selection[1]) {
-        self.params.selection[1] = 100
-      }
-      var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
-      var xMin = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[0] / 100) + xScale.range()[0]
-      var xMax = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[1] / 100) + xScale.range()[0]
-      self.brush.move(brushGroup, [xMin, xMax])
-    }
+  /**
+   * Override ContrailChartsView.svgSelection which uses container's shared svg
+   */
+  svgSelection: function () {
+    return d3.select(this.el).select('svg')
   },
 
   getFocusDataProvider: function () {
     return this._focusDataProvider
-  },
-
-  removeBrush: function () {
-    var self = this
-    var svg = self.svgSelection()
-    svg.select('g.brush').remove()
-    self.brush = null
-    self.config.unset('focusDomain', { silent: true })
-    var newFocusDomain = {}
-    self._focusDataProvider.setRangeAndFilterData(newFocusDomain)
-  },
-
-  getFocusDataProvider: function () {
-    return this._focusDataProvider
-  },
-
-  _triggerWindowChangedEvent: function (focusDomain) {
-    var self = this
-    var x = self.params.plot.x.accessor
-    self._focusDataProvider.setRangeAndFilterData(focusDomain)
-    self.eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
-  },
-
-  _handleBrushSelection: function (dataWindow) {
-    var self = this
-    var x = self.params.plot.x.accessor
-    var xScale = self.params.axis[self.params.plot.x.axis].scale
-    var brushHandleHeight = self.params.brushHandleHeight
-    var brushHandleScaleX = self.params.brushHandleScaleX
-    var brushHandleScaleY = self.params.brushHandleScaleY
-    var brushHandleCenter = self.params.yRange[1] + (self.params.yRange[0] - self.params.yRange[1]) / 2
-    var svg = self.svgSelection()
-    var xMin = xScale.invert(dataWindow[0])
-    var xMax = xScale.invert(dataWindow[1])
-    if (_.isDate(xMin)) {
-      xMin = xMin.getTime()
-    }
-    if (_.isDate(xMax)) {
-      xMax = xMax.getTime()
-    }
-    var focusDomain = {}
-    focusDomain[x] = [xMin, xMax]
-    self.config.set({ focusDomain: focusDomain }, { silent: true })
-    self.throttledTriggerWindowChangedEvent(focusDomain)
-    var gHandles = svg.select('g.brush').selectAll('.handle--custom')
-    gHandles
-      .classed('hide', false)
-      .attr('transform', function (d, i) { return 'translate(' + dataWindow[i] + ',' + brushHandleCenter + ') scale(' + brushHandleScaleX + ',' + brushHandleScaleY + ')' })
   },
 
   hasAxisConfig: function (axisName, axisAttributeName) {
@@ -125,7 +51,6 @@ var TimelineView = ContrailChartsView.extend({
     var self = this
     return _.isObject(self.params.axis) && _.isObject(self.params.axis[axisName]) && !_.isUndefined(self.params.axis[axisName][axisAttributeName])
   },
-
   /**
   * This needs to be called after compositeYChartView is rendered because we need the params computed.
   */
@@ -182,10 +107,20 @@ var TimelineView = ContrailChartsView.extend({
     }
   },
 
-  calculateDimmensions: function () {
+  removeBrush: function () {
+    var self = this
+    var svg = self.svgSelection()
+    svg.select('g.brush').remove()
+    self.brush = null
+    self.config.unset('focusDomain', { silent: true })
+    var newFocusDomain = {}
+    self._focusDataProvider.setRangeAndFilterData(newFocusDomain)
+  },
+
+  calculateDimensions: function () {
     var self = this
     if (!self.params.chartWidth) {
-      self.params.chartWidth = self.$el.width()
+      self.params.chartWidth = self._container.width()
     }
     if (self.params.chartWidthDelta) {
       self.params.chartWidth += self.params.chartWidthDelta
@@ -240,9 +175,9 @@ var TimelineView = ContrailChartsView.extend({
 
   renderSVG: function () {
     var self = this
-    var svgs = d3.select(self.el).select('svg')
-    if (svgs.empty()) {
-      var svg = d3.select(self.el).append('svg').attr('class', 'coCharts-svg')
+    let svg = d3.select(self.el).select('svg')
+    if (svg.empty()) {
+      svg = d3.select(self.el).append('svg').attr('class', 'coCharts-svg')
       svg.append('g')
         .attr('class', 'axis x-axis')
         .attr('transform', 'translate(0,' + self.params.yRange[1] + ')')
@@ -291,7 +226,7 @@ var TimelineView = ContrailChartsView.extend({
     xAxisLabelSvg.exit().remove()
   },
 
-  renderBar: function() {
+  renderBar: function () {
     var self = this
     var axisName = self.params.plot.x.axis
     var xScale = self.params.axis[axisName].scale
@@ -307,23 +242,85 @@ var TimelineView = ContrailChartsView.extend({
       .attr('height', 1)
       .merge(svgBars).transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('x', xScale.range()[0])
-      .attr('y', function(d) { return d.c })
+      .attr('y', function (d) { return d.c })
       .attr('width', xScale.range()[1] - xScale.range()[0])
-      .attr('height', function(d) { return d.h })
+      .attr('height', function (d) { return d.h })
     svgBars.exit().remove()
   },
 
   render: function () {
     var self = this
     self.resetParams()
-    self.calculateDimmensions()
+    self.calculateDimensions()
     self.calculateScales()
     self.renderSVG()
     self.renderAxis()
     self.renderBar()
     self.renderBrush()
+    ContrailChartsView.prototype.render.call(self)
     return self
-  }
+  },
+
+  _triggerWindowChangedEvent: function (focusDomain) {
+    var self = this
+    var x = self.params.plot.x.accessor
+    self._focusDataProvider.setRangeAndFilterData(focusDomain)
+    self._eventObject.trigger('windowChanged', focusDomain[x][0], focusDomain[x][1])
+  },
+
+  _handleBrushSelection: function (dataWindow) {
+    var self = this
+    var x = self.params.plot.x.accessor
+    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    var brushHandleScaleX = self.params.brushHandleScaleX
+    var brushHandleScaleY = self.params.brushHandleScaleY
+    var brushHandleCenter = self.params.yRange[1] + (self.params.yRange[0] - self.params.yRange[1]) / 2
+    var svg = self.svgSelection()
+    var xMin = xScale.invert(dataWindow[0])
+    var xMax = xScale.invert(dataWindow[1])
+    if (_.isDate(xMin)) {
+      xMin = xMin.getTime()
+    }
+    if (_.isDate(xMax)) {
+      xMax = xMax.getTime()
+    }
+    var focusDomain = {}
+    focusDomain[x] = [xMin, xMax]
+    self.config.set({ focusDomain: focusDomain }, { silent: true })
+    self.throttledTriggerWindowChangedEvent(focusDomain)
+    var gHandles = svg.select('g.brush').selectAll('.handle--custom')
+    gHandles
+      .classed('hide', false)
+      .attr('transform', function (d, i) { return 'translate(' + dataWindow[i] + ',' + brushHandleCenter + ') scale(' + brushHandleScaleX + ',' + brushHandleScaleY + ')' })
+  },
+
+  _onModelChange: function () {
+    this.render()
+    this._handleModelChange()
+  },
+
+  _handleModelChange: function () {
+    var self = this
+    var xScale = self.params.axis[self.params.plot.x.axis].scale
+    if (self.brush) {
+      self.brush = self.brush.extent([
+          [self.params.xRange[0], self.params.yRange[1] + 10],
+          [self.params.xRange[1], self.params.yRange[0] - 10]])
+      self.svgSelection().select('g.brush').call(self.brush)
+    }
+    if (_.isArray(self.params.selection)) {
+      if (!self.params.selection[0]) {
+        self.params.selection[0] = 0
+      }
+      if (!self.params.selection[1]) {
+        self.params.selection[1] = 100
+      }
+      var brushGroup = self.svgSelection().select('g.brush').transition().ease(d3.easeLinear).duration(self.params.duration)
+      var xMin = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[0] / 100) + xScale.range()[0]
+      var xMax = (xScale.range()[1] - xScale.range()[0]) * (self.params.selection[1] / 100) + xScale.range()[0]
+      self.brush.move(brushGroup, [xMin, xMax])
+    }
+  },
 })
 
 module.exports = TimelineView

@@ -6,11 +6,9 @@ var d3 = require('d3')
 var XYChartSubView = require('components/composite-y/XYChartSubView')
 
 var ScatterBubbleChartView = XYChartSubView.extend({
-  tagName: 'div',
   className: 'scatter-bubble-chart',
   chartType: 'scatterBubble',
   renderOrder: 50,
-
   /**
   * Called by the parent in order to calculate maximum data extents for all of this child's axis.
   * Assumes the params.activeAccessorData for this child view is filled by the parent with the relevent yAccessors for this child only.
@@ -39,13 +37,11 @@ var ScatterBubbleChartView = XYChartSubView.extend({
     self.params.handledAxisNames = _.keys(domains)
     return domains
   },
-
   /**
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
    */
   calculateScales: function () {},
-
   /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
@@ -54,23 +50,26 @@ var ScatterBubbleChartView = XYChartSubView.extend({
   },
 
   _bindMouseOverEvents: function (selection) {
-    var self = this
+    let self = this
     selection.on('mouseover', function (d) {
       // var pos = $(this).offset() // not working in jquery 3
-      var offset = {
-        left: d.x + d.r * 0.71,
-        top: d.y - d.r * 0.71
+      if (self.config.get('tooltipEnabled')) {
+        var offset = {
+          left: d.x + d.r * 0.71,
+          top: d.y - d.r * 0.71
+        }
+        self._eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
+        d3.select(this).classed('active', true)
       }
-      self.eventObject.trigger('showTooltip', offset, d.data, d.accessor.tooltip)
-      d3.select(this).classed('active', true)
     })
     selection.on('mouseout', function (d) {
       // var pos = $(this).offset() // not working in jquery 3
-      self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
+      if (self.config.get('tooltipEnabled')) {
+        self._eventObject.trigger('hideTooltip', d.accessor.tooltip)
+      }
       d3.select(this).classed('active', false)
     })
   },
-
   /**
   * Default shape drawing functions. Circle, Square and Triangle.
   * Use config.shapeEnterFunctions and config.shapeEditFunctions to define custom shape drawing functions.
@@ -131,7 +130,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
   * Shape drawing functions. The draw on the entering and edit selections. One drawing function per accessor shape.
   */
   prepareShapeRenderFunctions: function () {
-    var self = this
+    let self = this
     self.shapeEnterFunctions = {
       circle: self._shapeEnterCircle,
       square: self._shapeEnterSquare,
@@ -184,7 +183,7 @@ var ScatterBubbleChartView = XYChartSubView.extend({
     var svgBubbles = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })
     svgBubbles.enter()
       .each(function (d, i, selection) {
-        var enter = self.shapeEnterFunctions[d.shape](d, d3.select(this))
+        let enter = self.shapeEnterFunctions[d.shape](d, d3.select(this))
         self._bindMouseOverEvents(enter)
       })
     svgBubbles = self.svgSelection().select('g.drawing-' + self.getName()).selectAll('.bubble').data(flatData, function (d) { return d.id })

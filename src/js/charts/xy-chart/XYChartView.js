@@ -21,7 +21,7 @@ var XYChartView = ContrailChartsView.extend({
     self._dataProvider = new handlers.DataProvider({ parentDataModel: self._dataModel })
     self._components = []
     options = options || {}
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    self._eventObject = options.eventObject || _.extend({}, Events)
   },
   /**
   * Provide data for this chart as a simple array of objects.
@@ -60,6 +60,7 @@ var XYChartView = ContrailChartsView.extend({
   setConfig: function (config) {
     var self = this
     self._config = config
+    self.setElement(config.container)
     if (!self._config.chartId) {
       self._config.chartId = 'XYChartView'
     }
@@ -67,6 +68,10 @@ var XYChartView = ContrailChartsView.extend({
     if (self._config.dataConfig) self.setDataConfig(self._config.dataConfig)
     self._initHandlers()
     self._initComponents()
+  },
+
+  getComponent: function (id) {
+    return _.find(this._components, {id: id})
   },
 
   getComponentByType: function (type) {
@@ -104,29 +109,32 @@ var XYChartView = ContrailChartsView.extend({
 
   _initComponents: function () {
     var self = this
-    _.each(self._config.components, function (component) {
+    var dataModel
+    _.each(self._config.components, function (component, index) {
+      component.config.order = index
       self._registerComponent(component.type, component.config, self._dataProvider, component.id)
     })
+    // set parent config model
+    _.each(self._components, function (component, index) {
+      const sourceComponentId = component.config.get('sourceComponent')
+      if (sourceComponentId) {
+        const sourceComponent = self.getComponent(sourceComponentId)
+        component.config.setParent(sourceComponent.config)
+      }
+    })
     if (self._isEnabledComponent('navigation')) {
-      var dataModel = self.getComponentByType('navigation').getFocusDataProvider()
+      dataModel = self.getComponentByType('navigation').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
     if (self._isEnabledComponent('timeline')) {
-      var dataModel = self.getComponentByType('timeline').getFocusDataProvider()
+      dataModel = self.getComponentByType('timeline').getFocusDataProvider()
       if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').changeModel(dataModel)
     }
+    if (self._isEnabledComponent('tooltip')) {
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').config.toggleComponent('tooltip', true)
+    }
     if (self._isEnabledComponent('crosshair')) {
-      /*
-      // If crosshair component is activated then do not react on other tooltips
-      // No need to hardcode this. If user does not want to mix tooltip with crosshair the should not include tooltip in plot config.
-      var crosshairComponent = self.getComponentByType('crosshair')
-      if (crosshairComponent.config.get('tooltip')) {
-        var tooltipComponents = _.filter(self._components, { type: 'tooltip' })
-        _.each(tooltipComponents, function(tooltipComponent) {
-          tooltipComponent.params.acceptFilters.push(crosshairComponent.config.get('tooltip'))
-        })
-      }
-      */
+      if (self._isEnabledComponent('compositeY')) self.getComponentByType('compositeY').config.toggleComponent('crosshair', true)
     }
     if (self._isEnabledHandler('bindingHandler') && !self.hasExternalBindingHandler) {
       // Only start the binding handler if it is not an external one.
@@ -143,7 +151,8 @@ var XYChartView = ContrailChartsView.extend({
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject
+      eventObject: self._eventObject,
+      container: self.$el,
     })
     var component = new components[type].View(viewOptions)
     self._components.push(component)
@@ -155,7 +164,7 @@ var XYChartView = ContrailChartsView.extend({
   },
 
   renderMessage: function (msgObj) {
-    this.eventObject.trigger('message', msgObj)
+    this._eventObject.trigger('message', msgObj)
   },
 
   clearMessage: function (componentId) {
@@ -165,7 +174,7 @@ var XYChartView = ContrailChartsView.extend({
       action: 'update',
       messages: []
     }
-    this.eventObject.trigger('message', msgObj)
+    this._eventObject.trigger('message', msgObj)
   },
 
   _isEnabled: function (config, type) {

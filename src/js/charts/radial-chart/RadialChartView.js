@@ -1,117 +1,126 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var _ = require('lodash')
-var Events = require('contrail-charts-events')
-var ContrailChartsDataModel = require('contrail-charts-data-model')
-var ContrailView = require('contrail-view') // Todo use contrail-charts-view instead?
-var components = require('components/index')
-var handlers = require('handlers/index')
+const _ = require('lodash')
+const Events = require('contrail-charts-events')
+const ContrailChartsDataModel = require('contrail-charts-data-model')
+const ContrailView = require('contrail-view') // Todo use contrail-charts-view instead?
+const components = require('components/index')
+const handlers = require('handlers/index')
 /**
 * Chart with a common X axis and many possible child components rendering data on the Y axis (for example: line, bar, stackedBar).
 * Many different Y axis may be configured.
 */
-var RadialChartView = ContrailView.extend({
+class Self extends ContrailView.extend({
   type: 'RadialChartView',
-
-  initialize: function (options) {
-    var self = this
-    self.hasExternalBindingHandler = false
-    self._dataModel = new ContrailChartsDataModel()
-    self._dataProvider = new handlers.SerieProvider({ parent: self._dataModel })
-    self._components = []
+}) {
+  constructor (options) {
+    super()
+    this.hasExternalBindingHandler = false
+    this._dataModel = new ContrailChartsDataModel()
+    this._dataProvider = new handlers.SerieProvider({ parent: this._dataModel })
+    this._components = []
     options = options || {}
-    self.eventObject = options.eventObject || _.extend({}, Events)
-  },
+    this._eventObject = options.eventObject || _.extend({}, Events)
+    this.listenTo(this._dataProvider, 'change', this._render)
+  }
+
+  render () {
+    _.each(this._components, (component) => {
+      component.render()
+    })
+    this._render()
+  }
   /**
   * Provide data for this chart as a simple array of objects.
   * Additional ContrailChartsDataModel configuration may be provided.
   * Setting data to a rendered chart will trigger a DataModel change event that will cause the chart to be re-rendered.
   */
-  setData: function (data, dataConfig) {
-    var self = this
+  setData (data, dataConfig) {
     dataConfig = dataConfig || {}
-    self._dataModel.set(dataConfig, { silent: true })
+    this._dataModel.set(dataConfig, { silent: true })
 
-    if (_.isArray(data)) self._dataModel.setData(data)
-  },
+    if (_.isArray(data)) this._dataModel.setData(data)
+  }
   /**
   * Sets the configuration for this chart as a simple object.
   * Instantiate the required views if they do not exist yet, set their configurations otherwise.
   * Setting configuration to a rendered chart will trigger a ConfigModel change event that will cause the chart to be re-rendered.
   */
-  setConfig: function (config) {
-    var self = this
-    self._config = config
-    if (!self._config.chartId) {
-      self._config.chartId = 'RadialChartView'
+  setConfig (config) {
+    this._config = config
+    this.setElement(config.container)
+    if (!this._config.chartId) {
+      this._config.chartId = 'RadialChartView'
     }
-    self._initComponents()
-  },
+    this._initComponents()
+  }
 
-  getComponentByType: function (type) {
-    var self = this
-    return _.find(self._components, {type: type})
-  },
+  getComponent (id) {
+    return _.find(this._components, {id: id})
+  }
+  // TODO should return all instances not first only
+  getComponentByType (type) {
+    return _.find(this._components, {type: type})
+  }
 
-  _initComponents: function () {
-    var self = this
-    _.each(self._config.components, function (component) {
-      if (component.type === 'bindingHandler' && self._isEnabledComponent('bindingHandler')) {
-        if (!self.bindingHandler) {
-          self.bindingHandler = new handlers.BindingHandler(self._config.bindingHandler)
+  _initComponents () {
+    _.each(this._config.components, (component, index) => {
+      component.config.order = index
+      if (component.type === 'bindingHandler' && this._isEnabledComponent('bindingHandler')) {
+        if (!this.bindingHandler) {
+          this.bindingHandler = new handlers.BindingHandler(this._config.bindingHandler)
         } else {
-          self.bindingHandler.addBindings(self._config.bindingHandler.bindings, self._config.chartId)
+          this.bindingHandler.addBindings(this._config.bindingHandler.bindings, this._config.chartId)
         }
         return
       }
-      self._registerComponent(component.type, component.config, self._dataProvider, component.id)
+      this._registerComponent(component.type, component.config, this._dataProvider, component.id)
     })
-    if (self._isEnabledComponent('radialChart')) {
-      self.getComponentByType('radialChart').changeModel(self._dataProvider)
-      if (self._isEnabledComponent('legendUniversal')) {
-        var legend = self.getComponentByType('legendUniversal')
-        var radialChart = self.getComponentByType('radialChart')
-        legend.config.setParent(radialChart.config)
+    // set parent config model
+    _.each(this._components, (component, index) => {
+      const sourceComponentId = component.config.get('sourceComponent')
+      if (sourceComponentId) {
+        const sourceComponent = this.getComponent(sourceComponentId)
+        component.config.setParent(sourceComponent.config)
       }
+    })
+    if (this._isEnabledComponent('radialChart')) {
+      this.getComponentByType('radialChart').changeModel(this._dataProvider)
     }
-  },
+  }
 
-  _registerComponent: function (type, config, model, id) {
-    var self = this
-    if (!self._isEnabledComponent(type)) return false
-    var configModel = new components[type].ConfigModel(config)
-    var viewOptions = _.extend(config, {
+  _registerComponent (type, config, model, id) {
+    if (!this._isEnabledComponent(type)) return false
+    const configModel = new components[type].ConfigModel(config)
+    const viewOptions = _.extend(config, {
       id: id,
       config: configModel,
       model: model,
-      eventObject: self.eventObject
+      eventObject: this._eventObject,
+      container: this.$el,
     })
-    var component = new components[type].View(viewOptions)
-    self._components.push(component)
+    const component = new components[type].View(viewOptions)
+    this._components.push(component)
 
-    if (self._isEnabledComponent('bindingHandler') || self.hasExternalBindingHandler) {
-      self.bindingHandler.addComponent(self._config.chartId, type, component)
+    if (this._isEnabledComponent('bindingHandler') || this.hasExternalBindingHandler) {
+      this.bindingHandler.addComponent(this._config.chartId, type, component)
     }
     return component
-  },
+  }
 
-  _isEnabledComponent: function (type) {
-    var self = this
-    var componentConfig = _.find(self._config.components, {type: type})
+  _isEnabledComponent (type) {
+    const componentConfig = _.find(this._config.components, {type: type})
     if (!componentConfig) return false
     if (_.isObject(componentConfig.config)) {
       return !(componentConfig.config.enable === false)
     }
     return false
-  },
-
-  render: function () {
-    var self = this
-    _.each(self._components, function (component) {
-      component.render()
-    })
   }
-})
 
-module.exports = RadialChartView
+  _render () {
+    // TODO chart render function should be called after each component render for performance
+  }
+}
+
+module.exports = Self

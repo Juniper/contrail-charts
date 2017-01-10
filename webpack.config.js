@@ -1,25 +1,40 @@
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
-var path = require('path')
-var env = require('yargs').argv.mode
+const webpack = require('webpack')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
+const path = require('path')
+const env = require('yargs').argv.mode
 
-var fileName = 'contrail-charts'
-var libraryName = 'coCharts'
-var framework = 'backbone'
-var plugins = []
+const fileName = 'contrail-charts'
+const libraryName = 'coCharts'
+const framework = 'backbone'
+const plugins = []
+const loaders = [{
+  test: /\.scss$/,
+  loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
+}, {
+  test: /\.html/,
+  loader: 'handlebars-loader',
+}]
 
 if (env === 'build') {
   plugins.push(new UglifyJsPlugin({
     include: /\.min\.js$/,
     minimize: true,
   }))
+  loaders.push({
+    loader: 'babel-loader',
+    test: /\.js$/,
+    exclude: /(node_modules)/,
+    query: {
+      presets: ['es2015']
+    }
+  })
 }
 
 // Let's put css under css directory.
 plugins.push(new ExtractTextPlugin('css/' + fileName + '.css'))
 
-var config = {
+const config = {
   entry: {
     'contrail-charts': path.join(__dirname, '/src/js/index.js'),
     'contrail-charts.min': path.join(__dirname, '/src/js/index.js')
@@ -32,18 +47,7 @@ var config = {
     libraryTarget: 'umd',
     umdNamedDefine: false,
   },
-  module: {
-    loaders: [
-      {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader'),
-      },
-      {
-        test: /\.html/,
-        loader: "handlebars-loader",
-      },
-    ]
-  },
+  module: {loaders},
   externals: {
     jquery: { amd: 'jquery', root: 'jQuery' },
     d3: { amd: 'd3v4', root: 'd3' },

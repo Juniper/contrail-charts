@@ -1,20 +1,15 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var _ = require('lodash')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+const ContrailChartsView = require('contrail-charts-view')
 
-var XYChartSubView = ContrailChartsView.extend({
+const XYChartSubView = ContrailChartsView.extend({
 
   initialize: function (options) {
-    var self = this
-    self.config = options.config
-    self.parent = options.parent
-    self.axisName = options.axisName
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(this, options)
+    this.parent = options.parent
+    this.axisName = options.axisName
   },
-
   /**
   * Returns the unique name of this drawing so it can identify itself for the parent.
   * The drawing's name is of the following format: [axisName]-[chartType] ie. "y1-line".
@@ -36,14 +31,14 @@ var XYChartSubView = ContrailChartsView.extend({
   },
 
   getScreenX: function (dataElem, xAccessor) {
-    var xScale = this.getXScale()
+    const xScale = this.getXScale()
     return xScale(dataElem[xAccessor])
   },
 
   getScreenY: function (dataElem, yAccessor) {
-    var yScale = this.getYScale()
+    const yScale = this.getYScale()
     return yScale(dataElem[yAccessor])
-  }
+  },
 })
 
 module.exports = XYChartSubView

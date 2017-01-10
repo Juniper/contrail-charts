@@ -9,7 +9,6 @@ var XYChartSubView = require('components/composite-y/XYChartSubView')
 * This is the child view for CompositeYChartView.
 */
 var LineChartView = XYChartSubView.extend({
-  tagName: 'div',
   className: 'line-chart',
   chartType: 'line',
   renderOrder: 10,
@@ -34,13 +33,11 @@ var LineChartView = XYChartSubView.extend({
     self.params.handledAxisNames = _.keys(domains)
     return domains
   },
-
   /**
    * Called by the parent when all scales have been saved in this child's params.
    * Can be used by the child to perform any additional calculations.
    */
   calculateScales: function () {},
-
   /**
    * Called by the parent to allow the child to add some initialization code into the provided entering selection.
    */
@@ -100,22 +97,8 @@ var LineChartView = XYChartSubView.extend({
       .attr('class', function (d) { return 'line line-' + d.key })
       .attr('d', function (d) { return zeroLine(data) })
       .merge(svgLines)
-      .on('mouseover', function (d) {
-        var pos = d3.mouse(this)
-        var offset = self.$el.offset()
-        var dataItem = self.getTooltipData(d.data, pos[0])
-        var tooltipOffset = {
-          top: offset.top + pos[1],
-          left: offset.left + pos[0] - xScale.range()[0]
-        }
-
-        self.eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
-        d3.select(this).classed('active', true)
-      })
-      .on('mouseout', function (d) {
-        self.eventObject.trigger('hideTooltip', d.accessor.tooltip)
-        d3.select(this).classed('active', false)
-      })
+      .on('mouseover', self._onMouseover.bind(self))
+      .on('mouseout', self._onMouseout.bind(self))
       .transition().ease(d3.easeLinear).duration(self.params.duration)
       .attr('stroke', function (d) { return self.getColor(d.accessor) })
       .attr('d', function (d) { return lines[d.key](data) })
@@ -128,7 +111,31 @@ var LineChartView = XYChartSubView.extend({
       self.renderData()
     })
     return self
-  }
+  },
+
+  // Event handlers
+
+  _onMouseover: function (d) {
+    if (this.config.get('tooltipEnabled')) {
+      const pos = d3.mouse(d3.event.currentTarget)
+      const offset = this.$el.offset()
+      const dataItem = this.getTooltipData(d.data, pos[0])
+      const tooltipOffset = {
+        top: offset.top + pos[1],
+        left: offset.left + pos[0] - this.getXScale().range()[0]
+      }
+
+      this._eventObject.trigger('showTooltip', tooltipOffset, dataItem, d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', true)
+  },
+
+  _onMouseout: function (d) {
+    if (this.config.get('tooltipEnabled')) {
+      this._eventObject.trigger('hideTooltip', d.accessor.tooltip)
+    }
+    d3.select(d3.event.currentTarget).classed('active', false)
+  },
 })
 
 module.exports = LineChartView

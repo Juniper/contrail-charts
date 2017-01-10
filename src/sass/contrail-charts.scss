@@ -110,6 +110,7 @@ button:focus {
 
 .coCharts-tooltip-view {
   position: absolute;
+  pointer-events: none;
 	.tooltip-content {
 		padding: 10px;
 		border: 1px solid #aaa;
@@ -240,7 +241,7 @@ button:focus {
 		height: 25px;
 		line-height: 25px;
 		text-align: center;
-		margin-bottom: 5px;
+		margin: 0 4px 4px 0;
 
 		.label {
 			font-size: 14px;
@@ -252,6 +253,7 @@ button:focus {
 		cursor: pointer;
 	}
 	.color-picker-palette {
+    display: none;
 		width: 300px;
 		border: 1px solid #ddd;
 		position: absolute;
@@ -284,7 +286,10 @@ button:focus {
 }
 
 .pie-chart {
-  .arc path {
+  path.arc {
     stroke: white;
+  }
+  path.highlight  {
+    opacity: 0.3;
   }
 }

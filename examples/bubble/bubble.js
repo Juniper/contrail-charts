@@ -20,10 +20,11 @@ for (var i = 0; i < 100; i++) {
 }
 
 var chartConfig = {
+  container: '#chart',
   components: [{
     type: 'compositeY',
     config: {
-      el: '#chart',
+      chartHeight: 600,
       marginInner: 25,
       rRange: [3, 50],
       plot: {
@@ -131,7 +132,6 @@ var chartConfig = {
   }, {
     type: 'navigation',
     config: {
-      el: '#chart-navigation',
       marginInner: 5,
       chartHeight: 200,
       plot: {
@@ -152,4 +152,3 @@ var chartConfig = {
 var chartView = new coCharts.charts.XYChartView()
 chartView.setConfig(chartConfig)
 chartView.setData(complexData)
-chartView.render()

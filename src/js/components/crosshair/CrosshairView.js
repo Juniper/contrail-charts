@@ -1,139 +1,94 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-var _ = require('lodash')
-var d3 = require('d3')
-var Events = require('contrail-charts-events')
-var ContrailChartsView = require('contrail-charts-view')
+const d3 = require('d3')
+const ContrailChartsView = require('contrail-charts-view')
 
-var CrosshairView = ContrailChartsView.extend({
+const CrosshairView = ContrailChartsView.extend({
   type: 'crosshair',
-  tagName: 'div',
   className: 'coCharts-crosshair-view',
 
   initialize: function (options) {
-    var self = this
-    self.show = 0
-    self.config = options.config
-    self.listenTo(self.config, 'change', self.render)
-    self.eventObject = options.eventObject || _.extend({}, Events)
+    ContrailChartsView.prototype.initialize.call(this, options)
+    this.listenTo(this.config, 'change', this.render)
+    this.render()
+    this.listenTo(this._eventObject, 'showCrosshair', this.show)
+    this.listenTo(this._eventObject, 'hideCrosshair', this.hide)
   },
 
-  _mouseMoveHandler: function (mouse) {
-    var self = this
-    var data = self.getData()
-    var renderInfo = self.params.renderInfo
-    if (!data.length) {
-      return self.removeCrosshair()
+  show: function (data, point, config) {
+    if (!data) return this.hide()
+
+    if (point[0] < config.x1 || point[0] > config.x2 || point[1] < config.y1 || point[1] > config.y2) {
+      return this.hide()
     }
-    if (mouse[0] < renderInfo.x1 || mouse[0] > renderInfo.x2 || mouse[1] < renderInfo.y1 || mouse[1] > renderInfo.y2) {
-      return self.removeCrosshair()
-    }
-    var svg = self.svgSelection()
-    var xElem = self.config.get('findDataElem')(mouse[0], data, self.params.sourceComponentView)
+    const svg = this.svgSelection()
     // Draw crosshair line
-    var svgCrosshair = svg.selectAll('.crosshair').data([renderInfo.line])
-    var svgCrosshairEnter = svgCrosshair.enter().append('g')
+    const svgCrosshair = svg.selectAll('.crosshair').data([config.line])
+    const svgCrosshairEnter = svgCrosshair.enter().append('g')
       .attr('class', 'crosshair')
     svgCrosshairEnter.append('line')
       .attr('class', 'x-line')
-      .attr('x1', function (d) { return d.x(xElem) })
-      .attr('x2', function (d) { return d.x(xElem) })
-      .attr('y1', function (d) { return d.y1 })
-      .attr('y2', function (d) { return d.y2 })
+      .attr('x1', (d) => d.x(data))
+      .attr('x2', (d) => d.x(data))
+      .attr('y1', (d) => d.y1)
+      .attr('y2', (d) => d.y2)
     svgCrosshairEnter.append('text')
       .attr('class', 'x-text')
-      .attr('x', function (d) { return d.x(xElem) })
-      .attr('y', function (d) { return d.y1 + 15 })
-      .text(function (d) { return d.text(xElem) })
+      .attr('x', (d) => d.x(data))
+      .attr('y', (d) => d.y1 + 15)
+      .text((d) => d.text(data))
     svgCrosshairEnter.append('g')
       .attr('class', 'bubbles')
-    var svgCrosshairEdit = svgCrosshairEnter.merge(svgCrosshair)
-      .transition().ease(d3.easeLinear).duration(self.params.duration)
+    const svgCrosshairEdit = svgCrosshairEnter.merge(svgCrosshair)
+      .transition().ease(d3.easeLinear).duration(this.config.get('duration'))
     svgCrosshairEdit.select('.x-line')
-      .attr('x1', function (d) { return d.x(xElem) })
-      .attr('x2', function (d) { return d.x(xElem) })
-      .attr('y1', function (d) { return d.y1 })
-      .attr('y2', function (d) { return d.y2 })
+      .attr('x1', (d) => d.x(data))
+      .attr('x2', (d) => d.x(data))
+      .attr('y1', (d) => d.y1)
+      .attr('y2', (d) => d.y2)
     svgCrosshairEdit.select('.x-text')
-      .attr('x', function (d) { return d.x(xElem) })
-      .attr('y', function (d) { return d.y1 + 15 })
-      .text(function (d) { return d.text(xElem) })
+      .attr('x', (d) => d.x(data))
+      .attr('y', (d) => d.y1 + 15)
+      .text((d) => d.text(data))
     // Draw bubbles for all enabled y accessors.
-    var svgBubbles = svg.select('.crosshair').select('.bubbles').selectAll('circle').data(renderInfo.circles, function (d) { return d.id })
+    const svgBubbles = svg.select('.crosshair')
+          .select('.bubbles')
+          .selectAll('circle')
+          .data(config.circles, (d) => d.id)
     svgBubbles.enter().append('circle')
-      .attr('cx', function (d) { return d.x(xElem) })
-      .attr('cy', function (d) { return d.y(xElem) })
-      .attr('fill', function (d) { return d.color })
+      .attr('cx', (d) => d.x(data))
+      .attr('cy', (d) => d.y(data))
+      .attr('fill', (d) => d.color)
       .attr('r', 0)
       .merge(svgBubbles)
-      .transition().ease(d3.easeLinear).duration(self.params.duration)
-      .attr('cx', function (d) { return d.x(xElem) })
-      .attr('cy', function (d) { return d.y(xElem) })
-      .attr('r', self.params.bubbleR)
+      .transition().ease(d3.easeLinear).duration(this.config.get('duration'))
+      .attr('cx', (d) => d.x(data))
+      .attr('cy', (d) => d.y(data))
+      .attr('r', this.config.get('bubbleR'))
     svgCrosshair.exit().remove()
-    if (self.params.tooltip) {
+    if (this.config.get('tooltip')) {
       // Show tooltip
-      var pos = self.$el.offset()
-      var tooltipOffset = {
-        left: mouse[0] + pos.left + 30,
-        top: mouse[1] + pos.top + 30
+      const pos = this.$el.offset()
+      const tooltipOffset = {
+        left: point[0] + pos.left + 30,
+        top: point[1] + pos.top + 30,
       }
-      self.eventObject.trigger('showTooltip', tooltipOffset, xElem, self.params.tooltip)
+      this._eventObject.trigger('showTooltip', tooltipOffset, data, this.config.get('tooltip'))
     }
   },
 
-  _prepareRenderInfo: function (componentView) {
-    var self = this
-    var prepareRenderInfo = this.config.get('prepareRenderInfo')
-    self.params.renderInfo = prepareRenderInfo(componentView)
-  },
-
-  _bindMouseListeners: function (sourceParams, sourceConfig, componentView) {
-    var self = this
-    var svg = self.svgSelection()
-    self._prepareRenderInfo(componentView)
-    self.params.sourceComponentView = componentView
-    var throttledMouseMoveHandler = _.throttle(_.bind(self._mouseMoveHandler, self), 100)
-    svg.on('mousemove', function () {
-      throttledMouseMoveHandler(d3.mouse(this))
-    })
-    svg.on('mouseout', function () {
-      // The mouse could have left the svg but entered an svg child.
-      // We still get a mouseout event in this case so still need to verify if mouse coordinates are out of bounds.
-      var mouse = d3.mouse(this)
-      if (mouse[0] < self.params.renderInfo.x1 || mouse[0] > self.params.renderInfo.x2 || mouse[1] < self.params.renderInfo.y1 || mouse[1] > self.params.renderInfo.y2) {
-        self.removeCrosshair()
-      }
-    })
-  },
-
-  _bindListeners: function () {
-    var self = this
-    self.stopListening(self.eventObject)
-    // We assume that when the sourceComponent is rendered it triggers the 'rendered:[componentName]' event passing (sourceParams, sourceConfig) as arguments.
-    // We assume that these are the params of a CompositeY chart.
-    // TODO: How to handle params from different components (ie. Radial)?
-    // They can have a different structure then the 'plot' and 'axis' config attributes in CompositeY.
-    self.listenTo(self.eventObject, 'rendered:' + self.params.sourceComponent, self._bindMouseListeners)
-  },
-
-  removeCrosshair: function () {
-    var self = this
-    var svg = self.svgSelection()
-    var svgCrosshair = svg.selectAll('.crosshair').data([])
+  hide: function () {
+    const svgCrosshair = this.svgSelection().selectAll('.crosshair').data([])
     svgCrosshair.exit().remove()
-    if (self.params.tooltip) {
+    if (this.config.get('tooltip')) {
       // Hide tooltip
-      self.eventObject.trigger('hideTooltip', self.params.tooltip)
+      this._eventObject.trigger('hideTooltip', this.config.get('tooltip'))
     }
   },
 
   render: function () {
-    var self = this
-    self.$el.addClass(self.className)
-    self.resetParams()
-    self._bindListeners()
+    this.initSVG()
   }
 })
 
