@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --mode=build",
     "clean-build": "rm -rf build/* && webpack --mode=build",
-    "dev": "webpack --progress --colors --watch --mode=dev",
+    "dev": "webpack --progress --colors --watch --mode=build",
     "test": "node test.js",
     "lint": "eslint src/** || true"
   },

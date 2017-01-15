@@ -1,0 +1,47 @@
+* {
+  font-family: sans-serif;
+  font-size: 13px;
+  color: #666;
+}
+
+#complexChart {
+    position: relative;
+    margin: 30px;
+    width: 75%;
+}
+
+#complexChart-xyChart {
+    position: relative;
+}
+
+#complexChart-controlPanel {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+#complexChart-navigation {
+    margin-bottom: 25px;
+}
+
+#messageView {
+    height: 250px;
+    width: 200px;
+    position: absolute;
+    top: 30px;
+    right: 15px;
+}
+
+.card {
+
+  .title {
+    border: 1px solid #aaa;
+    border-bottom: 0;
+    padding: 10px;
+  }
+  .content {
+    border: 1px solid #aaa;
+    height: 300px;
+    padding: 5px;
+  }
+}

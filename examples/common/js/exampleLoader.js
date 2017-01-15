@@ -50,7 +50,13 @@ var examples = [
     js: 'composite-xy-timeline/composite-xy-timeline.js',
     css: 'composite-xy-timeline/composite-xy-timeline.css',
     title: 'Simple Timeline navigation'
-  }
+  },
+  {
+    html: 'legend/legend.html',
+    js: 'legend/legend.js',
+    css: 'legend/legend.css',
+    title: 'Legend'
+  },
 ]
 
 var $exampleLinks = $('#exampleLinks')

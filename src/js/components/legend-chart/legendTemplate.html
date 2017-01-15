@@ -1,0 +1,13 @@
+<div class="attributes">
+	{{#each attributes}}
+	<label class="legend-attribute checkbox" data-value="{{ key }}">{{ label }}
+		<input type="checkbox" {{#if checked}} checked {{/if}} />
+		<div class="edit">
+			<div class="select select--color" style="background-color: {{ color }}"><div class="triangle"></div></div>
+			<div class="select select--chart fa fa-area-chart"><div class="triangle"></div></div>
+		</div>
+		<div class="indicator" style="border-color: {{ color }}; {{#if checked}} background-color: {{ color }} {{/if}}"></div>
+	</label>
+	{{/each}}
+</div>
+<div class="button edit">edit</div>
