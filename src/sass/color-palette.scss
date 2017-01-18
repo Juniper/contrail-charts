@@ -1,0 +1,26 @@
+.color-palette {
+  display: inline-block;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  width: 154px;
+  padding: 5px 5px 2px;
+
+  .swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 1px solid orange;
+    border-radius: 2px;
+    background-color: orange;
+    
+    &:hover {
+      cursor: pointer;
+      border-color: #666;
+    }
+    
+    &.selected {
+      border: 1px solid white;
+      box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.75);
+    }
+  }
+}

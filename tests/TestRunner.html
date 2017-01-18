@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Jasmine Spec Runner</title>
+	<!-- jasmine -->
+	<link rel="stylesheet" href="../node_modules/jasmine-core/lib/jasmine-core/jasmine.css">
+	<script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine.js"></script>
+	<script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
+	<script src="../node_modules/jasmine-core/lib/jasmine-core/json2.js"></script>
+	<script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
+	<script src="../node_modules/jasmine-core/lib/console/console.js"></script>
+	<!-- contrail-charts -->
+	<script src="../node_modules/jquery/dist/jquery.js"></script>
+	<script src="../node_modules/lodash/lodash.js"></script>
+	<script src="../node_modules/backbone/backbone.js"></script>
+	<script src="../node_modules/d3/build/d3.js"></script>
+	<script src="../build/js/contrail-charts.min.js"></script>
+</head>
+<body>
+<script>
+	if (navigator.userAgent.indexOf("PhantomJS") > 0) {
+		var consoleReporter = new jasmineRequire.ConsoleReporter()({
+			showColors: true,
+			timer: new jasmine.Timer,
+			print: function() {
+				console.log.apply(console, arguments)
+			}
+		});
+		jasmine.getEnv().addReporter(consoleReporter);
+	}
+</script>
+<script src="./specs/ChartViewSpec.js"></script>
+</body>
+</html>

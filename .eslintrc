@@ -1,0 +1,10 @@
+{
+  "extends": "standard",
+  "globals": {
+    'coCharts': true,
+  },
+  rules: {
+    'comma-dangle': 0,
+    'no-console': ['error', { allow: ['warn', 'error'] }],
+  }
+}
