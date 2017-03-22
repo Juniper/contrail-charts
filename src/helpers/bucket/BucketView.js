@@ -20,6 +20,7 @@ export default class BucketView extends ContrailChartsView {
     return _.extend(super.selectors, {
       node: '.bucket',
       active: '.active',
+      label: '.bucket-label',
     })
   }
 
@@ -55,7 +56,7 @@ export default class BucketView extends ContrailChartsView {
 
     groups
       .append('text')
-      .attr('class', 'label')
+      .attr('class', this.selectorClass('label'))
       .text(d => d.bucket.length)
     // Update
     buckets
