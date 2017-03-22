@@ -111,7 +111,7 @@ export default class ContrailChartsView extends ContrailView {
   render (content) {
     if (this.isTagNameSvg(this.tagName)) {
       this._initSvg()
-      if (this.svg.select(`.${this.id}`).empty()) {
+      if (this.svg.select(`#${this.id}`).empty()) {
         this.el.setAttribute('data-order', this.zIndex)
         this.svg.node().append(this.el)
         // TODO constrain selector to direct descendants ":scope > g"
