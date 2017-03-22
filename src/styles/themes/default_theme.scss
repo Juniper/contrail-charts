@@ -1,0 +1,207 @@
+/*
+ * this theme definition is globally avaiable on purpose.
+ * A custom theme definition should be scoped in a sass map variable.
+ */
+
+@import "../colors";
+
+// brush
+$brush-selection: (
+  fillColor: $ashGrey
+) !default;
+$brush-handle: (
+  overallOpacity: 1,
+  fillColor: $grey,
+  fillOpacity: 0.75,
+  edgeColor: $blackGrey,
+  edgeWidth: 1,
+  cursorShape: ew-resize
+) !default;
+
+// control panel
+$control-panel: (
+  controlItemGutter: 5px
+) !default;
+$control-panel-item: (
+  fgColor: $blackGrey,
+  bgColor: $white,
+  borderWidth: 1px,
+  borderStyle: solid,
+  borderColor: $ashGrey2,
+  hoveredBgColor: $ashGrey2
+) !default;
+$control-panel-popup: (
+  width: 350px,
+  borderWidth: 1px,
+  borderStyle: solid,
+  borderColor: $ashGrey2,
+  bodyFgColor: $blackGrey,
+  bodyBgColor: $white,
+  bodyFontSize: 14px,
+  headerFgColor: $blackGrey,
+  headerBgColor: $ashGrey2,
+  headerFontSize: 14px
+) !default;
+
+// crosshair
+$crosshair: (
+  lineColor: $grey,
+  lineWidth: 1px,
+  footerSize: 11px,
+  footerColor: $grey,
+  jointBubbleEdgeColor: $white,
+  jointBubbleEdgeWidth: 1px
+) !default;
+
+// legend
+$legend: (
+  colorIndicatorRadius: 16px,
+  fontSize: 12px,
+  fgColor: $white,
+  bgColor: $ashGrey
+) !default;
+
+// legend panel
+$legend-panel: (
+  fontSize: 12px,
+  fgColor: $darkGrey,
+  borderWidth: 1px,
+  borderStyle: solid,
+  borderColor: $snowWhite,
+  borderRadius: 4px,
+  activeBorderColor: darken($snowWhite, 20%),
+
+  legendAttrItemGutter: 4px,
+
+  chartTypeIconSize: 13px
+) !default;
+$legend-panel-edit-btn: (
+  fontSize: 18px,
+  bgColor: $ashGrey,
+  activeBgColor: darken($ashGrey, 30%),
+  separatorWidth: 1px,
+  separatorStyle: solid,
+  separatorColor: $snowWhite,
+) !default;
+$legend-panel-attr-item: (
+  borderWidth: 1px,
+  borderStyle: solid,
+  borderColor: $white,
+  activeBorderColor: $snowWhite,
+  activeBorderRadius: 2px
+) !default;
+$legend-panel-axis-indicator: (
+  fgColor: $ashGrey2,
+  fontSize: 10px,
+  borderWidth: 1px,
+  borderStyle: solid,
+  borderColor: $snowWhite
+) !default;
+$legend-panel-color-indicator: (
+  bgColor: $white,
+  activeBgColor: $black
+) !default;
+$legend-panel-selector-trigger: (
+  fgColor: $white,
+  bgColor: darken($ashGrey, 30%)
+) !default;
+$legend-panel-selector-panel: (
+  bgColor: $white,
+  borderWidth: 1px,
+  borderStyle: solid,
+  borderColor: $ashGrey2,
+  borderRadius: 2px
+) !default;
+$legend-panel-selector-panel-swatch: (
+  selectedBorderWidth: 2px,
+  selectedBorderStyle: solid,
+  selectedBorderColor: $black
+) !default;
+
+// message
+$message-info: (
+  fgColor: $oceanBlue,
+  bgColor: $lightBlue
+) !default;
+$message-error: (
+  fgColor: $rubyRed,
+  bgColor: $lightPink
+) !default;
+$message-warn: (
+  fgColor: $darkOrange,
+  bgColor: $mayo
+) !default;
+
+// timeline
+$timeline-bar: (
+  lineColor: $ashGrey
+) !default;
+
+// tooltip
+$tooltip: (
+  tooltipBodyBgColor: $black,
+  tooltipBodyTransparency: 0.75,
+  tooltipContentColor: $white,
+) !default;
+$tooltip-title: (
+  fontSize: 14px,
+  separatorWidth: 1px,
+  separatorStyle: solid,
+  separatorColor: $ashGrey2
+) !default;
+$tooltip-item: (
+  separatorWidth: 1px,
+  separatorStyle: solid,
+  separatorColor: $snowWhite
+) !default;
+
+// compositeY chart
+$compositeY: (
+  gridlineColor: $ashGrey2,
+  tickSize: 11px,
+  tickColor: $darkGrey,
+  axisLabelSize: 11px,
+  axisLabelColor: $darkGrey
+) !default;
+
+// area chart
+$area-chart: (
+  areaOpacity: 0.7
+) !default;
+
+// bar chart
+$bar-chart: (
+  barOpacity: 0.6,
+  activeBarOpacity: 0.9
+) !default;
+
+// line chart
+$line-chart: (
+  lineWidth: 2,
+  lineOpacity: 0.8
+) !default;
+
+// scatter bubble chart
+$scatter-bubble-chart: (
+  pointOpacity: 0.7,
+  hoveredPointOpacity: 0.9,
+  hoveredPointEdgeWidth: 1px,
+  hoveredPointEdgeColor: $ashGrey2,
+  cursorOverPoint: pointer
+) !default;
+
+// pie chart
+$pie-chart: (
+  arcSeparatorColor: $white
+) !default;
+
+// dendrogram chart
+$dendrogram: (
+  linkColor: $solidBlue,
+  ribbonColor: $dimmedBlue,
+  ribbonActiveColor: $orange,
+  ribbonHoverColor: $orange,
+  arcLabelColor: $black,
+  arcLabelSize: 9px,
+  arcBorderWidth: 1px,
+) !default;

@@ -1,0 +1,55 @@
+@import "../../styles/colors";
+
+@mixin dendrogramRules($dendrogram) {
+  $p_link_color: map-get($dendrogram, "linkColor");
+  $p_ribbon_color: map-get($dendrogram, "ribbonColor");
+  $p_hovered_ribbon_color: map-get($dendrogram, "ribbonHoverColor");
+  $p_active_ribbon_color: map-get($dendrogram, "ribbonActiveColor");
+  $p_arc_border_width: map-get($dendrogram, "arcBorderWidth");
+  $p_arc_label_size: map-get($dendrogram, "arcLabelSize");
+  $p_arc_label_color: map-get($dendrogram, "arcLabelColor");
+
+  .link {
+    stroke: $p_link_color;
+    stroke-opacity: .2;
+    fill: none;
+    pointer-events: none;
+  }
+  .ribbon {
+    fill: $p_ribbon_color;
+    fill-opacity: .2;
+    stroke-width: 0;
+  }
+  .ribbon:hover {
+    fill: $p_hovered_ribbon_color;
+    fill-opacity: .4;
+  }
+  .ribbon.active {
+    fill: $p_active_ribbon_color;
+    fill-opacity: .7;
+  }
+  .arc {
+    fill: $p_ribbon_color;
+    fill-opacity: .7;
+    stroke-width: $p_arc_border_width;
+    stroke: darken($p_ribbon_color, 20%);
+    stroke-opacity: .7;
+  }
+  .arc:hover {
+    fill-opacity: 1;
+    cursor:pointer;
+  }
+  .arc-label {
+    text-anchor: start;
+    alignment-baseline: middle;
+    font-size: $p_arc_label_size;
+    fill: $p_arc_label_color;
+  }
+  .circle {
+    stroke: $blackGrey;
+    stroke-opacity: .4;
+    stroke-width: 1px;
+    fill: none;
+    pointer-events: none;
+  }
+}

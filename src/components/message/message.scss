@@ -1,0 +1,12 @@
+@import "message-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.message.cc-component {
+  @include messageRules(
+    $message-info,
+    $message-error,
+    $message-warn);
+
+  @include themify($messageId, $themes);
+}

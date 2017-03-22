@@ -1,0 +1,27 @@
+@mixin compositeYChartRules($compositeY) {
+  $p_gridline_color: map-get($compositeY, "gridlineColor");
+  $p_tick_size: map-get($compositeY, "tickSize");
+  $p_tick_color: map-get($compositeY, "tickColor");
+  $p_label_size: map-get($compositeY, "axisLabelSize");
+  $p_label_color: map-get($compositeY, "axisLabelColor");
+
+  .axis {
+    .domain {
+      display: none;
+    }
+    .tick {
+      line {
+        stroke: $p_gridline_color;
+      }
+      text {
+        font-size: $p_tick_size;
+        fill: $p_tick_color;
+      }
+    }
+    .axis-label {
+      font-size: $p_label_size;
+      fill: $p_label_color;
+      text-anchor: middle;
+    }
+  }
+}

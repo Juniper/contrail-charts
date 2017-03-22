@@ -1,0 +1,341 @@
+@import "../../styles/variables";
+@import "../../styles/colors";
+
+@mixin legendPanelRules(
+  $legend-panel,
+  $legend-panel-edit-btn,
+  $legend-panel-attr-item,
+  $legend-panel-axis-indicator,
+  $legend-panel-color-indicator,
+  $legend-panel-selector-trigger,
+  $legend-panel-selector-panel,
+  $legend-panel-selector-panel-swatch) {
+  $p_panel_font_size: map-get($legend-panel, "fontSize");
+  $p_panel_fg_color: map-get($legend-panel, "fgColor");
+  $p_panel_border_width: map-get($legend-panel, "borderWidth");
+  $p_panel_border_style: map-get($legend-panel, "borderStyle");
+  $p_panel_border_color: map-get($legend-panel, "borderColor");
+  $p_panel_border_radius: map-get($legend-panel, "borderRadius");
+  $p_panel_active_border_color: map-get($legend-panel, "activeBorderColor");
+
+  $p_edit_btn_separator_width: map-get($legend-panel-edit-btn, "separatorWidth");
+  $p_edit_btn_separator_style: map-get($legend-panel-edit-btn, "separatorStyle");
+  $p_edit_btn_separator_color: map-get($legend-panel-edit-btn, "separatorColor");
+  $p_edit_btn_font_size: map-get($legend-panel-edit-btn, "fontSize");
+  $p_edit_btn_fg_color: map-get($legend-panel-edit-btn, "bgColor");
+  $p_edit_btn_active_bg_color: map-get($legend-panel-edit-btn, "activeBgColor");
+
+  $p_attr_item_gutter: map-get($legend-panel, "legendAttrItemGutter");
+  $p_attr_item_border_width: map-get($legend-panel-attr-item, "borderWidth");
+  $p_attr_item_border_style: map-get($legend-panel-attr-item, "borderStyle");
+  $p_attr_item_border_color: map-get($legend-panel-attr-item, "borderColor");
+  $p_attr_item_active_border_color: map-get($legend-panel-attr-item, "activeBorderColor");
+  $p_attr_item_active_border_radius: map-get($legend-panel-attr-item, "activeBorderRadius");
+
+  $p_axis_indicator_fg_color: map-get($legend-panel-axis-indicator, "fgColor");
+  $p_axis_indicator_font_size: map-get($legend-panel-axis-indicator, "fontSize");
+  $p_axis_indicator_border_width: map-get($legend-panel-axis-indicator, "borderWidth");
+  $p_axis_indicator_border_style: map-get($legend-panel-axis-indicator, "borderStyle");
+  $p_axis_indicator_border_color: map-get($legend-panel-axis-indicator, "borderColor");
+
+  $p_color_indicator_bg_color: map-get($legend-panel-color-indicator, "bgColor");
+  $p_color_indicator_active_bg_color: map-get($legend-panel-color-indicator, "activeBgColor");
+
+  $p_chart_type_icon_size: map-get($legend-panel, "chartTypeIconSize");
+  $p_selector_trigger_bg_color: map-get($legend-panel-selector-trigger, "bgColor");
+  $p_selector_trigger_fg_color: map-get($legend-panel-selector-trigger, "fgColor");
+
+  $p_selector_panel_bg_color: map-get($legend-panel-selector-panel, "bgColor");
+  $p_selector_panel_border_width: map-get($legend-panel-selector-panel, "borderWidth");
+  $p_selector_panel_border_style: map-get($legend-panel-selector-panel, "borderStyle");
+  $p_selector_panel_border_color: map-get($legend-panel-selector-panel, "borderColor");
+  $p_selector_panel_border_radius: map-get($legend-panel-selector-panel, "borderRadius");
+
+  $p_selector_swatch_selected_border_width: map-get($legend-panel-selector-panel-swatch, "selectedBorderWidth");
+  $p_selector_swatch_selected_border_style: map-get($legend-panel-selector-panel-swatch, "selectedBorderStyle");
+  $p_selector_swatch_selected_border_color: map-get($legend-panel-selector-panel-swatch, "selectedBorderColor");
+
+  z-index: $control;
+
+  * {
+    box-sizing: content-box;
+  }
+  font-family: sans-serif;
+  font-size: $p_panel_font_size;
+  color: $p_panel_fg_color;
+  border-width: $p_panel_border_width;
+  border-style: $p_panel_border_style;
+  border-color: $p_panel_border_color;
+  border-radius: $p_panel_border_radius;
+  padding: 0 10px;
+  overflow: hidden;
+
+  &.vertical {
+    .edit-legend {
+      vertical-align: bottom;
+      margin-bottom: 4px;
+    }
+    
+    .attribute {
+      display: block;
+
+      &:not(:last-child) {
+        margin-bottom: $p_attr_item_gutter;
+      }
+    }
+  }
+
+  .legend-inner-container {
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+
+  .attributes {
+    display: inline-block;
+    line-height: 12px;
+    vertical-align: middle;
+  }
+
+  .edit-legend {
+    display: inline-block;
+    border-right-width: $p_edit_btn_separator_width;
+    border-right-style: $p_edit_btn_separator_style;
+    border-right-color: $p_edit_btn_separator_color;
+    padding-right: 8px;
+    font-size: $p_edit_btn_font_size;
+    vertical-align: middle;
+    color: $p_edit_btn_fg_color;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &:hover, &.edit-mode {
+    border-color: $p_panel_active_border_color;
+
+    .edit-legend {
+      color: $p_edit_btn_active_bg_color;
+    }
+  }
+
+  .attribute {
+    display: inline-block;
+    border-width: $p_attr_item_border_width;
+    border-style: $p_attr_item_border_style;
+    border-color: $p_attr_item_border_color;
+    padding: 2px 4px;
+    margin-right: $p_attr_item_gutter;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .edit-attribute {
+      display: none;
+    }
+
+    &.edit {
+      border-color: $p_attr_item_active_border_color;
+      border-radius: $p_attr_item_active_border_radius;
+
+      .edit-attribute {
+        display: inline-block;
+      }
+
+      .color-indicator {
+        display: none;
+      }
+    }
+  }
+
+  .legend-attribute {
+    display: inline-block;
+    padding: 10px 0;
+    margin: 0;
+    position: relative;
+    vertical-align: middle;
+
+    input[type=checkbox] {
+      display: none;
+    }
+
+    .associate-axis {
+      display: none;
+      text-transform: uppercase;
+      color: $p_axis_indicator_fg_color;
+      font-size: $p_axis_indicator_font_size;
+      border-width: $p_axis_indicator_border_width;
+      border-style: $p_axis_indicator_border_style;
+      border-color: $p_axis_indicator_border_color;
+      border-radius: 4px;
+      padding: 1px;
+      margin-right: 2px;
+
+      &.active {
+        display: inline;
+      }
+    }
+
+    &.disabled:hover {
+      cursor: default;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  @at-root .color-indicator {
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+    width: 10px;
+    height: 10px;
+    vertical-align: middle;
+    border: 1px solid $black;
+    border-radius: 50%;
+    background-color: $p_color_indicator_bg_color;
+
+    .legend-attribute input:checked ~ & {
+      background-color: $p_color_indicator_active_bg_color;
+    }
+
+    &:after {
+      position: absolute;
+      display: none;
+      content: ' ';
+
+      .legend-attribute input:checked ~ & {
+        display: block;
+      }
+
+      .legend-attribute.disabled input:checked ~ & {
+        display: none;
+      }
+
+      .legend-attribute & {
+        left: 1px;
+        top: 1px;
+        width: 8px;
+        height: 8px;
+        border: 1px solid $white;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .select {
+    position: relative;
+    display: inline-block;
+    height: 15px;
+    line-height: 15px;
+    width: 24px;
+    border-radius: 2px;
+    vertical-align: middle;
+
+    &.select--chart {
+      font-size: $p_chart_type_icon_size;
+      width: 24px;
+      padding: 0 2px;
+      background-color: $p_selector_trigger_bg_color;
+      color: $p_selector_trigger_fg_color;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .triangle {
+      position: absolute;
+      display: block;
+      right: 3px;
+      top: 8px;
+      width: 0;
+      height: 0;
+      border-bottom: 5px solid #{$p_selector_trigger_fg_color};
+      border-left: 5px solid transparent;
+    }
+  }
+
+  .selector {
+    display: none;
+    position: absolute;
+    background-color: $p_selector_panel_bg_color;
+    border-width: $p_selector_panel_border_width;
+    border-style: $p_selector_panel_border_style;
+    border-color: $p_selector_panel_border_color;
+    border-radius: $p_selector_panel_border_radius;
+    max-width: 140px;
+    padding: 5px;
+
+    div[class*="swatches--"] {
+      display: none;
+    }
+
+    &.active {
+      display: block;
+    }
+
+    &.select--color {
+      .swatches--colors {
+        display: block;
+      }
+    }
+
+    &.select--chart {
+      .swatches--charts {
+        display: block;
+      }
+    }
+
+    .swatch {
+      position: relative;
+      z-index: 1;
+      box-sizing: border-box;
+      float: left;
+      margin: 2px;
+      width: 24px;
+      height: 24px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: $white;
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.1, 1.1);
+        transform-origin: center;
+      }
+
+      &.selected:after {
+        content: " ";
+        position: absolute;
+        z-index: -1;
+        top: -1px;
+        left: -1px;
+        bottom: -1px;
+        right: -1px;
+        border-width: $p_selector_swatch_selected_border_width;
+        border-style: $p_selector_swatch_selected_border_style;
+        border-color: $p_selector_swatch_selected_border_color;
+        border-radius: 4px;
+      }
+    }
+
+    .swatch--chart {
+      display: none;
+      padding: 4px;
+      text-align: center;
+      font-size: $p_chart_type_icon_size;
+      line-height: #{if($p_chart_type_icon_size, $p_chart_type_icon_size + 2px, null)};
+
+      &.show {
+        display: inline-block;
+      }
+    }
+  }
+}

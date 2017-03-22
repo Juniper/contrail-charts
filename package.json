@@ -1,0 +1,72 @@
+{
+  "name": "contrail-charts",
+  "version": "0.1.0",
+  "description": "Contrail Chart library",
+  "main": "src/js/contrail-charts.js",
+  "scripts": {
+    "build": "npm run build:lib && npm run build:examples",
+    "build:lib": "webpack --env.prod",
+    "build:lib:withD3": "webpack --env.prod --env.include 'd3-all'",
+    "build:examples": "webpack --env.prod --config webpack.examples.config.babel.js",
+    "build:clean": "rm -rf build/* && npm run build",
+    "dev": "npm run dev:lib & npm run dev:examples",
+    "dev:lib": "webpack --progress --colors --watch --env.dev",
+    "dev:examples": "webpack-dev-server --watch --env.dev --config webpack.examples.config.babel.js",
+    "test": "node test.js",
+    "test-headless": "phantomjs tests/run-jasmine.js tests/TestRunner.html",
+    "lint": "npm run lint:src && npm run lint:examples",
+    "lint:src": "eslint src/** || true",
+    "lint:examples": "eslint examples/** || true",
+    "doc": "jsdoc src -r -d docs"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "babel-core": "6.23.1",
+    "babel-loader": "6.3.2",
+    "babel-preset-es2015": "6.22.0",
+    "babel-register": "6.23.0",
+    "bootstrap": "3.3.7",
+    "css-loader": "0.25.0",
+    "eslint": "3.10.2",
+    "eslint-config-standard": "6.2.1",
+    "eslint-plugin-promise": "3.4.0",
+    "eslint-plugin-standard": "2.0.1",
+    "extract-text-webpack-plugin": "2.0.0-rc.3",
+    "font-awesome": "4.7.0",
+    "ignore-loader": "0.1.2",
+    "jasmine-core": "2.5.2",
+    "jsdoc": "3.4.3",
+    "json-loader": "0.5.4",
+    "node-sass": "3.13.0",
+    "open": "0.0.5",
+    "phantomjs-polyfill": "0.0.2",
+    "raw-loader": "0.5.1",
+    "requirejs": "2.3.3",
+    "sass-loader": "4.0.2",
+    "style-loader": "0.13.1",
+    "uglify-js": "2.7.5",
+    "uglifyjs-webpack-plugin": "0.1.5",
+    "webpack": "2.2.1",
+    "webpack-dev-server": "2.4.1"
+  },
+  "dependencies": {
+    "backbone": "1.3.3",
+    "d3": "4.4.3",
+    "d3-interpolate-path": "1.1.0",
+    "d3-sankey": "0.4.2",
+    "handlebars": "4.0.6",
+    "handlebars-loader": "1.4.0",
+    "jquery": "3.1.1",
+    "lodash": "4.17.2",
+    "material-design-lite": "1.3.0"
+  },
+  "repository": "Juniper/contrail-charts",
+  "standard": {
+    "ignore": [
+      "build/"
+    ],
+    "globals": [
+      "define"
+    ]
+  }
+}

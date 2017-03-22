@@ -1,0 +1,12 @@
+@import "control-panel-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.control-panel.cc-component {
+  @include controlPanelRules(
+    $control-panel,
+    $control-panel-item,
+    $control-panel-popup);
+
+  @include themify($controlPanelId, $themes);
+}

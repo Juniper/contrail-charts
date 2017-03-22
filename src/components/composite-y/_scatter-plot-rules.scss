@@ -1,0 +1,23 @@
+@mixin scatterBubbleChartRules($scatter-bubble-chart) {
+  $p_point_opacity: map-get($scatter-bubble-chart, "pointOpacity");
+  $p_point_hovered_opacity: map-get($scatter-bubble-chart, "hoveredPointOpacity");
+  $p_point_hovered_edge_width: map-get($scatter-bubble-chart, "hoveredPointEdgeWidth");
+  $p_point_hovered_edge_color: map-get($scatter-bubble-chart, "hoveredPointEdgeColor");
+  $p_point_hovered_cursor: map-get($scatter-bubble-chart, "cursorOverPoint");
+
+  .point {
+    opacity: $p_point_opacity;
+    shape-rendering: geometricPrecision;
+    font-family: FontAwesome;
+    alignment-baseline: middle;
+    text-anchor: middle;
+
+    &:hover {
+      opacity: $p_point_hovered_opacity;
+      stroke-width: $p_point_hovered_edge_width;
+      stroke: $p_point_hovered_edge_color;
+      cursor: $p_point_hovered_cursor;
+      shape-rendering: geometricPrecision;
+    }
+  }
+}

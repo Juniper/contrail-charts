@@ -1,0 +1,17 @@
+@import "legend-panel-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.legend-panel.cc-component {
+  @include legendPanelRules(
+    $legend-panel,
+    $legend-panel-edit-btn,
+    $legend-panel-attr-item,
+    $legend-panel-axis-indicator,
+    $legend-panel-color-indicator,
+    $legend-panel-selector-trigger,
+    $legend-panel-selector-panel,
+    $legend-panel-selector-panel-swatch);
+
+  @include themify($legendPanelId, $themes);
+}

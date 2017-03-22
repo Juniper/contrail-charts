@@ -1,0 +1,35 @@
+@import "colors";
+@import "themes/default_theme"; /* the default global theme, don't add this to the $themes list */
+
+/* theme configuration map keys (component IDs) */
+$brushId: "brush";
+$controlPanelId: "control-panel";
+$crosshairId: "crosshair";
+$legendId: "legend";
+$legendPanelId: "legend-panel";
+$messageId: "message";
+$timelineBarId: "timeline-bar";
+$tooltipId: "tooltip";
+$compositeYId: "compositeY";
+$areaChartId: "area-chart";
+$barChartId: "bar-chart";
+$lineChartId: "line-chart";
+$pieChartId: "pie-chart";
+$dendrogramId: "dendrogram";
+$scatterBubbleChartId: "scatter-bubble-chart";
+
+/*
+ * z-index levels
+ */
+$presentation: 1;
+$control: 5;
+$alwaysTop: 9999;
+
+/* 
+ * load custom theme definitions and define the theme list variable
+ */
+@import "themes/alert_theme";
+
+$themes: (
+  red-alert: $alert-theme, /* a demo-only theme, enabled with "red-alert" class on body tag */
+);

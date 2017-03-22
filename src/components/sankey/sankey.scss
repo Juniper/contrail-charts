@@ -1,0 +1,22 @@
+
+.cc-svg .sankey {
+  .link {
+    fill: none;
+    stroke: #aaa;
+    stroke-opacity: 0.4;
+  }
+  .link:hover {
+    stroke: #f22;
+  }
+  .node {
+    rect {
+      fill: #5577ff;
+      stroke: #333;
+      stroke-width: 1px;
+    }
+    text {
+      alignment-baseline: central;
+      font-size: 9px;
+    }
+  }
+}

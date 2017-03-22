@@ -1,0 +1,9 @@
+@import "radial-dendrogram-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .radial-dendrogram {
+  @include dendrogramRules($dendrogram);
+
+  @include themify($dendrogramId, $themes);
+}

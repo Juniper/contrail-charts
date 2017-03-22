@@ -1,0 +1,25 @@
+@mixin brushRules($brush-selection, $brush-handle) {
+  $p_selection_color: map-get($brush-selection, "fillColor");
+  $p_handle_opacity: map-get($brush-handle, "overallOpacity");
+  $p_handle_color: map-get($brush-handle, "fillColor");
+  $p_handle_color_opacity: map-get($brush-handle, "fillOpacity");
+  $p_handle_border_color: map-get($brush-handle, "edgeColor");
+  $p_handle_border_width: map-get($brush-handle, "edgeWidth");
+  $p_handle_cursor: map-get($brush-handle, "cursorShape");
+
+  .selection {
+    fill: $p_selection_color;
+  }
+  .handle--custom {
+    opacity: $p_handle_opacity;
+    fill: $p_handle_color;
+    fill-opacity: $p_handle_color_opacity;
+    stroke: $p_handle_border_color;
+    stroke-width: $p_handle_border_width;
+    cursor: $p_handle_cursor;
+
+    &.hide {
+      display: none;
+    }
+  }
+}

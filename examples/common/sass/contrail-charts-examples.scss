@@ -1,0 +1,144 @@
+/**
+* Styles specific for contrail-examples.
+*/
+$baseFontSize: 14px;
+
+$stdWhite: #ffffff;
+$stdDarkgray: #555555;
+$stdGray: #888888;
+$stdLightgray: #eeeeee;
+$stdBorderGray: #dddddd;
+$stdBlack: #000000;
+
+html, body {
+  height: 100%;
+}
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: $baseFontSize 'Open Sans', sans-serif;
+  color: $stdDarkgray;
+  background: $stdWhite;
+}
+
+h1 {
+  padding: 10px 0;
+  font-weight: normal;
+  font-size: 25px;
+  text-align: center;
+}
+
+.flex-row {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+
+  .flex-col {
+    flex-grow: 1;
+  }
+
+  .col-6 {
+    height: 42vw;
+    width: 50vw;
+    max-width: 300px;
+    max-height: 300px;
+    margin: 0 4vw;
+  }
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+
+  .center-both {
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.portal-link {
+  background-color: $stdLightgray;
+  color: $stdBlack;
+
+  &.large-font {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  &:hover {
+    background-color: $stdDarkgray;
+    color: $stdWhite;
+  }
+
+  &.border {
+    border: 2px solid $stdBlack;
+    border-radius: 5px;
+  }
+}
+
+.navbar-logo {
+  padding: 0;
+  font-size: 20px;
+  font-weight: bold;
+  img {
+    max-height: 24px;
+    display: inline-block;
+  }
+  > span {
+    display: inline-block;
+    font-size: 15px;
+    line-height: 0.8;
+  }
+}
+
+.example-group {
+  .title {
+    padding: 10px 10px;
+    border-bottom: none;
+  }
+  .links {
+    top: -10px;
+
+    li {
+      list-style: none;
+      margin: 10px 25px;
+    }
+
+    .link {
+      font-family: 'Open Sans';
+      font-size: 15px;
+      color: #2194CE;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+}
+
+.disp-flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+@for $i from 1 through 20 {
+  .render-order-#{$i} {
+    order: $i;
+  }
+}
+
+#chartBox {
+  position: relative;
+}

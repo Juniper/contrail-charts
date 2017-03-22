@@ -1,0 +1,6 @@
+@mixin timelineBarRules($timeline-bar) {
+  $p_line_color: map-get($timeline-bar, "lineColor");
+
+  fill: $p_line_color;
+  opacity: 0.75;
+}

@@ -1,0 +1,95 @@
+@import "variables";
+
+@function map-get-safe($map, $key, $defaultValue: null) {
+  $value: map-get($map, $key);
+
+  @if ($value == null) {
+    @return $defaultValue;
+  } @else {
+    @return $value;
+  }
+}
+
+@function getConfigs($componentId, $config: ()) {
+  @if ($componentId == null) {
+    @error "getConfigs function only works with a component id";
+  } @else {
+    @if ($componentId == $brushId) {
+      @return (
+        map-get-safe($config, "selection", ()),
+        map-get-safe($config, "handle", ()),
+      );
+    } @else if ($componentId == $controlPanelId) {
+      @return (
+        map-get-safe($config, "general", ()),
+        map-get-safe($config, "item", ()),
+        map-get-safe($config, "popup", ()),
+      );
+    } @else if ($componentId == $crosshairId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $legendId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $legendPanelId) {
+      @return (
+        map-get-safe($config, "general", ()),
+        map-get-safe($config, "edit-btn", ()),
+        map-get-safe($config, "attr-item", ()),
+        map-get-safe($config, "axis-indicator", ()),
+        map-get-safe($config, "color-indicator", ()),
+        map-get-safe($config, "selector-trigger", ()),
+        map-get-safe($config, "selector-panel", ()),
+        map-get-safe($config, "selector-panel-swatch", ()),
+      );
+    } @else if ($componentId == $messageId) {
+      @return (
+        map-get-safe($config, "info", ()),
+        map-get-safe($config, "error", ()),
+        map-get-safe($config, "warn", ()),
+      );
+    } @else if ($componentId == $timelineBarId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $tooltipId) {
+      @return (
+        map-get-safe($config, "general", ()),
+        map-get-safe($config, "title", ()),
+        map-get-safe($config, "item", ()),
+      );
+    } @else if ($componentId == $compositeYId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $areaChartId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $barChartId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $lineChartId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $scatterBubbleChartId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $pieChartId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else if ($componentId == $dendrogramId) {
+      @return (
+        map-get-safe($config, "general", ()),
+      );
+    } @else {
+      @warn "Unknown componentId, #{$componentId}, doesn't have associated config variables.";
+    }
+  }
+}

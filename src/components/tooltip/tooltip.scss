@@ -1,0 +1,11 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.tooltip.cc-component {
+  @include tooltipRules(
+    $tooltip,
+    $tooltip-title,
+    $tooltip-item);
+
+  @include themify($tooltipId, $themes);
+}

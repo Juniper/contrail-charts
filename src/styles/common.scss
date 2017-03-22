@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+.hide {
+  display: none;
+}
+
+.cc-chart {
+  position: relative;
+}
+
+.cc-svg {
+  user-select: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cc-component {
+  .interactive {
+    cursor: pointer;
+  }
+}

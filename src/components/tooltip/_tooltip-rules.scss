@@ -1,0 +1,85 @@
+@import "../../styles/variables";
+@import "../../../node_modules/material-design-lite/src/_variables";
+
+@mixin tooltipRules(
+  $tooltip,
+  $tooltip-title,
+  $tooltip-item) {
+  $p_body_bg_color: map-get($tooltip, "tooltipBodyBgColor");
+  $p_body_fg_color: map-get($tooltip, "tooltipContentColor");
+  $p_body_opacity: map-get($tooltip, "tooltipBodyTransparency");
+
+  $p_title_font_size: map-get($tooltip-title, "fontSize");
+  $p_title_separator_width: map-get($tooltip-title, "separatorWidth");
+  $p_title_separator_style: map-get($tooltip-title, "separatorStyle");
+  $p_title_separator_color: map-get($tooltip-title, "separatorColor");
+  
+  $p_item_spearator_width: map-get($tooltip-item, "separatorWidth");
+  $p_item_spearator_style: map-get($tooltip-item, "separatorStyle");
+  $p_item_spearator_color: map-get($tooltip-item, "separatorColor");
+  
+  position: absolute;
+  pointer-events: none;
+  z-index: $alwaysTop;
+  opacity: 0;
+  height: 0;
+  visibility: hidden;
+  transition: visibility, opacity;
+  transition-duration: 300ms;
+  transition-timing-function: $animation-curve-linear-out-slow-in;
+
+  &.active {
+    height: auto;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .tooltip-content {
+    min-width: 200px;
+    padding: 10px 10px 5px;
+    border-radius: 4px;
+    background-color: $p_body_bg_color;
+    color: $p_body_fg_color;
+    opacity: $p_body_opacity;
+
+    .cc-title {
+      font-weight: bold;
+      font-size: $p_title_font_size;
+      border-bottom-width: $p_title_separator_width;
+      border-bottom-style: $p_title_separator_style;
+      border-bottom-color: $p_title_separator_color;
+      padding: 0 0 7px;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+  }
+
+  .tooltip-item {
+    border-bottom-width: $p_item_spearator_width;
+    border-bottom-style: $p_item_spearator_style;
+    border-bottom-color: $p_item_spearator_color;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+
+    &:last-child {
+      border-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .tooltip-item-color {
+      width: 5px;
+      height: 9px;
+      display: inline-block;
+      border-radius: 2px;
+    }
+
+    .tooltip-item-label {
+      margin-right: 15px;
+    }
+
+    .tooltip-item-value {
+      font-weight: 900;
+      float: right;
+    }
+  }
+}
