@@ -1,0 +1,8 @@
+<div class="filter-items"> 
+  {{#each this }} 
+  <div class="filter-item"> 
+    <input id="filter-item-input-{{key}}" class="filter-item-input" type="checkbox" name="filter" class="accessor-data-checkbox" value="{{key}}" {{#if enabled}}checked{{/if}}> 
+    <label for="filter-item-input-{{key}}" class="accessor-data-checkbox-label">{{label}}</label> 
+  </div> 
+  {{/each}} 
+</div> 

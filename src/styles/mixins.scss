@@ -1,0 +1,92 @@
+@import "functions";
+@import "../helpers/brush/brush-rules";
+@import "../components/control-panel/control-panel-rules";
+@import "../components/legend/legend-rules";
+@import "../components/legend-panel/legend-panel-rules";
+@import "../components/message/message-rules";
+@import "../components/timeline/timeline-rules";
+@import "../components/tooltip/tooltip-rules";
+@import "../components/composite-y/composite-y-rules";
+@import "../components/composite-y/area-chart-rules";
+@import "../components/composite-y/bar-chart-rules";
+@import "../components/composite-y/line-chart-rules";
+@import "../components/composite-y/scatter-plot-rules";
+@import "../components/pie-chart/pie-chart-rules";
+@import "../components/radial/radial-dendrogram-rules";
+
+@mixin applyRuleTemplate($componentId, $arg) {
+  @if ($componentId == null) {
+    @error "applyRuleTemplate mixin only works with a component id";
+  } @else {
+    @if ($componentId == $brushId) {
+      @include brushRules(
+        $brush-selection: nth($arg, 1),
+        $brush-handle: nth($arg, 2)
+      );
+    } @else if ($componentId == $controlPanelId) {
+      @include controlPanelRules(
+        $control-panel: nth($arg, 1),
+        $control-panel-item: nth($arg, 2),
+        $control-panel-popup: nth($arg, 3)
+      );
+    } @else if ($componentId == $crosshairId) {
+      @include crosshairRules(nth($arg, 1));
+    } @else if ($componentId == $legendId) {
+      @include legendRules(nth($arg, 1));
+    } @else if ($componentId == $legendPanelId) {
+      @include legendPanelRules(
+        $legend-panel: nth($arg, 1),
+        $legend-panel-edit-btn: nth($arg, 2),
+        $legend-panel-attr-item: nth($arg, 3),
+        $legend-panel-axis-indicator: nth($arg, 4),
+        $legend-panel-color-indicator: nth($arg, 5),
+        $legend-panel-selector-trigger: nth($arg, 6),
+        $legend-panel-selector-panel: nth($arg, 7),
+        $legend-panel-selector-panel-swatch: nth($arg, 8)
+      );
+    } @else if ($componentId == $messageId) {
+      @include messageRules(
+        $message-info: nth($arg, 1),
+        $message-error: nth($arg, 2),
+        $message-warn: nth($arg, 3)
+      );
+    } @else if ($componentId == $timelineBarId) {
+      @include timelineBarRules(nth($arg, 1));
+    } @else if ($componentId == $tooltipId) {
+      @include tooltipRules(
+        $tooltip: nth($arg, 1),
+        $tooltip-title: nth($arg, 2),
+        $tooltip-item: nth($arg, 3)
+      );
+    } @else if ($componentId == $compositeYId) {
+      @include compositeYChartRules(nth($arg, 1));
+    } @else if ($componentId == $areaChartId) {
+      @include areaChartRules(nth($arg, 1));
+    } @else if ($componentId == $barChartId) {
+      @include barChartRules(nth($arg, 1));
+    } @else if ($componentId == $lineChartId) {
+      @include lineChartRules(nth($arg, 1));
+    } @else if ($componentId == $scatterBubbleChartId) {
+      @include scatterBubbleChartRules(nth($arg, 1));
+    } @else if ($componentId == $pieChartId) {
+      @include pieChartRules(nth($arg, 1));
+    } @else if ($componentId == $dendrogramId) {
+      @include dendrogramRules(nth($arg, 1));
+    } @else {
+      @warn "Unknown componentId, #{$componentId}, doesn't have an associated mixin.";
+    }
+  }
+}
+
+@mixin themify($componentId, $themeset: ()) {
+  @each $theme, $config in $themeset {
+    $componentConfig: map-get($config, $componentId);
+
+    @if ($componentConfig != null) {
+      .#{$theme} & {
+        $arg: getConfigs($componentId, $componentConfig);
+        @include applyRuleTemplate($componentId, $arg);
+      }
+    }
+  }
+}

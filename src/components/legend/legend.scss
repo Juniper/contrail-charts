@@ -1,0 +1,9 @@
+@import "legend-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.legend.cc-component {
+  @include legendRules($legend);
+
+  @include themify($legendId, $themes);
+}

@@ -1,0 +1,36 @@
+<div class="legend-inner-container">
+  {{#if editable}}<div class="edit-legend"><i class="fa fa-pencil-square fs" aria-hidden="true"></i></div>{{/if}}
+  <div class="attributes">
+  	{{#each attributes}}
+  	<div class="attribute" data-accessor="{{ accessor }}">
+  		<div class="edit-attribute">
+  			<div class="select select--color" style="background-color: {{ color }}; border-color: {{ color }}" data-color="{{color}}"><div class="triangle"></div></div>
+  			<div class="select select--chart fa {{ chartIcon }}" data-chart-type="{{chartType}}"><div class="triangle"></div></div>
+  		</div>
+  		<label class="legend-attribute checkbox">
+  			<input type="checkbox" {{#if checked}} checked {{/if}} />
+        {{#if shape }}
+        <div class="indicator fa" style="{{#if checked}} color: {{ color }} {{/if}}">{{{ shape }}}</div>
+        {{else}}
+        <div class="color-indicator" style="border-color: {{ color }}; {{#if checked}} background-color: {{ color }} {{/if}}"></div>
+        {{/if}}
+        <span class="associate-axis">{{ axis }}</span>{{ label }}
+  		</label>
+  	</div>
+  	{{/each}}
+  </div>
+
+  <div class="selector">
+    <div class="swatches swatches--colors">
+      {{#each colors}}
+      <div class="swatch swatch--color" style="background-color: {{this}}; border-color: {{this}}" data-color="{{this}}"></div>
+      {{/each}}
+    </div>
+
+    <div class="swatches swatches--charts">
+      {{#each possibleChartTypes}}
+      <div class="swatch swatch--chart fa {{ chartIcon }}" data-chart-type="{{ chartType }}" data-axis="{{ axisLabel }}"></div>
+      {{/each}}
+    </div>
+  </div>
+</div>

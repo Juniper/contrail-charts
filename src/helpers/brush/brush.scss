@@ -1,0 +1,11 @@
+@import "brush-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .brush {
+  @include brushRules(
+    $brush-selection,
+    $brush-handle);
+
+  @include themify($brushId, $themes);
+}

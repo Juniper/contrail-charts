@@ -1,0 +1,9 @@
+@import "crosshair-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .crosshair {
+  @include crosshairRules($crosshair);
+
+  @include themify($crosshairId, $themes);
+}

@@ -1,0 +1,22 @@
+machine:
+  environment:
+    NODE_ENV: test
+  node:
+    version: 6.4.0
+
+dependencies:
+  pre:
+    - rm -rf ./node_modules
+  cache_directories:
+    - ~/.npm
+  override:
+    - npm prune && npm install
+    - npm run build
+    - npm run lint
+
+test:
+  pre:
+    - npm install -g phantomjs-prebuilt
+  override:
+    - npm run test-headless
+

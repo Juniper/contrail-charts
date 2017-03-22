@@ -1,0 +1,26 @@
+@mixin crosshairRules($crosshair) {
+  $p_line_width: map-get($crosshair, "lineWidth");
+  $p_line_color: map-get($crosshair, "lineColor");
+  $p_footer_size: map-get($crosshair, "footerSize");
+  $p_footer_color: map-get($crosshair, "footerColor");
+  $p_bubble_border_width: map-get($crosshair, "jointBubbleEdgeWidth");
+  $p_bubble_border_color: map-get($crosshair, "jointBubbleEdgeColor");
+
+  .crosshair-line {
+    .x-line {
+      stroke-width: $p_line_width;
+      stroke: $p_line_color;
+      shape-rendering: crispEdges;
+    }
+    .x-text {
+      text-anchor: middle;
+      font-size: $p_footer_size;
+      font-weight: bold;
+      fill: $p_footer_color;
+    }
+    .bubble {
+      stroke-width: $p_bubble_border_width;
+      stroke: $p_bubble_border_color;
+    }
+  }
+}

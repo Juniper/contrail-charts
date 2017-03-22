@@ -1,0 +1,134 @@
+/* 
+ * Note: this is a demo-only theme definition,
+ * remove this from production.
+ */
+
+$alert-theme: (
+  brush: (
+    selection: (
+      fillColor: red,
+    ),
+    handle: (
+      fillColor: lighten(red, 15%),
+      edgeColor: red,
+    )
+  ),
+  control-panel: (
+    item: (
+      fgColor: red,
+      bgColor: lighten(red, 60%),
+      broderWidth: 3px,
+      borderColor: darken(red, 20%),
+      hoveredBgColor: darken(red, 60%),
+    ),
+    popup: (
+      broderWidth: 3px,
+      borderColor: darken(red, 20%),
+      bodyFgColor: red,
+      bodyBgColor: lighten(red, 60%),
+      headerFgColor: red,
+      headerBgColor: darken(red, 20%),
+    )
+  ),
+  crosshair: (
+    general: (
+      lineColor: red,
+      lineWidth: 3px,
+      footerColor: red,
+      jointBubbleEdgeColor: lighten(red, 30%),
+      jointBubbleEdgeWidth: 2px,
+    )
+  ),
+  legend: (
+    general: (
+      fgColor: red,
+      bgColor: lighten(red, 60%),
+    )
+  ),
+  legend-panel: (
+    general: (
+      fgColor: red,
+      broderWidth: 2px,
+      borderColor: darken(red, 20%),
+      borderRadius: 0,
+      activeBorderColor: darken(red, 40%),
+    ),
+    edit-btn: (
+      bgColor: lighten(red, 30%),
+      activeBgColor: red,
+      separatorWidth: 2px,
+      separatorColor: red,
+    ),
+    selector-trigger: (
+      fgColor: red,
+      bgColor: darken(red, 60%),
+    ),
+    selector-panel: (
+      bgColor: lighten(red, 60%),
+      borderWidth: 2px,
+      borderColor: darken(red, 20%),
+      borderRadius: 0,
+    ),
+    selector-panel-swatch: (
+      selectedBorderColor: red,
+    )
+  ),
+  message: (
+    info: (
+      fgColor: red,
+    ),
+    error: (
+      fgColor: red,
+    ),
+    warn: (
+      fgColor: red,
+    )
+  ),
+  timeline-bar: (
+    general: (
+      lineColor: red,
+    )
+  ),
+  tooltip: (
+    general: (
+      tooltipBodyBgColor: lighten(red, 60%),
+      tooltipContentColor: red,
+    ),
+    title: (
+      separatorWidth: 3px,
+      separatorColor: red,
+    ),
+    item: (
+      separatorWidth: 2px,
+      separatorColor: lighten(red, 30%),
+    )
+  ),
+  compositeY: (
+    general: (
+      gridlineColor: red,
+      tickColor: red,
+      axisLabelColor: red,
+    )
+  ),
+  scatter-bubble-chart: (
+    general: (
+      hoveredPointEdgeWidth: 2px,
+      hoveredPointEdgeColor: darken(red, 30%),
+    )
+  ),
+  pie-chart: (
+    general: (
+      arcSeparatorColor: red,
+    )
+  ),
+  dendrogram: (
+    general: (
+      linkColor: darken(red, 20%),
+      ribbonColor: darken(red, 5%),
+      ribbonActiveColor: darken(orange, 40%),
+      ribbonHoverColor: darken(orange, 40%),
+      arcLabelColor: red,
+      arcBorderWidth: 3px,
+    )
+  )
+);

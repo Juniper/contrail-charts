@@ -1,0 +1,7 @@
+@mixin areaChartRules($area-chart) {
+  $p_opacity: map-get($area-chart, "areaOpacity");
+
+  .area {
+    opacity: $p_opacity;
+  }
+}

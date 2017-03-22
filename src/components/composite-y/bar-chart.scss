@@ -1,0 +1,9 @@
+@import "bar-chart-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .bar-chart, .stacked-bar-chart {
+  @include barChartRules($bar-chart);
+
+  @include themify($barChartId, $themes);
+}

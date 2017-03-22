@@ -1,0 +1,97 @@
+@import "../../styles/variables";
+@import "../../styles/colors";
+
+@mixin controlPanelRules(
+  $control-panel,
+  $control-panel-item,
+  $control-panel-popup) {
+  $p_item_gutter: map-get($control-panel, "controlItemGutter");
+  $p_item_bg_color: map-get($control-panel-item, "bgColor");
+  $p_item_border_width: map-get($control-panel-item, "borderWidth");
+  $p_item_border_style: map-get($control-panel-item, "borderStyle");
+  $p_item_border_color: map-get($control-panel-item, "borderColor");
+  $p_item_fg_color: map-get($control-panel-item, "fgColor");
+  $p_item_hovered_bg_color: map-get($control-panel-item, "hoveredBgColor");
+  $p_panel_width: map-get($control-panel-popup, "width");
+  $p_panel_border_width: map-get($control-panel-popup, "borderWidth");
+  $p_panel_border_style: map-get($control-panel-popup, "borderStyle");
+  $p_panel_border_color: map-get($control-panel-popup, "borderColor");
+  $p_panel_bg_color: map-get($control-panel-popup, "bodyBgColor");
+  $p_panel_header_bg_color: map-get($control-panel-popup, "headerBgColor");
+  $p_panel_header_fg_color: map-get($control-panel-popup, "headerFgColor");
+  $p_panel_popup_header_font_size: map-get($control-panel-popup, "headerFontSize");
+  $p_panel_popup_body_fg_color: map-get($control-panel-popup, "bodyFgColor");
+  $p_panel_popup_body_font_size: map-get($control-panel-popup, "bodyFontSize");
+
+  z-index: $control;
+
+  .control-panel-items {
+    width: 32px;
+    float: right;
+
+    .control-panel-item {
+      position: relative;
+      margin: 0 0 5px;
+      margin-bottom: $p_item_gutter;
+
+      button {
+        width: 100%;
+        font-size: 14px;
+        background-color: $p_item_bg_color;
+        padding: 5px;
+        border-width: $p_item_border_width;
+        border-style: $p_item_border_style;
+        border-color: $p_item_border_color;
+        color: $p_item_fg_color;
+        transition: background-color .25s;
+        &:hover {
+          background-color: $p_item_hovered_bg_color;
+        }
+      }
+      .opener {
+        position: absolute;
+        display: block;
+        left: 2px;
+        bottom: 2px;
+        width: 0;
+        height: 0;
+        border-bottom: 5px solid $ashGrey;
+        border-right: 5px solid transparent;
+      }
+    }
+  }
+
+  .panel {
+    width: $p_panel_width;
+    margin: 0 33px 0 0;
+    border-width: $p_panel_border_width;
+    border-style: $p_panel_border_style;
+    border-color: $p_panel_border_color;
+    background-color: $p_panel_bg_color;
+
+    .head {
+      padding: 5px 10px;
+      background-color: $p_panel_header_bg_color;
+      color: $p_panel_header_fg_color;
+      font-size: 0;
+
+      > * {
+        font-size: $p_panel_popup_header_font_size;
+      }
+
+      .head-icon {
+        margin-right: 10px;
+      }
+
+      .close {
+        float: right;
+        cursor: pointer;
+      }
+    }
+    .body {
+      padding: 10px;
+      color: $p_panel_popup_body_fg_color;
+      font-size: $p_panel_popup_body_font_size;
+    }
+  }
+}

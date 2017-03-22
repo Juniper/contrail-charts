@@ -1,0 +1,15 @@
+{{#each series}}
+<div class="color-select" style="background-color: {{color}}" data-accessor="{{accessor}}">
+  <span class="label">{{label}}</span>
+</div>
+{{/each}}
+<div class="color-picker-palette hide">
+  <div class="color-picker-palette-header">
+    <span class="color-picker-palette-title"></span>
+  </div>
+  <div class="color-picker-palette-body">
+    {{#each colors}}
+    <span class="color-picker-palette-color" style="background-color: {{this}}">&nbsp;</span>
+    {{/each}}
+  </div>
+</div>

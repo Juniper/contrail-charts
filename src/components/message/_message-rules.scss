@@ -1,0 +1,57 @@
+@mixin messageRules(
+  $message-info,
+  $message-error,
+  $message-warn) {
+  $p_info_fg_color: map-get($message-info, "fgColor");
+  $p_info_bg_color: map-get($message-info, "bgColor");
+  $p_error_fg_color: map-get($message-error, "fgColor");
+  $p_error_bg_color: map-get($message-error, "bgColor");
+  $p_warn_fg_color: map-get($message-warn, "fgColor");
+  $p_warn_bg_color: map-get($message-warn, "bgColor");
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .message-row {
+    overflow: hidden;
+    font-size: 13px;
+
+    &.msg-info {
+      color: $p_info_fg_color;
+      background-color: $p_info_bg_color;
+    }
+
+    &.msg-error {
+      color: $p_error_fg_color;
+      background-color: $p_error_bg_color;
+    }
+
+    &.msg-warn {
+      color: $p_warn_fg_color;
+      background-color: $p_warn_bg_color;
+    }
+
+    & .message-heading,
+    & .message-body {
+      width: 100%;
+      padding: 0 5px;
+      margin: 5px 0;
+    }
+
+    .message-heading {
+      display: flex;
+      position: relative;
+
+      .fa {
+        margin-right: 2px;
+      }
+
+      .message-title {
+        flex-grow: 1;
+        font-weight: bold;
+      }
+    }
+  }
+}

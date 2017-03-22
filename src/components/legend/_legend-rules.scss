@@ -1,0 +1,26 @@
+@mixin legendRules($legend) {
+  $p_color_indicator_radius: map-get($legend, "colorIndicatorRadius");
+  $p_label_font_size: map-get($legend, "fontSize");
+  $p_label_fg_color: map-get($legend, "fgColor");
+  $p_label_bg_color: map-get($legend, "bgColor");
+
+  .legend-group {
+    display: inline-block;
+    padding: 5px 10px;
+
+    .color-indicator {
+      display: inline-block;
+      width: $p_color_indicator_radius;
+      height: $p_color_indicator_radius;
+      border-radius: $p_color_indicator_radius;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .label {
+      font-size: $p_label_font_size;
+      color: $p_label_fg_color;
+      background-color: $p_label_bg_color;
+      vertical-align: middle;
+    }
+  }
+}
