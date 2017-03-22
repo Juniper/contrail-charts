@@ -1,20 +1,27 @@
 .cc-svg .bucket {
   .bucket {
+    stroke: #ff7f0e;
+    shape-rendering: geometricPrecision;
+    fill: #ff7f0e;
+    fill-opacity: 0.1;
+
     &.active {
-      stroke: grey;
+      text {
+        opacity: 1;
+      }
     }
 
-    opacity: 0.8;
-    shape-rendering: geometricPrecision;
-    fill: steelblue;
-
     text {
+      opacity: 0.7;
+      stroke-width: 2;
       font-family: FontAwesome;
       text-anchor: middle;
       alignment-baseline: middle;
     }
-    text.label {
-      stroke: #333;
+    text.bucket-label {
+      opacity: 1;
+      stroke-width: 1;
+      font-weight: normal;
     }
   }
 }

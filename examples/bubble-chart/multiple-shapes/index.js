@@ -96,9 +96,8 @@ const chartConfig = {
         }
       },
       bucket: {
-        range: [300, 500],
+        range: [400, 600],
         shape: bubbleShapes.circleFill,
-        color: '#ff7f0e',
         tooltip: 'tooltip-bucket',
       },
     }
