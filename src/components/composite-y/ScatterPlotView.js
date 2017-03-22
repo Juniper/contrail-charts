@@ -23,8 +23,6 @@ export default class ScatterPlotView extends XYChartSubView {
         config: this._bucketConfigModel,
         actionman: this._actionman,
       })
-      const updateComponents = _.concat([this._parent.id], this.config.get('updateComponents'))
-      this.config.set('updateComponents', updateComponents, {silent: true})
     }
   }
 
