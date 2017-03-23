@@ -63,12 +63,13 @@ export default class CompositeYChartView extends ContrailChartsView {
     this._updateChildDrawings()
     this._calculateActiveAccessorData()
     this._calculateDimensions()
-    this.calculateScales()
+    this._calculateRanges()
+    this._calculateScales()
 
     super.render()
-    this.renderSVG()
-    this.renderXAxis()
-    this.renderYAxes()
+    this._renderSVG()
+    this._renderXAxis()
+    this._renderYAxes()
     _.each(this._drawings, drawing => drawing.render())
 
     const crosshairId = this.config.get('crosshair')
@@ -150,10 +151,9 @@ export default class CompositeYChartView extends ContrailChartsView {
    * Assumes to have the range values available in the DataProvider (model) and the chart dimensions available in params.
    * Params: xRange, yRange, xDomain, yDomain, xScale, yScale
    */
-  calculateScales () {
+  _calculateRanges () {
     const p = this.params
     p.xMarginInner = _.max(_.map(this._drawings, 'xMarginInner'))
-    this.saveScales()
     p.xRange = [p.marginLeft + p.marginInner + p.xMarginInner, p.width - p.marginRight - p.marginInner - p.xMarginInner]
     p.yRange = [p.height - p.marginInner - p.marginBottom, p.marginInner + p.marginTop]
   }
@@ -178,7 +178,7 @@ export default class CompositeYChartView extends ContrailChartsView {
   /**
   * Save all scales in the params and drawing.params structures.
   */
-  saveScales () {
+  _calculateScales () {
     const domains = this.combineDomains()
     if (!_.has(this.params, 'axis')) {
       this.params.axis = {}
@@ -239,7 +239,7 @@ export default class CompositeYChartView extends ContrailChartsView {
    * Renders axis and drawing groups.
    * Resizes chart dimensions if chart already exists.
    */
-  renderSVG () {
+  _renderSVG () {
     const translate = this.params.xRange[0] - this.xMarginInner
     if (this.d3.select('clipPath').empty()) {
       this.d3.append('clipPath')
@@ -293,7 +293,7 @@ export default class CompositeYChartView extends ContrailChartsView {
   /**
    * Render x axis
    */
-  renderXAxis () {
+  _renderXAxis () {
     const name = this.config.get('plot.x.axis')
     const axis = this.params.axis[name]
     if (!axis.scale) return
@@ -332,7 +332,7 @@ export default class CompositeYChartView extends ContrailChartsView {
     axisLabelElements.exit().remove()
   }
 
-  renderYAxes () {
+  _renderYAxes () {
     // We render the yAxis here because there may be multiple drawings for one axis.
     // The parent has aggregated information about all Y axis.
     let referenceYScale = null
