@@ -35,7 +35,7 @@ define([ // eslint-disable-line no-undef
         marginLeft: 80,
         marginRight: 80,
         marginBottom: 40,
-        chartHeight: 450,
+        height: 450,
         plot: {
           x: {
             accessor: 'x',
@@ -124,7 +124,7 @@ define([ // eslint-disable-line no-undef
         marginLeft: 80,
         marginRight: 80,
         marginBottom: 40,
-        chartHeight: 200,
+        height: 200,
         plot: {
           x: {
             accessor: 'x',

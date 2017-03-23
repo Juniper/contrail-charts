@@ -48,14 +48,14 @@ export default class SankeyView extends ContrailChartsView {
   }
 
   _calculateDimensions () {
-    if (!this.params.chartWidth) {
-      this.params.chartWidth = this._container.getBoundingClientRect().width
+    if (!this.params.width) {
+      this.params.width = this._container.getBoundingClientRect().width
     }
-    if (this.params.chartWidthDelta) {
-      this.params.chartWidth += this.params.chartWidthDelta
+    if (this.params.widthDelta) {
+      this.params.width += this.params.widthDelta
     }
-    if (!this.params.chartHeight) {
-      this.params.chartHeight = 3 * this.params.chartWidth / 5
+    if (!this.params.height) {
+      this.params.height = 3 * this.params.width / 5
     }
     if (!this.params.labelMargin) {
       this.params.labelMargin = 50
@@ -111,8 +111,8 @@ export default class SankeyView extends ContrailChartsView {
     // Does not look good - the sum of incoming values will not equal sum of outgoing values and the outgoing link will be thinner than the sum of incomming ones.
     // This needs to be handled during data parsing (ie. by the user) because only the user knows which data is input (in our example the input is from port to ip).
     /*
-    console.log('valueSum, chartHeight: ', valueSum, this.params.chartHeight)
-    const valueScale = this.config.get('valueScale').domain([1, valueSum]).range([1, this.params.chartHeight])
+    console.log('valueSum, height: ', valueSum, this.params.height)
+    const valueScale = this.config.get('valueScale').domain([1, valueSum]).range([1, this.params.height])
     _.each(this.links, (link) => {
       link.originalValue = link.value
       link.value = valueScale(link.originalValue)
@@ -121,7 +121,7 @@ export default class SankeyView extends ContrailChartsView {
     this.sankey = d3Sankey.sankey()
       .nodeWidth(this.params.nodeWidth)
       .nodePadding(this.params.nodePadding)
-      .size([this.params.chartWidth - 2 * this.params.labelMargin, this.params.chartHeight - 2 * this.params.topMargin])
+      .size([this.params.width - 2 * this.params.labelMargin, this.params.height - 2 * this.params.topMargin])
     this.sankey
       .nodes(this.nodes)
       .links(this.links)
@@ -158,7 +158,7 @@ export default class SankeyView extends ContrailChartsView {
       .attr('y', (d) => d.dy / 2)
       .attr('text-anchor', 'end')
       .text((d) => d.dy > 10 ? d.label : '')
-      .filter((d) => d.x > this.params.chartWidth / 2)
+      .filter((d) => d.x > this.params.width / 2)
       .attr('x', 5 + this.sankey.nodeWidth())
       .attr('text-anchor', 'start')
     const svgNodesEdit = svgNodesEnter.merge(svgNodes).transition().ease(this.config.get('ease')).duration(this.params.duration)
@@ -172,7 +172,7 @@ export default class SankeyView extends ContrailChartsView {
       .attr('y', (d) => d.dy / 2)
       .attr('text-anchor', 'end')
       .text((d) => d.dy > 10 ? d.label : '')
-      .filter((d) => d.x > this.params.chartWidth / 2)
+      .filter((d) => d.x > this.params.width / 2)
       .attr('x', 5 + this.sankey.nodeWidth())
       .attr('text-anchor', 'start')
   }

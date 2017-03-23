@@ -25,7 +25,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 600,
+      height: 600,
       crosshair: 'crosshair-id',
       plot: {
         x: {

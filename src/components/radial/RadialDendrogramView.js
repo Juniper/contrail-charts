@@ -60,17 +60,17 @@ export default class RadialDendrogramView extends ContrailChartsView {
   }
 
   _calculateDimensions () {
-    if (!this.params.chartWidth) {
-      this.params.chartWidth = this._container.getBoundingClientRect().width
+    if (!this.params.width) {
+      this.params.width = this._container.getBoundingClientRect().width
     }
-    if (this.params.chartWidthDelta) {
-      this.params.chartWidth += this.params.chartWidthDelta
+    if (this.params.widthDelta) {
+      this.params.width += this.params.widthDelta
     }
-    if (!this.params.chartHeight) {
-      this.params.chartHeight = this.params.chartWidth
+    if (!this.params.height) {
+      this.params.height = this.params.width
     }
     if (!this.params.radius) {
-      this.params.radius = this.params.chartWidth / 2
+      this.params.radius = this.params.width / 2
     }
     if (!this.params.labelMargin) {
       this.params.labelMargin = 50
@@ -410,7 +410,7 @@ export default class RadialDendrogramView extends ContrailChartsView {
   }
 
   _render () {
-    this.d3.attr('transform', `translate(${this.params.chartWidth / 2}, ${this.params.chartHeight / 2})`)
+    this.d3.attr('transform', `translate(${this.params.width / 2}, ${this.params.height / 2})`)
     // Circles
     const svgCircles = this.d3.selectAll('.circle').data(this.circles)
     svgCircles.enter().append('circle')

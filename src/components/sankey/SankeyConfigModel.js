@@ -17,11 +17,11 @@ export default class SankeyConfigModel extends ContrailChartsConfigModel {
       isSharedContainer: true,
       */
 
-      // The chart width. If not provided will be caculated by View.
-      chartWidth: undefined,
+      // The component width. If not provided will be caculated by View.
+      width: undefined,
 
-      // The chart height. If not provided will be caculated by View.
-      chartHeight: undefined,
+      // The component height. If not provided will be caculated by View.
+      height: undefined,
 
       labelMargin: 50,
 

@@ -98,8 +98,8 @@ export default class CompositeYChartView extends ContrailChartsView {
 
   _calculateDimensions () {
     if (this._drawings[0]) {
-      this.params.chartWidth = this._drawings[0].width
-      this.params.chartHeight = this._drawings[0].height
+      this.params.width = this._drawings[0].width
+      this.params.height = this._drawings[0].height
     }
   }
   /**
@@ -153,9 +153,9 @@ export default class CompositeYChartView extends ContrailChartsView {
   calculateScales () {
     const p = this.params
     p.xMarginInner = _.max(_.map(this._drawings, 'xMarginInner'))
-    p.xRange = [p.marginLeft + p.marginInner + p.xMarginInner, p.chartWidth - p.marginRight - p.marginInner - p.xMarginInner]
-    p.yRange = [p.chartHeight - p.marginInner - p.marginBottom, p.marginInner + p.marginTop]
     this.saveScales()
+    p.xRange = [p.marginLeft + p.marginInner + p.xMarginInner, p.width - p.marginRight - p.marginInner - p.xMarginInner]
+    p.yRange = [p.height - p.marginInner - p.marginBottom, p.marginInner + p.marginTop]
   }
 
   getDrawing (accessor) {
@@ -327,7 +327,7 @@ export default class CompositeYChartView extends ContrailChartsView {
       .attr('class', 'axis-label')
       .merge(axisLabelElements)
       .attr('x', this.params.xRange[0] + (this.params.xRange[1] - this.params.xRange[0]) / 2)
-      .attr('y', this.params.chartHeight - this.params.marginTop - labelMargin)
+      .attr('y', this.params.height - this.params.marginTop - labelMargin)
       .text(d => d)
     axisLabelElements.exit().remove()
   }
@@ -346,7 +346,7 @@ export default class CompositeYChartView extends ContrailChartsView {
       yLabelX = 0 - this.params.marginLeft + yLabelMargin
       yLabelTransform = 'rotate(-90)'
       if (axisInfo.position === 'right') {
-        yLabelX = this.params.chartWidth - this.params.marginLeft - yLabelMargin
+        yLabelX = this.params.width - this.params.marginLeft - yLabelMargin
         yLabelTransform = 'rotate(90)'
         axisInfo.yAxis = d3Axis.axisRight(this.params.axis[axisInfo.name].scale)
           .tickSize((this.params.xRange[1] - this.params.xRange[0] + 2 * this.xMarginInner))

@@ -29,7 +29,7 @@ const chartConfig = {
       marginLeft: 60,
       marginRight: 60,
       marginBottom: 40,
-      chartHeight: 350,
+      height: 350,
       plot: {
         x: {
           accessor: 'x',
@@ -70,7 +70,7 @@ const chartConfig = {
       marginLeft: 60,
       marginRight: 60,
       marginBottom: 40,
-      chartHeight: 350,
+      height: 350,
       plot: {
         x: {
           accessor: 'x',
@@ -112,7 +112,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 300,
+      height: 300,
       plot: {
         x: {
           accessor: 'x',
@@ -155,7 +155,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 300,
+      height: 300,
       plot: {
         x: {
           accessor: 'd',
@@ -197,7 +197,7 @@ const chartConfig = {
       marginLeft: 60,
       marginRight: 60,
       marginBottom: 40,
-      chartHeight: 250,
+      height: 250,
       selection: [60, 100],
       plot: {
         x: {

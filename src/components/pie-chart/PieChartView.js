@@ -59,7 +59,7 @@ export default class PieChartView extends ContrailChartsView {
       .sort(null)
       .value(d => serieConfig.getValue(d))(data)
 
-    this.d3.attr('transform', `translate(${this.params.chartWidth / 2}, ${this.params.chartHeight / 2})`)
+    this.d3.attr('transform', `translate(${this.params.width / 2}, ${this.params.height / 2})`)
 
     const sectors = this.d3.selectAll(this.selectors.node)
       .data(stakes, d => d.value)
@@ -85,16 +85,9 @@ export default class PieChartView extends ContrailChartsView {
   }
 
   _calculateDimensions () {
-    if (!this.params.chartWidth) {
-      this.params.chartWidth = this._container.getBoundingClientRect().width
-    }
-    if (this.params.chartWidthDelta) {
-      this.params.chartWidth += this.params.chartWidthDelta
-    }
-    if (!this.params.chartHeight) {
-      this.params.chartHeight = Math.round(this.params.chartWidth / 2)
-    }
-    // TODO: use the 'axis' param to compute additional margins for the axis
+    this.params.width = this.config.get('width') || this._container.getBoundingClientRect().width
+    if (this.params.widthDelta) this.params.width += this.params.widthDelta
+    this.params.height = this.config.get('height') || Math.round(this.params.width / 2)
   }
 
   _onMousemove (d, el, event) {

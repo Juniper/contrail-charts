@@ -14,14 +14,14 @@ export default class CompositeYChartConfigModel extends ContrailChartsConfigMode
       // by default will use common shared container under the parent
       isSharedContainer: true,
 
-      // The chart width. If not provided will be calculated by View.
-      chartWidth: undefined,
+      // The component width. If not provided will be calculated by View.
+      width: undefined,
 
       // The difference by how much we want to modify the computed width.
-      chartWidthDelta: undefined,
+      widthDelta: undefined,
 
-      // The chart height. If not provided will be calculated by View.
-      chartHeight: undefined,
+      // The component height. If not provided will be calculated by View.
+      height: undefined,
 
       // Default axis ticks if not specified per axis.
       _xTicks: 10,
