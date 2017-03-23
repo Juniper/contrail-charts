@@ -6,7 +6,6 @@ import ContrailChartsView from 'contrail-charts-view'
 import _template from './legend.html'
 
 export default class LegendView extends ContrailChartsView {
-  static get dataType () { return 'DataFrame' }
 
   constructor (p) {
     super(p)
@@ -16,7 +15,7 @@ export default class LegendView extends ContrailChartsView {
 
   render () {
     const template = this.config.get('template') || _template
-    const content = template(this.config.data)
+    const content = template(this.config.getData(this.model))
     super.render(content)
   }
 }

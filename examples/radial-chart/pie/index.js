@@ -64,8 +64,9 @@ const chartConfig = {
       ],
     },
   }, {
-    type: 'LegendUniversal',
+    type: 'Legend',
     config: {
+      dataType: 'Serie',
       sourceComponent: 'donut-chart-id',
     },
   }

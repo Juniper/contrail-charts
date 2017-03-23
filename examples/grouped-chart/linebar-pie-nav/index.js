@@ -217,8 +217,9 @@ const chartConfig = {
     },
   }, {
     id: 'legend-pie',
-    type: 'LegendUniversal',
+    type: 'Legend',
     config: {
+      dataType: 'Serie',
       sourceComponent: 'pie-chart-id',
     },
   }, {
