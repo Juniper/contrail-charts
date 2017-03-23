@@ -1,109 +1,53 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+import _ from 'lodash'
 import {ChartView} from 'coCharts'
-import {formatter} from 'commons'
+import {formatter, fixture} from 'commons'
 
-// Complex example
-const dataSrc = []
-for (let i = 0; i < 100; i++) {
-  const a = Math.random() * 100
-  dataSrc.push({
-    x: 1475760930000 + 1000000 * i,
-    a: a,
-    b: a + Math.random() * 10,
-    c: Math.random() * 100,
-    d: i + (Math.random() - 0.5) * 10,
-    e: (Math.random() - 0.5) * 10
-  })
-}
+const data = fixture()
+const template = _.template(
+  `<div component="chart-id"></div>
+  <div component="timeline-id"></div>`)
 
-const container = 'timeline-chart'
-const layoutMeta = {
-  [container]: 'col-md-11'
-}
-
-const chartConfig = {
-  id: container,
+const config = {
+  id: 'chartBox',
+  template,
   components: [{
-    id: 'timeline-compositey',
+    id: 'chart-id',
     type: 'CompositeYChart',
     config: {
       marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 600,
-      possibleChartTypes: {
-        y1: [
-          {
-            label: 'Stacked Bar',
-            chart: 'StackedBar'
-          }, {
-            label: 'Bar',
-            chart: 'BarChart'
-          }, {
-            label: 'Line',
-            chart: 'LineChart'
-          }
-        ],
-        y2: [
-          {
-            label: 'Stacked Bar',
-            chart: 'StackedBar'
-          }, {
-            label: 'Bar',
-            chart: 'BarChart'
-          }, {
-            label: 'Line',
-            chart: 'LineChart'
-          }
-        ]
-      },
+      height: 300,
       plot: {
         x: {
-          accessor: 'x',
+          accessor: 't',
           labelFormatter: 'Time',
-          axis: 'x'
+          axis: 'x',
         },
         y: [
           {
             accessor: 'a',
             labelFormatter: 'Label A',
             enabled: true,
-            chart: 'stackedBar',
+            chart: 'BarChart',
             axis: 'y1',
-          },
-          {
+          }, {
             accessor: 'b',
             labelFormatter: 'Label B',
             enabled: true,
-            chart: 'stackedBarChart',
+            chart: 'LineChart',
             axis: 'y1',
-          },
-          {
+          }, {
             accessor: 'c',
             labelFormatter: 'Label C',
             enabled: false,
-            chart: 'StackedBar',
+            chart: 'LineChart',
             axis: 'y1',
           },
-          {
-            accessor: 'd',
-            labelFormatter: 'Megabytes D',
-            color: '#d62728',
-            enabled: true,
-            chart: 'LineChart',
-            axis: 'y2',
-          },
-          {
-            accessor: 'e',
-            labelFormatter: 'Megabytes E',
-            color: '#9467bd',
-            enabled: true,
-            chart: 'LineChart',
-            axis: 'y2',
-          }
         ]
       },
       axis: {
@@ -114,36 +58,20 @@ const chartConfig = {
           position: 'left',
           formatter: formatter.toInteger,
           labelMargin: 15,
-          domain: [-10, undefined]
         },
         y2: {
           position: 'right',
           formatter: formatter.toInteger,
-          labelMargin: 15
+          labelMargin: 15,
         }
       }
     }
   }, {
+    id: 'timeline-id',
     type: 'Timeline',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
-      chartHeight: 200,
-      selection: [75, 100],
-      plot: {
-        x: {
-          accessor: 'x',
-          labelFormatter: 'Time',
-          axis: 'x'
-        }
-      },
-      axis: {
-        x: {
-          formatter: formatter.extendedISOTime,
-        }
-      }
+      selection: [55, 85],
+      accessor: 't',
     }
   }]
 }
@@ -151,11 +79,9 @@ const chartConfig = {
 const chart = new ChartView()
 
 export default {
-  container: container,
-  layoutMeta: layoutMeta,
   render: () => {
-    chart.setConfig(chartConfig)
-    chart.setData(dataSrc)
+    chart.setConfig(config)
+    chart.setData(data)
   },
   remove: () => {
     chart.remove()
