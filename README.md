@@ -96,6 +96,6 @@ This project is licensed under Apache Version 2.0 - see the [LICENSE](LICENSE) f
 
 * Guidelines for commit logs
 
-    * Start commit message with a short (~50 characters) 1-line summary paragraph i.e. a single very brief line (no period at end) followed by a blank line. Rest of the commit log can be zero or more paragraphs. Each line within a paragraph should be <= 72 characters.
+    * Start commit message with a short (~50 characters) 1-line summary paragraph i.e. a single very brief line followed by a blank line. Rest of the commit log can be zero or more paragraphs. Each line within a paragraph should be <= 72 characters.
 
     * Include a Github issue number by adding Closes #NNN. For more details please read Github [help](https://help.github.com/articles/closing-issues-via-commit-messages/). 
