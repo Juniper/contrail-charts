@@ -219,7 +219,6 @@ const chartConfig = {
     id: 'legend-pie',
     type: 'Legend',
     config: {
-      dataType: 'Serie',
       sourceComponent: 'pie-chart-id',
     },
   }, {

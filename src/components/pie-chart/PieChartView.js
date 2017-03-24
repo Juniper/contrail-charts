@@ -67,12 +67,12 @@ export default class PieChartView extends ContrailChartsView {
     sectors
       .enter().append('path')
       .classed(this.selectorClass('node'), true)
-      .style('fill', d => this.config.getColor([], serieConfig.getLabel(d.data)))
+      .style('fill', d => this.config.getColor(d.data))
       .merge(sectors)
       .classed(this.selectorClass('interactive'), this.config.hasAction('node'))
       .attr('d', arc)
       .transition().ease(d3Ease.easeLinear).duration(this.params.duration)
-      .style('fill', d => this.config.getColor([], serieConfig.getLabel(d.data)))
+      .style('fill', d => this.config.getColor(d.data))
 
     sectors.exit().remove()
 
