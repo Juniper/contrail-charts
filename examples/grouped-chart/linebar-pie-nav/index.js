@@ -268,8 +268,8 @@ export default {
     const navigation = chart.getComponent('navigation-id')
     const zoom = navigation.actionman.get('Zoom')
     const pieChart = chart.getComponent('pie-chart-id')
-    zoom.on('fired', (componentIds, {accessor, range}) => {
-      const data = navigation.model.filter(accessor, range)
+    zoom.on('fired', (componentIds, ranges) => {
+      const data = navigation.model.filter('x', ranges['x'])
       pieChart.model.data = data
     })
   },

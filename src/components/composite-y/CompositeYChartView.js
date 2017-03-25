@@ -450,14 +450,16 @@ export default class CompositeYChartView extends ContrailChartsView {
     return data
   }
   /**
-   * Zooming by x scale
-   * Works only with components which triggers Zoom action which have the same x accessor
    * Works only with incremental values at x scale, as range is set as min / max values for x scale
    * There is no option to set zoomed range by exact position at x scale (start / end)
    */
-  zoom ({accessor, range}) {
-    if (this.config.get('plot.x.accessor') !== accessor) return
-    _.set(this.config, 'attributes.axis.x.domain', range)
+  zoom (ranges) {
+    const accessorsByAxis = _.groupBy(this.params.activeAccessorData, 'axis')
+    accessorsByAxis.x = [{accessor: this.config.get('plot.x.accessor')}]
+    _.each(accessorsByAxis, (accessors, axisName) => {
+      const range = d3Array.extent(_(accessors).map(accessor => ranges[accessor.accessor]).flatten().value())
+      if (range[0] !== range[1] || _.isNil(range[0])) _.set(this.config, `attributes.axis.${axisName}.domain`, range)
+    })
     this.config.trigger('change', this.config)
   }
   /**

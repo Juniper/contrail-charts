@@ -107,7 +107,7 @@ export default class TimelineView extends ContrailChartsView {
     if (_.isDate(xMin)) xMin = xMin.getTime()
     if (_.isDate(xMax)) xMax = xMax.getTime()
 
-    const data = {accessor: xAccessor, range: [xMin, xMax]}
+    const data = {[xAccessor]: [xMin, xMax]}
     actionman.fire('Zoom', this.config.get('updateComponents'), data)
   }
   /**

@@ -34,7 +34,8 @@ export default class NavigationView extends ContrailChartsView {
      */
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
-    this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration'))
+    // needs more time to not encounter onSelection event after zoom
+    this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration') * 2)
   }
 
   get events () {
@@ -64,7 +65,9 @@ export default class NavigationView extends ContrailChartsView {
     window.removeEventListener('resize', this._onResize)
   }
 
-  zoom ({accessor, range}) {
+  zoom (ranges) {
+    const range = ranges[this.config.get('plot.x.accessor')]
+    if (!range) return
     const sScale = this.config.get('selectionScale')
     const visualMin = this.params.xScale(range[0])
     const visualMax = this.params.xScale(range[1])
@@ -74,7 +77,9 @@ export default class NavigationView extends ContrailChartsView {
 
     if (_.isEqual(this.config.get('selection'), selection)) return
     this.config.set('selection', selection, {silent: true})
+    this._disabled = true
     this._update()
+    this._debouncedEnable()
   }
 
   prevChunkSelected () {
@@ -116,7 +121,7 @@ export default class NavigationView extends ContrailChartsView {
     if (_.isDate(xMin)) xMin = xMin.getTime()
     if (_.isDate(xMax)) xMax = xMax.getTime()
 
-    const data = {accessor: xAccessor, range: [xMin, xMax]}
+    const data = {[xAccessor]: [xMin, xMax]}
     actionman.fire('Zoom', this.config.get('updateComponents'), data)
   }
   /**
