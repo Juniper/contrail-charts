@@ -8,8 +8,10 @@
   $p_handle_cursor: map-get($brush-handle, "cursorShape");
 
   .selection {
-    fill: black;
-    mix-blend-mode: overlay;
+    fill: none;
+    // saturate colors everything inside selection
+    //fill: black;
+    //mix-blend-mode: overlay;
   }
 
   .unselected {
