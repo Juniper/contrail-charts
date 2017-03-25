@@ -67,7 +67,7 @@ export default class NavigationView extends ContrailChartsView {
 
   zoom (ranges) {
     const range = ranges[this.config.get('plot.x.accessor')]
-    if (!range) return
+    if (!range || range[0] === range[1]) return
     const sScale = this.config.get('selectionScale')
     const visualMin = this.params.xScale(range[0])
     const visualMax = this.params.xScale(range[1])
