@@ -55,7 +55,7 @@ const chartConfig = {
     id: 'compositey-chart-id',
     type: 'CompositeYChart',
     config: {
-      chartHeight: 300,
+      height: 300,
       crosshair: 'crosshair-id',
       possibleChartTypes: {
         y1: ['BarChart', 'LineChart'],
@@ -148,7 +148,7 @@ const chartConfig = {
     type: 'CompositeYChart',
     id: 'compositey-chart-id2',
     config: {
-      chartHeight: 300,
+      height: 300,
       possibleChartTypes: ['BarChart', 'LineChart'],
       plot: {
         x: {
@@ -181,8 +181,8 @@ const chartConfig = {
       marginLeft: 60,
       type: 'donut',
       radius: 100,
-      chartWidth: 200,
-      chartHeight: 300,
+      width: 200,
+      height: 300,
       colorScale: d3.scaleOrdinal().range([colorScheme[0], colorScheme[4], colorScheme[2]]), // eslint-disable-line no-undef
       serie: {
         getValue: serie => serie.value,
@@ -217,7 +217,7 @@ const chartConfig = {
     },
   }, {
     id: 'legend-pie',
-    type: 'LegendUniversal',
+    type: 'Legend',
     config: {
       sourceComponent: 'pie-chart-id',
     },
@@ -228,7 +228,7 @@ const chartConfig = {
       marginLeft: 60,
       marginRight: 60,
       marginBottom: 40,
-      chartHeight: 250,
+      height: 250,
       selection: [75, 100],
       plot: {
         x: {
@@ -268,8 +268,8 @@ export default {
     const navigation = chart.getComponent('navigation-id')
     const zoom = navigation.actionman.get('Zoom')
     const pieChart = chart.getComponent('pie-chart-id')
-    zoom.on('fired', (componentIds, {accessor, range}) => {
-      const data = navigation.model.filter(accessor, range)
+    zoom.on('fired', (componentIds, ranges) => {
+      const data = navigation.model.filter('x', ranges['x'])
       pieChart.model.data = data
     })
   },

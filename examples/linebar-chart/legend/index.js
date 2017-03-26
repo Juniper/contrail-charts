@@ -45,7 +45,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 400,
+      height: 400,
       crosshair: 'crosshair-id',
       possibleChartTypes: {
         y1: ['BarChart', 'StackedBarChart'],
@@ -120,7 +120,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 200,
+      height: 200,
       selection: [75, 100],
       plot: {
         x: {

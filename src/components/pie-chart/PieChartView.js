@@ -13,7 +13,6 @@ export default class PieChartView extends ContrailChartsView {
 
   constructor (p = {}) {
     super(p)
-    this._highlightRadius = 10
     this.listenTo(this.model, 'change', this.render)
     this.listenTo(this.config, 'change', this.render)
     /**
@@ -31,12 +30,13 @@ export default class PieChartView extends ContrailChartsView {
   get selectors () {
     return _.extend(super.selectors, {
       node: '.arc',
-      active: '.active',
+      highlight: '.highlight',
     })
   }
   get events () {
     return _.extend(super.events, {
       [`click ${this.selectors.node}`]: '_onClickNode',
+      [`mouseover ${this.selectors.node}`]: '_onMouseover',
       [`mousemove ${this.selectors.node}`]: '_onMousemove',
       [`mouseout ${this.selectors.node}`]: '_onMouseout',
     })
@@ -59,7 +59,7 @@ export default class PieChartView extends ContrailChartsView {
       .sort(null)
       .value(d => serieConfig.getValue(d))(data)
 
-    this.d3.attr('transform', `translate(${this.params.chartWidth / 2}, ${this.params.chartHeight / 2})`)
+    this.d3.attr('transform', `translate(${this.params.width / 2}, ${this.params.height / 2})`)
 
     const sectors = this.d3.selectAll(this.selectors.node)
       .data(stakes, d => d.value)
@@ -67,12 +67,12 @@ export default class PieChartView extends ContrailChartsView {
     sectors
       .enter().append('path')
       .classed(this.selectorClass('node'), true)
-      .style('fill', d => this.config.getColor([], serieConfig.getLabel(d.data)))
+      .style('fill', d => this.config.getColor(d.data))
       .merge(sectors)
       .classed(this.selectorClass('interactive'), this.config.hasAction('node'))
       .attr('d', arc)
       .transition().ease(d3Ease.easeLinear).duration(this.params.duration)
-      .style('fill', d => this.config.getColor([], serieConfig.getLabel(d.data)))
+      .style('fill', d => this.config.getColor(d.data))
 
     sectors.exit().remove()
 
@@ -85,32 +85,40 @@ export default class PieChartView extends ContrailChartsView {
   }
 
   _calculateDimensions () {
-    if (!this.params.chartWidth) {
-      this.params.chartWidth = this._container.getBoundingClientRect().width
-    }
-    if (this.params.chartWidthDelta) {
-      this.params.chartWidth += this.params.chartWidthDelta
-    }
-    if (!this.params.chartHeight) {
-      this.params.chartHeight = Math.round(this.params.chartWidth / 2)
-    }
-    // TODO: use the 'axis' param to compute additional margins for the axis
+    this.params.width = this.config.get('width') || this._container.getBoundingClientRect().width
+    if (this.params.widthDelta) this.params.width += this.params.widthDelta
+    this.params.height = this.config.get('height') || Math.round(this.params.width / 2)
+  }
+
+  // Event handlers
+
+  _onMouseover (d, el, event) {
+    const radius = this.config.get('radius')
+    const highlightArc = d3Shape.arc(d)
+      .innerRadius(radius)
+      .outerRadius(radius * 1.06)
+      .startAngle(d.startAngle)
+      .endAngle(d.endAngle)
+    this.d3
+      .append('path')
+      .classed('arc', true)
+      .classed(this.selectorClass('highlight'), true)
+      .attr('d', highlightArc)
+      .style('fill', this.config.getColor(d.data))
   }
 
   _onMousemove (d, el, event) {
     const [left, top] = d3Selection.mouse(this._container)
-    el.classList.add(this.selectorClass('active'))
     actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d.data)
   }
 
   _onMouseout (d, el) {
+    this.d3.selectAll(this.selectors.highlight).remove()
     actionman.fire('HideComponent', this.config.get('tooltip'))
-    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
-    els.classed('active', false)
   }
 
   _onClickNode (d, el, e) {
-    el.classList.remove(this.selectorClass('active'))
+    this._onMouseout(d, el)
     super._onEvent(d, el, e)
   }
 }

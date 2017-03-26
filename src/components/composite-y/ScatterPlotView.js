@@ -97,12 +97,11 @@ export default class ScatterPlotView extends XYChartSubView {
       _.each(this.params.activeAccessorData, accessor => {
         const key = accessor.accessor
         if (!_.isNil(_.get(d, key))) { // key may not exist in all the data set.
-          const y = _.get(d, key)
           const sizeScale = this.params.axis[accessor.sizeAxis].scale
           const obj = {
             id: x + '-' + key,
             x: this.xScale(x),
-            y: this.yScale(y),
+            y: this.yScale(_.get(d, key)),
             area: sizeScale(_.get(d, accessor.sizeAccessor)),
             color: this.config.getColor(d, accessor),
             accessor: accessor,
@@ -129,6 +128,6 @@ export default class ScatterPlotView extends XYChartSubView {
 
   _onBackgroundClick () {
     const accessor = this.config.get('plot.x.accessor')
-    this.actionman.fire('Zoom', null, {accessor, range: this.model.getRangeFor(accessor, true)})
+    this.actionman.fire('Zoom', null, {[accessor]: this.model.getRangeFor(accessor, true)})
   }
 }

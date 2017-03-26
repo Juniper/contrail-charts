@@ -36,7 +36,7 @@ const chartConfig = {
     config: {
       marginLeft: 50,
       marginRight: 50,
-      chartHeight: 450,
+      height: 450,
       plot: {
         x: {
           accessor: 'group.x',
@@ -146,7 +146,7 @@ const chartConfig = {
     type: 'Navigation',
     config: {
       marginInner: 5,
-      chartHeight: 200,
+      height: 200,
       plot: {
         x: {
           accessor: 'group.x',

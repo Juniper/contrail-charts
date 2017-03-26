@@ -24,12 +24,12 @@ export default class XYChartSubView extends ContrailChartsView {
   get tagName () { return 'g' }
 
   get width () {
-    const delta = this.config.get('chartWidthDelta') || 0
-    return (this.config.get('chartWidth') || this._container.getBoundingClientRect().width) + delta
+    const delta = this.config.get('widthDelta') || 0
+    return (this.config.get('width') || this._container.getBoundingClientRect().width) + delta
   }
 
   get height () {
-    return this.config.get('chartHeight') || Math.round(this.width / 2)
+    return this.config.get('height') || Math.round(this.width / 2)
   }
 
   get xScale () {

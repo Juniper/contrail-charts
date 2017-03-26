@@ -1,11 +1,10 @@
 @mixin pieChartRules($pie-chart) {
   $p_arc_separator_color: map-get($pie-chart, "arcSeparatorColor");
 
-  opacity: 0.9;
   path.arc {
     stroke: $p_arc_separator_color;
   }
-  path.active {
-    opacity: 0.45;
+  path.highlight {
+    opacity: 0.3;
   }
 }

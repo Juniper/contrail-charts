@@ -20,7 +20,7 @@ export default class BrushConfigModel extends ContrailChartsConfigModel {
   }
 
   get handleCenter () {
-    return (this.attributes.yRange[0] - this.attributes.yRange[1])
+    return this.attributes.yRange[1] / 2 + this.attributes.yRange[0] / 2
   }
 
   get extent () {

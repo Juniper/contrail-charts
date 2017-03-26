@@ -42,7 +42,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 500,
+      height: 500,
       plot: {
         x: {
           accessor: 'x',

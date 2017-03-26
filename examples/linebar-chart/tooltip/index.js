@@ -18,7 +18,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 300,
+      height: 300,
       plot: {
         x: {
           accessor: 't',
@@ -105,7 +105,7 @@ const chartConfig = {
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
-      chartHeight: 300,
+      height: 300,
       plot: {
         x: {
           accessor: 't',

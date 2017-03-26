@@ -184,9 +184,9 @@ export default class ContrailChartsView extends ContrailView {
       this._insertSorted(wrapper)
     }
     this.svg
-      .attr('width', this.params.chartWidth || this.svg.attr('width'))
-      .attr('height', this.params.chartHeight || this.svg.attr('height'))
       .classed(this.selectorClass('sharedSvg'), isSharedContainer)
+      .attr('width', this.params.width || this.svg.attr('width'))
+      .attr('height', this.params.height || this.svg.attr('height'))
   }
   /**
    * insert own element into the DOM in the right order

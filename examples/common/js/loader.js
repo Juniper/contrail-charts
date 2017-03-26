@@ -128,7 +128,7 @@ function createLink (example) {
   const chartType = example.category || ''
   const view = example.view
   const cleaned = encodeURIComponent(example.title.replace(/\s/g, ''))
-  const link = `<a id="${chartType}${cleaned}" href="#${chartType}${cleaned}">
+  const link = `<a class="${chartType}${cleaned}" href="#${chartType}${cleaned}">
     <span class="nav-text">${example.title}</span>
     </a>`
   const $link = $(link)
@@ -160,5 +160,5 @@ function _initRJS (example) {
   }
 }
 
-const exampleId = window.location.hash || '#groupedNavigation'
-$(exampleId).find('span').click()
+const exampleName = window.location.hash.substr(1) || 'groupedNavigation'
+$('.' + exampleName).find('span').click()

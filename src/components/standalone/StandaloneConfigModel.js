@@ -11,8 +11,8 @@ export default class StandaloneModel extends ContrailChartsConfigModel {
     return Object.assign(super.defaults, {
       // by default will use shared container under the parent
       isSharedContainer: true,
-      chartWidth: 300,
-      chartHeight: 100,
+      width: 300,
+      height: 100,
     })
   }
 }

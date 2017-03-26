@@ -59,7 +59,7 @@ export default class ContrailChartsConfigModel extends ContrailModel {
    * @param {Object} config on how to extract label from data
    */
   getLabel (data, config = {}) {
-    const getLabel = config.labelFormatter || config.label || config.accessor
+    const getLabel = config.labelFormatter || config.label || config.accessor || config.getLabel
     if (_.isString(getLabel)) return getLabel
     if (_.isNil(data)) return undefined
     if (_.isFunction(getLabel)) return getLabel(data)
