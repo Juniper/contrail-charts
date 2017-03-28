@@ -11,16 +11,6 @@ import actionman from 'core/Actionman'
 export default class SankeyView extends ContrailChartsView {
   static get dataType () { return 'Serie' }
 
-  get tagName () { return 'g' }
-  get className () { return 'sankey' }
-  get events () {
-    return {
-      'mouseover .link': '_onMouseoverLink',
-      'mouseout .link': '_onMouseoutLink',
-      'click .arc': '_arcClick'
-    }
-  }
-
   constructor (p = {}) {
     super(p)
     this.listenTo(this.model, 'change', this._onDataModelChange)
@@ -31,6 +21,22 @@ export default class SankeyView extends ContrailChartsView {
      */
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
+  }
+
+  get tagName () { return 'g' }
+
+  get selectors () {
+    return _.extend(super.selectors, {
+      node: '.node',
+      link: '.link',
+      active: '.active'
+    })
+  }
+  get events () {
+    return _.extend(super.events, {
+      [`mousemove ${this.selectors.link}`]: '_onMouseoverLink',
+      [`mouseout ${this.selectors.link}`]: '_onMouseoutLink'
+    })
   }
 
   render () {
@@ -92,13 +98,11 @@ export default class SankeyView extends ContrailChartsView {
         }
         const sourceIndex = nodeNameMap[link.source].index
         const targetIndex = nodeNameMap[link.target].index
-        let foundLink = null
-        // Check if this link already exists.
-        _.each(this.links, (uniqueLink) => {
-          if ((uniqueLink.source === sourceIndex && uniqueLink.target === targetIndex) ||
-            (uniqueLink.source === targetIndex && uniqueLink.target === sourceIndex)) {
-            foundLink = uniqueLink
+        const foundLink = _.find(this.links, uniqueLink => {
+          if ((uniqueLink.source === sourceIndex && uniqueLink.target === targetIndex) || (uniqueLink.source === targetIndex && uniqueLink.target === sourceIndex)) {
+            return true
           }
+          return false
         })
         if (foundLink) {
           foundLink.value += link.value
@@ -194,15 +198,5 @@ export default class SankeyView extends ContrailChartsView {
 
   _onMouseoutLink (d, el) {
     actionman.fire('HideComponent', this.config.get('tooltip'))
-  }
-
-  _arcClick (d, el) {
-    if (d.depth < this.maxDepth && d.depth === this.params.drillDownLevel) {
-      // Expand
-      this.config.set('drillDownLevel', this.params.drillDownLevel + 1)
-    } else if (d.depth < this.params.drillDownLevel) {
-      // Collapse
-      this.config.set('drillDownLevel', this.params.drillDownLevel - 1)
-    }
   }
 }
