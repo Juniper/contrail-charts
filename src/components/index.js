@@ -6,6 +6,18 @@ export {default as ColorPickerConfigModel} from './color-picker/ColorPickerConfi
 export {default as ColorPickerView} from './color-picker/ColorPickerView'
 export {default as CompositeYChartConfigModel} from './composite-y/CompositeYChartConfigModel'
 export {default as CompositeYChartView} from './composite-y/CompositeYChartView'
+
+export {default as StackedBarChartView} from './composite-y/StackedBarChartView'
+export {default as StackedBarChartConfigModel} from './composite-y/CompositeYChartConfigModel'
+export {default as BarChartView} from './composite-y/GroupedBarChartView'
+export {default as BarChartConfigModel} from './composite-y/CompositeYChartConfigModel'
+export {default as AreaChartView} from './composite-y/AreaChartView'
+export {default as AreaChartConfigModel} from './composite-y/CompositeYChartConfigModel'
+export {default as LineChartView} from './composite-y/LineChartView'
+export {default as LineChartConfigModel} from './composite-y/CompositeYChartConfigModel'
+export {default as ScatterPlotView} from './composite-y/ScatterPlotView'
+export {default as ScatterPlotConfigModel} from './composite-y/CompositeYChartConfigModel'
+
 export {default as ControlPanelConfigModel} from './control-panel/ControlPanelConfigModel'
 export {default as ControlPanelView} from './control-panel/ControlPanelView'
 export {default as CrosshairConfigModel} from './crosshair/CrosshairConfigModel'

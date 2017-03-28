@@ -21,7 +21,6 @@ export default class ScatterPlotView extends XYChartSubView {
       this._bucketConfigModel.parent = this.config
       this._bucketView = new BucketView({
         config: this._bucketConfigModel,
-        actionman: this._actionman,
       })
     }
   }

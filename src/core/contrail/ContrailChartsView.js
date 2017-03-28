@@ -4,6 +4,9 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
+import * as Components from 'components/index'
+import * as Helpers from 'helpers/index'
+import * as Providers from 'providers/index'
 /**
  * View base class
  */
@@ -12,10 +15,17 @@ export default class ContrailChartsView extends ContrailView {
     super(p)
     this._id = p.id
     this.d3.attr('id', this.id)
-    this.config = p.config
     this._order = p.order
     this._container = p.container
     this.params = {}
+
+    const View = Components[this.type + 'View'] || {}
+    const Provider = Providers[View.dataType + 'Provider']
+    if (Provider) {
+      if (p.model instanceof Provider) this.model = p.model
+      else this.model = new Provider(null, p.model)
+    }
+    this.setConfig(p.config)
   }
 
   get selectors () {
@@ -89,6 +99,22 @@ export default class ContrailChartsView extends ContrailView {
     const left = this.svg.node().getBoundingClientRect().left - this._container.getBoundingClientRect().left
     const top = this.svg.node().getBoundingClientRect().top - this._container.getBoundingClientRect().top
     return {left, top}
+  }
+
+  setData (data) {
+    this.model.data = data
+  }
+
+  setConfig (config) {
+    const configModelName = this.type + 'ConfigModel'
+    const ConfigModel = Components[configModelName] || Helpers[configModelName]
+    if (ConfigModel) {
+      if (config instanceof ConfigModel) this.config = config
+      else {
+        if (!this.config) this.config = new ConfigModel(config)
+        else this.config.set(config)
+      }
+    }
   }
   /**
    * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).

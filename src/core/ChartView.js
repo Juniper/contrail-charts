@@ -11,7 +11,12 @@ import actionman from 'core/Actionman'
 */
 export default class ChartView {
   constructor (p) {
+    this._config = null
     this._components = []
+    this._container = null
+    this._provider = null
+
+    this._frozen = false
   }
   /**
   * Provide data for this chart as a simple array of objects.
