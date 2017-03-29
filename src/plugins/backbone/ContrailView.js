@@ -66,7 +66,7 @@ export default class ContrailView extends Backbone.View {
   delegate (eventName, selector, listener, listenerName) {
     // code minification drops original listener name
     // const listenerName = listener.name.split(' ')[1]
-    this.d3.delegate(`${eventName}.${listenerName}.delegateEvents${this.cid}`, selector, listener)
+    this.d3.delegate(`${eventName}.${selector.substr(1)}.${listenerName}.delegateEvents${this.cid}`, selector, listener)
     return this
   }
   // d3 doesn't support two levels of event namespace
@@ -78,7 +78,7 @@ export default class ContrailView extends Backbone.View {
 
   undelegate (eventName, selector, listener) {
     const listenerName = listener.name.split(' ')[1]
-    this.d3.on(`${eventName}.${listenerName}.delegateEvents${this.cid}`, null)
+    this.d3.on(`${eventName}.${selector.substr(1)}.${listenerName}.delegateEvents${this.cid}`, null)
     return this
   }
   /**

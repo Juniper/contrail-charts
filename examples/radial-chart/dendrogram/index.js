@@ -56,7 +56,12 @@ const chartConfig = {
         }
       },
       drillDownLevel: 3,
-      tooltip: 'tooltip-id'
+      tooltip: 'tooltip-id',
+      action: {
+        'click node': data => console.warn('click node'),
+        'dblclick node': data => console.warn('dblclick node'),
+        'dblclick link': data => console.warn('dblclick link'),
+      },
     }
   }, {
     id: 'tooltip-id',
