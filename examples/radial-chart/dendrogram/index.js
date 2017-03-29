@@ -59,6 +59,7 @@ const chartConfig = {
       tooltip: 'tooltip-id',
       action: {
         'click node': data => console.warn('click node'),
+        'click link': data => console.warn('click link'),
         'dblclick node': data => console.warn('dblclick node'),
         'dblclick link': data => console.warn('dblclick link'),
       },

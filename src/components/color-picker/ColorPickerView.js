@@ -1,10 +1,11 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './color-picker.scss'
+import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
 import _template from './color-picker.html'
+import './color-picker.scss'
 
 export default class ColorPickerView extends ContrailChartsView {
   constructor (p) {
@@ -12,11 +13,21 @@ export default class ColorPickerView extends ContrailChartsView {
     this.listenTo(this.config, 'change', this.render)
   }
 
+  get selectors () {
+    return _.extend(super.selectors, {
+      open: '.color-select',
+      close: '.color-picker-palette-close',
+      title: '.color-picker-palette-title',
+      palette: '.color-picker-palette',
+      colorSelector: '.color-picker-palette-color',
+    })
+  }
+
   get events () {
     return {
-      'click .color-select': 'open',
-      'click .color-picker-palette-close': 'close',
-      'click .color-picker-palette-color': '_onSelectColor',
+      'click open': 'open',
+      'click close': 'close',
+      'click colorSelector': '_onSelectColor',
     }
   }
 
@@ -32,16 +43,16 @@ export default class ColorPickerView extends ContrailChartsView {
     const $elem = this.$(el)
     const label = $elem.find('.label').html()
     this._accessor = $elem.data('accessor')
-    const paletteElement = this.$('.color-picker-palette')
+    const paletteElement = this.$(this.selectors.palette)
     const elemOffset = $elem.position()
     elemOffset.left += $elem.outerWidth(true)
     paletteElement.css(elemOffset)
-    paletteElement.find('.color-picker-palette-title').html(label)
+    paletteElement.find(this.selectors.title).html(label)
     paletteElement.removeClass('hide')
   }
 
   close () {
-    this.d3.select('.color-picker-palette').classed('hide', true)
+    this.d3.select(this.selectors.palette).classed('hide', true)
   }
 
   // Event handlers

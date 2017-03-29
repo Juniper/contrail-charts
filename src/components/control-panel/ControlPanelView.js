@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './control-panel.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailChartsView from 'contrail-charts-view'
@@ -9,6 +8,7 @@ import actionman from 'core/Actionman'
 import _template from './control-panel.html'
 import _panelTemplate from './panel.html'
 import _actionTemplate from './action.html'
+import './control-panel.scss'
 
 export default class ControlPanelView extends ContrailChartsView {
   constructor (p = {}) {
@@ -30,7 +30,7 @@ export default class ControlPanelView extends ContrailChartsView {
 
   get events () {
     return {
-      [`click ${this.selectors.menuItem}`]: '_onMenuItemClick',
+      'click menuItem': '_onMenuItemClick',
     }
   }
 

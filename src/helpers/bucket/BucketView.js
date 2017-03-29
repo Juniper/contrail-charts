@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './bucket.scss'
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
@@ -10,6 +9,7 @@ import actionman from 'core/Actionman'
 import {hashCode} from '../../core/Util'
 import Cluster from './Cluster'
 import ContrailChartsView from 'contrail-charts-view'
+import './bucket.scss'
 
 export default class BucketView extends ContrailChartsView {
   get tagName () { return 'g' }
@@ -26,9 +26,9 @@ export default class BucketView extends ContrailChartsView {
 
   get events () {
     return _.extend(super.events, {
-      [`click ${this.selectors.node}`]: '_onClickNode',
-      [`mouseover ${this.selectors.node}`]: '_onMouseover',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'click node': '_onClickNode',
+      'mouseover node': '_onMouseover',
+      'mouseout node': '_onMouseout',
     })
   }
 

@@ -273,7 +273,7 @@
     max-width: 140px;
     padding: 5px;
 
-    div[class*="swatches--"] {
+    div[class*="switches--"] {
       display: none;
     }
 
@@ -282,18 +282,18 @@
     }
 
     &.select--color {
-      .swatches--colors {
+      .switches--colors {
         display: block;
       }
     }
 
     &.select--chart {
-      .swatches--charts {
+      .switches--charts {
         display: block;
       }
     }
 
-    .swatch {
+    .switch {
       position: relative;
       z-index: 1;
       box-sizing: border-box;

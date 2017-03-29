@@ -1,12 +1,12 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './bar-chart.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
 import XYChartSubView from 'components/composite-y/XYChartSubView'
 import actionman from 'core/Actionman'
+import './bar-chart.scss'
 
 export default class StackedBarChartView extends XYChartSubView {
   get zIndex () { return 1 }
@@ -21,8 +21,8 @@ export default class StackedBarChartView extends XYChartSubView {
 
   get events () {
     return {
-      [`mousemove ${this.selectors.node}`]: '_onMousemove',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'mousemove node': '_onMousemove',
+      'mouseout node': '_onMouseout',
     }
   }
   /**
