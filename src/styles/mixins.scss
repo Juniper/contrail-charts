@@ -9,9 +9,9 @@
 @import "../components/composite-y/composite-y-rules";
 @import "../components/composite-y/area-chart-rules";
 @import "../components/composite-y/bar-chart-rules";
-@import "../components/composite-y/line-chart-rules";
 @import "../components/composite-y/scatter-plot-rules";
 @import "../components/pie-chart/pie-chart-rules";
+@import "../components/line/line-rules";
 @import "../components/radial/radial-dendrogram-rules";
 
 @mixin applyRuleTemplate($componentId, $arg) {

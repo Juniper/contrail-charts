@@ -23,6 +23,7 @@ import navigation from '../../grouped-chart/navigation/index.js'
 import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav/index.js'
 import sankeyChart from '../../advance-chart/sankey'
 // Single
+import singleLine from '../../single/single-line'
 import singlePie from '../../single/single-pie'
 /**
  * structure of an example:
@@ -80,6 +81,9 @@ const allExamples = {
     }
   },
   'single': {
+    'Line Chart': {
+      view: singleLine,
+    },
     'Pie Chart': {
       view: singlePie,
       desc: `After 2 seconds the chart is set with changed config and then updated with new data`,
