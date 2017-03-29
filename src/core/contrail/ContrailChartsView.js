@@ -101,6 +101,14 @@ export default class ContrailChartsView extends ContrailView {
     return {left, top}
   }
 
+  get width () {
+    return this.config.get('width') || this._container.getBoundingClientRect().width
+  }
+
+  get height () {
+    return this.config.get('height') || Math.round(this.width / 2)
+  }
+
   setData (data) {
     this.model.data = data
   }
@@ -211,8 +219,8 @@ export default class ContrailChartsView extends ContrailView {
     }
     this.svg
       .classed(this.selectorClass('sharedSvg'), isSharedContainer)
-      .attr('width', this.params.width || this.svg.attr('width'))
-      .attr('height', this.params.height || this.svg.attr('height'))
+      .attr('width', this.width + this.config.get('margin.right'))
+      .attr('height', this.height + this.config.get('margin.bottom'))
   }
   /**
    * insert own element into the DOM in the right order
@@ -232,6 +240,7 @@ export default class ContrailChartsView extends ContrailView {
         .sort()
         .datum(null)
     }
+    this.d3.attr('transform', `translate(${this.config.get('margin.left')},${this.config.get('margin.top')})`)
   }
 
   // Event handlers
