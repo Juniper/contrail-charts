@@ -1,13 +1,13 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './legend-panel.scss'
 import $ from 'jquery'
 import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
 import * as d3Color from 'd3-color'
 import actionman from 'core/Actionman'
 import _template from './legend.html'
+import './legend-panel.scss'
 const _states = {
   DEFAULT: 'default',
   EDIT: 'edit'
@@ -20,13 +20,23 @@ export default class LegendPanelView extends ContrailChartsView {
     this._state = _states.DEFAULT
   }
 
+  get selectors () {
+    return _.extend({}, super.selectors, {
+      attribute: '.legend-attribute',
+      mode: '.edit-legend',
+      select: '.select',
+      color: '.switch--color',
+      chartType: '.switch--chart'
+    })
+  }
+
   get events () {
     return {
-      'change .legend-attribute': '_toggleAttribute',
-      'click .edit-legend': '_toggleEditMode',
-      'click .select': '_toggleSelector',
-      'click .swatch--color': '_selectColor',
-      'click .swatch--chart': '_selectChartType',
+      'change attribute': '_toggleAttribute',
+      'click mode': '_toggleEditMode',
+      'click select': '_toggleSelector',
+      'click color': '_selectColor',
+      'click chartType': '_selectChartType',
     }
   }
 
@@ -36,7 +46,7 @@ export default class LegendPanelView extends ContrailChartsView {
     super.render(content)
 
     if (!this.config.attributes.filter || this.config.data.attributes.length === 1) {
-      this.d3.selectAll('.legend-attribute')
+      this.d3.selectAll(this.selectors.attribute)
         .classed('disabled', true)
         .select('input')
         .property('disabled', true)
@@ -57,10 +67,10 @@ export default class LegendPanelView extends ContrailChartsView {
     this.$('.attribute').toggleClass('edit')
     this.d3.selectAll('.selector').classed('active', false)
 
-    this.d3.selectAll('.select--color').classed('hide', !this.config.attributes.editable.colorSelector)
-    this.d3.selectAll('.select--chart').classed('hide', !this.config.attributes.editable.chartSelector)
+    this.d3.selectAll(this.selectors.color).classed('hide', !this.config.attributes.editable.colorSelector)
+    this.d3.selectAll(this.selectors.chartType).classed('hide', !this.config.attributes.editable.chartSelector)
 
-    _.each(this.el.querySelectorAll('.legend-attribute > input'), el => {
+    _.each(this.el.querySelectorAll(this.selectors.attribute + ' > input'), el => {
       el.disabled = this._state !== _states.DEFAULT
     })
   }
@@ -72,11 +82,11 @@ export default class LegendPanelView extends ContrailChartsView {
   }
 
   _addChartTypes (attributeAxis) {
-    this.d3.selectAll('.swatch--chart')
-    .classed('show', false)
-    .filter(function (d, i, n) {
-      return n[i].dataset.axis === attributeAxis
-    }).classed('show', true)
+    this.d3.selectAll(this.selectors.chartType)
+      .classed('show', false)
+      .filter(function (d, i, n) {
+        return n[i].dataset.axis === attributeAxis
+      }).classed('show', true)
   }
 
   _toggleSelector (d, el) {
@@ -86,14 +96,14 @@ export default class LegendPanelView extends ContrailChartsView {
     selectorElement
       .classed('select--color', false)
       .classed('select--chart', false)
-    selectorElement.selectAll('.swatch').classed('selected', false)
+    selectorElement.selectAll('.switch').classed('selected', false)
 
     if (this.el.querySelector('.selector').classList.contains('active')) {
       selectorElement.classed('active', false)
     } else if (el.classList.contains('select--color')) {
       selectorElement.classed('active', true).classed('select--color', true)
       const currentColor = d3Color.color(el.dataset.color)
-      selectorElement.selectAll('.swatch--color')
+      selectorElement.selectAll(this.selectors.color)
         .filter(function (d, i, n) {
           return d3Color.color(n[i].dataset.color).toString() === currentColor.toString()
         })
@@ -105,7 +115,7 @@ export default class LegendPanelView extends ContrailChartsView {
         .classed('active', true)
         .classed('select--chart', true)
       const currentChart = el.dataset.chartType
-      selectorElement.selectAll('.swatch--chart')
+      selectorElement.selectAll(this.selectors.chartType)
         .filter(function (d, i, n) {
           return n[i].dataset.chartType === currentChart
         })

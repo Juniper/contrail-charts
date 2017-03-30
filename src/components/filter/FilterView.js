@@ -1,11 +1,12 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './filter.scss'
+import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
 import _template from './filter.html'
+import './filter.scss'
 
 export default class FilterView extends ContrailChartsView {
   static get dataType () { return 'DataFrame' }
@@ -16,9 +17,15 @@ export default class FilterView extends ContrailChartsView {
     this.listenTo(this.config, 'change', this.render)
   }
 
+  get selectors () {
+    return _.extend({}, super.selectors, {
+      item: '.filter-item-input',
+    })
+  }
+
   get events () {
     return {
-      'change .filter-item-input': '_onItemClick',
+      'change item': '_onItemClick',
     }
   }
 

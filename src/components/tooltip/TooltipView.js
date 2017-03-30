@@ -1,9 +1,9 @@
 // Copyright (c) Juniper Networks, Inc. All rights reserved.
 
-import './tooltip.scss'
 import ContrailChartsView from 'contrail-charts-view'
 import TitleView from 'helpers/title/TitleView'
 import _template from './tooltip.html'
+import './tooltip.scss'
 
 export default class TooltipView extends ContrailChartsView {
   constructor (p) {

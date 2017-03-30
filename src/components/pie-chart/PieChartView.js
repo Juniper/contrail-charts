@@ -1,12 +1,12 @@
 // Copyright (c) Juniper Networks, Inc. All rights reserved.
 
-import './pie-chart.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import './pie-chart.scss'
 
 export default class PieChartView extends ContrailChartsView {
   static get dataType () { return 'Serie' }
@@ -35,10 +35,10 @@ export default class PieChartView extends ContrailChartsView {
   }
   get events () {
     return _.extend(super.events, {
-      [`click ${this.selectors.node}`]: '_onClickNode',
-      [`mouseover ${this.selectors.node}`]: '_onMouseover',
-      [`mousemove ${this.selectors.node}`]: '_onMousemove',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'click node': '_onClickNode',
+      'mouseover node': '_onMouseover',
+      'mousemove node': '_onMousemove',
+      'mouseout node': '_onMouseout',
     })
   }
 

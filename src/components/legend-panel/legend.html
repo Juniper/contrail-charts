@@ -21,15 +21,15 @@
   </div>
 
   <div class="selector">
-    <div class="swatches swatches--colors">
+    <div class="switches switches--colors">
       {{#each colors}}
-      <div class="swatch swatch--color" style="background-color: {{this}}; border-color: {{this}}" data-color="{{this}}"></div>
+      <div class="switch switch--color" style="background-color: {{this}}; border-color: {{this}}" data-color="{{this}}"></div>
       {{/each}}
     </div>
 
-    <div class="swatches swatches--charts">
+    <div class="switches switches--charts">
       {{#each possibleChartTypes}}
-      <div class="swatch swatch--chart fa {{ chartIcon }}" data-chart-type="{{ chartType }}" data-axis="{{ axisLabel }}"></div>
+      <div class="switch switch--chart fa {{ chartIcon }}" data-chart-type="{{ chartType }}" data-axis="{{ axisLabel }}"></div>
       {{/each}}
     </div>
   </div>
