@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './area-chart.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
@@ -9,6 +8,7 @@ import * as d3Ease from 'd3-ease'
 import * as d3Array from 'd3-array'
 import XYChartSubView from 'components/composite-y/XYChartSubView'
 import actionman from 'core/Actionman'
+import './area-chart.scss'
 
 export default class AreaChartView extends XYChartSubView {
   get zIndex () { return 2 }
@@ -23,8 +23,8 @@ export default class AreaChartView extends XYChartSubView {
 
   get events () {
     return {
-      [`mousemove ${this.selectors.node}`]: '_onMousemove',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'mousemove node': '_onMousemove',
+      'mouseout node': '_onMouseout',
     }
   }
 

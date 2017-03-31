@@ -38,13 +38,6 @@ export default class NavigationView extends ContrailChartsView {
     this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration') * 2)
   }
 
-  get events () {
-    return {
-      'click .prev>a': 'prevChunkSelected',
-      'click .next>a': 'nextChunkSelected',
-    }
-  }
-
   render () {
     super.render()
     this.resetParams()
@@ -80,26 +73,6 @@ export default class NavigationView extends ContrailChartsView {
     this._disabled = true
     this._update()
     this._debouncedEnable()
-  }
-
-  prevChunkSelected () {
-    const range = this.model.getRange()
-    const x = this.params.xAccessor
-    const rangeDiff = range[x][1] - range[x][0]
-    this.model.queryLimit = {
-      [x]: [range[x][0] - rangeDiff * 0.5, range[x][1] - rangeDiff * 0.5],
-    }
-  // TODO: show some waiting screen?
-  }
-
-  nextChunkSelected () {
-    const range = this.model.getRange()
-    const x = this.params.xAccessor
-    const rangeDiff = range[x][1] - range[x][0]
-    this.model.queryLimit = {
-      [x]: [range[x][0] + rangeDiff * 0.5, range[x][1] + rangeDiff * 0.5],
-    }
-  // TODO: show some waiting screen?
   }
 
   // Event handlers

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './message.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailChartsView from 'contrail-charts-view'
@@ -9,6 +8,7 @@ import actionman from 'core/Actionman'
 import _template from './message.html'
 import SendMessage from './actions/SendMessage'
 import ClearMessage from './actions/ClearMessage'
+import './message.scss'
 const Actions = {SendMessage, ClearMessage}
 
 export default class MessageView extends ContrailChartsView {

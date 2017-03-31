@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './line-chart.scss'
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
@@ -12,6 +11,7 @@ import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
 import XYChartSubView from 'components/composite-y/XYChartSubView'
 import actionman from 'core/Actionman'
+import './line-chart.scss'
 
 export default class LineChartView extends XYChartSubView {
   get zIndex () { return 3 }
@@ -26,8 +26,8 @@ export default class LineChartView extends XYChartSubView {
 
   get events () {
     return {
-      [`mouseover ${this.selectors.node}`]: '_onMouseover',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'mouseover node': '_onMouseover',
+      'mouseout node': '_onMouseout',
     }
   }
 
