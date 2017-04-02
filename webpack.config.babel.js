@@ -56,7 +56,7 @@ export default (env = defaultEnv) => {
    *  When we need a build with all d3 packages set include env 'd3-all' or pass individual library name to be included.
    */
   let d3Libs = ['d3', 'd3-selection', 'd3-scale', 'd3-shape', 'd3-array', 'd3-axis', 'd3-ease', 'd3-brush',
-    'd3-time-format', 'd3-hierarchy']
+    'd3-time-format', 'd3-hierarchy', 'd3-geo']
 
   const externals = {
     'jquery': {amd: 'jquery', root: 'jQuery'},
