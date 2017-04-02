@@ -14,6 +14,7 @@ const config = {
     config: {
       height: 400,
       map: world,
+      tooltip: 'tooltip-id',
     }
   }, {
     id: 'tooltip-id',

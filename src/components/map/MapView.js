@@ -2,9 +2,11 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
+import * as d3Selection from 'd3-selection'
 import * as d3Geo from 'd3-geo'
 import * as topojson from 'topojson'
 import ContrailChartsView from 'contrail-charts-view'
+import actionman from 'core/Actionman'
 import './map.scss'
 
 export default class MapView extends ContrailChartsView {
@@ -30,8 +32,10 @@ export default class MapView extends ContrailChartsView {
   }
 
   get events () {
-    return {
-    }
+    return _.extend(super.events, {
+      'mousemove node': '_onMousemove',
+      'mouseout node': '_onMouseout',
+    })
   }
 
   get width () {
@@ -113,5 +117,14 @@ export default class MapView extends ContrailChartsView {
       .attr('cx', d => this.config.project(d)[0])
       .attr('cy', d => this.config.project(d)[1])
       .attr('r', 5)
+  }
+
+  _onMousemove (d, el) {
+    const [left, top] = d3Selection.mouse(this._container)
+    actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d)
+  }
+
+  _onMouseout (d, el) {
+    actionman.fire('HideComponent', this.config.get('tooltip'))
   }
 }
