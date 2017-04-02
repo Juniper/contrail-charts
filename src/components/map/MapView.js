@@ -3,6 +3,7 @@
  */
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
+import * as d3Zoom from 'd3-zoom'
 import * as d3Geo from 'd3-geo'
 import * as topojson from 'topojson'
 import ContrailChartsView from 'contrail-charts-view'
@@ -25,7 +26,7 @@ export default class MapView extends ContrailChartsView {
   get selectors () {
     return _.extend(super.selectors, {
       graticule: '.graticule',
-      country: '.country',
+      feature: '.feature',
       boundary: '.boundary',
       node: '.point',
     })
@@ -58,11 +59,15 @@ export default class MapView extends ContrailChartsView {
 
   _renderLayout () {
     const world = this.config.get('map')
-
     const projection = this.config.get('projection')
       .scale(this.config.get('zoom'))
       .translate([this.params.width / 2, this.params.height / 2])
       .precision(0.1)
+    const zoom = d3Zoom.zoom()
+      .scaleExtent([1, 8])
+      .on('zoom', this._onZoom.bind(this))
+
+    this.svg.call(zoom)
 
     const path = d3Geo.geoPath()
       .projection(projection)
@@ -94,10 +99,10 @@ export default class MapView extends ContrailChartsView {
     const countries = topojson.feature(world, world.objects.countries).features
     const boundaries = [topojson.mesh(world, world.objects.countries, (a, b) => a !== b)]
 
-    this.d3.selectAll(this.selectors.country)
+    this.d3.selectAll(this.selectors.feature)
       .data(countries)
       .enter().insert('path', this.selectors.graticule)
-      .attr('class', this.selectorClass('country'))
+      .attr('class', this.selectorClass('feature'))
       .attr('d', path)
 
     this.d3.selectAll(this.selectors.boundary)
@@ -117,6 +122,24 @@ export default class MapView extends ContrailChartsView {
       .attr('cx', d => this.config.project(d)[0])
       .attr('cy', d => this.config.project(d)[1])
       .attr('r', 5)
+  }
+
+  zoom (transform) {
+    this.d3.selectAll(this.selectors.boundary)
+      .style('stroke-width', 0.5 / transform.k + 'px')
+    this.d3.selectAll('circle')
+      .attr('r', 5 / transform.k)
+    this.d3.attr('transform', transform)
+    this._ticking = false
+  }
+
+  // Event handlers
+
+  _onZoom () {
+    if (!this._ticking) {
+      window.requestAnimationFrame(this.zoom.bind(this, d3Selection.event.transform))
+      this._ticking = true
+    }
   }
 
   _onMousemove (d, el) {
