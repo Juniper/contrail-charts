@@ -1,6 +1,6 @@
 {
   "name": "contrail-charts",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Contrail Chart library",
   "main": "src/js/contrail-charts.js",
   "scripts": {
@@ -58,7 +58,9 @@
     "handlebars-loader": "1.4.0",
     "jquery": "3.1.1",
     "lodash": "4.17.2",
-    "material-design-lite": "1.3.0"
+    "material-design-lite": "1.3.0",
+    "topojson": "2.2.0",
+    "metismenu": "2.7.0"
   },
   "repository": "Juniper/contrail-charts",
   "standard": {

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import './radial-dendrogram.scss'
 import _ from 'lodash'
 import * as d3Hierarchy from 'd3-hierarchy'
 import * as d3Scale from 'd3-scale'
@@ -9,6 +8,7 @@ import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import './radial-dendrogram.scss'
 
 export default class RadialDendrogramView extends ContrailChartsView {
   static get dataType () { return 'Serie' }
@@ -34,14 +34,15 @@ export default class RadialDendrogramView extends ContrailChartsView {
       active: '.active',
     })
   }
+
   get events () {
     return _.extend(super.events, {
-      [`click ${this.selectors.node}`]: '_onClickNode',
-      [`click ${this.selectors.link}`]: '_onEvent',
-      [`dblclick ${this.selectors.node}`]: '_onEvent',
-      [`dblclick ${this.selectors.link}`]: '_onEvent',
-      [`mousemove ${this.selectors.node}`]: '_onMousemove',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'click node': '_onClickNode',
+      'click link': '_onEvent',
+      'dblclick node': '_onEvent',
+      'dblclick link': '_onEvent',
+      'mousemove node': '_onMousemove',
+      'mouseout node': '_onMouseout',
     })
   }
 

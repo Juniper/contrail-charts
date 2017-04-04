@@ -15,6 +15,7 @@ import groupedBar from '../../linebar-chart/grouped-bar-chart'
 import liveData from '../../linebar-chart/live'
 // Scatter
 import shapes from '../../bubble-chart/multiple-shapes'
+import map from '../../bubble-chart/map'
 // Radial
 import pieChart from '../../radial-chart/pie'
 import dendrogramChart from '../../radial-chart/dendrogram'
@@ -62,7 +63,10 @@ const allExamples = {
   'bubble': {
     'Shapes': {
       view: shapes,
-    }
+    },
+    'Map': {
+      view: map,
+    },
   },
   'radial': {
     'Pie Chart': {
@@ -92,10 +96,11 @@ const allExamples = {
   'advance': {
     'Sankey': {
       view: sankeyChart,
-    }
+    },
   }
 }
 
+$('#side-menu').metisMenu()
 const $content = $('.content')
 const $chartBox = $('#chartBox')
 
