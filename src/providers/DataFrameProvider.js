@@ -35,11 +35,12 @@ export default class DataFrameProvider {
   }
   /**
    * Calculate and cache range of a serie
-   * @param {String} accessor - serie accessor
+   * @param {String | Array} accessors - serie accessor
    * @param {Boolean} isFull if true get range of the whole data, not just selection
    * @return {Array} [min, max] extent of values of the serie
    */
   getRangeFor (accessor, isFull) {
+    if (_.isArray(accessor)) return this.getCombinedRange(accessor, isFull)
     if (isFull) return d3Array.extent(this._data, d => _.get(d, accessor))
 
     if (!_.has(this._ranges, accessor)) {
@@ -50,10 +51,8 @@ export default class DataFrameProvider {
   /**
    * @return {Array} [min, max] values of provided series values combined
    */
-  combineDomains (accessors) {
-    const domains = _.map(accessors, accessor => {
-      return this.getRangeFor(accessor)
-    })
+  getCombinedRange (accessors) {
+    const domains = _.map(accessors, accessor => this.getRangeFor(accessor))
     return d3Array.extent(_.concat(...domains))
   }
   /**

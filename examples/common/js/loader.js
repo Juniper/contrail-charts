@@ -24,6 +24,7 @@ import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav/index.js'
 import sankeyChart from '../../advance-chart/sankey'
 // Single
 import singleLine from '../../single/single-line'
+import singleGroupedBar from '../../single/single-grouped-bar'
 import singlePie from '../../single/single-pie'
 /**
  * structure of an example:
@@ -83,6 +84,9 @@ const allExamples = {
   'single': {
     'Line Chart': {
       view: singleLine,
+    },
+    'Grouped Bar Chart': {
+      view: singleGroupedBar,
     },
     'Pie Chart': {
       view: singlePie,

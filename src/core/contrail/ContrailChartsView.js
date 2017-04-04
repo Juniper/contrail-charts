@@ -37,6 +37,7 @@ export default class ContrailChartsView extends ContrailView {
       sharedSvg: '.shared-svg',
       node: '.node',
       interactive: '.interactive',
+      active: '.active',
     }
   }
 

@@ -23,24 +23,25 @@ export default {
     let domain = []
 
     // data range is overrided by config.domain
-    if (!config.domain || _.isNil(config.domain[0]) || _.isNil(config.domain[1])) {
+    if (config.domain && !_.isNil(config.domain[0]) && !_.isNil(config.domain[1])) {
+      domain = config.domain
+    } else {
       let getFullRange = false
       if (model.data.length < 2) getFullRange = true
       domain = model.getRangeFor(config.accessor, getFullRange)
       if (config.domain && !_.isNil(config.domain[0])) domain[0] = config.domain[0]
       if (config.domain && !_.isNil(config.domain[1])) domain[1] = config.domain[1]
-    } else domain = config.domain
+    }
 
     scale.domain(domain)
     if (config.range) scale.range(config.range)
     return scale
   },
 
-  outerWidth (model, config = {}) {
-    const x = config.x.accessor
-    if (!_.isFunction(config.x.scale)) return config.width
-    const first = _.get(_(model.data).first(), x)
-    const last = _.get(_(model.data).last(), x)
-    return Math.abs(config.x.scale(last) - config.x.scale(first))
+  outerWidth (width, model, accessor, scale) {
+    if (!model || !accessor || !_.isFunction(scale)) return width
+    const first = _.get(_(model.data).first(), accessor)
+    const last = _.get(_(model.data).last(), accessor)
+    return Math.abs(scale(last) - scale(first))
   },
 }

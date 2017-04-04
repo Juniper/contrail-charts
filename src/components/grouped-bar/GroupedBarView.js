@@ -6,11 +6,21 @@ import * as d3Scale from 'd3-scale'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
-import XYChartSubView from 'components/composite-y/XYChartSubView'
+import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
-import './bar-chart.scss'
+import './bar.scss'
 
-export default class BarChartView extends XYChartSubView {
+export default class GroupedBarView extends ContrailChartsView {
+  static get dataType () { return 'DataFrame' }
+
+  constructor (...args) {
+    super(...args)
+    this.listenTo(this.model, 'change', this.render)
+    this.listenTo(this.config, 'change', this.render)
+  }
+
+  get tagName () { return 'g' }
+
   get zIndex () { return 1 }
   /**
    * follow same naming convention for all XY chart sub views
@@ -36,40 +46,40 @@ export default class BarChartView extends XYChartSubView {
   }
 
   get bandWidth () {
-    if (_.isEmpty(this.model.data)) return 0
+    const data = this.model.data
+    if (_.isEmpty(data)) return 0
     const paddedPart = 1 - (this.config.get('barPadding') / 2 / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
-    return this.outerWidth / this.model.data.length * paddedPart
+    return this.config.getOuterWidth(this.model, this.width) / data.length * paddedPart
   }
 
   getScreenX (datum, xAccessor, yAccessor) {
     let delta = 0
-    _.each(this.params.activeAccessorData, (accessor, j) => {
+    _.each(this.config.yAccessors, (accessor, j) => {
       if (accessor.accessor === yAccessor) {
-        const innerBandScale = this.params.axis[this.config.get('plot.x.axis')].innerBandScale
-        delta = innerBandScale(j) + innerBandScale.bandwidth() / 2
+        delta = this._innerBandScale(j) + this._innerBandScale.bandwidth() / 2
       }
     })
-    return this.xScale(_.get(datum, xAccessor)) + delta
+    return this.config.xScale(_.get(datum, xAccessor)) + delta
   }
 
   getScreenY (datum, yAccessor) {
-    return this.yScale(_.get(datum, yAccessor))
+    return this.config.yScale(_.get(datum, yAccessor))
   }
 
   render () {
     super.render()
+    this.config.calculateScales(this.model, this.width, this.height)
 
     // Create a flat data structure
-    const numOfAccessors = _.keys(this.params.activeAccessorData).length
+    const numOfAccessors = _.keys(this.config.yAccessors).length
     const bandWidthHalf = this.bandWidth / 2
-    const innerBandScale = d3Scale.scaleBand()
+    this._innerBandScale = d3Scale.scaleBand()
       .domain(d3Array.range(numOfAccessors))
       .range([-bandWidthHalf, bandWidthHalf])
       .paddingInner(0.05)
       .paddingOuter(0.05)
-    this.params.axis[this.params.plot.x.axis].innerBandScale = innerBandScale
     // Render the flat data structure
     const svgBarGroups = this.d3
       .selectAll(this.selectors.node)
@@ -77,10 +87,10 @@ export default class BarChartView extends XYChartSubView {
     svgBarGroups.enter().append('rect')
       .attr('class', d => 'bar')
       .attr('x', d => d.x)
-      .attr('y', this.yScale.range()[0])
+      .attr('y', this.config.yScale.range()[0])
       .attr('height', 0)
       .attr('width', d => d.w)
-      .merge(svgBarGroups).transition().ease(d3Ease.easeLinear).duration(this.params.duration)
+      .merge(svgBarGroups).transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attr('fill', d => d.color)
       .attr('x', d => d.x)
       .attr('y', d => d.y)
@@ -91,18 +101,17 @@ export default class BarChartView extends XYChartSubView {
 
   _prepareData () {
     const flatData = []
-    const start = this.yScale.domain()[0]
-    const innerBandScale = this.params.axis[this.config.get('plot.x.axis')].innerBandScale
-    const innerBandWidth = innerBandScale.bandwidth()
+    const start = this.config.yScale.domain()[0]
+    const innerBandWidth = this._innerBandScale.bandwidth()
     _.each(this.model.data, d => {
-      const x = _.get(d, this.config.get('plot.x.accessor'))
-      _.each(this.params.activeAccessorData, (accessor, j) => {
+      const x = _.get(d, this.config.get('x.accessor'))
+      _.each(this.config.yAccessors, (accessor, j) => {
         const key = accessor.accessor
         const obj = {
           id: x + '-' + key,
-          x: this.xScale(x) + innerBandScale(j),
-          y: this.yScale(_.get(d, key)),
-          h: this.yScale(start) - this.yScale(_.get(d, key)),
+          x: this.config.xScale(x) + this._innerBandScale(j),
+          y: this.config.yScale(_.get(d, key)),
+          h: this.config.yScale(start) - this.config.yScale(_.get(d, key)),
           w: innerBandWidth,
           color: this.config.getColor(d, accessor),
           accessor: accessor,
@@ -122,5 +131,14 @@ export default class BarChartView extends XYChartSubView {
       actionman.fire('ShowComponent', d.accessor.tooltip, {left, top}, d.data)
     }
     el.classList.add(this.selectorClass('active'))
+  }
+
+  _onMouseout (d, el) {
+    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.params.activeAccessorData, a => a.tooltip)
+    if (!_.isEmpty(tooltipId)) {
+      actionman.fire('HideComponent', tooltipId)
+    }
+    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    els.classed('active', false)
   }
 }

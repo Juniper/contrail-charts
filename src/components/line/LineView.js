@@ -9,8 +9,8 @@ import 'd3-transition'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
-import actionman from 'core/Actionman'
 import ContrailChartsView from 'contrail-charts-view'
+import actionman from 'core/Actionman'
 import './line.scss'
 
 export default class LineView extends ContrailChartsView {
