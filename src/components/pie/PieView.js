@@ -6,9 +6,9 @@ import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
-import './pie-chart.scss'
+import './pie.scss'
 
-export default class PieChartView extends ContrailChartsView {
+export default class PieView extends ContrailChartsView {
   static get dataType () { return 'Serie' }
 
   constructor (p = {}) {
@@ -33,6 +33,7 @@ export default class PieChartView extends ContrailChartsView {
       highlight: '.highlight',
     })
   }
+
   get events () {
     return _.extend(super.events, {
       'click node': '_onClickNode',
@@ -43,8 +44,6 @@ export default class PieChartView extends ContrailChartsView {
   }
 
   render () {
-    this.resetParams()
-    this._calculateDimensions()
     super.render()
     this._onMouseout()
     const serieConfig = this.config.get('serie')
@@ -59,7 +58,7 @@ export default class PieChartView extends ContrailChartsView {
       .sort(null)
       .value(d => serieConfig.getValue(d))(data)
 
-    this.d3.attr('transform', `translate(${this.params.width / 2}, ${this.params.height / 2})`)
+    this.d3.attr('transform', `translate(${this.width / 2}, ${this.height / 2})`)
 
     const sectors = this.d3.selectAll(this.selectors.node)
       .data(stakes, d => d.value)
@@ -71,7 +70,7 @@ export default class PieChartView extends ContrailChartsView {
       .merge(sectors)
       .classed(this.selectorClass('interactive'), this.config.hasAction('node'))
       .attr('d', arc)
-      .transition().ease(d3Ease.easeLinear).duration(this.params.duration)
+      .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .style('fill', d => this.config.getColor(d.data))
 
     sectors.exit().remove()
@@ -82,12 +81,6 @@ export default class PieChartView extends ContrailChartsView {
   remove () {
     super.remove()
     window.removeEventListener('resize', this._onResize)
-  }
-
-  _calculateDimensions () {
-    this.params.width = this.config.get('width') || this._container.getBoundingClientRect().width
-    if (this.params.widthDelta) this.params.width += this.params.widthDelta
-    this.params.height = this.config.get('height') || Math.round(this.params.width / 2)
   }
 
   // Event handlers

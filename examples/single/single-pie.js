@@ -29,7 +29,7 @@ let intervalId = -1
 export default {
   render: () => {
     clearInterval(intervalId)
-    chart = chart || new components.PieChartView({config, container})
+    chart = chart || new components.PieView({config, container})
     chart.setData(data)
 
     intervalId = setInterval(() => {

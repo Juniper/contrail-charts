@@ -11,11 +11,12 @@ export default class PieChartConfigModel extends ContrailChartsConfigModel {
       // sets the position for shared svg container
       isPrimary: true,
 
-      // The component width. If not provided will be caculated by View.
-      width: undefined,
-
-      // The component height. If not provided will be caculated by View.
-      height: undefined,
+      margin: {
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+      },
     })
   }
 

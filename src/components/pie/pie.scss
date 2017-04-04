@@ -1,8 +1,8 @@
-@import "pie-chart-rules";
+@import "pie-rules";
 @import "../../styles/variables";
 @import "../../styles/mixins";
 
-.cc-svg .pie-chart {
+.cc-svg .pie {
   @include pieChartRules($pie-chart);
 
   @include themify($pieChartId, $themes);
