@@ -29,6 +29,13 @@ export default {
       let getFullRange = false
       if (model.data.length < 2) getFullRange = true
       domain = model.getRangeFor(config.accessor, getFullRange)
+
+      if (config.stacked && config.accessor.length > 1) {
+        domain[1] = _.reduce(config.accessor, (sum, accessor) => {
+          return sum + model.getRangeFor(accessor)[1]
+        }, 0)
+      }
+
       if (config.domain && !_.isNil(config.domain[0])) domain[0] = config.domain[0]
       if (config.domain && !_.isNil(config.domain[1])) domain[1] = config.domain[1]
     }

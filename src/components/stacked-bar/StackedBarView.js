@@ -4,11 +4,21 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
-import XYChartSubView from 'components/composite-y/XYChartSubView'
+import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
-import './bar-chart.scss'
+import './bar.scss'
 
-export default class StackedBarChartView extends XYChartSubView {
+export default class StackedBarView extends ContrailChartsView {
+  static get dataType () { return 'DataFrame' }
+
+  constructor (...args) {
+    super(...args)
+    this.listenTo(this.model, 'change', this.render)
+    this.listenTo(this.config, 'change', this.render)
+  }
+
+  get tagName () { return 'g' }
+
   get zIndex () { return 1 }
   /**
    * follow same naming convention for all XY chart sub views
@@ -38,17 +48,9 @@ export default class StackedBarChartView extends XYChartSubView {
     const paddedPart = 1 - (this.config.get('barPadding') / 2 / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
-    return this.outerWidth / this.model.data.length * paddedPart
+    return this.config.getOuterWidth(this.model, this.width) / this.model.data.length * paddedPart
   }
 
-  combineDomains () {
-    const domains = super.combineDomains()
-    const topY = _.reduce(this.params.activeAccessorData, (sum, accessor) => {
-      return sum + this.model.getRangeFor(accessor.accessor)[1]
-    }, 0)
-    if (domains[this.axisName]) domains[this.axisName][1] = topY
-    return domains
-  }
   /**
   * @override
   * Y coordinate calculation considers position is being stacked
@@ -56,17 +58,18 @@ export default class StackedBarChartView extends XYChartSubView {
   getScreenY (datum, yAccessor) {
     if (_.isNil(_.get(datum, yAccessor))) return undefined
     let stackedValue = 0
-    _.takeWhile(this.params.activeAccessorData, accessorConfig => {
+    _.takeWhile(this.config.yAccessors, accessorConfig => {
       stackedValue += (_.get(datum, accessorConfig.accessor) || 0)
       return accessorConfig.accessor !== yAccessor
     })
-    return this.yScale(stackedValue)
+    return this.config.yScale(stackedValue)
   }
 
   render () {
     super.render()
+    this.config.calculateScales(this.model, this.width, this.height)
 
-    const start = this.yScale.range()[0]
+    const start = this.config.yScale.range()[0]
     const barGroups = this.d3
       .selectAll(this.selectors.node)
       .data(this._prepareData(), d => d.id)
@@ -76,7 +79,7 @@ export default class StackedBarChartView extends XYChartSubView {
       .attr('y', start)
       .attr('height', 0)
       .attr('width', d => d.w)
-      .merge(barGroups).transition().ease(d3Ease.easeLinear).duration(this.params.duration)
+      .merge(barGroups).transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attr('fill', d => d.color)
       .attr('x', d => d.x)
       .attr('y', d => d.y)
@@ -87,24 +90,24 @@ export default class StackedBarChartView extends XYChartSubView {
 
   _prepareData () {
     const data = this.model.data
-    const start = this.yScale.domain()[0]
+    const start = this.config.yScale.domain()[0]
     const flatData = []
     const bandWidthHalf = (this.bandWidth / 2)
     _.each(data, d => {
-      const x = _.get(d, this.config.get('plot.x.accessor'))
+      const x = _.get(d, this.config.get('x.accessor'))
       let stackedValue = start
       // y coordinate to stack next bar to
-      _.each(this.params.activeAccessorData, accessor => {
-        const key = accessor.accessor
+      _.each(this.config.yAccessors, accessorConfig => {
+        const key = accessorConfig.accessor
         const value = _.get(d, key) || 0
         const obj = {
           id: x + '-' + key,
-          x: this.xScale(x) - bandWidthHalf,
-          y: this.yScale(value - start + stackedValue),
-          h: this.yScale(start) - this.yScale(value + (stackedValue === start ? 0 : start)),
+          x: this.config.xScale(x) - bandWidthHalf,
+          y: this.config.yScale(value - start + stackedValue),
+          h: this.config.yScale(start) - this.config.yScale(value + (stackedValue === start ? 0 : start)),
           w: this.bandWidth,
-          color: this.config.getColor(d, accessor),
-          accessor: accessor,
+          color: this.config.getColor(d, accessorConfig),
+          accessor: accessorConfig,
           data: d,
         }
         stackedValue += value
@@ -122,5 +125,14 @@ export default class StackedBarChartView extends XYChartSubView {
       actionman.fire('ShowComponent', d.accessor.tooltip, {left, top}, d.data)
     }
     el.classList.add(this.selectorClass('active'))
+  }
+
+  _onMouseout (d, el) {
+    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.params.activeAccessorData, a => a.tooltip)
+    if (!_.isEmpty(tooltipId)) {
+      actionman.fire('HideComponent', tooltipId)
+    }
+    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    els.classed('active', false)
   }
 }
