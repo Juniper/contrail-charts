@@ -108,6 +108,7 @@ const allExamples = {
   }
 }
 
+$('#side-menu').metisMenu()
 const $content = $('.content')
 const $chartBox = $('#chartBox')
 

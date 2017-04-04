@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import './scatter-plot.scss'
 import _ from 'lodash'
 import 'd3-transition'
 import * as d3Selection from 'd3-selection'
@@ -10,6 +9,7 @@ import XYChartSubView from 'components/composite-y/XYChartSubView'
 import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
 import BucketView from 'helpers/bucket/BucketView'
 import actionman from 'core/Actionman'
+import './scatter-plot.scss'
 
 export default class ScatterPlotView extends XYChartSubView {
   constructor (p) {
@@ -37,8 +37,8 @@ export default class ScatterPlotView extends XYChartSubView {
 
   get events () {
     return {
-      [`mouseover ${this.selectors.node}`]: '_onMouseover',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'mouseover node': '_onMouseover',
+      'mouseout node': '_onMouseout',
     }
   }
   /**

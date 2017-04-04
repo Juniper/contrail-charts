@@ -36,8 +36,8 @@ export default class LineView extends ContrailChartsView {
 
   get events () {
     return {
-      [`mouseover ${this.selectors.node}`]: '_onMouseover',
-      [`mouseout ${this.selectors.node}`]: '_onMouseout',
+      'mouseover node': '_onMouseover',
+      'mouseout node': '_onMouseout',
     }
   }
   /**

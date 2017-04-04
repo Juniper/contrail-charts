@@ -42,8 +42,8 @@ export default class ContrailChartsView extends ContrailView {
 
   get events () {
     return {
-      [`click ${this.selectors.node}`]: '_onEvent',
-      [`dblclick ${this.selectors.node}`]: '_onEvent',
+      'click node': '_onEvent',
+      'dblclick node': '_onEvent',
     }
   }
 
@@ -160,13 +160,6 @@ export default class ContrailChartsView extends ContrailView {
       if (content) this.el.innerHTML = content
       this._insertSorted(this.el)
     }
-  }
-  /**
-   * Convenience method to get class name of selector
-   * Just remove leading dot
-   */
-  selectorClass (selectorName) {
-    return this.selectors[selectorName].substr(1)
   }
 
   show (container) {

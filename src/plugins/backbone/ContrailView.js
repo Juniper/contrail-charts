@@ -38,6 +38,13 @@ export default class ContrailView extends Backbone.View {
   }
 
   get delegateEventSplitter () { return /^(\S+)\s*(.*)$/ }
+  /**
+   * Convenience method to get class name of selector
+   * Just remove leading dot
+   */
+  selectorClass (selectorName) {
+    return this.selectors[selectorName].substr(1)
+  }
 
   // TODO move this function to Utils?
   // instanceof SVGElement works for existing element
@@ -63,10 +70,11 @@ export default class ContrailView extends Backbone.View {
    * d3 doesn't support multiple listeners on the same event and element,
    * so add listener name to create event namespace
    */
-  delegate (eventName, selector, listener, listenerName) {
+  delegate (eventName, selectorName, listener, listenerName) {
     // code minification drops original listener name
     // const listenerName = listener.name.split(' ')[1]
-    this.d3.delegate(`${eventName}.${listenerName}.delegateEvents${this.cid}`, selector, listener)
+    const uniqEventName = `${eventName}.${selectorName}.${listenerName}.delegateEvents${this.cid}`
+    this.d3.delegate(uniqEventName, this.selectors[selectorName], listener)
     return this
   }
   // d3 doesn't support two levels of event namespace
@@ -76,9 +84,9 @@ export default class ContrailView extends Backbone.View {
     return this
   }
 
-  undelegate (eventName, selector, listener) {
+  undelegate (eventName, selectorName, listener) {
     const listenerName = listener.name.split(' ')[1]
-    this.d3.on(`${eventName}.${listenerName}.delegateEvents${this.cid}`, null)
+    this.d3.on(`${eventName}.${selectorName}.${listenerName}.delegateEvents${this.cid}`, null)
     return this
   }
   /**
