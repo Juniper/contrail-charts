@@ -1,8 +1,8 @@
-@import "area-chart-rules";
+@import "area-rules";
 @import "../../styles/variables";
 @import "../../styles/mixins";
 
-.cc-svg .area-chart {
+.cc-svg .area {
   @include areaChartRules($area-chart);
 
   @include themify($areaChartId, $themes);

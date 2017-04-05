@@ -110,6 +110,7 @@ export default class GroupedBarView extends ContrailChartsView {
         const obj = {
           id: x + '-' + key,
           x: this.config.xScale(x) + this._innerBandScale(j),
+          // TODO in order to plot in forth quadrant use: y: this.config.yScale.range()[1]
           y: this.config.yScale(_.get(d, key)),
           h: this.config.yScale(start) - this.config.yScale(_.get(d, key)),
           w: innerBandWidth,
@@ -134,7 +135,7 @@ export default class GroupedBarView extends ContrailChartsView {
   }
 
   _onMouseout (d, el) {
-    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.params.activeAccessorData, a => a.tooltip)
+    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.config.yAccessors, a => a.tooltip)
     if (!_.isEmpty(tooltipId)) {
       actionman.fire('HideComponent', tooltipId)
     }

@@ -3,22 +3,21 @@
  */
 import {components} from 'coCharts'
 import {fixture} from 'commons'
+import {schemeCategory10 as colorScheme} from 'd3-scale'
 
 const length = 20
 const data = fixture({
   length: length,
   data: {
     'group.x': {linear: true, range: [0, length]},
-    'group.a': {linear: true, range: [3, (length - 1) * 3]},
-    b: {linear: true, range: [5, (length - 1) * 5], repeat: true},
+    'group.a': {random: true, range: [0, length * 3]},
+    b: {random: true, range: [0, (length - 1) * -5]},
+    c: {linear: true, range: [-5, (length - 1) * -5]},
   },
 })
 
 const container = document.querySelector('#chartBox')
 const config = {
-  margin: {
-    top: 10,
-  },
   x: {
     accessor: 'group.x',
     labelFormatter: 'Value',
@@ -26,10 +25,18 @@ const config = {
   y: [
     {
       accessor: 'group.a',
+      stack: 'positive',
       labelFormatter: 'Label Group.A',
+      color: colorScheme[2],
     }, {
       accessor: 'b',
+      stack: 'negative',
       labelFormatter: 'Label B',
+      color: colorScheme[3],
+    }, {
+      accessor: 'c',
+      stack: 'negative',
+      color: colorScheme[4],
     }
   ]
 }
@@ -38,7 +45,7 @@ let chart
 
 export default {
   render: () => {
-    chart = chart || new components.GroupedBarView({config, container})
+    chart = chart || new components.AreaView({config, container})
     chart.setData(data)
   },
   remove: () => {

@@ -28,11 +28,9 @@ const config = {
     {
       accessor: 'group.a',
       labelFormatter: 'Label Group.A',
-      enabled: true,
     }, {
       accessor: 'b',
       labelFormatter: 'Label B',
-      enabled: true,
     }
   ]
 }

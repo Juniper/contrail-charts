@@ -50,7 +50,6 @@ export default class StackedBarView extends ContrailChartsView {
     // or fill the gaps in it beforehand
     return this.config.getOuterWidth(this.model, this.width) / this.model.data.length * paddedPart
   }
-
   /**
   * @override
   * Y coordinate calculation considers position is being stacked
@@ -128,7 +127,7 @@ export default class StackedBarView extends ContrailChartsView {
   }
 
   _onMouseout (d, el) {
-    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.params.activeAccessorData, a => a.tooltip)
+    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.config.yAccessors, a => a.tooltip)
     if (!_.isEmpty(tooltipId)) {
       actionman.fire('HideComponent', tooltipId)
     }

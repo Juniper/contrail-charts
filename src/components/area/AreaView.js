@@ -5,12 +5,21 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
-import * as d3Array from 'd3-array'
-import XYChartSubView from 'components/composite-y/XYChartSubView'
+import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
-import './area-chart.scss'
+import './area.scss'
 
-export default class AreaChartView extends XYChartSubView {
+export default class AreaView extends ContrailChartsView {
+  static get dataType () { return 'DataFrame' }
+
+  constructor (...args) {
+    super(...args)
+    this.listenTo(this.model, 'change', this.render)
+    this.listenTo(this.config, 'change', this.render)
+  }
+
+  get tagName () { return 'g' }
+
   get zIndex () { return 2 }
   /**
    * follow same naming convention for all XY chart sub views
@@ -27,52 +36,36 @@ export default class AreaChartView extends XYChartSubView {
       'mouseout node': '_onMouseout',
     }
   }
-
-  combineDomains () {
-    const domains = super.combineDomains()
-
-    const stackGroups = _.groupBy(this.params.activeAccessorData, 'stack')
-    const totalRangeValues = _.reduce(stackGroups, (totalRangeValues, accessors) => {
-      const stackedRange = _.reduce(accessors, (stackedRange, accessor) => {
-        const range = this.model.getRangeFor(accessor.accessor)
-        // Summarize ranges for stacked layers
-        return [stackedRange[0] + range[0], stackedRange[1] + range[1]]
-      }, [0, 0])
-      // Get min / max extent for non-stacked layers
-      return totalRangeValues.concat(stackedRange)
-    }, [0, 0])
-    const totalRange = d3Array.extent(totalRangeValues)
-    if (domains[this.axisName]) domains[this.axisName] = totalRange
-    return domains
-  }
   /**
   * @override
   * Y coordinate calculation considers position is being stacked
   */
   getScreenY (datum, yAccessor) {
-    const stackGroups = _.groupBy(this.params.activeAccessorData, 'stack')
-    const stackName = _.find(this.params.activeAccessorData, config => config.accessor === yAccessor).stack
+    const stackGroups = _.groupBy(this.config.yAccessors, 'stack')
+    const stackName = _.find(this.config.yAccessors, config => config.accessor === yAccessor).stack
     let stackedValue = 0
     _.takeWhile(stackGroups[stackName], accessorConfig => {
       stackedValue += (_.get(datum, accessorConfig.accessor) || 0)
       return accessorConfig.accessor !== yAccessor
     })
-    return this.yScale(stackedValue)
+    return this.config.yScale(stackedValue)
   }
   /**
    * Render all areas in a single stack unless specific stack names specified
    */
   render () {
     super.render()
+    this.config.calculateScales(this.model, this.width, this.height)
+
     const data = this.model.data
-    const xAccessor = this.config.get('plot.x.accessor')
+    const xAccessor = this.config.get('x.accessor')
     const area = d3Shape.area()
-      .x(d => this.xScale(_.get(d.data, xAccessor)))
-      .y0(d => this.yScale(d[1]))
-      .y1(d => this.yScale(d[0]))
+      .x(d => this.config.xScale(_.get(d.data, xAccessor)))
+      .y0(d => this.config.yScale(d[1]))
+      .y1(d => this.config.yScale(d[0]))
       .curve(this.config.get('curve'))
 
-    const stackGroups = _.groupBy(this.params.activeAccessorData, 'stack')
+    const stackGroups = _.groupBy(this.config.yAccessors, 'stack')
     _.each(stackGroups, (accessorsByStack, stackName) => {
       const stack = d3Shape.stack()
         .offset(d3Shape.stackOffsetNone)
@@ -84,7 +77,7 @@ export default class AreaChartView extends XYChartSubView {
       areas.enter().append('path')
         .attr('class', d => `${this.selectorClass('node')} ${this.selectorClass('node')}-${d.key} ${this.selectorClass('node')}-${stackName}`)
         .merge(areas)
-        .transition().ease(d3Ease.easeLinear).duration(this.params.duration)
+        .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
         .attr('fill', d => this.config.getColor([], _.find(accessorsByStack, {accessor: d.key})))
         .attr('d', area)
     })
@@ -101,14 +94,23 @@ export default class AreaChartView extends XYChartSubView {
   // Event handlers
 
   _onMousemove (d, el) {
-    const tooltipId = this.params.activeAccessorData[d.index].tooltip
+    const tooltipId = this.config.yAccessors[d.index].tooltip
     if (tooltipId) {
       const [left, top] = d3Selection.mouse(this._container)
-      const xAccessor = this.config.get('plot.x.accessor')
-      const xVal = this.xScale.invert(left)
+      const xAccessor = this.config.get('x.accessor')
+      const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
       actionman.fire('ShowComponent', tooltipId, {left, top}, dataItem)
     }
     el.classList.add(this.selectorClass('active'))
+  }
+
+  _onMouseout (d, el) {
+    const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.config.yAccessors, a => a.tooltip)
+    if (!_.isEmpty(tooltipId)) {
+      actionman.fire('HideComponent', tooltipId)
+    }
+    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    els.classed('active', false)
   }
 }
