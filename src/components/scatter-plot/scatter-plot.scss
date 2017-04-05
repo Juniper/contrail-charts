@@ -3,7 +3,7 @@
 @import "../../styles/mixins";
 
 .cc-svg .scatter-plot {
-  @include scatterBubbleChartRules($scatter-bubble-chart);
+  @include scatterPlotRules($scatter-plot);
 
-  @include themify($scatterBubbleChartId, $themes);
+  @include themify($scatterPlotId, $themes);
 }

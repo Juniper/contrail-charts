@@ -5,15 +5,17 @@ import _ from 'lodash'
 import 'd3-transition'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
-import XYChartSubView from 'components/composite-y/XYChartSubView'
+import ContrailChartsView from 'contrail-charts-view'
 import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
 import BucketView from 'helpers/bucket/BucketView'
 import actionman from 'core/Actionman'
 import './scatter-plot.scss'
 
-export default class ScatterPlotView extends XYChartSubView {
-  constructor (p) {
-    super(p)
+export default class ScatterPlotView extends ContrailChartsView {
+  static get dataType () { return 'DataFrame' }
+
+  constructor (...args) {
+    super(...args)
     const bucketConfig = this.config.get('bucket')
     if (bucketConfig) {
       this._bucketConfigModel = new BucketConfigModel(bucketConfig)
@@ -23,7 +25,11 @@ export default class ScatterPlotView extends XYChartSubView {
         config: this._bucketConfigModel,
       })
     }
+    this.listenTo(this.model, 'change', this.render)
+    this.listenTo(this.config, 'change', this.render)
   }
+
+  get tagName () { return 'g' }
 
   get zIndex () { return 1 }
   /**
@@ -41,23 +47,11 @@ export default class ScatterPlotView extends XYChartSubView {
       'mouseout node': '_onMouseout',
     }
   }
-  /**
-   * @return {Object} like:  y1: [0,10], x: [-10,10]
-   */
-  combineDomains () {
-    const domains = super.combineDomains()
-    const accessorsBySizeAxis = _.groupBy(this.params.activeAccessorData, 'sizeAxis')
-    _.each(accessorsBySizeAxis, (accessors, axis) => {
-      const validAccessors = _.filter(accessors, a => a.sizeAccessor && a.shape)
-      const validAccessorNames = _.map(validAccessors, 'sizeAccessor')
-
-      domains[axis] = this.model.combineDomains(validAccessorNames)
-    })
-    return domains
-  }
 
   render () {
     super.render()
+    this.config.calculateScales(this.model, this.width, this.height)
+
     const data = this._prepareData()
     if (this._bucketView) {
       this._bucketView.container = this._container
@@ -89,28 +83,26 @@ export default class ScatterPlotView extends XYChartSubView {
    * Create a flat data structure
    */
   _prepareData () {
-    const xAccessor = this.config.get('plot.x.accessor')
+    const xAccessor = this.config.get('x.accessor')
+    const accessor = this.config.get('y')
     const points = []
     _.map(this.model.data, d => {
       const x = _.get(d, xAccessor)
-      _.each(this.params.activeAccessorData, accessor => {
-        const key = accessor.accessor
-        if (!_.isNil(_.get(d, key))) { // key may not exist in all the data set.
-          const sizeScale = this.params.axis[accessor.sizeAxis].scale
-          const obj = {
-            id: x + '-' + key,
-            x: this.xScale(x),
-            y: this.yScale(_.get(d, key)),
-            area: sizeScale(_.get(d, accessor.sizeAccessor)),
-            color: this.config.getColor(d, accessor),
-            accessor: accessor,
-            data: d,
-            halfWidth: Math.sqrt(sizeScale(_.get(d, accessor.sizeAccessor))) / 2,
-            halfHeight: Math.sqrt(sizeScale(_.get(d, accessor.sizeAccessor))) / 2,
-          }
-          points.push(obj)
+      const key = accessor.accessor
+      if (!_.isNil(_.get(d, key))) { // key may not exist in all the data set.
+        const obj = {
+          id: x + '-' + key,
+          x: this.config.xScale(x),
+          y: this.config.yScale(_.get(d, key)),
+          area: this.config.sizeScale(_.get(d, accessor.sizeAccessor)),
+          color: this.config.getColor(d, accessor),
+          accessor: accessor,
+          data: d,
+          halfWidth: Math.sqrt(this.config.sizeScale(_.get(d, accessor.sizeAccessor))) / 2,
+          halfHeight: Math.sqrt(this.config.sizeScale(_.get(d, accessor.sizeAccessor))) / 2,
         }
-      })
+        points.push(obj)
+      }
     })
     return points
   }
@@ -125,8 +117,17 @@ export default class ScatterPlotView extends XYChartSubView {
     el.classList.add(this.selectorClass('active'))
   }
 
+  _onMouseout (d, el) {
+    const tooltipId = d && d.accessor ? d.accessor.tooltip : this.config.get('y.tooltip')
+    if (!_.isEmpty(tooltipId)) {
+      actionman.fire('HideComponent', tooltipId)
+    }
+    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    els.classed('active', false)
+  }
+
   _onBackgroundClick () {
-    const accessor = this.config.get('plot.x.accessor')
+    const accessor = this.config.get('x.accessor')
     this.actionman.fire('Zoom', null, {[accessor]: this.model.getRangeFor(accessor, true)})
   }
 }

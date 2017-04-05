@@ -76,7 +76,7 @@
       @return (
         map-get-safe($config, "general", ()),
       );
-    } @else if ($componentId == $scatterBubbleChartId) {
+    } @else if ($componentId == $scatterPlotId) {
       @return (
         map-get-safe($config, "general", ()),
       );
