@@ -9,7 +9,6 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 export default class StackedBarConfigModel extends ContrailChartsConfigModel {
   get defaults () {
     return Object.assign(super.defaults,
-      ScalableChart.defaults,
       ColoredChart.defaults,
       {
         // Padding between series in percents of bar width

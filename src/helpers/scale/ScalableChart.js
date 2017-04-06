@@ -2,14 +2,6 @@ import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
 
 export default {
-  defaults: {
-    margin: {
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-    },
-  },
   /**
    * Idempotent function to calculate scale based on data model and provided config
    * @param model to extract domain from

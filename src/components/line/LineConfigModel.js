@@ -10,7 +10,6 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 export default class LineConfigModel extends ContrailChartsConfigModel {
   get defaults () {
     return Object.assign(super.defaults,
-      ScalableChart.defaults,
       ColoredChart.defaults,
       {
         curve: d3Shape.curveCatmullRom.alpha(0.5),

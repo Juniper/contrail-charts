@@ -88,6 +88,8 @@ export default class AreaView extends ContrailChartsView {
     const updatedAreaEls = updatedAreaClasses ? this.el.querySelectorAll(updatedAreaClasses) : []
     const updatedAreas = _.difference(this.el.querySelectorAll(this.selectors.node), updatedAreaEls)
     _.each(updatedAreas, area => area.remove())
+
+    this._ticking = false
   }
 
   // Event handlers

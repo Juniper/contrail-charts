@@ -5,12 +5,14 @@ import _ from 'lodash'
 import ContrailModel from 'contrail-model'
 
 export default class ContrailChartsConfigModel extends ContrailModel {
-  constructor (p = {}) {
-    super(p)
-  }
-
   get defaults () {
     return {
+      margin: {
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+      },
       duration: 300,
     }
   }
