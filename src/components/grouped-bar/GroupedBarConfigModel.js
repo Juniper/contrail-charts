@@ -42,9 +42,9 @@ export default class GroupedBarConfigModel extends ContrailChartsConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, width]}, this.attributes.x)
-    this.attributes.x.scale = ScalableChart.getScale(model, config)
+    _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
     config = { range: [height, 0], accessor: _.map(this.attributes.y, 'accessor') }
-    this.attributes.y.scale = ScalableChart.getScale(model, config)
+    _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 
   getColor (data, accessor) {

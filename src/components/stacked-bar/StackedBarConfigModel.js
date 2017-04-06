@@ -42,10 +42,14 @@ export default class StackedBarConfigModel extends ContrailChartsConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, width]}, this.attributes.x)
-    this.attributes.x.scale = ScalableChart.getScale(model, config)
+    _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
-    config = { stacked: true, range: [height, 0], accessor: _.map(this.yAccessors, 'accessor') }
-    this.attributes.y.scale = ScalableChart.getScale(model, config)
+    config = _.defaultsDeep({}, this.attributes.y, {
+      stacked: true,
+      range: [height, 0],
+      accessor: _.map(this.yAccessors, 'accessor'),
+    })
+    _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 
   getColor (data, accessor) {

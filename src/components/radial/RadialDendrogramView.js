@@ -39,6 +39,10 @@ export default class RadialDendrogramView extends ContrailChartsView {
     })
   }
 
+  get height () {
+    return this.config.get('height') || this.width
+  }
+
   render () {
     this.resetParams()
     this._calculateDimensions()
@@ -49,17 +53,11 @@ export default class RadialDendrogramView extends ContrailChartsView {
   }
 
   _calculateDimensions () {
-    if (!this.params.width) {
-      this.params.width = this._container.getBoundingClientRect().width
-    }
     if (this.params.widthDelta) {
       this.params.width += this.params.widthDelta
     }
-    if (!this.params.height) {
-      this.params.height = this.params.width
-    }
     if (!this.params.radius) {
-      this.params.radius = this.params.width / 2
+      this.params.radius = Math.min(this.width, this.height) / 2
     }
     if (!this.params.labelMargin) {
       this.params.labelMargin = 50
@@ -399,7 +397,7 @@ export default class RadialDendrogramView extends ContrailChartsView {
   }
 
   _render () {
-    this.d3.attr('transform', `translate(${this.params.width / 2}, ${this.params.height / 2})`)
+    this.d3.attr('transform', `translate(${this.width / 2}, ${this.height / 2})`)
     // Circles
     const svgCircles = this.d3.selectAll('.circle').data(this.circles)
     svgCircles.enter().append('circle')

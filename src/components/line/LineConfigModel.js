@@ -31,9 +31,9 @@ export default class LineConfigModel extends ContrailChartsConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, width]}, this.attributes.x)
-    this.attributes.x.scale = ScalableChart.getScale(model, config)
-    config = _.extend({range: [height, 0]}, this.attributes.y)
-    this.attributes.y.scale = ScalableChart.getScale(model, config)
+    _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
+    config = _.defaultsDeep({}, this.attributes.y, {range: [height, 0]})
+    _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 
   getColor (data, accessor) {

@@ -11,11 +11,6 @@ import ColoredChart from 'helpers/color/ColoredChart'
 export default class RadialDendrogramConfigModel extends ContrailChartsConfigModel {
   get defaults () {
     return Object.assign(super.defaults, ColoredChart.defaults, {
-      // The component width. If not provided will be caculated by View.
-      width: undefined,
-
-      // The component height. If not provided will be caculated by View.
-      height: undefined,
 
       // The labels of the levels.
       levels: [],

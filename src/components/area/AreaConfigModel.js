@@ -43,7 +43,7 @@ export default class AreaConfigModel extends ContrailChartsConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, width]}, this.attributes.x)
-    this.attributes.x.scale = ScalableChart.getScale(model, config)
+    _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
     const stackGroups = _.groupBy(this.yAccessors, 'stack')
     const totalDomainValues = _.reduce(stackGroups, (totalDomainValues, accessors) => {
@@ -59,7 +59,7 @@ export default class AreaConfigModel extends ContrailChartsConfigModel {
 
     config = { range: [height, 0], domain }
     config = _.defaultsDeep({}, this.attributes.y, {range: [height, 0], domain})
-    this.attributes.y.scale = ScalableChart.getScale(model, config)
+    _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 
   getColor (data, accessor) {
