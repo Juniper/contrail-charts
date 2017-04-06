@@ -26,7 +26,6 @@ export default class ScatterPlotView extends ContrailChartsView {
       })
     }
     this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get tagName () { return 'g' }

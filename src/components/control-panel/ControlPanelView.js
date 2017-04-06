@@ -16,7 +16,6 @@ export default class ControlPanelView extends ContrailChartsView {
     super.render(_template())
     this._opened = false
     this.render()
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get selectors () {

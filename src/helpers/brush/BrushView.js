@@ -14,7 +14,6 @@ export default class BrushView extends ContrailChartsView {
     super(p)
     this._brush = d3Brush.brushX()
       .on('start brush end', this._onSelection.bind(this))
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get tagName () { return 'g' }

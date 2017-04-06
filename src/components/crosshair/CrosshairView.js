@@ -12,7 +12,6 @@ export default class CrosshairView extends ContrailChartsView {
   constructor (p) {
     super(p)
     this.render()
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get tagName () { return 'g' }

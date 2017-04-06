@@ -9,7 +9,6 @@ export default class LegendView extends ContrailChartsView {
 
   constructor (p) {
     super(p)
-    this.listenTo(this.config, 'change', this.render)
     this.listenTo(this.model, 'change', this.render)
   }
 

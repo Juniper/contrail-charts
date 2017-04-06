@@ -16,7 +16,6 @@ const _states = {
 export default class LegendPanelView extends ContrailChartsView {
   constructor (p) {
     super(p)
-    this.listenTo(this.config, 'change', this.render)
     this._state = _states.DEFAULT
   }
 

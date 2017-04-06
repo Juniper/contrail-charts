@@ -16,7 +16,6 @@ export default class RadialDendrogramView extends ContrailChartsView {
   constructor (p) {
     super(p)
     this.listenTo(this.model, 'change', this._onDataModelChange)
-    this.listenTo(this.config, 'change', this._onConfigModelChange)
     /**
      * Let's bind super _onResize to this. Also .bind returns new function ref.
      * we need to store this for successful removal from window event

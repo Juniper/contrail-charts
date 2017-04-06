@@ -19,7 +19,6 @@ export default class LineView extends ContrailChartsView {
   constructor (...args) {
     super(...args)
     this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get tagName () { return 'g' }

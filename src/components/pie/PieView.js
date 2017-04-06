@@ -14,7 +14,6 @@ export default class PieView extends ContrailChartsView {
   constructor (p = {}) {
     super(p)
     this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
     /**
      * Let's bind super _onResize to this. Also .bind returns new function ref.
      * we need to store this for successful removal from window event

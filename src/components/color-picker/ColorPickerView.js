@@ -8,11 +8,6 @@ import _template from './color-picker.html'
 import './color-picker.scss'
 
 export default class ColorPickerView extends ContrailChartsView {
-  constructor (p) {
-    super(p)
-    this.listenTo(this.config, 'change', this.render)
-  }
-
   get selectors () {
     return _.extend(super.selectors, {
       open: '.color-select',

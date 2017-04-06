@@ -14,7 +14,6 @@ export default class FilterView extends ContrailChartsView {
   constructor (p) {
     super(p)
     this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get selectors () {

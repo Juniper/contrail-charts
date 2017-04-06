@@ -9,7 +9,6 @@ export default class TooltipView extends ContrailChartsView {
   constructor (p) {
     super(p)
     this.resetParams()
-    this.listenTo(this.config, 'change', this.resetParams)
   }
 
   get width () { return this.el.offsetWidth }

@@ -26,7 +26,6 @@ export default class NavigationView extends ContrailChartsView {
     })
     this._components = [this._brush, this._compositeYChartView]
     this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
-    this.listenTo(this.config, 'change', this.render)
     this.listenTo(this.model, 'change', this._onModelChange)
     /**
      * Let's bind super _onResize to this. Also .bind returns new function ref.

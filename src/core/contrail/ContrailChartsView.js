@@ -123,6 +123,9 @@ export default class ContrailChartsView extends ContrailView {
         if (!this.config) this.config = new ConfigModel(config)
         else this.config.set(config)
       }
+      if (!_.includes(this.config.listeners('change'), this.render)) {
+        this.listenTo(this.config, 'change', this.render)
+      }
     }
   }
   /**
@@ -181,6 +184,7 @@ export default class ContrailChartsView extends ContrailView {
    */
   remove () {
     if (this.config) this.stopListening(this.config)
+    this.config.clear()
     if (this.model) this.stopListening(this.model)
     this.params = {}
     super.remove()
