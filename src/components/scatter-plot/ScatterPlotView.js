@@ -77,6 +77,8 @@ export default class ScatterPlotView extends ContrailChartsView {
 
     points.exit().remove()
     if (this._bucketView) this.svg.delegate('click', 'svg', this._onBackgroundClick.bind(this))
+
+    this._ticking = false
   }
   /**
    * Create a flat data structure

@@ -84,6 +84,8 @@ export default class StackedBarView extends ContrailChartsView {
       .attr('height', d => d.h)
       .attr('width', d => d.w)
     barGroups.exit().remove()
+
+    this._ticking = false
   }
 
   _prepareData () {

@@ -74,6 +74,8 @@ export default class LineView extends ContrailChartsView {
       })
       .attr('stroke', this.config.getColor(data, accessor))
     linePath.exit().remove()
+
+    this._ticking = false
   }
   /**
    * Draw line along the path

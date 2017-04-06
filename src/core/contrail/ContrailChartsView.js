@@ -26,6 +26,8 @@ export default class ContrailChartsView extends ContrailView {
       else this.model = new Provider(null, p.model)
     }
     this.setConfig(p.config)
+    this._onResize = this._onResize.bind(this)
+    window.addEventListener('resize', this._onResize)
   }
 
   get selectors () {
@@ -186,6 +188,8 @@ export default class ContrailChartsView extends ContrailView {
     if (this.config) this.stopListening(this.config)
     this.config.clear()
     if (this.model) this.stopListening(this.model)
+    window.removeEventListener('resize', this._onResize)
+
     this.params = {}
     super.remove()
   }

@@ -96,6 +96,8 @@ export default class GroupedBarView extends ContrailChartsView {
       .attr('height', d => d.h)
       .attr('width', d => d.w)
     svgBarGroups.exit().remove()
+
+    this._ticking = false
   }
 
   _prepareData () {

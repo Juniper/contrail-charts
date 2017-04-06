@@ -14,12 +14,6 @@ export default class PieView extends ContrailChartsView {
   constructor (p = {}) {
     super(p)
     this.listenTo(this.model, 'change', this.render)
-    /**
-     * Let's bind super _onResize to this. Also .bind returns new function ref.
-     * we need to store this for successful removal from window event
-     */
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
   }
 
   get tagName () { return 'g' }
@@ -75,11 +69,6 @@ export default class PieView extends ContrailChartsView {
     sectors.exit().remove()
 
     this._ticking = false
-  }
-
-  remove () {
-    super.remove()
-    window.removeEventListener('resize', this._onResize)
   }
 
   // Event handlers

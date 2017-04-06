@@ -64,6 +64,8 @@ export default class BucketView extends ContrailChartsView {
       .attr('transform', d => `translate(${d.x},${d.y})`)
 
     buckets.exit().remove()
+
+    this._ticking = false
   }
 
   _bucketize (data) {

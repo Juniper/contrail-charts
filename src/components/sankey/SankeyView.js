@@ -24,12 +24,6 @@ export default class SankeyView extends ContrailChartsView {
   constructor (p = {}) {
     super(p)
     this.listenTo(this.model, 'change', this._onDataModelChange)
-    /**
-     * Let's bind super _onResize to this. Also .bind returns new function ref.
-     * we need to store this for successful removal from window event
-     */
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
   }
 
   render () {
@@ -39,11 +33,6 @@ export default class SankeyView extends ContrailChartsView {
     super.render()
     this._render()
     this._ticking = false
-  }
-
-  remove () {
-    super.remove()
-    window.removeEventListener('resize', this._onResize)
   }
 
   _calculateDimensions () {

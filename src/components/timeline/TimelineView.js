@@ -23,8 +23,6 @@ export default class TimelineView extends ContrailChartsView {
 
     this.listenTo(this.model, 'change', this.render)
     this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
     this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration'))
   }
 
@@ -73,6 +71,7 @@ export default class TimelineView extends ContrailChartsView {
       yRange,
     }, {silent: true})
     this._brush.render()
+
     this._ticking = false
   }
 
