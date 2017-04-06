@@ -26,6 +26,7 @@ import sankeyChart from '../../advance-chart/sankey'
 import singleLine from '../../single/single-line'
 import singleStackedBar from '../../single/single-stacked-bar'
 import singleGroupedBar from '../../single/single-grouped-bar'
+import singleArea from '../../single/single-area'
 import singleScatterPlot from '../../single/single-scatter-plot'
 import singlePie from '../../single/single-pie'
 /**
@@ -92,6 +93,9 @@ const allExamples = {
     },
     'Stacked Bar Chart': {
       view: singleStackedBar,
+    },
+    'Area Chart': {
+      view: singleArea,
     },
     'Scatter Plot': {
       view: singleScatterPlot,

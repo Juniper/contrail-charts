@@ -16,6 +16,7 @@ const data = fixture({
   },
 })
 
+let chart
 const container = document.querySelector('#chartBox')
 const config = {
   x: {
@@ -41,11 +42,9 @@ const config = {
   ]
 }
 
-let chart
-
 export default {
   render: () => {
-    chart = chart || new components.AreaView({config, container})
+    chart = new components.AreaView({config, container})
     chart.setData(data)
   },
   remove: () => {

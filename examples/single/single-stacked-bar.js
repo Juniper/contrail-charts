@@ -14,11 +14,12 @@ const data = fixture({
   },
 })
 
+let chart
 const container = document.querySelector('#chartBox')
 const config = {
   margin: {
-    left: 30,
-    right: 30,
+    left: 20,
+    right: 20,
   },
   x: {
     accessor: 'group.x',
@@ -35,11 +36,9 @@ const config = {
   ]
 }
 
-let chart
-
 export default {
   render: () => {
-    chart = chart || new components.StackedBarView({config, container})
+    chart = new components.StackedBarView({config, container})
     chart.setData(data)
   },
   remove: () => {

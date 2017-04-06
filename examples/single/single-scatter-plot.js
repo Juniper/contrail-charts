@@ -36,7 +36,7 @@ const config = {
 
 export default {
   render: () => {
-    chart = chart || new components.ScatterPlotView({config, container})
+    chart = new components.ScatterPlotView({config, container})
     chart.setData(data)
   },
   remove: () => {

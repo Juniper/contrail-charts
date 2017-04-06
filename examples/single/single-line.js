@@ -14,6 +14,7 @@ const data = fixture({
   },
 })
 
+let chart
 const container = document.querySelector('#chartBox')
 const config = {
   height: 200,
@@ -32,11 +33,9 @@ const config = {
   }
 }
 
-let chart
-
 export default {
   render: () => {
-    chart = chart || new components.LineView({config, container})
+    chart = new components.LineView({config, container})
     chart.setData(data)
   },
   remove: () => {

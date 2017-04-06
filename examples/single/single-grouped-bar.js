@@ -14,6 +14,7 @@ const data = fixture({
   },
 })
 
+let chart
 const container = document.querySelector('#chartBox')
 const config = {
   margin: {
@@ -34,11 +35,9 @@ const config = {
   ]
 }
 
-let chart
-
 export default {
   render: () => {
-    chart = chart || new components.GroupedBarView({config, container})
+    chart = new components.GroupedBarView({config, container})
     chart.setData(data)
   },
   remove: () => {

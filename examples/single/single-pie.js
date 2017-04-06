@@ -12,6 +12,8 @@ const data = fixture({
   },
 })
 
+let chart
+let intervalId = -1
 const container = document.querySelector('#chartBox')
 
 const config = {
@@ -23,18 +25,16 @@ const config = {
     valueFormatter: formatter.commaGroupedInteger,
   },
 }
-let chart
-let intervalId = -1
 
 export default {
   render: () => {
     clearInterval(intervalId)
-    chart = chart || new components.PieView({config, container})
+    chart = new components.PieView({config, container})
     chart.setData(data)
 
     intervalId = setInterval(() => {
       length = _.random(3, 20)
-      config.type = 'pie'
+      config.type = _.sample(['pie', 'donut'])
       config.colorScheme = d3Scale.schemeCategory20b
       chart.setConfig(config)
       chart.setData(data.slice(0, length))

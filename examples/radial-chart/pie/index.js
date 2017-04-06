@@ -34,7 +34,7 @@ const chartConfig = {
     }
   }, {
     id: 'donut-chart-id',
-    type: 'PieChart',
+    type: 'Pie',
     config: {
       type: 'donut',
       radius: 150,
