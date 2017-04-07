@@ -13,7 +13,6 @@ describe('XYChartView', function () {
               axis: 'x',
             },
             y: [{
-              enabled: true,
               accessor: 'y',
               chart: 'LineChart',
               axis: 'y',

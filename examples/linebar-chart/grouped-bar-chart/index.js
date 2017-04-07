@@ -15,7 +15,7 @@ const data = fixture({
   },
 })
 
-const chartConfig = {
+const config = {
   id: 'chartBox',
   components: [{
     id: 'grouped-bar-compositey',
@@ -35,21 +35,18 @@ const chartConfig = {
           {
             accessor: 'group.a',
             labelFormatter: 'Label Group.A',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
@@ -92,7 +89,7 @@ const chart = new ChartView()
 
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart.setConfig(config)
     chart.setData(data)
   },
   remove: () => {

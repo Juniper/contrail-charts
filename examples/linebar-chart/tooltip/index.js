@@ -29,14 +29,12 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
             chart: 'StackedBarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            enabled: true,
             chart: 'StackedBarChart',
             axis: 'y1',
             tooltip: 'custom-tooltip',
@@ -44,7 +42,6 @@ const chartConfig = {
             accessor: 'c',
             labelFormatter: 'Megabytes C',
             color: 'grey',
-            enabled: true,
             chart: 'LineChart',
             axis: 'y2',
             tooltip: 'default-tooltip',
@@ -116,7 +113,6 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'sticky-tooltip',

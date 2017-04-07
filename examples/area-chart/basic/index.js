@@ -43,7 +43,6 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'group.a',
             chart: 'AreaChart',
             stack: 'positive',
@@ -51,7 +50,6 @@ const chartConfig = {
             color: colorScheme[2],
             tooltip: 'default-tooltip',
           }, {
-            enabled: true,
             accessor: 'b',
             chart: 'AreaChart',
             stack: 'negative',
@@ -59,7 +57,6 @@ const chartConfig = {
             color: colorScheme[3],
             tooltip: 'default-tooltip',
           }, {
-            enabled: true,
             accessor: 'c',
             chart: 'AreaChart',
             stack: 'negative',

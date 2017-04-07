@@ -32,19 +32,17 @@ const config = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            enabled: true,
             chart: 'LineChart',
             axis: 'y1',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
-            enabled: false,
+            disabled: true,
             chart: 'LineChart',
             axis: 'y1',
           },

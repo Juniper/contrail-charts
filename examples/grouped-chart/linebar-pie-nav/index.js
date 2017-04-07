@@ -69,13 +69,11 @@ const chartConfig = {
         y: [
           {
             accessor: 'a',
-            enabled: true,
             chart: 'BarChart',
             color: colorScheme[0],
             axis: 'y',
           }, {
             accessor: 'b',
-            enabled: true,
             chart: 'BarChart',
             color: colorScheme[1],
             axis: 'y',
@@ -102,7 +100,6 @@ const chartConfig = {
     id: 'message-id',
     type: 'Message',
     config: {
-      enabled: true,
     }
   }, {
     id: 'tooltip-id',
@@ -158,7 +155,6 @@ const chartConfig = {
         y: [
           {
             accessor: 'c',
-            enabled: true,
             chart: 'LineChart',
             axis: 'y',
             color: colorScheme[2],
@@ -240,7 +236,6 @@ const chartConfig = {
           {
             accessor: 'd',
             label: 'Label D',
-            enabled: true,
             chart: 'LineChart',
             color: colorScheme[4],
             axis: 'y',

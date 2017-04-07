@@ -44,7 +44,6 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'group.data1',
             label: 'Data 1',
             chart: 'ScatterPlot',
@@ -56,7 +55,6 @@ const chartConfig = {
             axis: 'y1',
             tooltip: 'tooltip-id',
           }, {
-            enabled: true,
             accessor: 'data2',
             label: 'Data 2',
             chart: 'ScatterPlot',
@@ -67,7 +65,6 @@ const chartConfig = {
             axis: 'y2',
             tooltip: 'tooltip-id',
           }, {
-            enabled: true,
             accessor: 'data3',
             label: 'Data 3',
             chart: 'ScatterPlot',
@@ -154,7 +151,6 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'nav',
             chart: 'LineChart',
             color: colorScheme[1],

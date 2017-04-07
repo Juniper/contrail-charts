@@ -46,21 +46,19 @@ define([ // eslint-disable-line no-undef
             {
               accessor: 'a',
               label: 'Label A',
-              enabled: true,
               chart: 'StackedBarChart',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'b',
               label: 'Label B',
-              enabled: true,
               chart: 'StackedBarChart',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'c',
               label: 'Label C',
-              enabled: false,
+              disabled: true,
               chart: 'StackedBarChart',
               axis: 'y1',
               tooltip: 'default-tooltip',
@@ -68,7 +66,6 @@ define([ // eslint-disable-line no-undef
               accessor: 'd',
               label: 'Megabytes D',
               color: '#d62728',
-              enabled: true,
               chart: 'LineChart',
               axis: 'y2',
               tooltip: 'default-tooltip',
@@ -76,7 +73,6 @@ define([ // eslint-disable-line no-undef
               accessor: 'e',
               label: 'Megabytes E',
               color: '#9467bd',
-              enabled: true,
               chart: 'LineChart',
               axis: 'y2',
               tooltip: 'default-tooltip',
@@ -132,7 +128,6 @@ define([ // eslint-disable-line no-undef
           },
           y: [
             {
-              enabled: true,
               accessor: 'e',
               chart: 'LineChart',
               axis: 'y',

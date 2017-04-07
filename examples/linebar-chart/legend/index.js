@@ -61,21 +61,19 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            enabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
-            enabled: false,
+            disabled: true,
             chart: 'BarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
@@ -83,7 +81,6 @@ const chartConfig = {
             accessor: 'd',
             labelFormatter: 'Label D',
             color: '#d62728',
-            enabled: true,
             chart: 'LineChart',
             axis: 'y2',
             tooltip: 'default-tooltip',
@@ -91,7 +88,6 @@ const chartConfig = {
             accessor: 'e',
             labelFormatter: 'Label E',
             color: '#9467bd',
-            enabled: true,
             chart: 'LineChart',
             axis: 'y2',
             tooltip: 'default-tooltip',
@@ -130,19 +126,16 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'a',
             labelFormatter: 'Label A',
             chart: 'StackedBarChart',
             axis: 'y1',
           }, {
-            enabled: true,
             accessor: 'b',
             labelFormatter: 'Label B',
             chart: 'StackedBarChart',
             axis: 'y1',
           }, {
-            enabled: true,
             accessor: 'd',
             labelFormatter: 'Label D',
             chart: 'LineChart',
@@ -201,7 +194,6 @@ const chartConfig = {
     id: 'message-id',
     type: 'Message',
     config: {
-      enabled: true,
     }
   }, {
     id: 'crosshair-id',

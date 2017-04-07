@@ -36,21 +36,18 @@ const chartConfig = {
           {
             accessor: 'group.a',
             labelFormatter: 'Label Group.A',
-            enabled: true,
             chart: 'StackedBarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            enabled: true,
             chart: 'StackedBarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
-            enabled: true,
             chart: 'StackedBarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',

@@ -39,14 +39,12 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            enabled: true,
             chart: 'StackedBarChart',
             color: colorScheme[1],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
-            enabled: true,
             chart: 'StackedBarChart',
             color: colorScheme[3],
             axis: 'y',
@@ -80,14 +78,12 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            enabled: true,
             chart: 'BarChart',
             color: colorScheme[1],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
-            enabled: true,
             chart: 'BarChart',
             color: colorScheme[3],
             axis: 'y',
@@ -120,14 +116,12 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'a',
             label: 'Label A',
             chart: 'AreaChart',
             axis: 'y',
             color: colorScheme[2],
           }, {
-            enabled: true,
             accessor: 'c',
             label: 'Label C',
             chart: 'AreaChart',
@@ -163,14 +157,12 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'a',
             label: 'Label A',
             chart: 'LineChart',
             axis: 'y',
             color: colorScheme[2],
           }, {
-            enabled: true,
             accessor: 'c',
             label: 'Label C',
             chart: 'LineChart',
@@ -209,7 +201,6 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label D',
-            enabled: true,
             color: colorScheme[2],
             chart: 'LineChart',
             axis: 'y',

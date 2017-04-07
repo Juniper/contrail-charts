@@ -37,7 +37,6 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
             chart: 'StackedBarChart',
             axis: 'y1',
             tooltip: 'default-tooltip',
