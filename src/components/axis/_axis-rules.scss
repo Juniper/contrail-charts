@@ -1,9 +1,9 @@
-@mixin compositeYChartRules($compositeY) {
-  $p_gridline_color: map-get($compositeY, "gridlineColor");
-  $p_tick_size: map-get($compositeY, "tickSize");
-  $p_tick_color: map-get($compositeY, "tickColor");
-  $p_label_size: map-get($compositeY, "axisLabelSize");
-  $p_label_color: map-get($compositeY, "axisLabelColor");
+@mixin axisRules($axis) {
+  $p_gridline_color: map-get($axis, "gridlineColor");
+  $p_tick_size: map-get($axis, "tickSize");
+  $p_tick_color: map-get($axis, "tickColor");
+  $p_label_size: map-get($axis, "axisLabelSize");
+  $p_label_color: map-get($axis, "axisLabelColor");
 
   .axis {
     .domain {
@@ -19,6 +19,7 @@
       }
     }
     .axis-label {
+      margin: 4px;
       font-size: $p_label_size;
       fill: $p_label_color;
       text-anchor: middle;
