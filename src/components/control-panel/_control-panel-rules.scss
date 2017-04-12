@@ -26,16 +26,17 @@
   z-index: $control;
 
   .control-panel-items {
-    width: 32px;
-    float: right;
+    display: flex;
 
     .control-panel-item {
       position: relative;
-      margin: 0 0 5px;
-      margin-bottom: $p_item_gutter;
+      width: 32px;
+      height: 32px;
+      margin: 2px;
 
       button {
         width: 100%;
+        height: 32px;
         font-size: 14px;
         background-color: $p_item_bg_color;
         padding: 5px;
@@ -62,6 +63,7 @@
   }
 
   .panel {
+    position: absolute;
     width: $p_panel_width;
     margin: 0 33px 0 0;
     border-width: $p_panel_border_width;
