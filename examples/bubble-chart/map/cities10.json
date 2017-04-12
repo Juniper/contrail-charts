@@ -1,12 +1,15 @@
 [{
+  "id": "NYC",
   "city": "New York", 
   "growth": "4.8%", 
   "latitude": 40.7127837, 
   "longitude": -74.0059413, 
   "population": "8405837", 
   "rank": "1", 
-  "state": "New York"
+  "state": "New York",
+  "links": ["SJC", "SAN"]
 }, {
+  "id": "LAX",
   "city": "Los Angeles", 
   "growth": "4.8%", 
   "latitude": 34.0522342, 
@@ -15,6 +18,7 @@
   "rank": "2", 
   "state": "California"
 }, {
+  "id": "CHI",
   "city": "Chicago", 
   "growth": "-6.1%", 
   "latitude": 41.8781136, 
@@ -23,14 +27,17 @@
   "rank": "3", 
   "state": "Illinois"
 }, {
+  "id": "HOU",
   "city": "Houston", 
   "growth": "11.0%", 
   "latitude": 29.7604267, 
   "longitude": -95.3698028, 
   "population": "2195914", 
   "rank": "4", 
-  "state": "Texas"
+  "state": "Texas",
+  "links": ["PHL"]
 }, {
+  "id": "PHL",
   "city": "Philadelphia", 
   "growth": "2.6%", 
   "latitude": 39.9525839, 
@@ -39,6 +46,7 @@
   "rank": "5", 
   "state": "Pennsylvania"
 }, {
+  "id": "PHX",
   "city": "Phoenix", 
   "growth": "14.0%", 
   "latitude": 33.4483771, 
@@ -47,6 +55,7 @@
   "rank": "6", 
   "state": "Arizona"
 }, {
+  "id": "SAT",
   "city": "San Antonio", 
   "growth": "21.0%", 
   "latitude": 29.4241219, 
@@ -55,22 +64,27 @@
   "rank": "7", 
   "state": "Texas"
 }, {
+  "id": "SAN",
   "city": "San Diego", 
   "growth": "10.5%", 
   "latitude": 32.715738, 
   "longitude": -117.1610838, 
   "population": "1355896", 
   "rank": "8", 
-  "state": "California"
+  "state": "California",
+  "links": ["SJC"]
 }, {
+  "id": "DAL",
   "city": "Dallas", 
   "growth": "5.6%", 
   "latitude": 32.7766642, 
   "longitude": -96.79698789999999, 
   "population": "1257676", 
   "rank": "9", 
-  "state": "Texas"
+  "state": "Texas",
+  "links": ["PHL"]
 }, {
+  "id": "SJC",
   "city": "San Jose", 
   "growth": "10.5%", 
   "latitude": 37.3382082, 

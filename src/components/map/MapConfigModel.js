@@ -25,6 +25,10 @@ export default class MapConfigModel extends ContrailChartsConfigModel {
     })
   }
 
+  get zoom () {
+    return this.attributes.zoom
+  }
+
   project (serie) {
     const lon = this.getValue(serie, { accessor: this.get('accessors.longitude') })
     const lat = this.getValue(serie, { accessor: this.get('accessors.latitude') })

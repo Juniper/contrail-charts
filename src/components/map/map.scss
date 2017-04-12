@@ -29,4 +29,11 @@
   .point {
     fill: steelblue;
   }
+
+  .link {
+	  fill: none;
+	  stroke-width: 1px;
+	  stroke: tomato;
+	  pointer-events: none;
+  }
 }

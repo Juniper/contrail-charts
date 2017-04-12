@@ -29,6 +29,7 @@ export default class MapView extends ContrailChartsView {
       feature: '.feature',
       boundary: '.boundary',
       node: '.point',
+      link: '.link',
     })
   }
 
@@ -54,6 +55,17 @@ export default class MapView extends ContrailChartsView {
     super.render()
     this._renderLayout()
     this._renderData()
+    this._ticking = false
+  }
+
+  zoom (transform) {
+    this.d3.selectAll(this.selectors.boundary)
+      .style('stroke-width', 0.5 / transform.k + 'px')
+    this.d3.selectAll(this.selectors.node).attr('r', 5 / transform.k)
+    this.d3.selectAll(this.selectors.link)
+      .style('stroke-width', 1 / transform.k + 'px')
+
+    this.d3.attr('transform', transform)
     this._ticking = false
   }
 
@@ -112,9 +124,29 @@ export default class MapView extends ContrailChartsView {
       .attr('d', path)
   }
   // TODO temporary method to plot data before integrating with any chart component like scatter plot
+  // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
   _renderData () {
     const data = this.model.data
-    this.d3.selectAll('circle')
+    let links = []
+    _.each(data, source => {
+      links = links.concat(_.map(source.links, targetId => {
+        return {source, target: _.find(data, {id: targetId})}
+      }))
+    })
+
+    // Create a path for each source/target pair.
+    this.d3.selectAll(this.selectors.link)
+      .data(links)
+      .enter()
+      .append('path')
+      .attr('class', this.selectorClass('link'))
+      .attr('d', link => {
+        const source = this.config.project(link.source)
+        const target = this.config.project(link.target)
+        return this.arc(source, target, 5)
+      })
+
+    this.d3.selectAll(this.selectors.node)
       .data(data)
       .enter()
       .append('circle')
@@ -123,14 +155,25 @@ export default class MapView extends ContrailChartsView {
       .attr('cy', d => this.config.project(d)[1])
       .attr('r', 5)
   }
+  /**
+   * @param {Number} bend parameter for how much bend is applied to arcs
+   * If no bend is supplied, then do the plain square root
+   * A bend of 5 looks nice and subtle, but this will depend on the length of arcs
+   * Higher the number the less bend
+   */
+  arc (source, target, bend = 1) {
+    if (target && source) {
+      const dx = target[0] - source[0]
+      const dy = target[1] - source[1]
+      const dr = Math.sqrt(dx * dx + dy * dy) * bend
 
-  zoom (transform) {
-    this.d3.selectAll(this.selectors.boundary)
-      .style('stroke-width', 0.5 / transform.k + 'px')
-    this.d3.selectAll('circle')
-      .attr('r', 5 / transform.k)
-    this.d3.attr('transform', transform)
-    this._ticking = false
+      // To avoid a whirlpool effect, make the bend direction consistent regardless of whether the source is left or right of the target
+      const isSourceLeft = (target[0] - source[0]) < 0
+      if (isSourceLeft) return `M${target[0]},${target[1]}A${dr},${dr} 0 0,1 ${source[0]},${source[1]}`
+      return `M${source[0]},${source[1]}A${dr},${dr} 0 0,1 ${target[0]},${target[1]}`
+    } else {
+      return 'M0,0,l0,0z'
+    }
   }
 
   // Event handlers
