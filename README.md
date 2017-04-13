@@ -68,6 +68,10 @@ their config options.
 
 ![Bubble Chart](images/bubble-chart.png)
 
+#### Bubble Map
+
+![Bubble Map](images/bubble-map.png)
+
 #### Grouped Chart
 
 ![Grouped Chart](images/grouped-chart.png)
