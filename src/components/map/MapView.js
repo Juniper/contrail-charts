@@ -70,67 +70,78 @@ export default class MapView extends ContrailChartsView {
   }
 
   _renderLayout () {
-    const world = this.config.get('map')
+    const map = this.config.get('map')
+    const featureName = this.config.get('feature')
+    const featureData = topojson.feature(map, map.objects[featureName]).features
+    const boundariesData = [topojson.mesh(map, map.objects[featureName], (a, b) => a !== b)]
+    const path = d3Geo.geoPath()
+
     const projection = this.config.get('projection')
-      .scale(this.config.get('zoom.factor'))
-      .translate([this.params.width / 2, this.params.height / 2])
       .precision(0.1)
+    const zoomFactor = this.config.get('zoom.factor')
+    if (zoomFactor) {
+      projection
+        .scale(zoomFactor)
+        .translate([this.params.width / 2, this.params.height / 2])
+      path.projection(projection)
+    } else {
+      const featureToFit = topojson.feature(map, map.objects[this.config.get('fit')])
+      this._fit(path, projection, featureToFit, {width: this.width, height: this.height})
+    }
+
     const zoom = d3Zoom.zoom()
-      .scaleExtent([1, 8])
+      .scaleExtent(this.config.get('zoom.extent'))
       .on('zoom', this._onZoom.bind(this))
 
     this.svg.call(zoom)
 
-    const path = d3Geo.geoPath()
-      .projection(projection)
+    const features = this.d3.selectAll(this.selectors.feature).data(featureData)
 
-    // TODO
-    if (this.config.get('graticule')) {
-      const graticule = d3Geo.geoGraticule()
-
-      this.d3.append('path')
-        .datum(graticule)
-        .attr('class', 'graticule')
-        .attr('d', path)
-
-      this.d3.append('defs').append('path')
-        .datum({type: 'Sphere'})
-        .attr('id', 'sphere')
-        .attr('d', path)
-
-      this.d3.append('use')
-        .attr('class', 'stroke')
-        .attr('xlink:href', '#sphere')
-
-      this.d3.append('use')
-        .attr('class', 'fill')
-        .attr('xlink:href', '#sphere')
-    }
-
-    // TODO it may have sense to parametrize this variable to deal with other maps (not world)
-    const countries = topojson.feature(world, world.objects.countries).features
-    const boundaries = [topojson.mesh(world, world.objects.countries, (a, b) => a !== b)]
-
-    this.d3.selectAll(this.selectors.feature)
-      .data(countries)
+    features
       .enter().insert('path', this.selectors.graticule)
       .attr('class', this.selectorClass('feature'))
+      .merge(features)
       .attr('d', path)
 
-    this.d3.selectAll(this.selectors.boundary)
-      .data(boundaries)
+    const boundaries = this.d3.selectAll(this.selectors.boundary).data(boundariesData)
+
+    boundaries
       .enter().insert('path', this.selectors.graticule)
       .attr('class', this.selectorClass('boundary'))
+      .merge(boundaries)
       .attr('d', path)
+  }
+  // TODO
+  _renderGraticule () {
+    if (!this.config.get('graticule')) return
+    const graticule = d3Geo.geoGraticule()
+
+    this.d3.append('path')
+      .datum(graticule)
+      .attr('class', 'graticule')
+      .attr('d', path)
+
+    this.d3.append('defs').append('path')
+      .datum({type: 'Sphere'})
+      .attr('id', 'sphere')
+      .attr('d', path)
+
+    this.d3.append('use')
+      .attr('class', 'stroke')
+      .attr('xlink:href', '#sphere')
+
+    this.d3.append('use')
+      .attr('class', 'fill')
+      .attr('xlink:href', '#sphere')
   }
   // TODO temporary method to plot data before integrating with any chart component like scatter plot
   // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
   _renderData () {
     const data = this.model.data
-    // TODO links extraction should take place in Data Provider
-    let links = []
+    // TODO links data extraction should take place in Data Provider
+    let linksData = []
     _.each(data, source => {
-      links = links.concat(_.map(source.links, sourceLink => {
+      linksData = linksData.concat(_.map(source.links, sourceLink => {
         const link = _.extend({source, target: _.find(data, {id: sourceLink.id})}, sourceLink)
         delete link.id
         return link
@@ -138,11 +149,13 @@ export default class MapView extends ContrailChartsView {
     })
 
     // Create a path for each source/target pair.
-    this.d3.selectAll(this.selectors.link)
-      .data(links)
+    const links = this.d3.selectAll(this.selectors.link).data(linksData)
+
+    links
       .enter()
       .append('path')
       .attr('class', this.selectorClass('link'))
+      .merge(links)
       .attr('d', link => {
         const source = this.config.project(link.source)
         const target = this.config.project(link.target)
@@ -150,14 +163,16 @@ export default class MapView extends ContrailChartsView {
       })
       .attr('stroke-width', link => link.width)
 
-    this.d3.selectAll(this.selectors.node)
-      .data(data)
+    const nodes = this.d3.selectAll(this.selectors.node).data(data)
+
+    nodes
       .enter()
       .append('circle')
       .attr('class', this.selectorClass('node'))
+      .attr('r', 8)
+      .merge(nodes)
       .attr('cx', d => this.config.project(d)[0])
       .attr('cy', d => this.config.project(d)[1])
-      .attr('r', 8)
   }
   /**
    * @param {Number} bend parameter for how much bend is applied to arcs
@@ -178,6 +193,22 @@ export default class MapView extends ContrailChartsView {
     } else {
       return 'M0,0,l0,0z'
     }
+  }
+
+  _fit (path, projection, feature, rect) {
+    projection
+      .scale(1)
+      .translate([0, 0])
+
+    path.projection(projection)
+
+    const b = path.bounds(feature)
+    const scale = 0.95 / Math.max((b[1][0] - b[0][0]) / rect.width, (b[1][1] - b[0][1]) / rect.height)
+    const translate = [(rect.width - scale * (b[1][0] + b[0][0])) / 2, (rect.height - scale * (b[1][1] + b[0][1])) / 2]
+
+    projection
+      .scale(scale)
+      .translate(translate)
   }
 
   // Event handlers

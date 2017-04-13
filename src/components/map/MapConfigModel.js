@@ -13,9 +13,11 @@ export default class MapConfigModel extends ContrailChartsConfigModel {
       projection: d3Geo.geoMercator(),
       zoom: {
         // scale factor to show map at
-        // 170 - is the world view for mercator projection
-        factor: 170,
+        // 170 is the world view for mercator projection
+        // If no factor is provided the whole map is fit into the container
+        // factor: 170,
         step: 0.5,
+        extent: [1, 8],
       },
 
       // grid of meridians and parallels for showing projection distortion

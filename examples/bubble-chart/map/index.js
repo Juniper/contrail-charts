@@ -11,8 +11,9 @@ const config = {
     id: 'map-id',
     type: 'Map',
     config: {
-      height: 400,
       map: world,
+      feature: 'countries',
+      fit: 'land',
       tooltip: 'tooltip-id',
     }
   }, {
