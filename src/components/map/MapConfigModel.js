@@ -11,9 +11,12 @@ export default class MapConfigModel extends ContrailChartsConfigModel {
       isSharedContainer: true,
 
       projection: d3Geo.geoMercator(),
-      // scale factor to show map at
-      // 170 - is the world view for mercator projection
-      zoom: 170,
+      zoom: {
+        // scale factor to show map at
+        // 170 - is the world view for mercator projection
+        factor: 170,
+        step: 0.5,
+      },
 
       // grid of meridians and parallels for showing projection distortion
       graticule: false,
@@ -21,7 +24,7 @@ export default class MapConfigModel extends ContrailChartsConfigModel {
       accessors: {
         longitude: 'longitude',
         latitude: 'latitude',
-      }
+      },
     })
   }
 

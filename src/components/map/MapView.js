@@ -61,9 +61,9 @@ export default class MapView extends ContrailChartsView {
   zoom (transform) {
     this.d3.selectAll(this.selectors.boundary)
       .style('stroke-width', 0.5 / transform.k + 'px')
-    this.d3.selectAll(this.selectors.node).attr('r', 5 / transform.k)
+    this.d3.selectAll(this.selectors.node).attr('r', 8 / transform.k)
     this.d3.selectAll(this.selectors.link)
-      .style('stroke-width', 1 / transform.k + 'px')
+      .style('stroke-width', 2 / transform.k + 'px')
 
     this.d3.attr('transform', transform)
     this._ticking = false
@@ -72,7 +72,7 @@ export default class MapView extends ContrailChartsView {
   _renderLayout () {
     const world = this.config.get('map')
     const projection = this.config.get('projection')
-      .scale(this.config.get('zoom'))
+      .scale(this.config.get('zoom.factor'))
       .translate([this.params.width / 2, this.params.height / 2])
       .precision(0.1)
     const zoom = d3Zoom.zoom()
@@ -127,10 +127,13 @@ export default class MapView extends ContrailChartsView {
   // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`
   _renderData () {
     const data = this.model.data
+    // TODO links extraction should take place in Data Provider
     let links = []
     _.each(data, source => {
-      links = links.concat(_.map(source.links, targetId => {
-        return {source, target: _.find(data, {id: targetId})}
+      links = links.concat(_.map(source.links, sourceLink => {
+        const link = _.extend({source, target: _.find(data, {id: sourceLink.id})}, sourceLink)
+        delete link.id
+        return link
       }))
     })
 
@@ -145,6 +148,7 @@ export default class MapView extends ContrailChartsView {
         const target = this.config.project(link.target)
         return this.arc(source, target, 5)
       })
+      .attr('stroke-width', link => link.width)
 
     this.d3.selectAll(this.selectors.node)
       .data(data)
@@ -153,7 +157,7 @@ export default class MapView extends ContrailChartsView {
       .attr('class', this.selectorClass('node'))
       .attr('cx', d => this.config.project(d)[0])
       .attr('cy', d => this.config.project(d)[1])
-      .attr('r', 5)
+      .attr('r', 8)
   }
   /**
    * @param {Number} bend parameter for how much bend is applied to arcs
