@@ -11,8 +11,8 @@ import _actionTemplate from './action.html'
 import './control-panel.scss'
 
 export default class ControlPanelView extends ContrailChartsView {
-  constructor (p = {}) {
-    super(p)
+  constructor (...args) {
+    super(...args)
     super.render(_template())
     this._opened = false
     this.render()
@@ -38,15 +38,19 @@ export default class ControlPanelView extends ContrailChartsView {
     const configs = _.map(this.config.get('menu'), config => {
       return _.extend({}, config, this.config.menuItems[config.id])
     })
-    const menuItems = this.d3.select(this.selectors.menuItems).selectAll(this.selectors.menuItem)
+    const menuItemsDiv = this.d3.select(this.selectors.menuItems)
+
+    const menuItems = menuItemsDiv
+      .selectAll(this.selectors.menuItem)
       .data(configs, config => config.id)
       .classed('disabled', d => d.disabled)
-    menuItems
-      .enter()
+
+    menuItems.enter()
       .append('div')
       .classed(this.selectorClass('menuItem'), true)
       .classed('disabled', d => d.disabled)
       .html(d => _actionTemplate(d))
+
     menuItems.exit()
       .remove()
   }
