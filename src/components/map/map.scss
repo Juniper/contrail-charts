@@ -17,7 +17,7 @@
   }
 
   .feature {
-    fill: grey;
+    fill: #989898;
   }
 
   .boundary {
@@ -27,6 +27,13 @@
   }
 
   .point {
-    fill: steelblue;
+    fill: #fcb134;
+  }
+
+  .link {
+	  fill: none;
+	  stroke-width: 2px;
+	  stroke: #fcb134;
+	  pointer-events: none;
   }
 }
