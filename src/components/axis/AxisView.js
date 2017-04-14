@@ -23,8 +23,7 @@ export default class AxisView extends ContrailChartsView {
     })
   }
   /**
-   * Renders axis and drawing groups.
-   * Resizes chart dimensions if chart already exists.
+   * Axis is rendered outside the container inner (width * height) area on margins
    */
   render () {
     if (!this.config.scale) return
@@ -35,10 +34,13 @@ export default class AxisView extends ContrailChartsView {
       .attr('transform', `translate(${margin.left}, ${margin.top})`)
       .classed(this.config.name, true)
 
-    const tickSize = this.config.direction === 'horizontal' ? this.innerHeight : this.innerWidth
+    const isHorizontal = this.config.direction === 'horizontal'
+    this._plotLength = isHorizontal ? this.innerWidth : this.innerHeight
+    this._tickLength = isHorizontal ? this.innerHeight : this.innerWidth
+
     this._d3Axis = d3Axis[_.camelCase(`axis-${this.config.position}`)](this.config.scale)
       .ticks(this.config.get('ticks'))
-      .tickSize(tickSize * (this.config.location === 'start' ? -1 : 1))
+      .tickSize(this._tickLength * this.config.side)
       .tickPadding(10)
 
     if (this.config.formatter) this._d3Axis.tickFormat(this.config.formatter)
@@ -49,13 +51,36 @@ export default class AxisView extends ContrailChartsView {
 
     this.d3.transition().ease(d3Ease.easeLinear).duration(this.config.duration)
     this.d3.call(this._d3Axis)
+    this._renderLabel()
+  }
+  /**
+   * Labels are rendered at the center along axis
+   * TODO not optimal label spacing
+   * and in the first quater of the margin between container edge and tick
+   */
+  _renderLabel () {
+    const offset = {
+      along: this._plotLength / 2,
+      across: this._tickLength * +(this.config.location === 'end') +
+        this.config.get('margin.' + this.config.position) * 0.75 * this.config.side,
+    }
 
-    this.d3
+    const labels = this.d3.selectAll(this.selectorClass('label'))
+      .data(this.config.labels)
+    labels
+      .enter()
       .append('text')
       .attr('class', this.selectorClass('label'))
-      .attr('x', this.innerWidth / 2)
-      .text(this.config.getLabel(null, this.config.attributes))
+      .text(d => d)
+      .merge(labels)
+      .attr('transform', (d, i) => {
+        offset.across += i * this.config.get('margin.label') * this.config.side
+        const position = this.config.isHorizontal ? [offset.along, offset.across] : [offset.across, offset.along]
 
-    this.d3.select(this.selectors.label).attr('y', this.height)
+        return `translate(${position[0]}, ${position[1]})
+          rotate(${90 * this.config.side * +!this.config.isHorizontal})`
+      })
+
+    labels.exit().remove()
   }
 }

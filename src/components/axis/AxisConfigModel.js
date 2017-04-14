@@ -1,8 +1,11 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
 */
+import _ from 'lodash'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
-
+/**
+ * Axis name is required to start with 'x' or 'y' to designate it's mathematical position
+ */
 export default class AxisConfigModel extends ContrailChartsConfigModel {
   static getDirection (position) {
     if (['left', 'right'].includes(position)) return 'vertical'
@@ -11,7 +14,7 @@ export default class AxisConfigModel extends ContrailChartsConfigModel {
 
   static getLocation (position) {
     if (['top', 'left'].includes(position)) return 'start'
-    if (['bottom', 'rigth'].includes(position)) return 'end'
+    if (['bottom', 'right'].includes(position)) return 'end'
   }
 
   static defaultPosition (name) {
@@ -28,12 +31,21 @@ export default class AxisConfigModel extends ContrailChartsConfigModel {
 
       positions: ['left', 'right', 'top', 'bottom'],
 
-      labelMargin: 5,
+      margin: {
+        label: 10,
+      },
+
+      // serie accessors to plot on this axis
+      accessors: [],
     })
   }
 
   get name () {
     return this.attributes.name
+  }
+
+  get baseName () {
+    return this.attributes.name.slice(0, 1)
   }
 
   get scale () {
@@ -52,11 +64,26 @@ export default class AxisConfigModel extends ContrailChartsConfigModel {
     return this.constructor.getDirection(this.attributes.position)
   }
 
+  get isHorizontal () {
+    return this.direction === 'horizontal'
+  }
+
   get location () {
     return this.constructor.getLocation(this.attributes.position)
+  }
+  /**
+   * @return {Number} relative position of the axis to the plot
+   */
+  get side () {
+    return this.location === 'start' ? -1 : 1
   }
 
   get tickCoords () {
     return this.attributes.tickCoords
+  }
+
+  get labels () {
+    if (this.attributes.label) return [this.attributes.label]
+    return _.map(this.attributes.accessors, 'labelFormatter')
   }
 }
