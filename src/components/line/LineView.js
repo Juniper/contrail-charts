@@ -48,7 +48,7 @@ export default class LineView extends ContrailChartsView {
     const xAccessor = this.config.get('x.accessor')
     const accessor = this.config.get('y')
     const key = accessor.accessor
-    this.config.calculateScales(this.model, this.width, this.height)
+    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     this._line = d3Shape.line()
       .x(d => this.config.xScale(_.get(d, xAccessor)))

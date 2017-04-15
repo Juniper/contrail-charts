@@ -106,10 +106,22 @@ export default class ContrailChartsView extends ContrailView {
     return this.config.get('width') || this._container.getBoundingClientRect().width
   }
 
+  get innerWidth () {
+    const margin = this.config.get('margin')
+    return this.width - margin.left - margin.right
+  }
+
   get height () {
     return this.config.get('height') || Math.round(this.width / 2)
   }
 
+  get innerHeight () {
+    const margin = this.config.get('margin')
+    return this.height - margin.top - margin.bottom
+  }
+  /**
+  * @param {Array} data
+  */
   setData (data) {
     this.model.data = data
   }
@@ -160,6 +172,8 @@ export default class ContrailChartsView extends ContrailView {
           .sort()
           .datum(null)
       }
+      const margin = this.config.get('margin')
+      this.d3.attr('transform', `translate(${margin.left},${margin.top})`)
     } else {
       // non vector components
       if (content) this.el.innerHTML = content
@@ -221,8 +235,8 @@ export default class ContrailChartsView extends ContrailView {
     }
     this.svg
       .classed(this.selectorClass('sharedSvg'), isSharedContainer)
-      .attr('width', this.width + this.config.get('margin.right'))
-      .attr('height', this.height + this.config.get('margin.bottom'))
+      .attr('width', this.width)
+      .attr('height', this.height)
   }
   /**
    * insert own element into the DOM in the right order
@@ -242,7 +256,6 @@ export default class ContrailChartsView extends ContrailView {
         .sort()
         .datum(null)
     }
-    this.d3.attr('transform', `translate(${this.config.get('margin.left')},${this.config.get('margin.top')})`)
   }
 
   // Event handlers
