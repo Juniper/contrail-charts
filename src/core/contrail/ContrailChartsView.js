@@ -4,9 +4,7 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
-import * as Components from 'components/index'
-import * as Helpers from 'helpers/index'
-import * as Providers from 'providers/index'
+import * as Providers from 'providers'
 /**
  * View base class
  */
@@ -17,13 +15,13 @@ export default class ContrailChartsView extends ContrailView {
     this.d3.attr('id', this.id)
     this._order = p.order
     this._container = p.container
+    // TODO remove
     this.params = {}
 
-    const View = Components[this.type + 'View'] || {}
-    const Provider = Providers[View.dataType + 'Provider']
+    const Provider = Providers[this.constructor.dataType + 'Provider']
     if (Provider) {
       if (p.model instanceof Provider) this.model = p.model
-      else this.model = new Provider(null, p.model)
+      else this.model = new Provider(undefined, p.model)
     }
     this.setConfig(p.config)
     this._onResize = this._onResize.bind(this)
@@ -117,16 +115,16 @@ export default class ContrailChartsView extends ContrailView {
   }
 
   setConfig (config) {
-    const configModelName = this.type + 'ConfigModel'
-    const ConfigModel = Components[configModelName] || Helpers[configModelName]
+    const ConfigModel = this.constructor.Config
     if (ConfigModel) {
       if (config instanceof ConfigModel) this.config = config
       else {
-        if (!this.config) this.config = new ConfigModel(config)
-        else this.config.set(config)
-      }
-      if (!_.includes(this.config.listeners('change'), this.render)) {
-        this.listenTo(this.config, 'change', this.render)
+        if (!this.config) {
+          this.config = new ConfigModel(config)
+          this.listenTo(this.config, 'change', this.render)
+        } else {
+          this.config.set(config)
+        }
       }
     }
   }
@@ -134,6 +132,7 @@ export default class ContrailChartsView extends ContrailView {
    * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
    * The view may modify the params object with calculated values.
    */
+  // TODO deprecate
   resetParams (params) {
     if (params) this.config.set(params)
     this.params = this.config.computeParams()
@@ -190,6 +189,7 @@ export default class ContrailChartsView extends ContrailView {
     if (this.model) this.stopListening(this.model)
     window.removeEventListener('resize', this._onResize)
 
+    // TODO remove
     this.params = {}
     super.remove()
   }
