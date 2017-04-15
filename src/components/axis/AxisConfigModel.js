@@ -7,11 +7,16 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
  * Axis name is required to start with 'x' or 'y' to designate it's mathematical position
  */
 export default class AxisConfigModel extends ContrailChartsConfigModel {
+  /**
+   * @return {String} Visual direction of Axis
+   */
   static getDirection (position) {
     if (['left', 'right'].includes(position)) return 'vertical'
     if (['top', 'bottom'].includes(position)) return 'horizontal'
   }
-
+  /**
+   * @return {String} Visual location of axis relative to the plot
+   */
   static getLocation (position) {
     if (['top', 'left'].includes(position)) return 'start'
     if (['bottom', 'right'].includes(position)) return 'end'
@@ -80,6 +85,12 @@ export default class AxisConfigModel extends ContrailChartsConfigModel {
 
   get tickCoords () {
     return this.attributes.tickCoords
+  }
+  /**
+   * calculate domain values for ticks based on preset tick coordinates from scale range
+   */
+  get tickValues () {
+    return _.map(this.attributes.tickCoords, coord => this.attributes.scale.invert(coord))
   }
 
   get labels () {

@@ -44,10 +44,7 @@ export default class AxisView extends ContrailChartsView {
       .tickPadding(10)
 
     if (this.config.formatter) this._d3Axis.tickFormat(this.config.formatter)
-    if (this.config.tickCoords) {
-      const values = _.map(this.config.tickCoords, coord => this.config.scale.invert(coord))
-      this._d3Axis.tickValues(values)
-    }
+    if (this.config.tickCoords) this._d3Axis.tickValues(this.config.tickValues)
 
     this.d3.transition().ease(d3Ease.easeLinear).duration(this.config.duration)
     this.d3.call(this._d3Axis)
@@ -65,7 +62,7 @@ export default class AxisView extends ContrailChartsView {
         this.config.get('margin.' + this.config.position) * 0.75 * this.config.side,
     }
 
-    const labels = this.d3.selectAll(this.selectorClass('label'))
+    const labels = this.d3.selectAll(this.selectors.label)
       .data(this.config.labels)
     labels
       .enter()
