@@ -4,8 +4,6 @@
 
 export {default as ColorPickerConfigModel} from './color-picker/ColorPickerConfigModel'
 export {default as ColorPickerView} from './color-picker/ColorPickerView'
-export {default as CompositeYChartConfigModel} from './composite-y/CompositeYChartConfigModel'
-export {default as CompositeYChartView} from './composite-y/CompositeYChartView'
 
 export {default as StackedBarView} from './stacked-bar/StackedBarView'
 export {default as StackedBarConfigModel} from './stacked-bar/StackedBarConfigModel'

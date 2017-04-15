@@ -29,6 +29,7 @@ import singleGroupedBar from '../../single/single-grouped-bar'
 import singleArea from '../../single/single-area'
 import singleScatterPlot from '../../single/single-scatter-plot'
 import singlePie from '../../single/single-pie'
+import singleComposite from '../../single/single-composite'
 /**
  * structure of an example:
  * 'example title': {
@@ -110,6 +111,8 @@ const allExamples = {
       view: navigation,
       desc: `Grouped chart with Navigation component for all of them. </br>
       First line chart in second row is not updated as it is plotted with different values at x axis`,
+    'Composite Chart': {
+      view: singleComposite,
     },
     '2 LineBar 1 Pie Nav': {
       view: twoLineBarOnePieNav,

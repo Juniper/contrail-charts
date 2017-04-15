@@ -60,7 +60,6 @@
         map-get-safe($config, "title", ()),
         map-get-safe($config, "item", ()),
       );
-    } @else if ($componentId == $compositeYId) {
     } @else if ($componentId == $axisId) {
       @return (
         map-get-safe($config, "general", ()),

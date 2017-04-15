@@ -1,3 +1,4 @@
+export {default as CompositeChart} from './CompositeChart'
 //export {default as BrushView} from './brush/BrushView'
 export {default as BrushConfigModel} from './brush/BrushConfigModel'
 //export {default as BucketView} from './bucket/BucketView'

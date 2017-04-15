@@ -6,7 +6,6 @@
 @import "../components/message/message-rules";
 @import "../components/timeline/timeline-rules";
 @import "../components/tooltip/tooltip-rules";
-@import "../components/composite-y/composite-y-rules";
 @import "../components/area/area-rules";
 @import "../components/grouped-bar/bar-rules";
 @import "../components/stacked-bar/bar-rules";
@@ -60,8 +59,6 @@
         $tooltip-title: nth($arg, 2),
         $tooltip-item: nth($arg, 3)
       );
-    } @else if ($componentId == $compositeYId) {
-      @include compositeYChartRules(nth($arg, 1));
     } @else if ($componentId == $axisId) {
       @include axisRules(nth($arg, 1));
     } @else if ($componentId == $areaChartId) {
