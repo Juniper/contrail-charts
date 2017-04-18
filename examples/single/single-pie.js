@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Juniper Networks, Inc. All rights reserved.
+ */
 import _ from 'lodash'
 import {components} from 'coCharts'
 import {formatter, fixture} from 'commons'
@@ -32,11 +35,14 @@ export default {
     chart = new components.PieView({config, container})
     chart.setData(data)
 
-    intervalId = setInterval(() => {
-      length = _.random(3, 20)
+    setTimeout(() => {
       config.type = _.sample(['pie', 'donut'])
       config.colorScheme = d3Scale.schemeCategory20b
       chart.setConfig(config)
+    }, 1000)
+
+    intervalId = setInterval(() => {
+      const length = _.random(3, 20)
       chart.setData(data.slice(0, length))
     }, 2000)
   },
