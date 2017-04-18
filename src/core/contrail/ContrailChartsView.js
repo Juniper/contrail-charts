@@ -132,6 +132,8 @@ export default class ContrailChartsView extends ContrailView {
       if (config instanceof ConfigModel) this.config = config
       else {
         if (!this.config) {
+          // clone config as this object may be changed outside and passed again
+          config = _.cloneDeep(config)
           this.config = new ConfigModel(config)
           this.listenTo(this.config, 'change', this.render)
         } else {
