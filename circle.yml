@@ -1,4 +1,6 @@
 machine:
+  timezone:
+    America/Los_Angeles
   environment:
     NODE_ENV: test
   node:
@@ -13,25 +15,25 @@ dependencies:
     - npm prune && npm install
     - npm run build
     - npm run lint
-  post:
-    - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
-    - tar -xzf sc-latest-linux.tar.gz
+
 
 test:
   pre:
     - npm install -g phantomjs-prebuilt
+    - wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
+    - tar -xzf sc-latest-linux.tar.gz
   override:
     - npm run test-headless
     - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready:
-      background: true
+        background: true
     # Wait for tunnel to be ready
     - while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
-    # Start the example app. TODO: Create npm start target
+    # Start the example app. TODO Create npm start target
     - npm run dev
-      background: true
+        background: true
     # Wait for example app to be ready
     - curl --retry 10 --retry-delay 2 -v http://localhost:9000
-    # TODO: Run selenium tests
+    # TODO Run selenium tests
   post:
     - killall --wait sc  # Wait for Sauce Connect to close the tunnel
 
