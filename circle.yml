@@ -1,6 +1,4 @@
 machine:
-  timezone:
-    America/Los_Angeles
   environment:
     NODE_ENV: test
   node:
