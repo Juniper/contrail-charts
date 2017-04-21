@@ -5,7 +5,7 @@ import {ChartView, Util} from 'coCharts'
 import {formatter, _c, fixture} from 'commons'
 
 const data = fixture({
-  length: 40,
+  length: 20,
   data: {
     'group.x': {linear: true, range: [1475760930000, 1475800930000]},
     'group.data1': {random: true, range: [0, 50], gap: true},
@@ -17,7 +17,7 @@ const data = fixture({
   },
 })
 
-const colorScheme = _c.bubbleColorScheme6
+const colorScheme = _c.radialColorScheme10
 const bubbleShapes = Util.bubbleShapes
 
 const chartConfig = {
@@ -52,7 +52,7 @@ const chartConfig = {
             sizeAxis: 'sizeAxis',
             // this is a circle symbol from fontawesome
             shape: bubbleShapes.circleFill,
-            color: colorScheme[0],
+            color: d => colorScheme[0],
             axis: 'y1',
             tooltip: 'tooltip-id',
           }, {
@@ -62,8 +62,8 @@ const chartConfig = {
             chart: 'ScatterPlot',
             sizeAccessor: 'size2',
             sizeAxis: 'sizeAxis',
-            shape: bubbleShapes.square,
-            color: colorScheme[4],
+            shape: bubbleShapes.cloud,
+            color: d => colorScheme[5],
             axis: 'y2',
             tooltip: 'tooltip-id',
           }, {
@@ -73,8 +73,8 @@ const chartConfig = {
             chart: 'ScatterPlot',
             sizeAccessor: 'size2',
             sizeAxis: 'sizeAxis',
-            shape: bubbleShapes.star,
-            color: d => d.data3 > 80 ? 'red' : colorScheme[5],
+            shape: bubbleShapes.network,
+            color: d => d.data3 > 80 ? colorScheme[9] : colorScheme[8],
             axis: 'y2',
             tooltip: 'tooltip-id',
           }
@@ -96,8 +96,8 @@ const chartConfig = {
         }
       },
       bucket: {
-        range: [400, 600],
-        shape: bubbleShapes.circleFill,
+        range: [500, 800],
+        shape: bubbleShapes.square,
         tooltip: 'tooltip-bucket',
       },
     }

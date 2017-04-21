@@ -12,15 +12,14 @@ const data = fixture({
   data: {
     'group.t': {linear: true, range: [1475760930000, 1475800930000]},
     'group.a': {random: true, range: [0, length * 3]},
-    b: {random: true, range: [0, -length * 5]},
-    c: {random: true, range: [0, -length * 5]},
+    'group.b': {random: true, range: [0, -length * 5]},
+    'group.c': {random: true, range: [0, -length * 5]},
   },
 })
 data[5].a = -10
 
 const chartConfig = {
   id: 'chartBox',
-  title: 'Area Chart',
   components: [{
     type: 'LegendPanel',
     config: {
@@ -52,7 +51,7 @@ const chartConfig = {
             tooltip: 'default-tooltip',
           }, {
             enabled: true,
-            accessor: 'b',
+            accessor: 'group.b',
             chart: 'AreaChart',
             stack: 'negative',
             axis: 'y',
@@ -60,7 +59,7 @@ const chartConfig = {
             tooltip: 'default-tooltip',
           }, {
             enabled: true,
-            accessor: 'c',
+            accessor: 'group.c',
             chart: 'AreaChart',
             stack: 'negative',
             axis: 'y',
@@ -97,10 +96,10 @@ const chartConfig = {
           accessor: 'group.a',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'b',
+          accessor: 'group.b',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'c',
+          accessor: 'group.c',
           valueFormatter: formatter.toInteger,
         }
       ]
