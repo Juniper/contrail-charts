@@ -6,7 +6,6 @@ import * as Components from 'components'
 import * as Composites from 'composites'
 import * as Providers from 'providers'
 import * as Actions from 'actions'
-import TitleView from 'helpers/title/TitleView'
 import actionman from 'core/Actionman'
 /**
  * Creates a chart as a composition of components or other compositions
@@ -15,18 +14,14 @@ export default class CompositeChart {
   constructor (p) {
     this._components = []
     this.actionman = actionman
-    this._frozen = false
     this.setConfig(p)
   }
 
   setData (data) {
-    if (this.frozen) return
     if (!_.isArray(data)) return
     _(this._components)
-      .map(c => c.model)
-      .uniq()
-      .compact()
-      .each(m => { m.data = data })
+      .filter(c => c.model)
+      .each(c => c.setData(data) )
   }
   /**
    * Sets the configuration for this chart as a simple object.
@@ -34,7 +29,7 @@ export default class CompositeChart {
    * Updating configuration to a rendered chart will trigger a ConfigModel change event that will cause the chart to be re-rendered.
    * calling setConfig on already rendered chart will update the chart.
    */
-  setConfig (config) {
+  setConfig (config = {}) {
     if (this._config) this.remove()
     this._config = _.cloneDeep(config)
     /**
@@ -50,7 +45,6 @@ export default class CompositeChart {
       const Provider = Providers[config.provider.type + 'Provider']
       if (Provider) this._provider = new Provider(config.provider.config)
     }
-    this._initComponents()
   }
   /**
    * Get component by id
@@ -73,23 +67,16 @@ export default class CompositeChart {
    * @param {Object} providerConfig
    * @param {Provider} model optional for dependent components
    */
-  add ({id, type, config, provider: providerConfig}, model) {
+  add (p) {
+    const {type, config} = p
     if (!_.isObject(config) || config.enable === false) return false
     const Component = Components[type + 'View'] || Composites[type + 'View']
 
-    //const container = this._container.querySelector(`[component="${config.container || config.id}"]`)
-    model = model || this._provider
-
     // Share first initialized provider with all other components
     //if (!this._provider) this._provider = model
+    //model = model || this._provider
 
-    const viewOptions = {
-      id: id || config.id,
-      config,
-      model,
-      container: config.container || this._container,
-    }
-    const component = new Component(viewOptions)
+    const component = new Component(p)
     this._components.push(component)
 
     return component
@@ -102,7 +89,12 @@ export default class CompositeChart {
    * Removes chart view and its components.
    * All actions will be unregistered, individual components will be removed except the parent container.
    */
-  remove () {
+  remove (id) {
+    if (id) {
+      const component = this.get(id)
+      this._components = _.without(this._components, component)
+      return component.remove()
+    }
     _.each(Actions, action => actionman.unset(action, this))
     _.each(this._components, component => component.remove())
     this._components = []

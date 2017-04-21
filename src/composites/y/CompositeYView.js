@@ -11,20 +11,26 @@ export default class CompositeYView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
+  constructor (...args) {
+    super(...args)
+    this.listenTo(this.model, 'change', this.render)
+  }
+
   get tagName () { return 'g' }
 
-  setData (data) {
-    super.setData(data)
-    this.render({silent: true})
-    this._composite.setData(data)
+  get selectors () {
+    return _.extend(super.selectors, {
+      node: '.child',
+      axis: '.axis',
+    })
   }
 
   setConfig (config) {
-    if (!this._composite) this._composite = new CompositeChart({container: this._container})
+    if (!this._composite) this._composite = new CompositeChart()
     super.setConfig(config)
   }
 
-  render (p) {
+  render () {
     super.render()
     this._plotMargin = _.cloneDeep(this.config.get('margin'))
     _.each(this.config.get('axes'), (config, name) => {
@@ -32,9 +38,10 @@ export default class CompositeYView extends ContrailChartsView {
       this._plotMargin[config.position] += this._plotMargin.label
     })
 
+    // TODO consider stacked charts change scale depending on data
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
-    this._updateComponents(p)
+    this._updateComponents()
 
     this._ticking = false
   }
@@ -43,36 +50,62 @@ export default class CompositeYView extends ContrailChartsView {
    */
   _renderAxes () {
     let ticks = {}
-    _.each(this.config.get('axes'), (axisConfig, name) => {
+    const plotYAxes = _(this.config.yAccessors).map('axis').uniq().value()
+    const axes = _.filter(this.config.get('axes'), (axis, name) => {
+      axis.name = name
+      return name.startsWith('x') || plotYAxes.includes(name)
+    })
+
+    const elements = this.svg.selectAll(this.selectors.axis)
+      .data(axes, d => d.name)
+
+    elements.enter().each(axis => {
       const config = _.extend({
-        id: `${this.id}-${name}`,
-        name,
+        id: `${this.id}-${axis.name}`,
+        name: axis.name,
         margin: this._plotMargin,
-        accessors: this.config.getAxisAccessors(name),
-      }, axisConfig)
+        accessors: this.config.getAxisAccessors(axis.name),
+      }, axis)
 
       // Sync ticks of the axes in the same direction
       const direction = AxisConfigModel.getDirection(config.position)
       if (ticks[direction]) config.tickCoords = ticks[direction]
       else ticks[direction] = _.map(config.scale.ticks(), v => config.scale(v))
 
-      const component = this._composite.get(config.id)
-      if (!component) {
-        this._composite.add({
-          type: 'Axis',
-          config,
-        })
-      } else {
-        // if only a scale is changed Backbone doesn't trigger "change" event and no render will happen
-        component.config.set(config, {silent: true})
-        component.config.trigger('change')
-      }
+      const component = this._composite.add({
+        type: 'Axis',
+        config,
+        container: this._container,
+      })
+      component.el.__data__ = axis
+    })
+
+    elements.each(axis => {
+      const component = this._composite.get(`${this.id}-${axis.name}`)
+
+      const config = _.extend({
+        margin: this._plotMargin,
+        accessors: this.config.getAxisAccessors(axis.name),
+      }, axis)
+
+      // Sync ticks of the axes in the same direction
+      const direction = component.config.direction
+      if (ticks[direction]) config.tickCoords = ticks[direction]
+      else ticks[direction] = _.map(config.scale.ticks(), v => config.scale(v))
+      // if only a scale is changed Backbone doesn't trigger "change" event and no render will happen
+      component.config.set(config, {silent: true})
+      component.render()
+    })
+
+    elements.exit().each(axis => {
+      this._composite.remove(`${this.id}-${axis.name}`)
     })
   }
 
   _updateComponents (p) {
     const config = {
-      container: this._container,
+      // all sub charts should not react on model change as some preparation for them is done here
+      frozen: true,
       // TODO add axes space to the chart margins
       margin: this._plotMargin,
       width: this.width,
@@ -82,21 +115,39 @@ export default class CompositeYView extends ContrailChartsView {
         scale: this.config.get('axes.x.scale'),
       }
     }
-    _.each(this.config.yAccessors, accessor => {
+    const children = this.svg.selectAll(this.selectors.node)
+      .data(this.config.yAccessors, d => d.accessor)
+
+    children.enter().each(accessor => {
       config.id = `${this.id}-${accessor.accessor}`
       config.y = {
         accessor: accessor.accessor,
         scale: this.config.get(`axes.${accessor.axis}.scale`),
       }
 
-      const component = this._composite.get(config.id)
-      if (!component) {
-        this._composite.add({
-          type: this.config.getComponentType(accessor),
-          config,
-          model: this.model,
-        })
-      } else component.config.set(config, p)
+      const component = this._composite.add({
+        type: this.config.getComponentType(accessor),
+        config,
+        model: this.model,
+        container: this._container,
+      })
+      component.render()
+      component.d3.classed(this.selectorClass('node'), true)
+      component.el.__data__ = accessor
+    })
+
+    children.each(accessor => {
+      config.y = {
+        accessor: accessor.accessor,
+        scale: this.config.get(`axes.${accessor.axis}.scale`),
+      }
+      let component = this._composite.get(`${this.id}-${accessor.accessor}`)
+      component.config.set(config)
+      component.render()
+    })
+
+    children.exit().each(accessor => {
+      this._composite.remove(`${this.id}-${accessor.accessor}`)
     })
   }
 }

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+import _ from 'lodash'
 import {composites} from 'coCharts'
 import {fixture} from 'commons'
 
@@ -43,6 +44,7 @@ const config = {
         axis: 'y1',
       }, {
         accessor: 'c',
+        disabled: true,
         labelFormatter: 'Label C',
         chart: 'Line',
         axis: 'y2',
@@ -68,6 +70,20 @@ export default {
     // chart.setConfig is designed for chart update already rendered with data
     chart = new composites.CompositeYView({config, container})
     chart.setData(data)
+
+    setTimeout(() => {
+      config.plot.y[2].disabled = false
+      chart.setConfig(config)
+    }, 2000)
+    setTimeout(() => {
+      config.plot.y[0].disabled = true
+      config.plot.y[1].disabled = true
+      chart.setConfig(config)
+    }, 4000)
+    setTimeout(() => {
+      const length = _.random(3, 20)
+      chart.setData(data.slice(0, length))
+    }, 6000)
   },
   remove: () => {
     chart.remove()
