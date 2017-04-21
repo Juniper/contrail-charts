@@ -5,14 +5,14 @@ import {ChartView} from 'coCharts'
 import {_c, fixture} from 'commons'
 import template from './template.html'
 
-const colorScheme = _c.lbColorScheme7
+const colorScheme = _c.lbColorScheme17
 
 const length = 20
 const data = fixture({
-  length: 20,
+  length: 30,
   data: {
     x: {linear: true, range: [0, length]},
-    a: {linear: true, range: [0, length * 3], repeat: true},
+    a: {random: true, range: [0, length * 7], repeat: true},
     b: {linear: true, range: [0, length * 5], repeat: true},
     c: {random: true, range: [0, -length * 5]},
     d: {linear: true, range: [0, length * 7]},
@@ -82,14 +82,14 @@ const chartConfig = {
             label: 'Label A',
             enabled: true,
             chart: 'BarChart',
-            color: colorScheme[1],
+            color: colorScheme[7],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
             enabled: true,
             chart: 'BarChart',
-            color: colorScheme[3],
+            color: colorScheme[6],
             axis: 'y',
           },
         ]
@@ -168,14 +168,14 @@ const chartConfig = {
             label: 'Label A',
             chart: 'LineChart',
             axis: 'y',
-            color: colorScheme[2],
+            color: colorScheme[11],
           }, {
             enabled: true,
             accessor: 'c',
             label: 'Label C',
             chart: 'LineChart',
             axis: 'y',
-            color: colorScheme[4],
+            color: colorScheme[9],
           }
         ]
       },
@@ -210,7 +210,7 @@ const chartConfig = {
             accessor: 'a',
             label: 'Label D',
             enabled: true,
-            color: colorScheme[2],
+            color: colorScheme[8],
             chart: 'LineChart',
             axis: 'y',
           }
