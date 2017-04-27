@@ -36,6 +36,13 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     return _.filter(this.get('plot.y'), a => !a.disabled)
   }
 
+  get children () {
+    const accessorsByChart = _.groupBy(this.get('plot.y'), accessor => {
+      return `${accessor.axis}-${accessor.stack || (accessor.chart === 'Line' ? accessor.accessor : accessor.chart)}`
+    })
+    return _.map(accessorsByChart, (accessors, key) => { return {key, accessors} })
+  }
+
   get xScale () {
     return this.get('x.scale')
   }
@@ -43,9 +50,15 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   get yScale () {
     return this.get('y.scale')
   }
+  /**
+   * @param {Object} child element of array returned by this.children
+   */
+  getComponentType (child = {accessors: [{}]}) {
+    return child.accessors[0].chart || 'Line'
+  }
 
-  getComponentType (accessor = {}) {
-    return accessor.chart || 'Line'
+  getAxisName (child) {
+    return child.accessors[0].axis || 'y'
   }
 
   getAxisAccessors (name) {
@@ -63,8 +76,9 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     const accessorsByAxis = _.groupBy(this.get('plot.y'), 'axis')
     _.each(accessorsByAxis, (accessors, axisName) => {
       const accessorNames = _.map(accessors, 'accessor')
-      const config = _.defaultsDeep(
+      const config = _.extend(
         {
+          domain: this.get(`axes.${axisName}.calculatedDomain`),
           range: [height, 0],
           accessor: accessorNames
         },
