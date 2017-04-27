@@ -14,16 +14,16 @@ export default class ContrailModel extends Backbone.Model {
     return _.get(this.attributes, attr)
   }
 
-  set (key, val, options) {
+  set (key, value, options) {
     if (key == null) return this
 
     // Handle both `"key", value` and `{key: value}` -style arguments.
-    var attrs
+    let attrs
     if (typeof key === 'object') {
       attrs = key
-      options = val
+      options = value
     } else {
-      (attrs = {})[key] = val
+      (attrs = {})[key] = value
     }
 
     options || (options = {})
@@ -32,13 +32,15 @@ export default class ContrailModel extends Backbone.Model {
     if (!this._validate(attrs, options)) return false
 
     // Extract attributes and options.
-    var unset = options.unset
-    var silent = options.silent
-    var changes = []
-    var changing = this._changing
-    this._changing = true
+    const unset = options.unset
+    const silent = options.silent
 
-    if (!changing) {
+    // array of attribute names (keys)
+    const changes = []
+    const isChanging = this._isChanging
+    this._isChanging = true
+
+    if (!isChanging) {
       this._previousAttributes = _.clone(this.attributes)
       this.changed = {}
     }
@@ -49,19 +51,19 @@ export default class ContrailModel extends Backbone.Model {
 
     // For each `set` attribute, update or delete the current value.
     for (var attr in attrs) {
-      val = attrs[attr]
-      if (!_.isEqual(current[attr], val)) changes.push(attr)
-      if (!_.isEqual(prev[attr], val)) {
-        changed[attr] = val
+      value = _.get(attrs, attr)
+      const currentValue = _.get(current, attr)
+      if (!_.isEqual(currentValue, value)) changes.push(attr)
+      if (!_.isEqual(_.get(prev, attr), value)) {
+        _.set(changed, attr, value)
       } else {
-        delete changed[attr]
+        this.changed = _.omit(changed, attr)
       }
       if (unset) {
-        delete current[attr]
+        this.attributes = _.omit(current, attr)
       } else {
-        if (_.isObject(current[attr])) {
-          current[attr] = _.extend(current[attr], val)
-        } else current[attr] = val
+        const newValue = _.isPlainObject(currentValue) ? _.extend(currentValue, value) : value
+        _.set(current, attr, newValue)
       }
     }
 
@@ -78,7 +80,7 @@ export default class ContrailModel extends Backbone.Model {
 
     // You might be wondering why there's a `while` loop here. Changes can
     // be recursively nested within `"change"` events.
-    if (changing) return this
+    if (isChanging) return this
     if (!silent) {
       while (this._pending) {
         options = this._pending
@@ -87,7 +89,9 @@ export default class ContrailModel extends Backbone.Model {
       }
     }
     this._pending = false
-    this._changing = false
+    this._isChanging = false
     return this
   }
+
+  // TODO override changedAttributes to support nested objects
 }
