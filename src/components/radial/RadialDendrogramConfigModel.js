@@ -10,7 +10,7 @@ import ColoredChart from 'helpers/color/ColoredChart'
 
 export default class RadialDendrogramConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, ColoredChart.defaults, {
+    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
 
       // The labels of the levels.
       levels: [],

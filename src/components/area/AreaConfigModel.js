@@ -10,7 +10,7 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class AreaConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults,
+    return _.defaultsDeep(super.defaults,
       ColoredChart.defaults,
       {
         curve: d3Shape.curveCatmullRom.alpha(0.5),
@@ -56,9 +56,7 @@ export default class AreaConfigModel extends ContrailChartsConfigModel {
       return totalDomainValues.concat(stackedDomain)
     }, [0, 0])
     const domain = d3Array.extent(totalDomainValues)
-
     config = { range: [height, 0], domain }
-    config = _.defaultsDeep({}, this.attributes.y, {range: [height, 0], domain})
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 

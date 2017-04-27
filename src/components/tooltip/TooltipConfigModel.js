@@ -6,7 +6,7 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 
 export default class TooltipConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, {
+    return _.defaultsDeep(super.defaults, {
       // Which tooltip ids to accept. If empty accept all.
       acceptFilters: [],
 

@@ -7,11 +7,8 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 
 export default class TimelineConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, {
+    return _.defaultsDeep(super.defaults, {
       isSharedContainer: true,
-
-      // The component width
-      width: undefined,
 
       // The component height
       height: 100,

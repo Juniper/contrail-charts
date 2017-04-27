@@ -8,7 +8,7 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults,
+    return _.defaultsDeep(super.defaults,
       ColoredChart.defaults,
       {
         margin: {

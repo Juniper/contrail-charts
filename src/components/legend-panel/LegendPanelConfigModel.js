@@ -15,7 +15,7 @@ const chartTypeIconMap = {
 
 export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, ColoredChart.defaults, {
+    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
       editable: {
         colorSelector: true,
         chartSelector: true

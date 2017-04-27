@@ -1,6 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+import _ from 'lodash'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
 
 /**
@@ -8,7 +9,7 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 */
 export default class StandaloneModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, {
+    return _.defaultsDeep(super.defaults, {
       // by default will use shared container under the parent
       isSharedContainer: true,
       width: 300,
