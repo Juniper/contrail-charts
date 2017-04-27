@@ -39,17 +39,18 @@ const chartConfig = {
     },
   }, {
     id: 'compositey-chart-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 400,
       crosshair: 'crosshair-id',
       possibleChartTypes: {
-        y1: ['BarChart', 'StackedBarChart'],
-        y2: ['LineChart']
+        y1: ['GroupedBar', 'StackedBar'],
+        y2: ['Line']
       },
       plot: {
         x: {
@@ -61,40 +62,40 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
             disabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
             color: '#d62728',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'e',
             labelFormatter: 'Label E',
             color: '#9467bd',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },
@@ -112,10 +113,11 @@ const chartConfig = {
   }, {
     type: 'Navigation',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 200,
       selection: [75, 100],
       plot: {
@@ -128,17 +130,17 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
           }
         ]

@@ -33,7 +33,7 @@ const chartConfig = {
     },
   }, {
     id: 'compositey-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       crosshair: 'crosshair-id',
       plot: {
@@ -44,21 +44,21 @@ const chartConfig = {
         y: [
           {
             accessor: 'group.a',
-            chart: 'AreaChart',
+            chart: 'Area',
             stack: 'positive',
             axis: 'y',
             color: colorScheme[2],
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
-            chart: 'AreaChart',
+            chart: 'Area',
             stack: 'negative',
             axis: 'y',
             color: colorScheme[3],
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
-            chart: 'AreaChart',
+            chart: 'Area',
             stack: 'negative',
             axis: 'y',
             color: colorScheme[4],
@@ -66,7 +66,7 @@ const chartConfig = {
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           formatter: formatter.extendedISOTime,
         },

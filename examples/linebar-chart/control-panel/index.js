@@ -36,12 +36,13 @@ const chartConfig = {
     }
   }, {
     id: 'compositey-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 500,
       plot: {
         x: {
@@ -53,40 +54,40 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'custom-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
             disabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'd',
             labelFormatter: 'Megabytes D',
             color: '#d62728',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'e',
             labelFormatter: 'Megabytes E',
             color: '#9467bd',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           formatter: formatter.extendedISOTime
         },

@@ -1,11 +1,11 @@
 /* global coCharts, describe, it, expect, beforeEach */
-describe('PieChartView', function () {
+describe('PieView', function () {
   beforeEach(function () {
     this.chartConfig = {
       id: 'chart',
       components: [{
         id: 'pie-chart-id',
-        type: 'PieChart',
+        type: 'Pie',
         config: {
           type: 'donut',
           radius: 100,

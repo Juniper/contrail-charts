@@ -5,7 +5,7 @@ import _ from 'lodash'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class PieChartConfigModel extends ContrailChartsConfigModel {
+export default class PieConfigModel extends ContrailChartsConfigModel {
   get defaults () {
     return Object.assign(super.defaults, ColoredChart.defaults, {
       // sets the position for shared svg container

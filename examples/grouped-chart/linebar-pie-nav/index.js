@@ -53,13 +53,13 @@ const chartConfig = {
     },
   }, {
     id: 'compositey-chart-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       height: 300,
       crosshair: 'crosshair-id',
       possibleChartTypes: {
-        y1: ['BarChart', 'LineChart'],
-        y2: ['BarChart', 'LineChart']
+        y1: ['GroupedBar', 'Line'],
+        y2: ['GroupedBar', 'Line']
       },
       plot: {
         x: {
@@ -69,18 +69,18 @@ const chartConfig = {
         y: [
           {
             accessor: 'a',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[0],
             axis: 'y',
           }, {
             accessor: 'b',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[1],
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           ticks: 6
         },
@@ -142,11 +142,11 @@ const chartConfig = {
       filter: true,
     },
   }, {
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     id: 'compositey-chart-id2',
     config: {
       height: 300,
-      possibleChartTypes: ['BarChart', 'LineChart'],
+      possibleChartTypes: ['GroupedBar', 'Line'],
       plot: {
         x: {
           accessor: 'x',
@@ -155,7 +155,7 @@ const chartConfig = {
         y: [
           {
             accessor: 'c',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
             color: colorScheme[2],
           }
@@ -169,7 +169,7 @@ const chartConfig = {
     },
   }, {
     id: 'pie-chart-id',
-    type: 'PieChart',
+    type: 'Pie',
     provider: {
       formatter: pieDataParser,
     },
@@ -236,7 +236,7 @@ const chartConfig = {
           {
             accessor: 'd',
             label: 'Label D',
-            chart: 'LineChart',
+            chart: 'Line',
             color: colorScheme[4],
             axis: 'y',
           }

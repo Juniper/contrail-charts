@@ -24,7 +24,7 @@ const chartConfig = {
   template,
   components: [{
     id: 'stacked-bar-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       marginLeft: 60,
       marginRight: 60,
@@ -39,19 +39,19 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             color: colorScheme[1],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             color: colorScheme[3],
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'X',
@@ -63,7 +63,7 @@ const chartConfig = {
     }
   }, {
     id: 'grouped-bar-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       marginLeft: 60,
       marginRight: 60,
@@ -78,19 +78,19 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[1],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[3],
             axis: 'y',
           },
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'X',
@@ -102,12 +102,13 @@ const chartConfig = {
     },
   }, {
     id: 'area-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 300,
       plot: {
         x: {
@@ -118,20 +119,20 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            chart: 'AreaChart',
+            chart: 'Area',
             axis: 'y',
             color: colorScheme[2],
           }, {
             accessor: 'c',
             label: 'Label C',
-            chart: 'AreaChart',
+            chart: 'Area',
             stack: 'negative',
             axis: 'y',
             color: colorScheme[4],
           },
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'X',
@@ -143,12 +144,13 @@ const chartConfig = {
     }
   }, {
     id: 'line-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 300,
       plot: {
         x: {
@@ -159,19 +161,19 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
             color: colorScheme[2],
           }, {
             accessor: 'c',
             label: 'Label C',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
             color: colorScheme[4],
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'D',
@@ -202,12 +204,12 @@ const chartConfig = {
             accessor: 'a',
             label: 'Label D',
             color: colorScheme[2],
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },

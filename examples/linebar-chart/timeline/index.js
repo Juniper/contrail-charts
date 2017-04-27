@@ -15,12 +15,13 @@ const config = {
   template,
   components: [{
     id: 'chart-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 300,
       plot: {
         x: {
@@ -32,23 +33,23 @@ const config = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y1',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
             disabled: true,
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y1',
           },
         ]
       },
-      axis: {
+      axes: {
         x: {
           formatter: formatter.extendedISOTime,
         },

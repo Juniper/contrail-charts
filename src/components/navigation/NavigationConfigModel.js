@@ -26,14 +26,13 @@ export default class NavigationConfigModel extends ContrailChartsConfigModel {
       _xTicks: 10,
       _yTicks: 10,
 
-      // Margin between label and chart
-      labelMargin: 16,
-
-      marginTop: 25,
-      marginBottom: 40,
-      marginLeft: 50,
-      marginRight: 50,
-      marginInner: 10,
+      margin: {
+        top: 25,
+        left: 50,
+        right: 50,
+        bottom: 40,
+        label: 16,
+      },
 
       curve: d3Shape.curveCatmullRom.alpha(0.5),
 

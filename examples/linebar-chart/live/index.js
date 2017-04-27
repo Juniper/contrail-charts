@@ -21,10 +21,11 @@ const chartConfig = {
     id: 'compositey-id',
     type: 'CompositeYChart',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 600,
       crosshair: 'crosshair-id',
       plot: {
@@ -37,13 +38,13 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },

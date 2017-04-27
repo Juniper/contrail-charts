@@ -24,17 +24,18 @@ define([ // eslint-disable-line no-undef
   `<div component="chart-id1"></div>
    <div component="chart-id2"></div>`)
 
-  const chartConfig = {
+  const config = {
     id: 'chartBox',
     template,
     components: [{
       id: 'chart-id1',
-      type: 'CompositeYChart',
+      type: 'CompositeY',
       config: {
-        marginInner: 10,
-        marginLeft: 80,
-        marginRight: 80,
-        marginBottom: 40,
+        margin: {
+          left: 80,
+          right: 80,
+          bottom: 40,
+        },
         height: 450,
         plot: {
           x: {
@@ -46,40 +47,40 @@ define([ // eslint-disable-line no-undef
             {
               accessor: 'a',
               label: 'Label A',
-              chart: 'StackedBarChart',
+              chart: 'StackedBar',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'b',
               label: 'Label B',
-              chart: 'StackedBarChart',
+              chart: 'StackedBar',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'c',
               label: 'Label C',
               disabled: true,
-              chart: 'StackedBarChart',
+              chart: 'StackedBar',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'd',
               label: 'Megabytes D',
               color: '#d62728',
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y2',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'e',
               label: 'Megabytes E',
               color: '#9467bd',
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y2',
               tooltip: 'default-tooltip',
             }
           ]
         },
-        axis: {
+        axes: {
           y1: {
             position: 'left',
             formatter: (value) => value.toFixed(0),
@@ -114,7 +115,7 @@ define([ // eslint-disable-line no-undef
       }
     }, {
       id: 'chart-id2',
-      type: 'CompositeYChart',
+      type: 'CompositeY',
       config: {
         marginInner: 10,
         marginLeft: 80,
@@ -129,7 +130,7 @@ define([ // eslint-disable-line no-undef
           y: [
             {
               accessor: 'e',
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y',
             }
           ]
@@ -147,7 +148,7 @@ define([ // eslint-disable-line no-undef
 
   return {
     render: function () {
-      chart.setConfig(chartConfig)
+      chart.setConfig(config)
       chart.setData(data)
     },
     remove: () => {

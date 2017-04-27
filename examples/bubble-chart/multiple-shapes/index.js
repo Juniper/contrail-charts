@@ -32,7 +32,7 @@ const chartConfig = {
     },
   }, {
     id: 'multishape-bubble-chart',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       marginLeft: 50,
       marginRight: 50,
@@ -77,7 +77,7 @@ const chartConfig = {
           }
         ]
       },
-      axis: {
+      axes: {
         sizeAxis: {
           range: [1, 500]
         },
@@ -142,7 +142,6 @@ const chartConfig = {
     id: 'navigation-id',
     type: 'Navigation',
     config: {
-      marginInner: 5,
       height: 200,
       plot: {
         x: {
@@ -152,7 +151,7 @@ const chartConfig = {
         y: [
           {
             accessor: 'nav',
-            chart: 'LineChart',
+            chart: 'Line',
             color: colorScheme[1],
             axis: 'y',
           }

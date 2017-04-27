@@ -13,7 +13,7 @@ export default class Refresh extends Action {
   _execute (accessorName, color) {
     const chart = this._registrar
 
-    _.each(chart.getComponentsByType('CompositeYChart'), compositeY => {
+    _.each(chart.getComponentsByType('CompositeY'), compositeY => {
       compositeY.config.trigger('change', compositeY.config)
     })
 
@@ -21,7 +21,7 @@ export default class Refresh extends Action {
       navigation.config.trigger('change', navigation.config)
     })
 
-    _.each(chart.getComponentsByType('PieChart'), pieChart => {
+    _.each(chart.getComponentsByType('Pie'), pieChart => {
       pieChart.config.trigger('change', pieChart.config)
     })
   }

@@ -13,7 +13,7 @@ export default class SelectSerie extends Action {
   _execute (accessorName, isSelected) {
     const chart = this._registrar
 
-    _.each(chart.getComponentsByType('CompositeYChart'), (compositeY) => {
+    _.each(chart.getComponentsByType('CompositeY'), (compositeY) => {
       const plot = compositeY.config.get('plot')
       const accessor = _.find(plot.y, (a) => a.accessor === accessorName)
       if (accessor) {

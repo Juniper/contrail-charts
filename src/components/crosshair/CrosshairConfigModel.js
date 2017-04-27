@@ -3,7 +3,7 @@
  */
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
 /**
-* This CrosshairConfigModel is designed to prepare data for CrosshairView based on the CompositeYChartView.
+* This CrosshairConfigModel is designed to prepare data for CrosshairView based on the CompositeYView.
 */
 export default class CrosshairConfigModel extends ContrailChartsConfigModel {
   get defaults () {

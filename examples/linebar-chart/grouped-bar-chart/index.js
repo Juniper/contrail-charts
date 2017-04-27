@@ -18,13 +18,14 @@ const data = fixture({
 const config = {
   id: 'chartBox',
   components: [{
-    id: 'grouped-bar-compositey',
-    type: 'CompositeYChart',
+    id: 'composite-grouped-bar',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       plot: {
         x: {
           accessor: 'group.x',
@@ -35,25 +36,19 @@ const config = {
           {
             accessor: 'group.a',
             labelFormatter: 'Label Group.A',
-            chart: 'BarChart',
-            axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'BarChart',
-            axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
-            chart: 'BarChart',
-            axis: 'y1',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },

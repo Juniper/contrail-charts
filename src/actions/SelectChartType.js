@@ -11,7 +11,7 @@ export default class SelectChartType extends Action {
   }
   /**
    * To update chart type of an accessor under the component.
-   * If the updated chart type is one of BarChart type, then we will change all charts (any of bar chart type)
+   * If the updated chart type is one of GroupedBar type, then we will change all charts (any of bar chart type)
    * under the axis to same updated chart type. This is to avoid showing bar and stacked bar under one axis.
    * @param component
    * @param accessorName
@@ -19,7 +19,7 @@ export default class SelectChartType extends Action {
    * @private
    */
   _updateChartType (component, accessorName, chartType) {
-    const barCharts = ['BarChart', 'StackedBarChart']
+    const barCharts = ['GroupedBar', 'StackedBar']
     let triggerChange = false
     const plot = component.config.get('plot')
     const accessor = _.find(plot.y, (a) => a.accessor === accessorName)
@@ -48,7 +48,7 @@ export default class SelectChartType extends Action {
   _execute (accessorName, chartType) {
     const chart = this._registrar
 
-    _.each(chart.getComponentsByType('CompositeYChart'), (compositeY) => {
+    _.each(chart.getComponentsByType('CompositeY'), (compositeY) => {
       this._updateChartType(compositeY, accessorName, chartType)
     })
 

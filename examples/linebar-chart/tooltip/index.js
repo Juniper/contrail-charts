@@ -12,12 +12,13 @@ const chartConfig = {
   template,
   components: [{
     id: 'compositey-id1',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 300,
       plot: {
         x: {
@@ -29,26 +30,26 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'custom-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Megabytes C',
             color: 'grey',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           formatter: formatter.extendedISOTime,
         },
@@ -96,12 +97,13 @@ const chartConfig = {
     }
   }, {
     id: 'compositey-id2',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       height: 300,
       plot: {
         x: {
@@ -113,7 +115,7 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'sticky-tooltip',
           }

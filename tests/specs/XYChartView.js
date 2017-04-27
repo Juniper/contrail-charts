@@ -5,7 +5,7 @@ describe('XYChartView', function () {
       container: '#chart',
       components: [{
         id: 'compositeY',
-        type: 'CompositeYChart',
+        type: 'CompositeY',
         config: {
           plot: {
             x: {
@@ -14,7 +14,7 @@ describe('XYChartView', function () {
             },
             y: [{
               accessor: 'y',
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y',
             }]
           },
