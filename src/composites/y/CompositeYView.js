@@ -42,6 +42,12 @@ export default class CompositeYView extends ContrailChartsView {
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
+    const components = this._composite.getByType(_(this.config.yAccessors).map('chart').uniq().value())
+    _.each(components, component => {
+      const componentAxis = this.config.getAxisName(component.config.get('y'))
+      const scale = this.config.get(`axes.${componentAxis}.scale`)
+      component.config.set('y.scale', scale, {silent: true})
+    })
     this._composite.render()
 
     this._ticking = false
@@ -123,7 +129,7 @@ export default class CompositeYView extends ContrailChartsView {
       .data(this.config.children, d => d.key)
 
     children.enter().merge(children).each(child => {
-      const type = this.config.getComponentType(child)
+      const type = this.config.getComponentType(child.accessors)
       config.id = `${this.id}-${child.key}`
       if (type === 'Line') config.y = child.accessors[0]
       else config.y = child.accessors
@@ -142,7 +148,7 @@ export default class CompositeYView extends ContrailChartsView {
       }
 
       component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
-      const axisName = this.config.getAxisName(child)
+      const axisName = this.config.getAxisName(child.accessors)
       let calculatedDomain = this.config.get(`axes.${axisName}.calculatedDomain`) || []
       calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('y.scale').domain()))
       this.config.set(`axes.${axisName}.calculatedDomain`, calculatedDomain, {silent: true})
@@ -151,8 +157,5 @@ export default class CompositeYView extends ContrailChartsView {
     children.exit().each(child => {
       this._composite.remove(`${this.id}-${child.key}`)
     })
-  }
-
-  _updateComponent (child) {
   }
 }

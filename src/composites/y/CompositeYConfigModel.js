@@ -37,7 +37,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   }
 
   get children () {
-    const accessorsByChart = _.groupBy(this.get('plot.y'), accessor => {
+    const accessorsByChart = _.groupBy(this.yAccessors, accessor => {
       return `${accessor.axis}-${accessor.stack || (accessor.chart === 'Line' ? accessor.accessor : accessor.chart)}`
     })
     return _.map(accessorsByChart, (accessors, key) => { return {key, accessors} })
@@ -51,14 +51,16 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     return this.get('y.scale')
   }
   /**
-   * @param {Object} child element of array returned by this.children
+   * @param {Object} accessors element of array returned by this.children
    */
-  getComponentType (child = {accessors: [{}]}) {
-    return child.accessors[0].chart || 'Line'
+  getComponentType (accessors = [{}]) {
+    _.isArray(accessors) || (accessors = [accessors])
+    return accessors[0].chart || 'Line'
   }
 
-  getAxisName (child) {
-    return child.accessors[0].axis || 'y'
+  getAxisName (accessors = [{}]) {
+    _.isArray(accessors) || (accessors = [accessors])
+    return accessors[0].axis || 'y'
   }
 
   getAxisAccessors (name) {

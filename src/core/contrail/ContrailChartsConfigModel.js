@@ -14,6 +14,9 @@ export default class ContrailChartsConfigModel extends ContrailModel {
         bottom: 0,
       },
       duration: 300,
+
+      // if set true - no render will occur on config and data updates
+      frozen: false,
     }
   }
   /**

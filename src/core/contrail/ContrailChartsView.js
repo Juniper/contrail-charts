@@ -11,7 +11,7 @@ import * as Providers from 'providers'
 export default class ContrailChartsView extends ContrailView {
   constructor (p = {}) {
     super(p)
-    this._id = p.id
+    this._id = p.id || p.config.id
     this.d3.attr('id', this.id)
     this._order = p.order
     this._container = p.container
@@ -123,6 +123,7 @@ export default class ContrailChartsView extends ContrailView {
   * @param {Array} data
   */
   setData (data) {
+    if (this.config.get('frozen')) return
     this.model.data = data
   }
 
@@ -168,11 +169,11 @@ export default class ContrailChartsView extends ContrailView {
         this.el.setAttribute('data-order', this.zIndex)
         this.svg.node().append(this.el)
         // TODO constrain selector to direct descendants ":scope > g"
-        this.svg
-          .selectAll('g[data-order]')
-          .datum(function () { return this.getAttribute('data-order') })
-          .sort()
-          .datum(null)
+        //this.svg
+          //.selectAll('g[data-order]')
+          //.datum(function () { return this.getAttribute('data-order') })
+          //.sort()
+          //.datum(null)
       }
       const margin = this.config.get('margin')
       this.d3.attr('transform', `translate(${margin.left},${margin.top})`)
