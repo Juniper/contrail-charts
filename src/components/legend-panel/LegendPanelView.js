@@ -6,6 +6,7 @@ import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
 import * as d3Color from 'd3-color'
 import actionman from 'core/Actionman'
+import Config from './LegendPanelConfigModel'
 import _template from './legend.html'
 import './legend-panel.scss'
 const _states = {
@@ -14,6 +15,8 @@ const _states = {
 }
 
 export default class LegendPanelView extends ContrailChartsView {
+  static get Config () { return Config }
+
   constructor (p) {
     super(p)
     this._state = _states.DEFAULT

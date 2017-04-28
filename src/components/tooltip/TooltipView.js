@@ -3,13 +3,11 @@
 import ContrailChartsView from 'contrail-charts-view'
 import TitleView from 'helpers/title/TitleView'
 import _template from './tooltip.html'
+import Config from './TooltipConfigModel'
 import './tooltip.scss'
 
 export default class TooltipView extends ContrailChartsView {
-  constructor (p) {
-    super(p)
-    this.resetParams()
-  }
+  static get Config () { return Config }
 
   get width () { return this.el.offsetWidth }
   get height () { return this.el.offsetHeight }

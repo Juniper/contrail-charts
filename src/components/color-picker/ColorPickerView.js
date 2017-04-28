@@ -4,10 +4,13 @@
 import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import Config from './ColorPickerConfigModel'
 import _template from './color-picker.html'
 import './color-picker.scss'
 
 export default class ColorPickerView extends ContrailChartsView {
+  static get Config () { return Config }
+
   get selectors () {
     return _.extend(super.selectors, {
       open: '.color-select',

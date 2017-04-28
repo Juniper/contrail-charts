@@ -9,7 +9,6 @@ import ColoredChart from 'helpers/color/ColoredChart'
 
 export default class NavigationConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, ColoredChart.defaults, {
       // The component width. If not provided will be caculated by View.
       width: undefined,
 
@@ -19,6 +18,7 @@ export default class NavigationConfigModel extends ContrailChartsConfigModel {
       // The component height. If not provided will be caculated by View.
       height: undefined,
 
+    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
       // Scale to transform values from percentage based selection to visual coordinates
       selectionScale: d3Scale.scaleLinear().domain([0, 100]),
 

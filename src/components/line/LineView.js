@@ -11,9 +11,11 @@ import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import Config from './LineConfigModel'
 import './line.scss'
 
 export default class LineView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
   constructor (...args) {

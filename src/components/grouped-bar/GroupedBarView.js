@@ -8,9 +8,11 @@ import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import Config from './GroupedBarConfigModel'
 import './bar.scss'
 
 export default class GroupedBarView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
   constructor (...args) {

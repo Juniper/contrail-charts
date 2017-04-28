@@ -1,14 +1,16 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import './sankey.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Sankey from 'd3-sankey'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import Config from './SankeyConfigModel'
+import './sankey.scss'
 
 export default class SankeyView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'Serie' }
 
   get tagName () { return 'g' }

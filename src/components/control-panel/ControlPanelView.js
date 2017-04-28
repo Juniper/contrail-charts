@@ -8,11 +8,14 @@ import actionman from 'core/Actionman'
 import _template from './control-panel.html'
 import _panelTemplate from './panel.html'
 import _actionTemplate from './action.html'
+import Config from './ControlPanelConfigModel'
 import './control-panel.scss'
 
 export default class ControlPanelView extends ContrailChartsView {
-  constructor (p = {}) {
-    super(p)
+  static get Config () { return Config }
+
+  constructor (...args) {
+    super(...args)
     super.render(_template())
     this._opened = false
     this.render()

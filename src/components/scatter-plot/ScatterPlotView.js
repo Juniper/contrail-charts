@@ -9,9 +9,11 @@ import ContrailChartsView from 'contrail-charts-view'
 import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
 import BucketView from 'helpers/bucket/BucketView'
 import actionman from 'core/Actionman'
+import Config from './ScatterPlotConfigModel'
 import './scatter-plot.scss'
 
 export default class ScatterPlotView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
   constructor (...args) {

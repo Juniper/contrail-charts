@@ -7,9 +7,11 @@ import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import Config from './AreaConfigModel'
 import './area.scss'
 
 export default class AreaView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
   constructor (...args) {

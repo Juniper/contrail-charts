@@ -2,9 +2,12 @@ import _ from 'lodash'
 import * as d3Axis from 'd3-axis'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
+import Config from './AxisConfigModel'
 import './axis.scss'
 
 export default class AxisView extends ContrailChartsView {
+  static get Config () { return Config }
+
   constructor (...args) {
     super(...args)
     this.render()

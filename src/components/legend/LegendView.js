@@ -2,13 +2,15 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import ContrailChartsView from 'contrail-charts-view'
+import Config from './LegendConfigModel'
 import _template from './legend.html'
 import './legend.scss'
 
 export default class LegendView extends ContrailChartsView {
+  static get Config () { return Config }
 
-  constructor (p) {
-    super(p)
+  constructor (...args) {
+    super(...args)
     this.listenTo(this.model, 'change', this.render)
   }
 

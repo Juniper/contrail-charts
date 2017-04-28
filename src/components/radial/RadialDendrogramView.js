@@ -8,9 +8,11 @@ import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import ContrailChartsView from 'contrail-charts-view'
 import actionman from 'core/Actionman'
+import Config from './RadialDendrogramConfigModel'
 import './radial-dendrogram.scss'
 
 export default class RadialDendrogramView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'Serie' }
 
   constructor (p) {
