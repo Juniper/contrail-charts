@@ -21,7 +21,7 @@ export default class CompositeChart {
     if (!_.isArray(data)) return
     _(this._components)
       .filter(c => c.model)
-      .each(c => c.setData(data) )
+      .each(c => c.setData(data))
   }
   /**
    * Sets the configuration for this chart as a simple object.
@@ -58,7 +58,8 @@ export default class CompositeChart {
    * @return {Array} of components
    */
   getByType (type) {
-    return _.filter(this._components, {type: type})
+    _.isArray(type) || (type = [type])
+    return _.filter(this._components, component => type.includes(component.type))
   }
   /**
    * Initialize individual component
@@ -98,34 +99,5 @@ export default class CompositeChart {
     _.each(Actions, action => actionman.unset(action, this))
     _.each(this._components, component => component.remove())
     this._components = []
-  }
-  /**
-   * Initialize configured components
-   */
-  _initComponents () {
-    // Apply template
-    this._container = this._config.container || document.querySelector('#' + this._config.id)
-    if (this._config.template) {
-      const template = document.createElement('template')
-      template.innerHTML = this._config.template()
-      // some components require container to have id
-      _.each(template.content.querySelectorAll(`[component]`), el => {
-        el.setAttribute('id', 'cc-' + el.getAttribute('component'))
-      })
-      this._container.append(document.importNode(template.content, true))
-    }
-    if (this._config.title) TitleView(this._container, this._config.title)
-
-    _.each(this._config.components, (component, index) => {
-      component.config.order = index
-      component.config.id = component.id
-    })
-    const [dependent, independent] = _.partition(this._config.components, c => c.config.sourceComponent)
-    _.each(independent, component => this.add(component))
-    _.each(dependent, component => {
-      const sourceComponent = this.getComponent(component.config.sourceComponent)
-      const componentView = this.add(component, sourceComponent.model)
-      componentView.config.parent = sourceComponent.config
-    })
   }
 }
