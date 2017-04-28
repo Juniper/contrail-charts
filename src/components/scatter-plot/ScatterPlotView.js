@@ -49,7 +49,7 @@ export default class ScatterPlotView extends ContrailChartsView {
 
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.width, this.height)
+    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     const data = this._prepareData()
     if (this._bucketView) {
@@ -123,7 +123,7 @@ export default class ScatterPlotView extends ContrailChartsView {
     if (!_.isEmpty(tooltipId)) {
       actionman.fire('HideComponent', tooltipId)
     }
-    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
   }
 

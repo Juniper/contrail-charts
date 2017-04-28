@@ -13,6 +13,7 @@ export default class AreaConfigModel extends ContrailChartsConfigModel {
     return _.defaultsDeep(super.defaults,
       ColoredChart.defaults,
       {
+        isSharedContainer: true,
         curve: d3Shape.curveCatmullRom.alpha(0.5),
       })
   }

@@ -11,6 +11,7 @@ export default class GroupedBarConfigModel extends ContrailChartsConfigModel {
     return _.defaultsDeep(super.defaults,
       ColoredChart.defaults,
       {
+        isSharedContainer: true,
         // Padding between series in percents of bar width
         barPadding: 15,
       })

@@ -26,7 +26,7 @@ export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
   }
 
   get data () {
-    const accessors = this._parent.getAccessors()
+    const accessors = this._parent.yAccessors
     const axesCount = _.chain(accessors).map('axis').uniq().value().length
 
     let possibleChartTypes = []

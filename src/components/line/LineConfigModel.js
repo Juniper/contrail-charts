@@ -12,7 +12,10 @@ export default class LineConfigModel extends ContrailChartsConfigModel {
     return _.defaultsDeep(super.defaults,
       ColoredChart.defaults,
       {
+        isSharedContainer: true,
         curve: d3Shape.curveCatmullRom.alpha(0.5),
+
+        //scale - calculated from data domain and available plot area size
       }
     )
   }

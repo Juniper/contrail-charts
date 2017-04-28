@@ -47,7 +47,7 @@ export default class StackedBarView extends ContrailChartsView {
     const paddedPart = 1 - (this.config.get('barPadding') / 2 / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
-    return this.config.getOuterWidth(this.model, this.width) / this.model.data.length * paddedPart
+    return this.config.getOuterWidth(this.model, this.innerWidth) / this.model.data.length * paddedPart
   }
   /**
   * @override
@@ -65,7 +65,7 @@ export default class StackedBarView extends ContrailChartsView {
 
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.width, this.height)
+    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     const start = this.config.yScale.range()[0]
     const barGroups = this.d3
@@ -132,7 +132,7 @@ export default class StackedBarView extends ContrailChartsView {
     if (!_.isEmpty(tooltipId)) {
       actionman.fire('HideComponent', tooltipId)
     }
-    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
   }
 }

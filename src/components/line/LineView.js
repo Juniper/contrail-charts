@@ -56,17 +56,17 @@ export default class LineView extends ContrailChartsView {
       .curve(this.config.get('curve'))
 
     const linePath = this.d3.selectAll(this.selectors.node)
-      .data([{key}], d => d.key)
+      .data(_.isEmpty(data) ? [] : [accessor], d => d.accessor)
 
     linePath.enter().append('path')
       .attr('class', 'line line-' + key)
-      .attr('d', this._line(data[0]))
-      .transition().ease(d3Ease.easeLinear).duration(this.params.duration)
+      .attr('d', this._line(data[0] || 0))
+      .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attrTween('d', this._interpolate.bind(this, data, key))
       .attr('stroke', this.config.getColor(data, accessor))
 
     linePath
-      .transition().ease(d3Ease.easeLinear).duration(this.params.duration)
+      .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attrTween('d', (d, i, els) => {
         const previous = els[i].getAttribute('d')
         const current = this._line(data)
@@ -94,13 +94,21 @@ export default class LineView extends ContrailChartsView {
   // Event handlers
 
   _onMouseover (d, el) {
-    if (d.accessor.tooltip) {
+    if (d.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
       const xAccessor = this.config.get('x.accessor')
       const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
-      actionman.fire('ShowComponent', d.accessor.tooltip, {left, top}, dataItem)
+      actionman.fire('ShowComponent', d.tooltip, {left, top}, dataItem)
     }
     el.classList.add(this.selectorClass('active'))
+  }
+
+  _onMouseout (d = {}, el) {
+    const tooltipId = d.tooltip || this.config.get('y.tooltip')
+    if (!_.isEmpty(tooltipId)) actionman.fire('HideComponent', tooltipId)
+
+    const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
+    els.classed('active', false)
   }
 }

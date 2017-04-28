@@ -54,7 +54,7 @@ export default class AreaView extends ContrailChartsView {
    */
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.width, this.height)
+    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     const data = this.model.data
     const xAccessor = this.config.get('x.accessor')
@@ -111,7 +111,7 @@ export default class AreaView extends ContrailChartsView {
     if (!_.isEmpty(tooltipId)) {
       actionman.fire('HideComponent', tooltipId)
     }
-    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
   }
 }

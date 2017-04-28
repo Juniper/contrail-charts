@@ -14,7 +14,7 @@ export default class ColorPickerConfigModel extends ContrailChartsConfigModel {
    */
   get data () {
     const data = {colors: this.attributes.colorScheme}
-    const accessors = this._parent.getAccessors()
+    const accessors = this._parent.yAccessors
     data.series = _.map(accessors, (accessor) => {
       return {
         accessor: accessor.accessor,

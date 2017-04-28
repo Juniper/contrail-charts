@@ -69,7 +69,7 @@ export default class GroupedBarView extends ContrailChartsView {
 
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.width, this.height)
+    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     // Create a flat data structure
     const numOfAccessors = _.keys(this.config.yAccessors).length
@@ -140,7 +140,9 @@ export default class GroupedBarView extends ContrailChartsView {
     if (!_.isEmpty(tooltipId)) {
       actionman.fire('HideComponent', tooltipId)
     }
-    const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
+    // TODO Here and in all similar components with _onMouseout global d3Selection is used instead of this.d3.select
+    // because it replaces associated "el" bar data with this.d3.__data__
+    const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
   }
 }
