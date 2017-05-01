@@ -79,7 +79,7 @@ export default class AreaView extends ContrailChartsView {
         .attr('class', d => `${this.selectorClass('node')} ${this.selectorClass('node')}-${d.key} ${this.selectorClass('node')}-${stackName}`)
         .merge(areas)
         .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-        .attr('fill', d => this.config.getColor([], _.find(accessorsByStack, {accessor: d.key})))
+        .attr('fill', d => this.config.getColor(d.key))
         .attr('d', area)
     })
 

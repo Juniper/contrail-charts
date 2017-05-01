@@ -28,7 +28,8 @@ export default class LegendPanelView extends ContrailChartsView {
       mode: '.edit-legend',
       select: '.select',
       color: '.switch--color',
-      chartType: '.switch--chart'
+      chartType: '.switch--chart',
+      axis: '.axis',
     })
   }
 
@@ -55,7 +56,7 @@ export default class LegendPanelView extends ContrailChartsView {
     }
 
     this.d3.classed('vertical', this.config.attributes.placement === 'vertical')
-    this.d3.selectAll('.axis').classed('active', this.config.data.axesCount > 1)
+    this.d3.selectAll(this.selectors.axis).classed('active', this.config.data.axesCount > 1)
     if (this._state === _states.EDIT) this._setEditState()
   }
 
@@ -69,8 +70,8 @@ export default class LegendPanelView extends ContrailChartsView {
     this.$('.attribute').toggleClass('edit')
     this.d3.selectAll('.selector').classed('active', false)
 
-    this.d3.selectAll(this.selectors.color).classed('hide', !this.config.attributes.editable.colorSelector)
-    this.d3.selectAll(this.selectors.chartType).classed('hide', !this.config.attributes.editable.chartSelector)
+    this.d3.selectAll(this.selectors.color).classed('hide', !this.config.get('editable.colorSelector'))
+    this.d3.selectAll(this.selectors.chartType).classed('hide', !this.config.get('editable.chartSelector'))
 
     _.each(this.el.querySelectorAll(this.selectors.attribute + ' > input'), el => {
       el.disabled = this._state !== _states.DEFAULT
@@ -86,9 +87,8 @@ export default class LegendPanelView extends ContrailChartsView {
   _addChartTypes (attributeAxis) {
     this.d3.selectAll(this.selectors.chartType)
       .classed('show', false)
-      .filter(function (d, i, n) {
-        return n[i].dataset.axis === attributeAxis
-      }).classed('show', true)
+      .filter((d, i, n) => n[i].dataset.axis === attributeAxis)
+      .classed('show', true)
   }
 
   _toggleSelector (d, el) {
@@ -106,7 +106,7 @@ export default class LegendPanelView extends ContrailChartsView {
       selectorElement.classed('active', true).classed('select--color', true)
       const currentColor = d3Color.color(el.dataset.color)
       selectorElement.selectAll(this.selectors.color)
-        .filter(function (d, i, n) {
+        .filter((d, i, n) => {
           return d3Color.color(n[i].dataset.color).toString() === currentColor.toString()
         })
         .classed('selected', true)
@@ -118,9 +118,7 @@ export default class LegendPanelView extends ContrailChartsView {
         .classed('select--chart', true)
       const currentChart = el.dataset.chartType
       selectorElement.selectAll(this.selectors.chartType)
-        .filter(function (d, i, n) {
-          return n[i].dataset.chartType === currentChart
-        })
+        .filter((d, i, n) => n[i].dataset.chartType === currentChart)
         .classed('selected', true)
     }
 

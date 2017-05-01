@@ -108,7 +108,7 @@ export default class StackedBarView extends ContrailChartsView {
           y: this.config.yScale(value - start + stackedValue),
           h: this.config.yScale(start) - this.config.yScale(value + (stackedValue === start ? 0 : start)),
           w: this.bandWidth,
-          color: this.config.getColor(d, accessorConfig),
+          color: this.config.getColor(accessorConfig.accessor, d),
           accessor: accessorConfig,
           data: d,
         }

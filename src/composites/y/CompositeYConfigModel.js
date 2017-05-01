@@ -50,6 +50,10 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   get yScale () {
     return this.get('y.scale')
   }
+
+  set (...args) {
+    super.set(ColoredChart.set(...args))
+  }
   /**
    * @param {Object} accessors element of array returned by this.children
    */
@@ -90,8 +94,15 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     })
   }
 
-  getColor (data, accessor) {
-    const configuredColor = ColoredChart.getColor(data, accessor)
-    return configuredColor || this.attributes.colorScale(accessor.accessor)
+  getColor (accessorName) {
+    const configured = _.find(this.yAccessors, {accessor: accessorName}).color
+    return configured || this.attributes.colorScale(accessorName)
+  }
+
+  setColor (accessorName, color) {
+    const accessor = _.find(this.yAccessors, {accessor: accessorName})
+    if (!accessor) return
+    accessor.color = color
+    this.trigger('change', this.config)
   }
 }

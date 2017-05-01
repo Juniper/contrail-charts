@@ -98,7 +98,7 @@ export default class ScatterPlotView extends ContrailChartsView {
           x: this.config.xScale(x),
           y: this.config.yScale(_.get(d, key)),
           area: this.config.sizeScale(_.get(d, accessor.sizeAccessor)),
-          color: this.config.getColor(d, accessor),
+          color: this.config.getColor(accessor.accessor, d),
           accessor: accessor,
           data: d,
           halfWidth: Math.sqrt(this.config.sizeScale(_.get(d, accessor.sizeAccessor))) / 2,

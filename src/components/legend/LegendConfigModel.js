@@ -10,7 +10,7 @@ export default class LegendConfigModel extends ContrailChartsConfigModel {
     return _.map(accessors, accessor => {
       return {
         label: this.getLabel(undefined, accessor),
-        color: this._parent.getColor([], accessor),
+        color: this._parent.getColor(accessor),
       }
     })
   }

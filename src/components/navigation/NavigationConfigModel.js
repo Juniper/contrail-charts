@@ -50,8 +50,8 @@ export default class NavigationConfigModel extends ContrailChartsConfigModel {
     ]
   }
 
-  getColor (data, accessor) {
-    const configuredColor = ColoredChart.getColor(data, accessor)
-    return configuredColor || this.attributes.colorScale(accessor.accessor)
+  getColor (accessorName) {
+    const configured = _.find(this.yAccessors, {accessor: accessorName}).color
+    return configured || this.attributes.colorScale(accessorName)
   }
 }

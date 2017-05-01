@@ -51,9 +51,11 @@ export default class ScatterPlotConfigModel extends ContrailChartsConfigModel {
       _.set(this.attributes, 'size.scale', ScalableChart.getScale(model, config))
     }
   }
-
-  getColor (data, accessor) {
-    const configuredColor = ColoredChart.getColor(data, accessor)
-    return configuredColor || this.attributes.colorScale(accessor.accessor)
+  /**
+   * @param {Object} data may be used to assign color to individual bubbles based on its value
+   */
+  getColor (accessorName, data) {
+    const configured = ColoredChart.getColor(data, this.get('y'))
+    return configured || this.attributes.colorScale(accessorName)
   }
 }

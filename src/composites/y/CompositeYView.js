@@ -4,6 +4,7 @@
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import ContrailChartsView from 'contrail-charts-view'
+import SelectColor from '../../actions/SelectColor'
 import CompositeChart from 'helpers/CompositeChart'
 import AxisConfigModel from 'components/axis/AxisConfigModel'
 import Config from './CompositeYConfigModel'
@@ -11,6 +12,7 @@ import Config from './CompositeYConfigModel'
 export default class CompositeYView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
+  static get Actions () { return {SelectColor} }
 
   constructor (...args) {
     super(...args)

@@ -65,7 +65,7 @@ export default class LineView extends ContrailChartsView {
       .attr('d', this._line(data[0] || 0))
       .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attrTween('d', this._interpolate.bind(this, data, key))
-      .attr('stroke', this.config.getColor(data, accessor))
+      .attr('stroke', this.config.getColor())
 
     linePath
       .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
@@ -74,7 +74,7 @@ export default class LineView extends ContrailChartsView {
         const current = this._line(data)
         return d3InterpolatePath(previous, current)
       })
-      .attr('stroke', this.config.getColor(data, accessor))
+      .attr('stroke', this.config.getColor())
     linePath.exit().remove()
 
     this._ticking = false

@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import {components, Util} from 'coCharts'
-import {_c, fixture} from 'commons'
+import {fixture} from 'commons'
 
 const data = fixture({
   length: 40,
@@ -13,7 +13,6 @@ const data = fixture({
   },
 })
 
-const colorScheme = _c.bubbleColorScheme6
 const bubbleShapes = Util.bubbleShapes
 
 let chart
@@ -26,7 +25,7 @@ const config = {
   y: {
     accessor: 'group.data1',
     shape: bubbleShapes.circle,
-    color: colorScheme[0],
+    color: d => d.group.size1 > 8 ? 'red' : null
   },
   size: {
     accessor: 'group.size1',

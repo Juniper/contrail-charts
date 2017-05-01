@@ -52,9 +52,12 @@ export default class StackedBarConfigModel extends ContrailChartsConfigModel {
     })
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
-
-  getColor (data, accessor) {
-    const configuredColor = ColoredChart.getColor(data, accessor)
-    return configuredColor || this.attributes.colorScale(accessor.accessor)
+  /**
+   * @param {Object} data may be used to assign color to individual bar based on its value
+   */
+  getColor (accessorName, data) {
+    const accessor = _.find(this.yAccessors, {accessor: accessorName})
+    const configured = ColoredChart.getColor(data, accessor)
+    return configured || this.attributes.colorScale(accessorName)
   }
 }

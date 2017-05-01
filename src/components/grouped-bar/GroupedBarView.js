@@ -117,7 +117,7 @@ export default class GroupedBarView extends ContrailChartsView {
           y: this.config.yScale(_.get(d, key)),
           h: this.config.yScale(start) - this.config.yScale(_.get(d, key)),
           w: innerBandWidth,
-          color: this.config.getColor(d, accessor),
+          color: this.config.getColor(accessor.accessor, d),
           accessor: accessor,
           data: d,
         }

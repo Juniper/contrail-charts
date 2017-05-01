@@ -7,7 +7,7 @@ import * as Composites from 'composites'
 import * as Providers from 'providers'
 /**
  * Creates a chart as a composition of components or other compositions
-*/
+ */
 export default class CompositeChart {
   constructor (p) {
     this._components = []

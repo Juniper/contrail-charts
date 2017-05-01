@@ -61,12 +61,21 @@ export default class RadialDendrogramConfigModel extends ContrailChartsConfigMod
     super.set(ColoredChart.set(...args))
   }
 
-  getColor (data, accessor) {
-    return accessor.color || this.attributes.colorScale(accessor.level)
+  getColor (accessorName) {
+    const configured = _.find(this.accessors, {accessor: accessorName}).color
+    return configured || this.attributes.colorScale(accessorName)
   }
 
-  getAccessors () {
-    return _.map(this.attributes.levels, (level) => {
+  setColor (accessorName, color) {
+    const levels = this.get('levels')
+    const level = _.find(levels, level => level.level === accessorName)
+    if (!level) return
+    level.color = color
+    this.trigger('change', this.config)
+  }
+
+  get accessors () {
+    return _.map(this.attributes.levels, level => {
       return {
         accessor: level.level,
         level: level.level,

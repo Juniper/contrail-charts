@@ -31,6 +31,7 @@ const config = {
     }, {
       accessor: 'b',
       labelFormatter: 'Label B',
+      color: d => d.group.a > 50 ? 'red' : undefined
     }
   ]
 }

@@ -154,7 +154,7 @@ export default class SankeyView extends ContrailChartsView {
     const svgNodesEdit = svgNodesEnter.merge(svgNodes).transition().ease(this.config.get('ease')).duration(this.params.duration)
       .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
     svgNodesEdit.select('rect')
-      .style('fill', (d) => this.config.getColor([], this.config.get('levels')[d.level]))
+      .style('fill', (d) => this.config.getColor(d.level))
       .attr('width', this.sankey.nodeWidth())
       .attr('height', (d) => d.dy)
     svgNodesEdit.select('text')

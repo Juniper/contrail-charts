@@ -4,16 +4,17 @@
 import _ from 'lodash'
 import * as d3Shape from 'd3-shape'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
-import ColoredChart from 'helpers/color/ColoredChart'
 import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class LineConfigModel extends ContrailChartsConfigModel {
   get defaults () {
     return _.defaultsDeep(super.defaults,
-      ColoredChart.defaults,
       {
         isSharedContainer: true,
         curve: d3Shape.curveCatmullRom.alpha(0.5),
+        y: {
+          color: 'steelblue',
+        },
 
         //scale - calculated from data domain and available plot area size
       }
@@ -27,6 +28,7 @@ export default class LineConfigModel extends ContrailChartsConfigModel {
   get yScale () {
     return this.get('y.scale')
   }
+
   /**
    * @param model
    * @param width
@@ -39,8 +41,11 @@ export default class LineConfigModel extends ContrailChartsConfigModel {
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 
-  getColor (data, accessor) {
-    const configuredColor = ColoredChart.getColor(data, accessor)
-    return configuredColor || this.attributes.colorScale(accessor.accessor)
+  getColor () {
+    return this.get('y.color')
+  }
+
+  setColor (accessorName, color) {
+    this.set('y.color', color)
   }
 }
