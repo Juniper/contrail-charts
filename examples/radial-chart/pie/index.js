@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {formatter} from 'commons'
 import * as d3Scale from 'd3-scale'
 
@@ -22,7 +22,8 @@ function getValue (serie) {
   return serie.value
 }
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   title: 'Donut Chart',
   components: [{
@@ -72,11 +73,9 @@ const chartConfig = {
   ]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(pieData)
   },
   remove: () => {

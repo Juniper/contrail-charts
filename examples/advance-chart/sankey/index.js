@@ -1,11 +1,12 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import * as d3Scale from 'd3-scale'
 import flowData from './data.json'
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     id: 'sankey-chart-component',
@@ -91,15 +92,12 @@ const chartConfig = {
   }]
 }
 
-const chartView = new ChartView()
-
 export default {
   render: () => {
-    chartView.setConfig(chartConfig)
-    chartView.setData(flowData.data)
-    chartView.render()
+    chart = new composites.CompositeView({config})
+    chart.setData(flowData.data)
   },
   remove: () => {
-    chartView.remove()
+    chart.remove()
   }
 }

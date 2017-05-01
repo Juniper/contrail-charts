@@ -1,13 +1,14 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {formatter, fixture} from 'commons'
 
 let counter = 0
 const length = 21
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     id: 'control-panel-id',
@@ -19,7 +20,7 @@ const chartConfig = {
     }
   }, {
     id: 'compositey-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       margin: {
         left: 80,
@@ -32,7 +33,7 @@ const chartConfig = {
         x: {
           accessor: 'x',
           labelFormatter: 'X Value',
-          axis: 'x'
+          axis: 'x',
         },
         y: [
           {
@@ -49,7 +50,6 @@ const chartConfig = {
           scale: 'scaleLinear',
         },
         y1: {
-          position: 'left',
           formatter: formatter.toInteger,
         }
       },
@@ -79,11 +79,10 @@ const chartConfig = {
 }
 
 let intervalId = -1
-const chart = new ChartView()
 
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     clearInterval(intervalId)
     intervalId = setInterval(() => {
       const dataConfig = {

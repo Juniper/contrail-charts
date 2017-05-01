@@ -24,6 +24,7 @@ define([ // eslint-disable-line no-undef
   `<div component="chart-id1"></div>
    <div component="chart-id2"></div>`)
 
+  let chart
   const config = {
     id: 'chartBox',
     template,
@@ -83,13 +84,13 @@ define([ // eslint-disable-line no-undef
         axes: {
           y1: {
             position: 'left',
-            formatter: (value) => value.toFixed(0),
-            labelMargin: 15
+            formatter: value => value.toFixed(0),
+            labelMargin: 15,
           },
           y2: {
             position: 'right',
-            formatter: (value) => value.toFixed(2),
-            labelMargin: 15
+            formatter: value => value.toFixed(2),
+            labelMargin: 15,
           }
         }
       },
@@ -100,16 +101,16 @@ define([ // eslint-disable-line no-undef
         dataConfig: [
           {
             accessor: 'x',
-            labelFormatter: (key) => 'Time',
-            valueFormatter: (value) => value.toFixed(0)
+            labelFormatter: key => 'Time',
+            valueFormatter: value => value.toFixed(0)
           }, {
             accessor: 'a',
             labelFormatter: () => 'Label A',
-            valueFormatter: (value) => value.toFixed(5)
+            valueFormatter: value => value.toFixed(5)
           }, {
             accessor: 'b',
             labelFormatter: () => 'Label B',
-            valueFormatter: (value) => value.toFixed(2)
+            valueFormatter: value => value.toFixed(2)
           }
         ]
       }
@@ -117,10 +118,11 @@ define([ // eslint-disable-line no-undef
       id: 'chart-id2',
       type: 'CompositeY',
       config: {
-        marginInner: 10,
-        marginLeft: 80,
-        marginRight: 80,
-        marginBottom: 40,
+        margin: {
+          Left: 80,
+          right: 80,
+          bottom: 40,
+        },
         height: 200,
         plot: {
           x: {
@@ -135,20 +137,18 @@ define([ // eslint-disable-line no-undef
             }
           ]
         },
-        axis: {
+        axes: {
           y: {
-            ticks: 5
+            ticks: 5,
           }
         }
       }
     }]
   }
 
-  const chart = new coCharts.ChartView()
-
   return {
     render: function () {
-      chart.setConfig(config)
+      chart = new coCharts.composites.CompositeView({config})
       chart.setData(data)
     },
     remove: () => {

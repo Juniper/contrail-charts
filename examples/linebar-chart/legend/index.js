@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {formatter, fixture} from 'commons'
 
 const length = 100
@@ -17,7 +17,8 @@ const data = fixture({
   },
 })
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     type: 'LegendPanel',
@@ -206,13 +207,11 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
-    chart.renderMessage({
+    chart.actionman.fire('SendMessage', {
       componentId: 'compositey-chart-id',
       action: 'once',
       messages: [{

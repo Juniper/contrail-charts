@@ -1,11 +1,12 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {_c} from 'commons'
 import dendrogamData from './data.json'
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     type: 'LegendPanel',
@@ -85,11 +86,9 @@ const chartConfig = {
   ]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(dendrogamData.data)
   },
   remove: () => {

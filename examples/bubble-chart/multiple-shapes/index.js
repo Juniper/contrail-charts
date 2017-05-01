@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView, Util} from 'coCharts'
+import {composites, Util} from 'coCharts'
 import {formatter, _c, fixture} from 'commons'
 
 const data = fixture({
@@ -20,7 +20,8 @@ const data = fixture({
 const colorScheme = _c.bubbleColorScheme6
 const bubbleShapes = Util.bubbleShapes
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     type: 'LegendPanel',
@@ -34,8 +35,10 @@ const chartConfig = {
     id: 'multishape-bubble-chart',
     type: 'CompositeY',
     config: {
-      marginLeft: 50,
-      marginRight: 50,
+      margin: {
+        left: 50,
+        right: 50,
+      },
       height: 450,
       plot: {
         x: {
@@ -166,14 +169,12 @@ const chartConfig = {
   }]
 }
 
-const chartView = new ChartView()
-
 export default {
   render: () => {
-    chartView.setConfig(chartConfig)
-    chartView.setData(data)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
   },
   remove: () => {
-    chartView.remove()
+    chart.remove()
   }
 }

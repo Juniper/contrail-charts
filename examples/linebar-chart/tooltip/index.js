@@ -1,13 +1,14 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {formatter, fixture} from 'commons'
 import template from './template.html'
 
 const data = fixture()
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   template,
   components: [{
@@ -153,11 +154,9 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

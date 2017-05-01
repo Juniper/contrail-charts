@@ -46,7 +46,7 @@ const config = {
         accessor: 'c',
         disabled: true,
         labelFormatter: 'Label C',
-        chart: 'Line',
+        chart: 'StackedBar',
         axis: 'y2',
       }
     ]

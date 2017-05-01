@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {formatter, fixture} from 'commons'
 
 const data = fixture()
@@ -10,6 +10,7 @@ const template = _.template(
   `<div component="chart-id"></div>
   <div component="timeline-id"></div>`)
 
+let chart
 const config = {
   id: 'chartBox',
   template,
@@ -75,11 +76,9 @@ const config = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(config)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

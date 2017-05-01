@@ -1,24 +1,13 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
-import {formatter} from 'commons'
+import {composites} from 'coCharts'
+import {formatter, fixture} from 'commons'
 
-// Complex example
-const complexData = []
-for (let i = 0; i < 100; i++) {
-  const a = Math.random() * 100
-  complexData.push({
-    x: 1475760930000 + 1000000 * i,
-    a: a,
-    b: a + Math.random() * 10,
-    c: Math.random() * 100,
-    d: i + (Math.random() - 0.5) * 10,
-    e: (Math.random() - 0.5) * 10,
-  })
-}
+const data = fixture()
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     id: 'control-panel-id',
@@ -46,7 +35,7 @@ const chartConfig = {
       height: 500,
       plot: {
         x: {
-          accessor: 'x',
+          accessor: 't',
           labelFormatter: 'Time',
           axis: 'x'
         },
@@ -71,16 +60,9 @@ const chartConfig = {
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
-            accessor: 'd',
-            labelFormatter: 'Megabytes D',
+            accessor: 'random',
+            labelFormatter: 'Random',
             color: '#d62728',
-            chart: 'Line',
-            axis: 'y2',
-            tooltip: 'default-tooltip',
-          }, {
-            accessor: 'e',
-            labelFormatter: 'Megabytes E',
-            color: '#9467bd',
             chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
@@ -89,18 +71,16 @@ const chartConfig = {
       },
       axes: {
         x: {
-          formatter: formatter.extendedISOTime
+          formatter: formatter.extendedISOTime,
         },
         y1: {
           position: 'left',
           formatter: formatter.toInteger,
-          labelMargin: 15,
-          domain: [-10, undefined]
+          domain: [-10, undefined],
         },
         y2: {
           position: 'right',
           formatter: formatter.toFixed1,
-          labelMargin: 15
         }
       }
     },
@@ -121,12 +101,10 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
-    chart.setData(complexData)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
   },
   remove: () => {
     chart.remove()

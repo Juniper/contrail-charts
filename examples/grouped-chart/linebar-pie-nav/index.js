@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import {formatter, _c, fixture} from 'commons'
 import template from './template.html'
 const colorScheme = _c.d3ColorScheme20
@@ -36,7 +36,8 @@ function pieDataParser (tsData) {
   })
 }
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   template,
   components: [{
@@ -161,7 +162,7 @@ const chartConfig = {
           }
         ]
       },
-      axis: {
+      axes: {
         y: {
           ticks: 5
         }
@@ -252,17 +253,15 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
 
     // Update pie chart data on Navigation zoom
-    const navigation = chart.getComponent('navigation-id')
+    const navigation = chart.get('navigation-id')
     const zoom = navigation.actionman.get('Zoom')
-    const pieChart = chart.getComponent('pie-chart-id')
+    const pieChart = chart.get('pie-chart-id')
     zoom.on('fired', (componentIds, ranges) => {
       const data = navigation.model.filter('x', ranges['x'])
       pieChart.model.data = data

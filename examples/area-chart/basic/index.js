@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'coCharts'
 import formatter from 'formatter'
 import fixture from 'fixture'
 import {schemeCategory10 as colorScheme} from 'd3-scale'
@@ -18,7 +18,8 @@ const data = fixture({
 })
 data[5].a = -10
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   title: 'Area Chart',
   components: [{
@@ -36,6 +37,11 @@ const chartConfig = {
     type: 'CompositeY',
     config: {
       crosshair: 'crosshair-id',
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+      },
       plot: {
         x: {
           accessor: 'group.t',
@@ -105,14 +111,12 @@ const chartConfig = {
   }]
 }
 
-const chartView = new ChartView()
-
 export default {
   render: () => {
-    chartView.setConfig(chartConfig)
-    chartView.setData(data)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
   },
   remove: () => {
-    chartView.remove()
+    chart.remove()
   }
 }
