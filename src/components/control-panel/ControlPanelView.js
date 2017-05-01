@@ -4,15 +4,17 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailChartsView from 'contrail-charts-view'
+import Config from './ControlPanelConfigModel'
 import actionman from 'core/Actionman'
+import ToggleFreeze from '../../actions/ToggleFreeze'
 import _template from './control-panel.html'
 import _panelTemplate from './panel.html'
 import _actionTemplate from './action.html'
-import Config from './ControlPanelConfigModel'
 import './control-panel.scss'
 
 export default class ControlPanelView extends ContrailChartsView {
   static get Config () { return Config }
+  static get Actions () { return {ToggleFreeze} }
 
   constructor (...args) {
     super(...args)
@@ -72,9 +74,8 @@ export default class ControlPanelView extends ContrailChartsView {
     panel.innerHTML = _panelTemplate(config)
     const container = panel.querySelector(this.selectors.container)
     panel.classList.toggle('hide')
-    const actionId = this._opened ? 'HideComponent' : 'ShowComponent'
+    actionman.fire('ToggleVisibility', config.component, !this._opened, container)
     this._opened = !this._opened
-    actionman.fire(actionId, config.component, container)
   }
 
   // Event handlers
@@ -82,6 +83,7 @@ export default class ControlPanelView extends ContrailChartsView {
   _onMenuItemClick (d, el) {
     d3Selection.event.stopPropagation()
     if (d.component) this.open(d)
+    else if (d.action) actionman.fire(d.action, d.toggle)
     else actionman.fire(d.id, d)
   }
 }

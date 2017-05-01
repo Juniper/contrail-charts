@@ -1,6 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+import _ from 'lodash'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
 
 export default class ControlPanelConfigModel extends ContrailChartsConfigModel {
@@ -11,10 +12,16 @@ export default class ControlPanelConfigModel extends ContrailChartsConfigModel {
         icon: 'fa fa-refresh',
       },
       Freeze: {
+        action: 'ToggleFreeze',
+        attribute: 'frozen',
+        toggle: true,
         title: 'Stop Live Update',
         icon: 'fa fa-stop',
       },
       Unfreeze: {
+        action: 'ToggleFreeze',
+        attribute: 'frozen',
+        toggle: false,
         title: 'Start Live Update',
         icon: 'fa fa-play',
       },
@@ -27,5 +34,21 @@ export default class ControlPanelConfigModel extends ContrailChartsConfigModel {
         icon: 'fa fa-filter',
       }
     }
+  }
+
+  set (key, value, options) {
+    if (_.isString(key) && !this.attributes[key]) {
+      const currentActionId = _.findKey(this.menuItems, item => {
+        return item.attribute === key && item.toggle === value
+      })
+      const oppositeId = _.findKey(this.menuItems, item => {
+        return item.attribute === key && item.toggle === !value
+      })
+
+      const menuItem = _.find(this.attributes.menu, item => item.id === currentActionId)
+
+      menuItem.id = oppositeId
+      this.trigger('change')
+    } else super.set(key, value, options)
   }
 }

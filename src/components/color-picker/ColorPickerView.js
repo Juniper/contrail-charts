@@ -3,13 +3,15 @@
  */
 import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
 import Config from './ColorPickerConfigModel'
+import actionman from 'core/Actionman'
+import ToggleVisibility from '../../actions/ToggleVisibility'
 import _template from './color-picker.html'
 import './color-picker.scss'
 
 export default class ColorPickerView extends ContrailChartsView {
   static get Config () { return Config }
+  static get Actions () { return {ToggleVisibility} }
 
   get selectors () {
     return _.extend(super.selectors, {

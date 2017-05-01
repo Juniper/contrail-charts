@@ -115,7 +115,7 @@ export default class BucketView extends ContrailChartsView {
   _onMouseout (d, el) {
     const tooltip = this.config.get('tooltip')
     if (tooltip) {
-      actionman.fire('HideComponent', tooltip)
+      actionman.fire('ToggleVisibility', tooltip, false)
     }
     const els = el ? this.d3.select(() => el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)

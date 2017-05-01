@@ -4,19 +4,17 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
-import _template from './message.html'
 import SendMessage from './actions/SendMessage'
 import ClearMessage from './actions/ClearMessage'
+import _template from './message.html'
 import './message.scss'
-const Actions = {SendMessage, ClearMessage}
 
 export default class MessageView extends ContrailChartsView {
+  static get Actions () { return {SendMessage, ClearMessage} }
   constructor (p) {
     super(p)
     this.params.containerList = {}
     this.render()
-    _.each(Actions, action => actionman.set(action, this))
   }
 
   get selectors () {

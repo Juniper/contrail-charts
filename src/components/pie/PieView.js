@@ -5,8 +5,8 @@ import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
 import Config from './PieConfigModel'
+import actionman from 'core/Actionman'
 import './pie.scss'
 
 export default class PieView extends ContrailChartsView {
@@ -92,12 +92,12 @@ export default class PieView extends ContrailChartsView {
 
   _onMousemove (d, el, event) {
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d.data)
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d.data)
   }
 
   _onMouseout (d, el) {
     this.d3.selectAll(this.selectors.highlight).remove()
-    actionman.fire('HideComponent', this.config.get('tooltip'))
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 
   _onClickNode (d, el, e) {

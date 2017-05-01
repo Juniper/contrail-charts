@@ -3,13 +3,15 @@
  */
 import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
-import CompositeYView from 'components/composite-y/CompositeYView'
+import Config from './ControlPanelConfigModel'
 import actionman from 'core/Actionman'
+import CompositeYView from 'components/composite-y/CompositeYView'
+import CompositeYConfigModel from 'components/composite-y/CompositeYConfigModel'
 import BrushView from 'helpers/brush/BrushView'
 import BrushConfigModel from 'helpers/brush/BrushConfigModel'
-import CompositeYConfigModel from 'components/composite-y/CompositeYConfigModel'
 
 export default class NavigationView extends ContrailChartsView {
+  static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
   constructor (p) {

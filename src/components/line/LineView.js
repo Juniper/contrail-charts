@@ -4,14 +4,14 @@
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
-import {interpolatePath as d3InterpolatePath} from 'd3-interpolate-path'
 import 'd3-transition'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
+import {interpolatePath as d3InterpolatePath} from 'd3-interpolate-path'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
 import Config from './LineConfigModel'
+import actionman from 'core/Actionman'
 import './line.scss'
 
 export default class LineView extends ContrailChartsView {
@@ -101,14 +101,14 @@ export default class LineView extends ContrailChartsView {
       const xAccessor = this.config.get('x.accessor')
       const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
-      actionman.fire('ShowComponent', d.tooltip, {left, top}, dataItem)
+      actionman.fire('ToggleVisibility', d.tooltip, true, {left, top}, dataItem)
     }
     el.classList.add(this.selectorClass('active'))
   }
 
   _onMouseout (d = {}, el) {
     const tooltipId = d.tooltip || this.config.get('y.tooltip')
-    if (!_.isEmpty(tooltipId)) actionman.fire('HideComponent', tooltipId)
+    if (!_.isEmpty(tooltipId)) actionman.fire('ToggleVisibility', tooltipId, false)
 
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)

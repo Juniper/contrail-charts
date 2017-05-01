@@ -97,6 +97,6 @@ export default class CrosshairView extends ContrailChartsView {
     const lines = this.d3.selectAll(this.selectors.node).data([])
     lines.exit().remove()
 
-    actionman.fire('HideComponent', this.config.get('tooltip'))
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 }

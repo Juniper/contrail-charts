@@ -5,8 +5,8 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
 import Config from './StackedBarConfigModel'
+import actionman from 'core/Actionman'
 import './bar.scss'
 
 export default class StackedBarView extends ContrailChartsView {
@@ -124,7 +124,7 @@ export default class StackedBarView extends ContrailChartsView {
   _onMousemove (d, el, event) {
     if (d.accessor.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ShowComponent', d.accessor.tooltip, {left, top}, d.data)
+      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, {left, top}, d.data)
     }
     el.classList.add(this.selectorClass('active'))
   }
@@ -132,7 +132,7 @@ export default class StackedBarView extends ContrailChartsView {
   _onMouseout (d, el) {
     const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.config.yAccessors, a => a.tooltip)
     if (!_.isEmpty(tooltipId)) {
-      actionman.fire('HideComponent', tooltipId)
+      actionman.fire('ToggleVisibility', tooltipId, false)
     }
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)

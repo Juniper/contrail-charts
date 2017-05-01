@@ -6,8 +6,8 @@ import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
 import Config from './AreaConfigModel'
+import actionman from 'core/Actionman'
 import './area.scss'
 
 export default class AreaView extends ContrailChartsView {
@@ -103,7 +103,7 @@ export default class AreaView extends ContrailChartsView {
       const xAccessor = this.config.get('x.accessor')
       const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
-      actionman.fire('ShowComponent', tooltipId, {left, top}, dataItem)
+      actionman.fire('ToggleVisibility', tooltipId, true, {left, top}, dataItem)
     }
     el.classList.add(this.selectorClass('active'))
   }
@@ -111,7 +111,7 @@ export default class AreaView extends ContrailChartsView {
   _onMouseout (d, el) {
     const tooltipId = d && d.accessor ? d.accessor.tooltip : _.map(this.config.yAccessors, a => a.tooltip)
     if (!_.isEmpty(tooltipId)) {
-      actionman.fire('HideComponent', tooltipId)
+      actionman.fire('ToggleVisibility', tooltipId, false)
     }
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)

@@ -5,8 +5,8 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Sankey from 'd3-sankey'
 import ContrailChartsView from 'contrail-charts-view'
-import actionman from 'core/Actionman'
 import Config from './SankeyConfigModel'
+import actionman from 'core/Actionman'
 import './sankey.scss'
 
 export default class SankeyView extends ContrailChartsView {
@@ -179,11 +179,11 @@ export default class SankeyView extends ContrailChartsView {
 
   _onMouseoverLink (d, el) {
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d)
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d)
   }
 
   _onMouseoutLink (d, el) {
-    actionman.fire('HideComponent', this.config.get('tooltip'))
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 
   _arcClick (d, el) {

@@ -6,10 +6,10 @@ import 'd3-transition'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
+import Config from './ScatterPlotConfigModel'
+import actionman from 'core/Actionman'
 import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
 import BucketView from 'helpers/bucket/BucketView'
-import actionman from 'core/Actionman'
-import Config from './ScatterPlotConfigModel'
 import './scatter-plot.scss'
 
 export default class ScatterPlotView extends ContrailChartsView {
@@ -115,7 +115,7 @@ export default class ScatterPlotView extends ContrailChartsView {
   _onMouseover (d, el, event) {
     if (d.accessor.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ShowComponent', d.accessor.tooltip, {left, top}, d.data)
+      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, {left, top}, d.data)
     }
     el.classList.add(this.selectorClass('active'))
   }
@@ -123,7 +123,7 @@ export default class ScatterPlotView extends ContrailChartsView {
   _onMouseout (d, el) {
     const tooltipId = d && d.accessor ? d.accessor.tooltip : this.config.get('y.tooltip')
     if (!_.isEmpty(tooltipId)) {
-      actionman.fire('HideComponent', tooltipId)
+      actionman.fire('ToggleVisibility', tooltipId, false)
     }
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
