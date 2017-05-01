@@ -30,7 +30,8 @@ export default class GroupedBarConfigModel extends ContrailChartsConfigModel {
   }
 
   set (...args) {
-    super.set(ColoredChart.set(...args))
+    ColoredChart.set(...args)
+    super.set(...args)
   }
 
   getOuterWidth (model, width) {

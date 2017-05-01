@@ -52,7 +52,8 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   }
 
   set (...args) {
-    super.set(ColoredChart.set(...args))
+    ColoredChart.set(...args)
+    super.set(...args)
   }
   /**
    * @param {Object} accessors element of array returned by this.children

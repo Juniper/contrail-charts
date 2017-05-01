@@ -27,7 +27,8 @@ export default class PieConfigModel extends ContrailChartsConfigModel {
   }
 
   set (...args) {
-    super.set(ColoredChart.set(...args))
+    ColoredChart.set(...args)
+    super.set(...args)
   }
   /**
    * retrieves color by label in accessor OR by getLabel function from the data

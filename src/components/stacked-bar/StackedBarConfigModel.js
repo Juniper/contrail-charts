@@ -30,7 +30,8 @@ export default class StackedBarConfigModel extends ContrailChartsConfigModel {
   }
 
   set (...args) {
-    super.set(ColoredChart.set(...args))
+    ColoredChart.set(...args)
+    super.set(...args)
   }
 
   getOuterWidth (model, width) {
