@@ -5,15 +5,12 @@ import _ from 'lodash'
 import * as Components from 'components'
 import * as Composites from 'composites'
 import * as Providers from 'providers'
-import * as Actions from 'actions'
-import actionman from 'core/Actionman'
 /**
  * Creates a chart as a composition of components or other compositions
 */
 export default class CompositeChart {
   constructor (p) {
     this._components = []
-    this.actionman = actionman
     this.setConfig(p)
   }
 
@@ -32,13 +29,6 @@ export default class CompositeChart {
   setConfig (config = {}) {
     if (this._config) this.remove()
     this._config = _.cloneDeep(config)
-    /**
-     * Let's register actions here.
-     * Doing this in the constructor causes actions to be registered for views which may not have setConfig invoked,
-     * causing multiple chart instance scenarios having actions bound to registars not active in the dom.
-     * Since action is singleton and some actions trigger on all registrar, we need to avoid above mentioned scenario.
-     */
-    _.each(Actions, action => actionman.set(action, this))
 
     // if config specified create common provider for all components to prepare (format) data just once
     if (config.provider && config.provider.type) {
@@ -96,7 +86,6 @@ export default class CompositeChart {
       this._components = _.without(this._components, component)
       return component.remove()
     }
-    _.each(Actions, action => actionman.unset(action, this))
     _.each(this._components, component => component.remove())
     this._components = []
   }
