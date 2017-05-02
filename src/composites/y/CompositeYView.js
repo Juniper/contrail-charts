@@ -4,17 +4,19 @@
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import ContrailChartsView from 'contrail-charts-view'
-import SelectColor from '../../actions/SelectColor'
+import Config from './CompositeYConfigModel'
 import CompositeChart from 'helpers/CompositeChart'
 import AxisConfigModel from 'components/axis/AxisConfigModel'
-import Config from './CompositeYConfigModel'
+import SelectColor from '../../actions/SelectColor'
+import SelectAccessor from '../../actions/SelectAccessor'
+import SelectChartType from './actions/SelectChartType'
 /**
  * Creates composed chart with X and Y scales and compatible components like: Line, Area, StackedBar, etc
  */
 export default class CompositeYView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
-  static get Actions () { return {SelectColor} }
+  static get Actions () { return {SelectColor, SelectAccessor, SelectChartType} }
 
   constructor (...args) {
     super(...args)

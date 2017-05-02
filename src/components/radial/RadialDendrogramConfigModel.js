@@ -86,4 +86,13 @@ export default class RadialDendrogramConfigModel extends ContrailChartsConfigMod
       }
     })
   }
+
+  setAccessor (accessorName, isEnabled) {
+    const levels = this.attributes.levels
+    const level = _.find(levels, level => level.level === accessorName)
+    if (!level) return
+    let drillDownLevel = isEnabled ? level.level + 1 : level.level
+    if (drillDownLevel < 1) drillDownLevel = 1
+    this.set({drillDownLevel})
+  }
 }

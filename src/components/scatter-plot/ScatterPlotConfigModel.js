@@ -59,4 +59,7 @@ export default class ScatterPlotConfigModel extends ContrailChartsConfigModel {
     const configured = ColoredChart.getColor(data, this.get('y'))
     return configured || this.attributes.colorScale(accessorName)
   }
+  // TODO
+  setColor () {
+  }
 }

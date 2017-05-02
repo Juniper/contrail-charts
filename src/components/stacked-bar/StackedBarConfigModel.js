@@ -20,6 +20,12 @@ export default class StackedBarConfigModel extends ContrailChartsConfigModel {
   get yAccessors () {
     return _.filter(this.attributes.y, a => !(a.enabled === false))
   }
+  /**
+   * @return {Array} all y accessors
+   */
+  get accessors () {
+    return this.attributes.y
+  }
 
   get xScale () {
     return this.get('x.scale')
@@ -60,5 +66,11 @@ export default class StackedBarConfigModel extends ContrailChartsConfigModel {
     const accessor = _.find(this.yAccessors, {accessor: accessorName})
     const configured = ColoredChart.getColor(data, accessor)
     return configured || this.attributes.colorScale(accessorName)
+  }
+  // TODO
+  setColor () {
+  }
+  // TODO
+  setAccessor () {
   }
 }

@@ -3,14 +3,13 @@
  */
 import Action from '../core/Action'
 
-export default class Refresh extends Action {
+export default class SelectAccessor extends Action {
   constructor (p) {
     super(p)
     this._deny = false
   }
 
-  _execute (accessorName, color) {
-    const config = this._registrar.config
-    if (config) config.trigger('change', config)
+  _execute (accessorName, isSelected) {
+    this._registrar.config.setAccessor(accessorName, isSelected)
   }
 }

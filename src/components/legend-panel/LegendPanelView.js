@@ -63,7 +63,7 @@ export default class LegendPanelView extends ContrailChartsView {
   _toggleAttribute (d, el) {
     const accessorName = $(el).parents('.attribute').data('accessor')
     const isChecked = el.querySelector('input').checked
-    actionman.fire('SelectSerie', accessorName, isChecked)
+    actionman.fire('SelectAccessor', accessorName, isChecked)
   }
 
   _setEditState () {

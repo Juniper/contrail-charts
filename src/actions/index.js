@@ -1,7 +1,6 @@
 export {default as Refresh} from 'actions/Refresh'
-export {default as SelectSerie} from 'actions/SelectSerie'
+export {default as SelectAccessor} from 'actions/SelectAccessor'
 export {default as SelectColor} from 'actions/SelectColor'
-export {default as SelectChartType} from 'actions/SelectChartType'
 export {default as ToggleFreeze} from 'actions/ToggleFreeze'
 export {default as ToggleVisibility} from 'actions/ToggleVisibility'
 export {default as Zoom} from 'actions/Zoom'

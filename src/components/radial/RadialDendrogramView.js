@@ -10,12 +10,13 @@ import ContrailChartsView from 'contrail-charts-view'
 import Config from './RadialDendrogramConfigModel'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
+import SelectAccessor from '../../actions/SelectAccessor'
 import './radial-dendrogram.scss'
 
 export default class RadialDendrogramView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'Serie' }
-  static get Actions () { return {SelectColor} }
+  static get Actions () { return {SelectColor, SelectAccessor} }
 
   constructor (p) {
     super(p)

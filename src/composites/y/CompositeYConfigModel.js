@@ -31,9 +31,17 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
       }
     )
   }
-
+  /**
+   * @return {Array} all enabled y accessors
+   */
   get yAccessors () {
     return _.filter(this.get('plot.y'), a => !a.disabled)
+  }
+  /**
+   * @return {Array} all y accessors
+   */
+  get accessors () {
+    return this.get('plot.y')
   }
 
   get children () {
@@ -96,14 +104,41 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   }
 
   getColor (accessorName) {
-    const configured = _.find(this.yAccessors, {accessor: accessorName}).color
+    const configured = _.find(this.accessors, {accessor: accessorName}).color
     return configured || this.attributes.colorScale(accessorName)
   }
 
   setColor (accessorName, color) {
-    const accessor = _.find(this.yAccessors, {accessor: accessorName})
+    const accessor = _.find(this.accessors, {accessor: accessorName})
     if (!accessor) return
     accessor.color = color
-    this.trigger('change', this.config)
+    this.trigger('change')
+  }
+
+  setAccessor (accessorName, isEnabled) {
+    const accessor = _.find(this.accessors, a => a.accessor === accessorName)
+    if (!accessor) return
+    accessor.disabled = !isEnabled
+    this.trigger('change')
+  }
+  /**
+   * Changing anyone chart type from GroupedBar to StackedBar or vise versa will affect all bars for no bars overlap
+   * @param accessorName
+   * @param type
+   */
+  setChartType (accessorName, type) {
+    const barCharts = ['GroupedBar', 'StackedBar']
+    const accessor = _.find(this.accessors, {accessor: accessorName})
+    if (!accessor) return
+    const toUpdate = [accessor]
+    if (barCharts.includes(type)) {
+      toUpdate.push(..._.filter(this.accessors, a => {
+        return barCharts.includes(a.chart) && a.axis === accessor.axis && a !== accessor
+      }))
+    }
+
+    // TODO should fire SelectChartType action for all extra accessors changed
+    _.each(toUpdate, accessor => { accessor.chart = type })
+    this.trigger('change')
   }
 }

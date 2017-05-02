@@ -6,13 +6,15 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
 const chartTypeIconMap = {
-  'Bar': 'fa-bar-chart',
+  'GroupedBar': 'fa-bar-chart',
   'StackedBar': 'fa-signal', // Todo find something better
   'Line': 'fa-line-chart',
   'Area': 'fa-area-chart',
   'Pie': 'fa-pie-chart'
 }
-
+/**
+ * Legend Panel is a dependent component which retrieves its data from the parent
+ */
 export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
   get defaults () {
     return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
@@ -24,14 +26,16 @@ export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
       placement: 'horizontal'
     })
   }
-
+  /**
+   * Retrieves accessors list from parent config model
+   */
   get data () {
-    const accessors = this._parent.yAccessors
+    const accessors = this._parent.accessors
     const axesCount = _.chain(accessors).map('axis').uniq().value().length
 
     let possibleChartTypes = []
-    _.each(this._parent.attributes.possibleChartTypes, function (chartTypes, axisLabel) {
-      possibleChartTypes = _.concat(possibleChartTypes, _.map(chartTypes, function (chartType) {
+    _.each(this._parent.get('possibleChartTypes'), (chartTypes, axisLabel) => {
+      possibleChartTypes = _.concat(possibleChartTypes, _.map(chartTypes, chartType => {
         return {
           axisLabel: axisLabel,
           chartType: chartType,
@@ -43,8 +47,8 @@ export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
     const data = {
       colors: this.attributes.colorScheme,
       possibleChartTypes: possibleChartTypes,
-      editable: this.attributes.editable.colorSelector || this.attributes.editable.chartSelector,
-      axesCount: axesCount
+      editable: this.get('editable.colorSelector') || this.get('editable.chartSelector'),
+      axesCount: axesCount,
     }
 
     data.attributes = _.map(accessors, accessor => {
@@ -52,10 +56,10 @@ export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
         accessor: accessor.accessor,
         axis: accessor.axis,
         label: this.getLabel([], accessor),
-        color: this._parent.getColor([], accessor),
+        color: this._parent.getColor(accessor.accessor),
         chartType: accessor.chart,
         chartIcon: chartTypeIconMap[accessor.chart],
-        checked: this.attributes.filter ? accessor.enabled : true,
+        checked: this.attributes.filter && !accessor.disabled,
         shape: accessor.shape,
       }
     })

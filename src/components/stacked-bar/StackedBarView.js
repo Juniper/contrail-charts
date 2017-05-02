@@ -7,11 +7,14 @@ import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
 import Config from './StackedBarConfigModel'
 import actionman from 'core/Actionman'
+import SelectColor from '../../actions/SelectColor'
+import SelectAccessor from '../../actions/SelectAccessor'
 import './bar.scss'
 
 export default class StackedBarView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
+  static get Actions () { return {SelectColor, SelectAccessor} }
 
   constructor (...args) {
     super(...args)
