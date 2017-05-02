@@ -8,7 +8,9 @@ import SelectColor from '../../actions/SelectColor'
 import CompositeChart from 'helpers/CompositeChart'
 import AxisConfigModel from 'components/axis/AxisConfigModel'
 import Config from './CompositeYConfigModel'
-
+/**
+ * Creates composed chart with X and Y scales and compatible components like: Line, Area, StackedBar, etc
+ */
 export default class CompositeYView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
@@ -16,6 +18,7 @@ export default class CompositeYView extends ContrailChartsView {
 
   constructor (...args) {
     super(...args)
+    this._composite = new CompositeChart()
     this.listenTo(this.model, 'change', this.render)
   }
 
@@ -26,11 +29,6 @@ export default class CompositeYView extends ContrailChartsView {
       node: '.child',
       axis: '.axis',
     })
-  }
-
-  setConfig (config) {
-    if (!this._composite) this._composite = new CompositeChart()
-    super.setConfig(config)
   }
 
   render () {
@@ -44,13 +42,16 @@ export default class CompositeYView extends ContrailChartsView {
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
+
+    // force composite scale for children components
     const components = this._composite.getByType(_(this.config.yAccessors).map('chart').uniq().value())
     _.each(components, component => {
       const componentAxis = this.config.getAxisName(component.config.get('y'))
       const scale = this.config.get(`axes.${componentAxis}.scale`)
+      // TODO even without silent this will not trigger config 'change' because of nested attribute
       component.config.set('y.scale', scale, {silent: true})
+      component.render()
     })
-    this._composite.render()
 
     this._ticking = false
   }

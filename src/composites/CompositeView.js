@@ -6,7 +6,7 @@ import ContrailChartsView from 'contrail-charts-view'
 import CompositeChart from 'helpers/CompositeChart'
 import TitleView from 'helpers/title/TitleView'
 /**
- * Simple composite view
+ * This view enabled creation of composed visualization out of multiple components
  */
 export default class CompositeView extends ContrailChartsView {
   setData (data) {
@@ -17,6 +17,7 @@ export default class CompositeView extends ContrailChartsView {
    * while for all other components id of component is used as it's element id due to Backbone.View
    */
   setConfig (config) {
+    if (!this._composite) this._composite = new CompositeChart()
     this._container = config.container || document.querySelector('#' + config.id)
     // Apply template
     if (config.template) {
@@ -31,7 +32,7 @@ export default class CompositeView extends ContrailChartsView {
 
     if (config.title) TitleView(this._container, config.title)
 
-    if (!this._composite) this._composite = new CompositeChart({container: this._container})
+    // TODO add ability to change components in composition: add / remove
 
     _.each(config.components, (component, index) => {
       // component id is used to find its container in template
