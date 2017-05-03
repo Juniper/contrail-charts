@@ -33,6 +33,16 @@ export default class CompositeYView extends ContrailChartsView {
     })
   }
 
+  get innerWidth () {
+    const margin = this._plotMargin || this.config.get('margin')
+    return this.width - margin.left - margin.right
+  }
+
+  get innerHeight () {
+    const margin = this._plotMargin || this.config.get('margin')
+    return this.height - margin.top - margin.bottom
+  }
+
   render () {
     super.render()
     this._plotMargin = _.cloneDeep(this.config.get('margin'))
@@ -61,7 +71,6 @@ export default class CompositeYView extends ContrailChartsView {
    * Render axes and calculate inner margins for charts
    */
   _renderAxes () {
-    let ticks = {}
     const plotYAxes = _(this.config.yAccessors).map('axis').uniq().value()
     const axes = _.filter(this.config.get('axes'), (axis, name) => {
       axis.name = name
@@ -76,13 +85,11 @@ export default class CompositeYView extends ContrailChartsView {
         id: `${this.id}-${axis.name}`,
         name: axis.name,
         margin: this._plotMargin,
+        height: this.config.get('height'),
+        width: this.config.get('width'),
         accessors: this.config.getAxisAccessors(axis.name),
       }, axis)
-
-      // Sync ticks of the axes in the same direction
-      const direction = AxisConfigModel.getDirection(config.position)
-      if (ticks[direction]) config.tickCoords = ticks[direction]
-      else ticks[direction] = _.map(config.scale.ticks(), v => config.scale(v))
+      config.tickCoords = this.config._syncScales(AxisConfigModel.getDirection(config.position), config.scale)
 
       const component = this._composite.add({
         type: 'Axis',
@@ -97,13 +104,12 @@ export default class CompositeYView extends ContrailChartsView {
 
       const config = _.extend({
         margin: this._plotMargin,
+        height: this.config.get('height'),
+        width: this.config.get('width'),
         accessors: this.config.getAxisAccessors(axis.name),
       }, axis)
+      config.tickCoords = this.config._syncScales(component.config.direction, config.scale)
 
-      // Sync ticks of the axes in the same direction
-      const direction = component.config.direction
-      if (ticks[direction]) config.tickCoords = ticks[direction]
-      else ticks[direction] = _.map(config.scale.ticks(), v => config.scale(v))
       // if only a scale is changed Backbone doesn't trigger "change" event and no render will happen
       component.config.set(config, {silent: true})
     })

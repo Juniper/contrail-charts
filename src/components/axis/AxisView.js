@@ -52,6 +52,8 @@ export default class AxisView extends ContrailChartsView {
     this.d3.transition().ease(d3Ease.easeLinear).duration(this.config.duration)
     this.d3.call(this._d3Axis)
     this._renderLabel()
+
+    this._ticking = false
   }
   /**
    * Labels are rendered at the center along axis

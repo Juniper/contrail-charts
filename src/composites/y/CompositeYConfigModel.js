@@ -27,7 +27,8 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
             // Default y axis name.
             axis: 'y',
           }
-        }
+        },
+        ticks: {},
       }
     )
   }
@@ -140,5 +141,12 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     // TODO should fire SelectChartType action for all extra accessors changed
     _.each(toUpdate, accessor => { accessor.chart = type })
     this.trigger('change')
+  }
+  /**
+   * Sync ticks of the scales in the same direction
+   */
+  _syncScales (direction, scale) {
+    if (this.attributes.ticks[direction]) return this.attributes.ticks[direction]
+    else this.attributes.ticks[direction] = _.map(scale.ticks(), v => scale(v))
   }
 }

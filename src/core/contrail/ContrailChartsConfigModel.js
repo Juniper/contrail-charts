@@ -25,6 +25,10 @@ export default class ContrailChartsConfigModel extends ContrailModel {
   get type () {
     return this.constructor.name.slice(0, -11)
   }
+
+  get duration () {
+    return this.attributes.duration
+  }
   /**
   * Initialize the computed parameters with the config parameters.
   */

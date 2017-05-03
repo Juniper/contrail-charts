@@ -17,7 +17,7 @@ export default {
     // data range is overrided by config.domain
     if (config.domain && !_.isNil(config.domain[0]) && !_.isNil(config.domain[1])) {
       domain = config.domain
-    } else {
+    } else if (model.data.length > 1) {
       let getFullRange = false
       if (model.data.length < 2) getFullRange = true
       domain = model.getRangeFor(config.accessor, getFullRange)
@@ -32,7 +32,7 @@ export default {
       if (config.domain && !_.isNil(config.domain[1])) domain[1] = config.domain[1]
     }
 
-    scale.domain(domain)
+    if (!_.isEmpty(domain)) scale.domain(domain)
     if (config.range) scale.range(config.range)
     return scale
   },

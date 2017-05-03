@@ -5,6 +5,7 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
 import * as Providers from 'providers'
+import ContrailChartsConfigModel from 'contrail-charts-config-model'
 import actionman from 'core/Actionman'
 import ToggleFreeze from '../../actions/ToggleFreeze'
 /**
@@ -13,7 +14,7 @@ import ToggleFreeze from '../../actions/ToggleFreeze'
 export default class ContrailChartsView extends ContrailView {
   constructor (p = {}) {
     super(p)
-    this._id = p.id || p.config.id
+    this._id = p.id || _.get(p, 'config.id')
     this.d3.attr('id', this.id)
     this._order = p.order
     this._container = p.container
@@ -132,7 +133,7 @@ export default class ContrailChartsView extends ContrailView {
   }
 
   setConfig (config) {
-    const ConfigModel = this.constructor.Config
+    const ConfigModel = this.constructor.Config || ContrailChartsConfigModel
     if (ConfigModel) {
       if (config instanceof ConfigModel) this.config = config
       else {

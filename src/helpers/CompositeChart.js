@@ -18,6 +18,7 @@ export default class CompositeChart {
     if (!_.isArray(data)) return
     _(this._components)
       .filter(c => c.model)
+      .uniqBy(c => c.model)
       .each(c => c.setData(data))
   }
   /**
