@@ -29,6 +29,7 @@ const config = {
         right: 80,
         bottom: 40,
       },
+      crosshair: 'crosshair-id',
       plot: {
         x: {
           accessor: 'group.x',

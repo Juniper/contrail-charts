@@ -132,7 +132,7 @@ export default class ContrailChartsView extends ContrailView {
     this.model.data = data
   }
 
-  setConfig (config) {
+  setConfig (config = {}) {
     const ConfigModel = this.constructor.Config || ContrailChartsConfigModel
     if (ConfigModel) {
       if (config instanceof ConfigModel) this.config = config

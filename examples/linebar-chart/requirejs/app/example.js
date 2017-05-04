@@ -66,14 +66,14 @@ define([ // eslint-disable-line no-undef
               tooltip: 'default-tooltip',
             }, {
               accessor: 'd',
-              label: 'Megabytes D',
+              label: 'Label D',
               color: '#d62728',
               chart: 'Line',
               axis: 'y2',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'e',
-              label: 'Megabytes E',
+              label: 'Label E',
               color: '#9467bd',
               chart: 'Line',
               axis: 'y2',

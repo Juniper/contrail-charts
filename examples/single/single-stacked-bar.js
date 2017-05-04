@@ -26,6 +26,7 @@ const config = {
   x: {
     accessor: 'group.x',
     labelFormatter: 'Value',
+    domain: [5, length],
   },
   y: [
     {

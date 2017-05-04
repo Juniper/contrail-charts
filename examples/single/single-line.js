@@ -43,6 +43,7 @@ export default {
 
     setTimeout(() => {
       config.y.accessor = 'b'
+      config.y.color = colorScheme[3]
       chart.setConfig(config)
     }, 1000)
     setTimeout(() => {

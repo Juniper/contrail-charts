@@ -16,9 +16,8 @@ const config = {
     type: 'CompositeY',
     config: {
       margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
+        left: 60,
+        right: 50,
       },
       height: 300,
       plot: {
@@ -42,7 +41,7 @@ const config = {
             tooltip: 'custom-tooltip',
           }, {
             accessor: 'c',
-            labelFormatter: 'Megabytes C',
+            labelFormatter: 'Label C',
             color: 'grey',
             chart: 'Line',
             axis: 'y2',
@@ -100,17 +99,12 @@ const config = {
     id: 'compositey-id2',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
-      height: 300,
+      height: 200,
       plot: {
         x: {
           accessor: 't',
           labelFormatter: 'Time',
-          axis: 'x'
+          axis: 'x',
         },
         y: [
           {

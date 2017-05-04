@@ -83,10 +83,11 @@ const config = {
       },
       axes: {
         x: {
-          ticks: 6
+          ticks: 6,
+          formatter: formatter.extendedISOTime,
         },
         y: {
-          ticks: 5
+          ticks: 5,
         }
       }
     }
@@ -163,8 +164,12 @@ const config = {
         ]
       },
       axes: {
+        x: {
+          formatter: formatter.extendedISOTime,
+          ticks: 10,
+        },
         y: {
-          ticks: 5
+          ticks: 5,
         }
       }
     },
@@ -175,7 +180,9 @@ const config = {
       formatter: pieDataParser,
     },
     config: {
-      marginLeft: 60,
+      margin: {
+        left: 60,
+      },
       type: 'donut',
       radius: 100,
       width: 200,
@@ -243,9 +250,9 @@ const config = {
           }
         ]
       },
-      axis: {
+      axes: {
         y: {
-          ticks: 6
+          ticks: 6,
         }
       },
       updateComponents: ['compositey-chart-id2'],

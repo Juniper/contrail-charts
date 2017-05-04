@@ -5,35 +5,25 @@ import _ from 'lodash'
 import {composites} from 'coCharts'
 import {fixture} from 'commons'
 
-const length = 20
-const data = fixture({
-  length: length,
-  data: {
-    'group.x': {linear: true, range: [0, length]},
-    'group.a': {linear: true, range: [3, (length - 1) * 3]},
-    b: {linear: true, range: [5, (length - 1) * 5], repeat: true},
-    c: {linear: true, range: [7, (length - 1) * 7]},
-  },
-})
+const data = fixture()
 
 let chart
 const container = document.querySelector('#chartBox')
 const config = {
   margin: {
-    bottom: 20,
     left: 60,
     right: 30,
-    top: 10,
   },
+  height: 300,
   plot: {
     x: {
-      accessor: 'group.x',
+      accessor: 'x',
       labelFormatter: 'Value',
       axis: 'x',
     },
     y: [
       {
-        accessor: 'group.a',
+        accessor: 'a',
         labelFormatter: 'Label Group.A',
         chart: 'Line',
         axis: 'y1',
@@ -57,9 +47,12 @@ const config = {
       label: 'X',
     },
     y1: {
+      ticks: 6,
     },
     y2: {
       position: 'right',
+      // this value is ignored because second axis is synced with previous
+      ticks: 5,
     },
   },
 }

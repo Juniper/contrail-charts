@@ -36,12 +36,12 @@ const config = {
     id: 'compositey-id',
     type: 'CompositeY',
     config: {
-      crosshair: 'crosshair-id',
       margin: {
         left: 80,
         right: 80,
         bottom: 40,
       },
+      crosshair: 'crosshair-id',
       plot: {
         x: {
           accessor: 'group.t',

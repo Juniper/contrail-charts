@@ -19,8 +19,10 @@ import shapes from '../../bubble-chart/multiple-shapes'
 import pieChart from '../../radial-chart/pie'
 import dendrogramChart from '../../radial-chart/dendrogram'
 import areaBasic from '../../area-chart/basic'
-import navigation from '../../grouped-chart/navigation/index.js'
-import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav/index.js'
+// Grouped
+import navigation from '../../grouped-chart/navigation'
+import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav'
+
 import sankeyChart from '../../advance-chart/sankey'
 // Single
 import singleLine from '../../single/single-line'
@@ -29,7 +31,7 @@ import singleGroupedBar from '../../single/single-grouped-bar'
 import singleArea from '../../single/single-area'
 import singleScatterPlot from '../../single/single-scatter-plot'
 import singlePie from '../../single/single-pie'
-import singleComposite from '../../single/single-composite'
+import singleComposite from '../../single/single-composite-y'
 /**
  * structure of an example:
  * 'example title': {
@@ -105,14 +107,15 @@ const allExamples = {
       view: singlePie,
       desc: `After 2 seconds the chart is set with changed config and then updated with new data`,
     },
+    'Composite Y Chart': {
+      view: singleComposite,
+    },
   },
   'grouped': {
     'Navigation': {
       view: navigation,
       desc: `Grouped chart with Navigation component for all of them. </br>
       First line chart in second row is not updated as it is plotted with different values at x axis`,
-    'Composite Chart': {
-      view: singleComposite,
     },
     '2 LineBar 1 Pie Nav': {
       view: twoLineBarOnePieNav,
