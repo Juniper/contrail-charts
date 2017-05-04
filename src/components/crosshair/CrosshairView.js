@@ -11,7 +11,7 @@ import './crosshair.scss'
 export default class CrosshairView extends ContrailChartsView {
   constructor (p) {
     super(p)
-    this.render()
+    //this.render()
   }
 
   get tagName () { return 'g' }

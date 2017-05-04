@@ -3,10 +3,10 @@
  */
 import _ from 'lodash'
 import ContrailChartsView from 'contrail-charts-view'
-import Config from './ControlPanelConfigModel'
+import Config from './NavigationConfigModel'
 import actionman from 'core/Actionman'
-import CompositeYView from 'components/composite-y/CompositeYView'
-import CompositeYConfigModel from 'components/composite-y/CompositeYConfigModel'
+import CompositeYView from 'composites/y/CompositeYView'
+import CompositeYConfigModel from 'composites/y/CompositeYConfigModel'
 import BrushView from 'helpers/brush/BrushView'
 import BrushConfigModel from 'helpers/brush/BrushConfigModel'
 
@@ -16,6 +16,7 @@ export default class NavigationView extends ContrailChartsView {
 
   constructor (p) {
     super(p)
+    return
     this._brush = new BrushView({
       config: new BrushConfigModel({
         isSharedContainer: true,
@@ -34,6 +35,7 @@ export default class NavigationView extends ContrailChartsView {
   }
 
   render () {
+    return
     super.render()
     this.resetParams()
     this._compositeYChartView.container = this.el
@@ -44,6 +46,7 @@ export default class NavigationView extends ContrailChartsView {
   }
 
   remove () {
+    return
     super.remove()
     _.each(this._components, (component) => {
       component.remove()
