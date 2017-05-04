@@ -15,6 +15,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
           top: 10,
           left: 40,
           bottom: 40,
+          right: 15,
           label: 15,
         },
         isSharedContainer: true,

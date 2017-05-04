@@ -19,14 +19,12 @@ const config = {
     type: 'CompositeY',
     config: {
       margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
+        left: 60,
       },
       height: 300,
       plot: {
         x: {
-          accessor: 't',
+          accessor: 'x',
           labelFormatter: 'Time',
           axis: 'x',
         },
@@ -34,36 +32,24 @@ const config = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'GroupedBar',
+            chart: 'Line',
             axis: 'y1',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'Line',
-            axis: 'y1',
-          }, {
-            accessor: 'c',
-            labelFormatter: 'Label C',
-            disabled: true,
-            chart: 'Line',
+            chart: 'GroupedBar',
             axis: 'y1',
           },
         ]
       },
       axes: {
         x: {
-          formatter: formatter.extendedISOTime,
+          scale: 'scaleLinear',
         },
         y1: {
           position: 'left',
           formatter: formatter.toInteger,
-          labelMargin: 15,
         },
-        y2: {
-          position: 'right',
-          formatter: formatter.toInteger,
-          labelMargin: 15,
-        }
       }
     }
   }, {
@@ -71,7 +57,7 @@ const config = {
     type: 'Timeline',
     config: {
       selection: [55, 85],
-      accessor: 't',
+      accessor: 'x',
     }
   }]
 }

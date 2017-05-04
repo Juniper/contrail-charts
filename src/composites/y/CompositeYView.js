@@ -6,9 +6,9 @@ import * as d3Array from 'd3-array'
 import ContrailChartsView from 'contrail-charts-view'
 import Config from './CompositeYConfigModel'
 import CompositeChart from 'helpers/CompositeChart'
-import AxisConfigModel from 'components/axis/AxisConfigModel'
 import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
+import Zoom from '../../actions/Zoom'
 import SelectChartType from './actions/SelectChartType'
 /**
  * Creates composed chart with X and Y scales and compatible components like: Line, Area, StackedBar, etc
@@ -16,7 +16,7 @@ import SelectChartType from './actions/SelectChartType'
 export default class CompositeYView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
-  static get Actions () { return {SelectColor, SelectAccessor, SelectChartType} }
+  static get Actions () { return {SelectColor, SelectAccessor, SelectChartType, Zoom} }
 
   constructor (...args) {
     super(...args)
@@ -59,13 +59,25 @@ export default class CompositeYView extends ContrailChartsView {
     const components = this._composite.getByType(_(this.config.yAccessors).map('chart').uniq().value())
     _.each(components, component => {
       const componentAxis = this.config.getAxisName(component.config.get('y'))
-      const scale = this.config.get(`axes.${componentAxis}.scale`)
       // TODO even without silent this will not trigger config 'change' because of nested attribute
-      component.config.set('y.scale', scale, {silent: true})
+      component.config.set('y.scale', this.config.get(`axes.${componentAxis}.scale`), {silent: true})
       component.render()
     })
 
     this._ticking = false
+  }
+  /**
+   * Works only with incremental values at x scale, as range is set as min / max values for x scale
+   * There is no option to set zoomed range by exact position at x scale (start / end)
+   */
+  zoom (ranges) {
+    const accessorsByAxis = _.groupBy(this.config.yAccessors, 'axis')
+    accessorsByAxis.x = [{accessor: this.config.get('plot.x.accessor')}]
+    _.each(accessorsByAxis, (accessors, axisName) => {
+      if (_.isEmpty(_.filter(accessors, a => ranges[a.accessor]))) return
+      const range = d3Array.extent(_(accessors).map(accessor => ranges[accessor.accessor]).flatten().value())
+      if (range[0] !== range[1] || _.isNil(range[0])) this.config.set(`axes.${axisName}.domain`, range)
+    })
   }
   /**
    * Render axes and calculate inner margins for charts

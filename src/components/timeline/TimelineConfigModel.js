@@ -7,7 +7,7 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 
 export default class TimelineConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, {
+    return _.merge(super.defaults, {
       isSharedContainer: true,
 
       // The component height
