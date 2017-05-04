@@ -7,7 +7,7 @@ import ColoredChart from 'helpers/color/ColoredChart'
 
 export default class ColorPickerConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, ColoredChart.defaults)
+    return _.merge(super.defaults, ColoredChart.defaults)
   }
   /**
    * Ask parent component for serie accessors

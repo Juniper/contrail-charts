@@ -7,7 +7,7 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 
 export default class BucketConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, {
+    return _.merge(super.defaults, {
       isSharedContainer: true,
       // range start 256 - is an area of 16x16 square considering the default font for number of buckets as 14px
       range: [256, 512],

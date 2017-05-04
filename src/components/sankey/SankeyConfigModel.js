@@ -10,7 +10,7 @@ import ColoredChart from 'helpers/color/ColoredChart'
 
 export default class SankeyConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
+    return _.merge(super.defaults, ColoredChart.defaults, {
       /*
       isPrimary: true,
       // by default will use common shared container under the parent

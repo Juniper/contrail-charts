@@ -88,10 +88,11 @@ export default class ScatterPlotView extends ContrailChartsView {
   _prepareData () {
     const xAccessor = this.config.get('x.accessor')
     const accessor = this.config.get('y')
+    const key = accessor.accessor
     const points = []
+
     _.map(this.model.data, d => {
       const x = _.get(d, xAccessor)
-      const key = accessor.accessor
       if (!_.isNil(_.get(d, key))) { // key may not exist in all the data set.
         const obj = {
           id: x + '-' + key,

@@ -7,16 +7,9 @@ import ColoredChart from 'helpers/color/ColoredChart'
 
 export default class PieConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
+    return _.merge(super.defaults, ColoredChart.defaults, {
       // sets the position for shared svg container
       isPrimary: true,
-
-      margin: {
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-      },
     })
   }
 

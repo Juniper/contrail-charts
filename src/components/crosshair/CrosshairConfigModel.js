@@ -8,7 +8,7 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 */
 export default class CrosshairConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, {
+    return _.merge(super.defaults, {
       // by default will use common shared container under the parent
       isSharedContainer: true,
       duration: 100,

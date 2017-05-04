@@ -18,7 +18,7 @@ export default class NavigationConfigModel extends ContrailChartsConfigModel {
       // The component height. If not provided will be caculated by View.
       height: undefined,
 
-    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
+    return _.merge(super.defaults, ColoredChart.defaults, {
       // Scale to transform values from percentage based selection to visual coordinates
       selectionScale: d3Scale.scaleLinear().domain([0, 100]),
 

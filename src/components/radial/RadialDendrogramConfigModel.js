@@ -10,7 +10,7 @@ import ColoredChart from 'helpers/color/ColoredChart'
 
 export default class RadialDendrogramConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults, ColoredChart.defaults, {
+    return _.merge(super.defaults, ColoredChart.defaults, {
 
       // The labels of the levels.
       levels: [],
@@ -82,7 +82,7 @@ export default class RadialDendrogramConfigModel extends ContrailChartsConfigMod
         level: level.level,
         label: level.label,
         color: level.color,
-        enabled: level.level < this.attributes.drillDownLevel
+        disabled: level.level >= this.attributes.drillDownLevel
       }
     })
   }

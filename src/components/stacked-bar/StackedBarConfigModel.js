@@ -8,7 +8,7 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class StackedBarConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults,
+    return _.merge(super.defaults,
       ColoredChart.defaults,
       {
         isSharedContainer: true,
@@ -52,7 +52,7 @@ export default class StackedBarConfigModel extends ContrailChartsConfigModel {
     let config = _.extend({range: [0, width]}, this.attributes.x)
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
-    config = _.defaultsDeep({}, this.attributes.y, {
+    config = _.merge({}, this.attributes.y, {
       stacked: true,
       range: [height, 0],
       accessor: _.map(this.yAccessors, 'accessor'),

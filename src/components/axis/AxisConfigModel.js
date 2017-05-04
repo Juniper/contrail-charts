@@ -28,7 +28,7 @@ export default class AxisConfigModel extends ContrailChartsConfigModel {
   }
 
   get defaults () {
-    return _.defaultsDeep(super.defaults, {
+    return _.merge(super.defaults, {
 
       isSharedContainer: true,
       // Default axis ticks if not specified per axis.

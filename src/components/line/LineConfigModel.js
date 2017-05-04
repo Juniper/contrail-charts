@@ -8,7 +8,7 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class LineConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults,
+    return _.merge(super.defaults,
       {
         isSharedContainer: true,
         curve: d3Shape.curveCatmullRom.alpha(0.5),
@@ -28,7 +28,6 @@ export default class LineConfigModel extends ContrailChartsConfigModel {
   get yScale () {
     return this.get('y.scale')
   }
-
   /**
    * @param model
    * @param width
@@ -37,7 +36,7 @@ export default class LineConfigModel extends ContrailChartsConfigModel {
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, width]}, this.attributes.x)
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
-    config = _.defaultsDeep({}, this.attributes.y, {range: [height, 0]})
+    config = _.merge({}, this.attributes.y, {range: [height, 0]})
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 

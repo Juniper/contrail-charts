@@ -9,7 +9,7 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class ScatterPlotConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults,
+    return _.merge(super.defaults,
       ColoredChart.defaults,
       {
         shape: bubbleShapes.circleFill,
@@ -44,7 +44,7 @@ export default class ScatterPlotConfigModel extends ContrailChartsConfigModel {
     let config = _.extend({range: [0, width]}, this.attributes.x)
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
-    config = _.defaultsDeep({}, this.attributes.y, {range: [height, 0]})
+    config = _.merge({}, this.attributes.y, {range: [height, 0]})
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
 
     if (this.get('size.accessor')) {

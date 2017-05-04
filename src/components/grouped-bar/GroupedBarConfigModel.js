@@ -8,7 +8,7 @@ import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class GroupedBarConfigModel extends ContrailChartsConfigModel {
   get defaults () {
-    return _.defaultsDeep(super.defaults,
+    return _.merge(super.defaults,
       ColoredChart.defaults,
       {
         isSharedContainer: true,
