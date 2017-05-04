@@ -5,6 +5,11 @@ import _ from 'lodash'
 import ContrailModel from 'contrail-model'
 
 export default class ContrailChartsConfigModel extends ContrailModel {
+  constructor (p = {}) {
+    super(p)
+    this.id = p.id
+  }
+
   get defaults () {
     return {
       margin: {
@@ -36,7 +41,7 @@ export default class ContrailChartsConfigModel extends ContrailModel {
     this._computed = {}
     return _.extend(this._computed, JSON.parse(JSON.stringify(this.toJSON())))
   }
-
+  // TODO this listener should be removed on component remove
   set parent (model) {
     model.on('change', () => { this.trigger('change') })
     this._parent = model

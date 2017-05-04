@@ -12,6 +12,7 @@ export default class ScatterPlotConfigModel extends ContrailChartsConfigModel {
     return _.merge(super.defaults,
       ColoredChart.defaults,
       {
+        isSharedContainer: true,
         shape: bubbleShapes.circleFill,
         size: {
           range: [1, 500],

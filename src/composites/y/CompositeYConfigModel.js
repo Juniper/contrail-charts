@@ -5,6 +5,7 @@ import _ from 'lodash'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 import ScalableChart from 'helpers/scale/ScalableChart'
+import AxisConfigModel from 'components/axis/AxisConfigModel'
 
 export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   get defaults () {
@@ -51,7 +52,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
 
   get children () {
     const accessorsByChart = _.groupBy(this.yAccessors, accessor => {
-      return `${accessor.axis}-${accessor.stack || (accessor.chart === 'Line' ? accessor.accessor : accessor.chart)}`
+      return `${accessor.axis}-${accessor.stack || (this.isMultiAccessor(accessor.chart) ? accessor.chart : accessor.accessor)}`
     })
     return _.map(accessorsByChart, (accessors, key) => { return {key, accessors} })
   }
@@ -62,6 +63,28 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
 
   get yScale () {
     return this.get('y.scale')
+  }
+
+  get plotMargin () {
+    const margin = _.cloneDeep(this.attributes.margin)
+    _.each(this.attributes.axes, (config, name) => {
+      // TODO move to set method
+      config.position = config.position || AxisConfigModel.defaultPosition(name)
+      margin[config.position] += margin.label
+    })
+    return margin
+  }
+  /**
+   * @return axes with enabled accessors to plot
+   */
+  get activeAxes () {
+    const plotYAxes = _(this.yAccessors).map('axis').uniq().value()
+    return _.filter(this.attributes.axes, (axis, name) => {
+      // TODO move to set method
+      axis.id = `${this.id}-${name}`
+      axis.name = name
+      return name.startsWith('x') || plotYAxes.includes(name)
+    })
   }
 
   set (...args) {
@@ -83,6 +106,19 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
 
   getAxisAccessors (name) {
     return _.filter(this.get('plot.y'), accessor => accessor.axis === name)
+  }
+
+  getAxisConfig (name) {
+    const axis = this.get('axes.' + name)
+    const direction = AxisConfigModel.getDirection(axis.position)
+    const config = _.extend({
+      margin: this.plotMargin,
+      height: this.attributes.height,
+      width: this.attributes.width,
+      accessors: this.getAxisAccessors(name),
+      tickCoords: this.syncScales(direction, axis.scale, axis.ticks)
+    }, axis)
+    return config
   }
   /**
    * @param model
@@ -149,8 +185,12 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   /**
    * Sync ticks of the scales in the same direction
    */
-  _syncScales (direction, scale) {
+  syncScales (direction, scale, ticksAmount) {
     if (this.attributes.ticks[direction]) return this.attributes.ticks[direction]
-    else this.attributes.ticks[direction] = _.map(scale.ticks(), v => scale(v))
+    else this.attributes.ticks[direction] = _.map(scale.ticks(ticksAmount), v => scale(v))
+  }
+
+  isMultiAccessor (type) {
+    return ['Area', 'StackedBar', 'GroupedBar'].includes(type)
   }
 }

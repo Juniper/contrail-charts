@@ -50,8 +50,10 @@ const config = {
             accessor: 'group.data1',
             label: 'Data 1',
             chart: 'ScatterPlot',
-            sizeAccessor: 'group.size1',
-            sizeAxis: 'sizeAxis',
+            size: {
+              accessor: 'group.size1',
+              range: [1, 500],
+            },
             // this is a circle symbol from fontawesome
             shape: bubbleShapes.circleFill,
             color: colorScheme[0],
@@ -61,8 +63,10 @@ const config = {
             accessor: 'data2',
             label: 'Data 2',
             chart: 'ScatterPlot',
-            sizeAccessor: 'size2',
-            sizeAxis: 'sizeAxis',
+            size: {
+              accessor: 'size2',
+              range: [1, 500],
+            },
             shape: bubbleShapes.square,
             color: colorScheme[4],
             axis: 'y2',
@@ -71,8 +75,10 @@ const config = {
             accessor: 'data3',
             label: 'Data 3',
             chart: 'ScatterPlot',
-            sizeAccessor: 'size2',
-            sizeAxis: 'sizeAxis',
+            size: {
+              accessor: 'size2',
+              range: [1, 500],
+            },
             shape: bubbleShapes.star,
             color: d => d.data3 > 80 ? 'red' : colorScheme[5],
             axis: 'y2',
@@ -81,8 +87,8 @@ const config = {
         ]
       },
       axes: {
-        sizeAxis: {
-          range: [1, 500]
+        x: {
+          formatter: formatter.extendedISOTime,
         },
         y1: {
           position: 'left',
@@ -160,7 +166,7 @@ const config = {
           }
         ]
       },
-      axis: {
+      axes: {
         y: {
           ticks: 6
         },

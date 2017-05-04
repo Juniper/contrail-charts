@@ -34,23 +34,17 @@ export default class CompositeYView extends ContrailChartsView {
   }
 
   get innerWidth () {
-    const margin = this._plotMargin || this.config.get('margin')
+    const margin = this.config.plotMargin
     return this.width - margin.left - margin.right
   }
 
   get innerHeight () {
-    const margin = this._plotMargin || this.config.get('margin')
+    const margin = this.config.plotMargin
     return this.height - margin.top - margin.bottom
   }
 
   render () {
     super.render()
-    this._plotMargin = _.cloneDeep(this.config.get('margin'))
-    _.each(this.config.get('axes'), (config, name) => {
-      config.position = config.position || AxisConfigModel.defaultPosition(name)
-      this._plotMargin[config.position] += this._plotMargin.label
-    })
-
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
@@ -83,51 +77,26 @@ export default class CompositeYView extends ContrailChartsView {
    * Render axes and calculate inner margins for charts
    */
   _renderAxes () {
-    const plotYAxes = _(this.config.yAccessors).map('axis').uniq().value()
-    const axes = _.filter(this.config.get('axes'), (axis, name) => {
-      axis.name = name
-      return name.startsWith('x') || plotYAxes.includes(name)
-    })
-
     const elements = this.svg.selectAll(this.selectors.axis)
-      .data(axes, d => d.name)
+      .data(this.config.activeAxes, d => d.name)
 
     elements.enter().each(axis => {
-      const config = _.extend({
-        id: `${this.id}-${axis.name}`,
-        name: axis.name,
-        margin: this._plotMargin,
-        height: this.config.get('height'),
-        width: this.config.get('width'),
-        accessors: this.config.getAxisAccessors(axis.name),
-      }, axis)
-      config.tickCoords = this.config._syncScales(AxisConfigModel.getDirection(config.position), config.scale)
-
       const component = this._composite.add({
         type: 'Axis',
-        config,
+        config: this.config.getAxisConfig(axis.name),
         container: this._container,
       })
       component.el.__data__ = axis
     })
 
     elements.each(axis => {
-      const component = this._composite.get(`${this.id}-${axis.name}`)
-
-      const config = _.extend({
-        margin: this._plotMargin,
-        height: this.config.get('height'),
-        width: this.config.get('width'),
-        accessors: this.config.getAxisAccessors(axis.name),
-      }, axis)
-      config.tickCoords = this.config._syncScales(component.config.direction, config.scale)
-
+      const component = this._composite.get(axis.id)
       // if only a scale is changed Backbone doesn't trigger "change" event and no render will happen
-      component.config.set(config, {silent: true})
+      component.config.set(this.config.getAxisConfig(axis.name))
     })
 
     elements.exit().each(axis => {
-      this._composite.remove(`${this.id}-${axis.name}`)
+      this._composite.remove(axis.id)
     })
   }
   /**
@@ -140,11 +109,12 @@ export default class CompositeYView extends ContrailChartsView {
       // all sub charts should not react on model change as some preparation for them is done here
       frozen: true,
       // TODO add axes space to the chart margins
-      margin: this._plotMargin,
+      margin: this.config.plotMargin,
       width: this.width,
       height: this.height,
       x: {
         accessor: this.config.get('plot.x.accessor'),
+        domain: this.config.get('axes.x.domain'),
         scale: this.config.get('axes.x.scale'),
       }
     }
@@ -154,8 +124,9 @@ export default class CompositeYView extends ContrailChartsView {
     children.enter().merge(children).each(child => {
       const type = this.config.getComponentType(child.accessors)
       config.id = `${this.id}-${child.key}`
-      if (type === 'Line') config.y = child.accessors[0]
-      else config.y = child.accessors
+      if (this.config.isMultiAccessor(type)) config.y = child.accessors
+      else config.y = child.accessors[0]
+      if (type === 'ScatterPlot') config.size = child.accessors[0].size
 
       let component = this._composite.get(`${this.id}-${child.key}`)
       if (component) component.config.set(config, {silent: true})
