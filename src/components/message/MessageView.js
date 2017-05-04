@@ -13,7 +13,7 @@ export default class MessageView extends ContrailChartsView {
   static get Actions () { return {SendMessage, ClearMessage} }
   constructor (p) {
     super(p)
-    this.params.containerList = {}
+    this._containerList = {}
     this.render()
   }
 
@@ -42,16 +42,16 @@ export default class MessageView extends ContrailChartsView {
     }, data)
     let template = this.config.get('template') || _template
 
-    if (!this.params.containerList[msgObj.componentId]) {
+    if (!this._containerList[msgObj.componentId]) {
       let componentElemD3 = d3Selection.select(`#${msgObj.componentId}`)
 
       // TODO el.closest is not supported in IE15
       if (componentElemD3.node() && componentElemD3.node().closest(this.selectors.chart)) {
-        this.params.containerList[msgObj.componentId] = componentElemD3
+        this._containerList[msgObj.componentId] = componentElemD3
       }
     }
 
-    let associatedComponent = this.params.containerList[msgObj.componentId]
+    let associatedComponent = this._containerList[msgObj.componentId]
 
     if (associatedComponent) {
       if (!associatedComponent.classed(this.selectors.component.substring(1))) {
@@ -92,10 +92,5 @@ export default class MessageView extends ContrailChartsView {
     this.$(messageSelector).fadeOut('fast', () => {
       this.$(messageSelector).remove()
     })
-  }
-
-  remove () {
-    super.remove()
-    _.each(Actions, action => actionman.unset(action, this))
   }
 }
