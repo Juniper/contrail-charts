@@ -14,10 +14,10 @@ $font-iconline: 'Pe-icon-7-stroke';
 /* Colors */
 $color-brand: #67B7FE;
 
-$color-grey: #F2F2F4;
+$color-grey: #F4F8F9;
 $color-dkgrey: #65707C;
-$color-dark: #2D334F;
-$color-bg: #F4F8F9;
+$color-dark: #111;
+$color-bg: #EEE;
 
 $color-red: #F24738;
 $color-green: #85B200;
@@ -56,6 +56,10 @@ body {
   font-size: 16px;
   color: $color-dark;
   background-color: $color-bg;
+  
+  &.whitebg {
+      background-color: #fff;
+  }
 }
 p {
   line-height: 1.3em;
@@ -647,18 +651,21 @@ a, .btn {
     color: #fff;
     
     .crailui__sidehead {
-        padding: 15px 25px;
+        padding: 25px 25px;
     }
     
     h1 {
         margin: 0;
         margin-bottom: .3rem;
         font-size: 1.3rem;
+        text-align: left;
+        padding: 0;
     }
     
     p {
         font-size: .8em;
         color: rgba(255,255,255,.45);
+        margin: 0;
     }
 }
 
@@ -672,8 +679,10 @@ a, .btn {
     
     .crailui__heder {
         padding: 14px 20px;
-        background-color: #fff;
-        box-shadow: $shadow-normal;
+        
+        &+.crailui__body {
+            padding-top: 0;
+        }
         
         h2 {
             margin: 0;
@@ -697,6 +706,7 @@ a, .btn {
     
     .crailui__body {
         padding: 20px;
+        padding-bottom: 60px;
     }
 }
 
@@ -709,6 +719,7 @@ a, .btn {
         padding: 20px;
         margin: 0;
         color: rgba($color-dark, .65);
+        text-align: right;
     }
 }
 
@@ -720,6 +731,20 @@ a, .btn {
     > .panel {
         width: calc(50% - 16px);
         margin: 8px;
+        
+        &.panel--full {
+            flex: 0 1 auto;
+            width: calc(100% - 16px);
+            min-height: inherit;
+        }
+        
+        &.panel--8 {
+            flex: .6;
+        }
+        
+        &.panel--4 {
+            flex: .4;
+        }
     }
 }
 
@@ -727,7 +752,7 @@ a, .btn {
     background-color: #fff;
     border-radius: 4px;
     box-shadow: $shadow-normal;
-    padding: 20px;
+    padding: 5px;
     min-height: 350px;
 }
 
@@ -739,7 +764,7 @@ a, .btn {
         
         > a {
             position: relative;
-            padding: 12px 25px;
+            padding: 16px 25px;
             padding-right: 45px;
             padding-left: 60px;
             font-size: .9em;
@@ -754,7 +779,7 @@ a, .btn {
             &:hover {
                 background-color: transparent;
                 color: #fff;
-                box-shadow: inset 2px 0 rgba($color-brand, .45);
+                box-shadow: inset 2px 0 rgba(255,255,255, .45);
                 
                 &:after {
                     color: rgba(255,255,255,.8);
@@ -767,15 +792,15 @@ a, .btn {
                 transition: $trans-ease;
                 position: absolute;
                 right: 25px;
-                top: 12px;
+                top: 16px;
                 color: rgba(255,255,255,.4);
             }
             
             [class^="icon-"] {
                 position: absolute;
-                color: rgba($color-brand, .8);
+                color: rgba(255,255,255,.45);
                 font-size: 24px;
-                margin-top: -1px;
+                margin-top: -6px;
                 left: 25px;
                 trantion: $trans-normal;
             }
@@ -787,26 +812,27 @@ a, .btn {
             > a,
             > a:focus {
                 background-color: transparent;
-                color: $color-brand;
-                box-shadow: inset 2px 0 rgba($color-brand, .75);
+                color: #fff;
+                box-shadow: inset 2px 0 rgba(255,255,255,.75);
                 
                 &:after {
                     transform: rotate(180deg);
                 }
                 
                 [class^="icon-"] {
-                    color: $color-brand;
+                    color: #fff;
                 }
             }
         }
         
         .nav-sidebar__sub {
-            box-shadow: inset 2px 0 rgba($color-brand, .75);
+            box-shadow: inset 2px 0 rgba(255,255,255,.75);
             
             > li {
                 
                 > a {
                     padding: 8px 25px;
+                    padding-left: 60px;
                     font-size: .9em;
                     color: rgba(255,255,255,.85);
                     
@@ -900,7 +926,7 @@ a, .btn {
   
   .mobilebar__logo {
     text-align: center;
-    padding: 15px 0;
+    padding: 5px 0;
     padding-bottom: 0;
     
     h1 {
@@ -1356,6 +1382,35 @@ a, .btn {
             width: 100%;
             margin: 0;
             margin-bottom: 10px;
+            
+            &.panel--full {
+                width: 100%;
+            }
+            
+            &.panel--4 {
+                width: 100%;
+            }
+            
+            &.panel--8 {
+                width: 100%;
+            }
+        }
+    }
+    
+    .nav-sidebar {
+        
+        > li {
+            
+            .nav-sidebar__sub {
+                
+                > li {
+                    
+                    > a {
+                        padding: 12px 25px;
+                        padding-left: 60px;
+                    }
+                }
+            }
         }
     }
   
@@ -1400,6 +1455,7 @@ a, .btn {
   
   
 }
+
 /**
 * Styles specific for contrail-examples.
 */
@@ -1424,8 +1480,6 @@ html, body {
 
 body {
   font: $baseFontSize 'Open Sans', sans-serif;
-  color: $stdDarkgray;
-  background: $stdWhite;
 }
 
 h1 {
