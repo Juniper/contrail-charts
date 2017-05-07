@@ -1276,6 +1276,12 @@ a, .btn {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-edit:before {
+  content: "\e906";
+}
+.icon-refresh:before {
+  content: "\e907";
+}
 .icon-chart-advanced:before {
   content: "\e900";
 }
