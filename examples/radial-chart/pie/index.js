@@ -5,7 +5,7 @@ import {composites} from 'coCharts'
 import {formatter} from 'commons'
 import * as d3Scale from 'd3-scale'
 
-const pieData = [
+const data = [
   { label: 'Process 1', value: 2704659 },
   { label: 'Process 2', value: 2159981 },
   { label: 'Process 3', value: 3853788 },
@@ -76,7 +76,7 @@ const config = {
 export default {
   render: () => {
     chart = new composites.CompositeView({config})
-    chart.setData(pieData)
+    chart.setData(data)
   },
   remove: () => {
     chart.remove()

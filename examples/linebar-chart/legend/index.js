@@ -114,35 +114,27 @@ const config = {
   }, {
     type: 'Navigation',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       height: 200,
       selection: [75, 100],
+      update: ['compositey-chart-id'],
       plot: {
         x: {
           accessor: 'x',
           labelFormatter: 'X Values',
-          axis: 'x',
         },
         y: [
           {
             accessor: 'a',
             labelFormatter: 'Label A',
             chart: 'StackedBar',
-            axis: 'y1',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
             chart: 'StackedBar',
-            axis: 'y1',
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
             chart: 'Line',
-            axis: 'y2',
           }
         ]
       },
@@ -150,16 +142,10 @@ const config = {
         x: {
           scale: 'scaleLinear',
         },
-        y1: {
-          position: 'left',
+        y: {
           formatter: formatter.toInteger,
           ticks: 5,
         },
-        y2: {
-          position: 'right',
-          formatter: formatter.toFixed1,
-          ticks: 5,
-        }
       }
     },
   }, {

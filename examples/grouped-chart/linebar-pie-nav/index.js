@@ -229,11 +229,9 @@ const config = {
     id: 'navigation-id',
     type: 'Navigation',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 250,
       selection: [75, 100],
+      update: ['compositey-chart-id2'],
       plot: {
         x: {
           accessor: 'x',
@@ -251,11 +249,14 @@ const config = {
         ]
       },
       axes: {
+        x: {
+          ticks: 8,
+          formatter: formatter.extendedISOTime,
+        },
         y: {
           ticks: 6,
         }
       },
-      updateComponents: ['compositey-chart-id2'],
     }
   }]
 }

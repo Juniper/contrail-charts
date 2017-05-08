@@ -27,9 +27,6 @@ const config = {
     id: 'stacked-bar-id',
     type: 'CompositeY',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 350,
       plot: {
         x: {
@@ -66,9 +63,6 @@ const config = {
     id: 'grouped-bar-id',
     type: 'CompositeY',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 350,
       plot: {
         x: {
@@ -105,11 +99,6 @@ const config = {
     id: 'area-id',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       height: 300,
       plot: {
         x: {
@@ -147,11 +136,6 @@ const config = {
     id: 'line-id',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       height: 300,
       plot: {
         x: {
@@ -189,11 +173,9 @@ const config = {
     id: 'navigation-id',
     type: 'Navigation',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 250,
       selection: [60, 100],
+      update: ['area-id', 'stacked-bar-id', 'grouped-bar-id'],
       plot: {
         x: {
           accessor: 'x',

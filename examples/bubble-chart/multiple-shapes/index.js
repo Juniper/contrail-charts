@@ -36,8 +36,7 @@ const config = {
     type: 'CompositeY',
     config: {
       margin: {
-        left: 50,
-        right: 50,
+        right: 60,
       },
       height: 450,
       plot: {
@@ -152,23 +151,26 @@ const config = {
     type: 'Navigation',
     config: {
       height: 200,
+      selection: [50, 100],
+      update: ['multishape-bubble-chart'],
       plot: {
         x: {
           accessor: 'group.x',
-          axis: 'x',
         },
         y: [
           {
             accessor: 'nav',
             chart: 'Line',
             color: colorScheme[1],
-            axis: 'y',
           }
         ]
       },
       axes: {
+        x: {
+          formatter: formatter.extendedISOTime,
+        },
         y: {
-          ticks: 6
+          ticks: 6,
         },
       }
     }

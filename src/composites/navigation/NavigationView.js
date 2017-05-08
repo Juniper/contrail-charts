@@ -6,51 +6,46 @@ import ContrailChartsView from 'contrail-charts-view'
 import Config from './NavigationConfigModel'
 import actionman from 'core/Actionman'
 import CompositeYView from 'composites/y/CompositeYView'
-import CompositeYConfigModel from 'composites/y/CompositeYConfigModel'
-import BrushView from 'helpers/brush/BrushView'
-import BrushConfigModel from 'helpers/brush/BrushConfigModel'
+import BrushView from 'components/brush/BrushView'
 
 export default class NavigationView extends ContrailChartsView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 
-  constructor (p) {
-    super(p)
-    return
-    this._brush = new BrushView({
-      config: new BrushConfigModel({
-        isSharedContainer: true,
-      }),
-    })
-    const compositeYConfig = new CompositeYConfigModel(this.config.attributes)
-    this._compositeYChartView = new CompositeYView({
-      config: compositeYConfig,
-      model: this.model,
-    })
-    this._components = [this._brush, this._compositeYChartView]
-    this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
-    this.listenTo(this.model, 'change', this._onModelChange)
+  constructor (...args) {
+    super(...args)
+    this.listenTo(this.model, 'change', this.render)
     // needs more time to not encounter onSelection event after zoom
     this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration') * 2)
   }
 
   render () {
-    return
     super.render()
-    this.resetParams()
-    this._compositeYChartView.container = this.el
-    // TODO this will also trigger render async, but the next one is needed by following _update immediately
-    this._compositeYChartView.config.set(this.config.attributes)
-    this._compositeYChartView.render()
+    if (!this._yChart) {
+      this._yChart = new CompositeYView({
+        config: _.extend({
+          frozen: true,
+        }, this.config.attributes),
+        container: this.el,
+        model: this.model,
+      })
+      this._yChart.render()
+    }
+    if (!this._brush) {
+      this._brush = new BrushView({
+        container: this.el,
+        config: {
+          isSharedContainer: true,
+          margin: this._yChart.config.plotMargin,
+        },
+      })
+      this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
+    }
     this._update()
   }
 
   remove () {
-    return
     super.remove()
-    _.each(this._components, (component) => {
-      component.remove()
-    })
     this._components = []
     this.stopListening(this._brush, 'selection')
   }
@@ -59,8 +54,8 @@ export default class NavigationView extends ContrailChartsView {
     const range = ranges[this.config.get('plot.x.accessor')]
     if (!range || range[0] === range[1]) return
     const sScale = this.config.get('selectionScale')
-    const visualMin = this.params.xScale(range[0])
-    const visualMax = this.params.xScale(range[1])
+    const visualMin = this._yChart.config.xScale(range[0])
+    const visualMax = this._yChart.config.xScale(range[1])
 
     // round zoom range to integers in percents including the original exact float values
     const selection = [_.floor(sScale.invert(visualMin)), _.ceil(sScale.invert(visualMax))]
@@ -74,15 +69,12 @@ export default class NavigationView extends ContrailChartsView {
 
   // Event handlers
 
-  _onModelChange () {
-    this.render()
-  }
-
   _onSelection (range) {
     if (this._disabled) return
     const xAccessor = this.config.get('plot.x.accessor')
-    let xMin = this.params.xScale.invert(range[0])
-    let xMax = this.params.xScale.invert(range[1])
+    const xScale = this._yChart.config.get('axes.x.scale')
+    let xMin = xScale.invert(range[0])
+    let xMax = xScale.invert(range[1])
     const sScale = this.config.get('selectionScale')
     const selection = [_.floor(sScale.invert(range[0])), _.ceil(sScale.invert(range[1]))]
     this.config.set('selection', selection, {silent: true})
@@ -92,7 +84,7 @@ export default class NavigationView extends ContrailChartsView {
     if (_.isDate(xMax)) xMax = xMax.getTime()
 
     const data = {[xAccessor]: [xMin, xMax]}
-    actionman.fire('Zoom', this.config.get('updateComponents'), data)
+    actionman.fire('Zoom', this.config.get('update'), data)
   }
   /**
    * Turn off selection for the animation period on resize
@@ -109,15 +101,12 @@ export default class NavigationView extends ContrailChartsView {
    * Composite Y component is updated on resize on its own
    */
   _update () {
-    const p = this._compositeYChartView.params
-    this.params.xScale = p.axis.x.scale
-    this._brush.container = this.el
-    this.config.set('xRange', p.xRange, {silent: true})
-    this.config.set('yRange', p.yRange, {silent: true})
+    const xRange = this._yChart.config.get('axes.x.scale').range()
+    const yRange = this._yChart.config.get('axes.y.scale').range()
     this._brush.config.set({
-      selection: this.config.selectionRange,
-      xRange: p.xRange,
-      yRange: p.yRange,
+      selection: this.config.getSelectionRange(xRange),
+      xRange,
+      yRange,
     }, {silent: true})
     this._brush.render()
     this._ticking = false

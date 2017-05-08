@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-
 export {default as ColorPickerConfigModel} from './color-picker/ColorPickerConfigModel'
 export {default as ColorPickerView} from './color-picker/ColorPickerView'
 
@@ -27,8 +26,6 @@ export {default as LegendView} from './legend/LegendView'
 export {default as LegendPanelConfigModel} from './legend-panel/LegendPanelConfigModel'
 export {default as LegendPanelView} from './legend-panel/LegendPanelView'
 export {default as MessageView} from './message/MessageView'
-export {default as NavigationConfigModel} from './navigation/NavigationConfigModel'
-export {default as NavigationView} from './navigation/NavigationView'
 export {default as PieConfigModel} from './pie/PieConfigModel'
 export {default as PieView} from './pie/PieView'
 export {default as RadialDendrogramConfigModel} from './radial/RadialDendrogramConfigModel'
