@@ -36,41 +36,51 @@
 
   .tooltip-content {
     min-width: 200px;
-    padding: 10px 10px 5px;
-    border-radius: 4px;
-    background-color: $p_body_bg_color;
+    padding: 14px;
+    border-radius: 8px;
+    /* background-color: $p_body_bg_color; */
+    background-color: rgba(0,0,0,.75);
     color: $p_body_fg_color;
     opacity: $p_body_opacity;
 
     .cc-title {
       font-weight: bold;
       font-size: $p_title_font_size;
+      /*
       border-bottom-width: $p_title_separator_width;
       border-bottom-style: $p_title_separator_style;
-      border-bottom-color: $p_title_separator_color;
-      padding: 0 0 7px;
-      margin-bottom: 15px;
+      border-bottom-color: $p_title_separator_color; */
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding-bottom: 8px;
+      /* margin-bottom: 15px; */
       text-align: left;
     }
   }
 
   .tooltip-item {
+    /*
     border-bottom-width: $p_item_spearator_width;
     border-bottom-style: $p_item_spearator_style;
-    border-bottom-color: $p_item_spearator_color;
-    margin-bottom: 5px;
-    padding-bottom: 5px;
+    border-bottom-color: $p_item_spearator_color; */
+    padding: 3px 0;
+    
+    &:first-child {
+        padding-top: 0;
+    }
 
     &:last-child {
-      border-bottom: 0;
-      margin-bottom: 0;
+      padding-bottom: 0;
     }
 
     .tooltip-item-color {
-      width: 5px;
-      height: 9px;
+      width: 20px;
+      height: 12px;
       display: inline-block;
-      border-radius: 2px;
+      border-radius: 12px;
+      background-color: rgba(255,255,255,.12);
+      margin-right: 3px;
+      position: relative;
+      top: 2px;
     }
 
     .tooltip-item-label {
@@ -78,8 +88,20 @@
     }
 
     .tooltip-item-value {
-      font-weight: 900;
+      font-weight: 700;
       float: right;
     }
   }
+  
+  
+  &.tooltip-light {
+      
+      .tooltip-content {
+        background-color: rgba(255,255,255,.95);
+        border: 1px solid rgba(0,0,0,.2);
+        color: #111;
+      }
+  }
+  
+  
 }
