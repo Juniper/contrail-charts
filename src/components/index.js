@@ -1,6 +1,8 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+export {default as BrushView} from './brush/BrushView'
+export {default as BrushConfigModel} from './brush/BrushConfigModel'
 export {default as ColorPickerConfigModel} from './color-picker/ColorPickerConfigModel'
 export {default as ColorPickerView} from './color-picker/ColorPickerView'
 

@@ -44,9 +44,12 @@ export default class CompositeView extends ContrailChartsView {
     _.each(independent, component => this._composite.add(component))
     _.each(dependent, component => {
       const sourceComponent = this._composite.get(component.config.sourceComponent)
-      component.model = sourceComponent.model
-      const componentView = this._composite.add(component)
-      componentView.config.parent = sourceComponent.config
+      // source component may be defined but disabled
+      if (sourceComponent) {
+        component.model = sourceComponent.model
+        const componentView = this._composite.add(component)
+        componentView.config.parent = sourceComponent.config
+      }
     })
   }
 

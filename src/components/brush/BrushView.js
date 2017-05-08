@@ -7,16 +7,20 @@ import * as d3Shape from 'd3-shape'
 import * as d3Brush from 'd3-brush'
 import * as d3Ease from 'd3-ease'
 import ContrailChartsView from 'contrail-charts-view'
+import Config from './BrushConfigModel'
 import './brush.scss'
 
 export default class BrushView extends ContrailChartsView {
-  constructor (p) {
-    super(p)
+  static get Config () { return Config }
+
+  constructor (...args) {
+    super(...args)
     this._brush = d3Brush.brushX()
       .on('start brush end', this._onSelection.bind(this))
   }
 
   get tagName () { return 'g' }
+
   get zIndex () { return 9 }
 
   get selectors () {

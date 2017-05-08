@@ -11,10 +11,6 @@ export default class BrushConfigModel extends ContrailChartsConfigModel {
     return this.attributes.selection || []
   }
 
-  get duration () {
-    return this.attributes.duration
-  }
-
   get handleHeight () {
     return this.has('handleHeight') ? this.attributes.handleHeight : 16
   }

@@ -8,8 +8,7 @@ import ContrailChartsView from 'contrail-charts-view'
 import Config from './TimelineConfigModel'
 import actionman from 'core/Actionman'
 import Zoom from '../../actions/Zoom'
-import BrushView from 'helpers/brush/BrushView'
-import BrushConfigModel from 'helpers/brush/BrushConfigModel'
+import BrushView from 'components/brush/BrushView'
 import './timeline.scss'
 
 export default class TimelineView extends ContrailChartsView {
@@ -20,9 +19,8 @@ export default class TimelineView extends ContrailChartsView {
   constructor (...args) {
     super(...args)
     this._brush = new BrushView({
-      config: new BrushConfigModel({
-        isSharedContainer: true,
-      }),
+      container: this._container,
+      config: { isSharedContainer: true, },
     })
 
     this.listenTo(this.model, 'change', this.render)
@@ -66,7 +64,6 @@ export default class TimelineView extends ContrailChartsView {
       .attr('width', xRange[1] - xRange[0])
     this._bar.exit().remove()
 
-    this._brush.container = this._container
     this._brush.config.set({
       selection: this.config.selectionRange,
       xRange,
