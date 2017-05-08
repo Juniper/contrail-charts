@@ -1276,6 +1276,9 @@ a, .btn {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-stop:before {
+  content: "\e914";
+} 
 .icon-color:before {
   content: "\e90f";
 }
