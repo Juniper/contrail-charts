@@ -6,11 +6,11 @@ import ContrailChartsConfigModel from 'contrail-charts-config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
 const chartTypeIconMap = {
-  'BarChart': 'fa-bar-chart',
-  'StackedBarChart': 'fa-signal', // Todo find something better
-  'LineChart': 'fa-line-chart',
-  'AreaChart': 'fa-area-chart',
-  'PieChart': 'fa-pie-chart'
+  'BarChart': 'icon-charttype-bar',
+  'StackedBarChart': 'icon-charttype-stacked',
+  'LineChart': 'icon-charttype-line',
+  'AreaChart': 'icon-charttype-area',
+  'PieChart': 'icon-charttype-pie'
 }
 
 export default class LegendPanelConfigModel extends ContrailChartsConfigModel {
