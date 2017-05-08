@@ -12,11 +12,13 @@ import ToggleFreeze from '../../actions/ToggleFreeze'
  * View base class
  */
 export default class ContrailChartsView extends ContrailView {
+  /**
+   * @param {HTMLElement} p.container must be specified
+   */
   constructor (p = {}) {
     super(p)
     this._id = p.id || _.get(p, 'config.id')
     this.d3.attr('id', this.id)
-    this._order = p.order
     this._container = p.container
     // TODO remove
     this.params = {}
@@ -210,7 +212,9 @@ export default class ContrailChartsView extends ContrailView {
    */
   remove () {
     if (this.config) this.stopListening(this.config)
-    this.config.clear()
+    // TODO this.config should unsubscribe all dependent components
+    // and there will be no need to do clear silently
+    this.config.clear({silent: true})
     if (this.model) this.stopListening(this.model)
     window.removeEventListener('resize', this._onResize)
     _.each(this.constructor.Actions, action => actionman.unset(action, this))
