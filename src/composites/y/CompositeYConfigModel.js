@@ -52,17 +52,18 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
 
   get children () {
     const accessorsByChart = _.groupBy(this.yAccessors, accessor => {
-      return `${accessor.axis}-${accessor.stack || (this.isMultiAccessor(accessor.chart) ? accessor.chart : accessor.accessor)}`
+      const axis = this.getAxisName(accessor)
+      return `${axis}-${accessor.stack || (this.isMultiAccessor(accessor.chart) ? accessor.chart : accessor.accessor)}`
     })
     return _.map(accessorsByChart, (accessors, key) => { return {key, accessors} })
   }
 
   get xScale () {
-    return this.get('x.scale')
+    return this.get(`axes.${this.get('plot.x.axis')}.scale`)
   }
-
-  get yScale () {
-    return this.get('y.scale')
+  // TODO should this return all scales or just first?
+  get yScales () {
+    return _.find(this.get('axes'), a => a.name.startsWith('y')).scale
   }
 
   get plotMargin () {
@@ -78,7 +79,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
    * @return axes with enabled accessors to plot
    */
   get activeAxes () {
-    const plotYAxes = _(this.yAccessors).map('axis').uniq().value()
+    const plotYAxes = _(this.yAccessors).map(a => this.getAxisName(a)).uniq().value()
     return _.filter(this.attributes.axes, (axis, name) => {
       // TODO move to set method
       axis.id = `${this.id}-${name}`
@@ -105,7 +106,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
   }
 
   getAxisAccessors (name) {
-    return _.filter(this.get('plot.y'), accessor => accessor.axis === name)
+    return _.filter(this.get('plot.y'), accessor => this.getAxisName(accessor) === name)
   }
 
   getAxisConfig (name) {
@@ -129,7 +130,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     const config = _.extend({range: [0, width]}, this.get('plot.x'), this.get('axes.x'))
     _.set(this.attributes, 'axes.x.scale', ScalableChart.getScale(model, config))
 
-    const accessorsByAxis = _.groupBy(this.get('plot.y'), 'axis')
+    const accessorsByAxis = _.groupBy(this.get('plot.y'), a => this.getAxisName(a))
     _.each(accessorsByAxis, (accessors, axisName) => {
       const accessorNames = _.map(accessors, 'accessor')
       const config = _.extend(
@@ -174,7 +175,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     const toUpdate = [accessor]
     if (barCharts.includes(type)) {
       toUpdate.push(..._.filter(this.accessors, a => {
-        return barCharts.includes(a.chart) && a.axis === accessor.axis && a !== accessor
+        return barCharts.includes(a.chart) && this.getAxisName(a) === this.getAxisName(accessor) && a !== accessor
       }))
     }
 
