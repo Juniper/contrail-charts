@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {composites, Util} from 'coCharts'
+import {composites, Util} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
 
 const data = fixture({

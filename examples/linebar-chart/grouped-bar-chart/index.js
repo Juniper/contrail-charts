@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {composites} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {fixture} from 'commons'
 
 const length = 20

@@ -63,7 +63,7 @@ export default (env = defaultEnv) => {
       d3: { amd: 'd3v4', root: 'd3' },
       // lodash: { amd: 'lodash', root: '_' },
       backbone: { amd: 'backbone', root: 'Backbone' },
-      coCharts: 'coCharts'
+      'contrail-charts': 'cc'
     },
     resolve: {
       modules: [absolute(), 'node_modules'],
@@ -81,7 +81,7 @@ export default (env = defaultEnv) => {
     devServer: {
       publicPath: '/build/examples/',
       compress: true,
-      port: 9000
+      port: 9000,
     }
   }
 }

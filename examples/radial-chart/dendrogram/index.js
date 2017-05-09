@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {composites} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {_c} from 'commons'
 import dendrogamData from './data.json'
 

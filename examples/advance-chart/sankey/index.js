@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {composites} from 'coCharts'
+import {composites} from 'contrail-charts'
 import * as d3Scale from 'd3-scale'
 import flowData from './data.json'
 

@@ -6,7 +6,7 @@ define([ // eslint-disable-line no-undef
   'd3v4', // Example use of multiple d3 versions. chart will use d3v4 instead of older d3.
   'lodash',
   'contrail-charts',
-], function (d3, _, coCharts) {
+], function (d3, _, cc) {
   const data = []
   _.each(d3.range(100), i => {
     const a = _.random(0, 100)
@@ -148,7 +148,7 @@ define([ // eslint-disable-line no-undef
 
   return {
     render: function () {
-      chart = new coCharts.composites.CompositeView({config})
+      chart = new cc.composites.CompositeView({config})
       chart.setData(data)
     },
     remove: () => {

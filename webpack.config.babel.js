@@ -6,7 +6,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin'
 
 let fileName = 'contrail-charts'
-const libraryName = 'coCharts'
+const libraryName = 'cc'
 const paths = {
   framework: 'plugins/backbone/',
   contrail: 'core/contrail/',

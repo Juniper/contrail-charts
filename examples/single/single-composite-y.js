@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import {composites} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {fixture} from 'commons'
 
 const data = fixture()

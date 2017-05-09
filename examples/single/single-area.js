@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {components} from 'coCharts'
+import {components} from 'contrail-charts'
 import {fixture} from 'commons'
 import {schemeCategory10 as colorScheme} from 'd3-scale'
 
