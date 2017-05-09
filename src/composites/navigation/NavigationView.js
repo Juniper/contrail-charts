@@ -36,7 +36,7 @@ export default class NavigationView extends ContrailChartsView {
         container: this.el,
         config: {
           isSharedContainer: true,
-          margin: this._yChart.config.plotMargin,
+          margin: this._yChart.config.margin,
         },
       })
       this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))

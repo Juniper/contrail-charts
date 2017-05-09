@@ -31,12 +31,17 @@ export default class ContrailChartsConfigModel extends ContrailModel {
     return this.constructor.name.slice(0, -11)
   }
 
+  get margin () {
+    return this.attributes.margin
+  }
+
   get duration () {
     return this.attributes.duration
   }
   /**
-  * Initialize the computed parameters with the config parameters.
-  */
+   * TODO remove
+   * Initialize the computed parameters with the config parameters.
+   */
   computeParams () {
     this._computed = {}
     return _.extend(this._computed, JSON.parse(JSON.stringify(this.toJSON())))

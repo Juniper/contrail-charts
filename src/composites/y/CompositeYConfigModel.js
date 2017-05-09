@@ -44,6 +44,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     return _.filter(this.get('plot.y'), a => !a.disabled)
   }
   /**
+   * TODO update name to considering that this is only y accessors with no filter for disabled
    * @return {Array} all y accessors
    */
   get accessors () {
@@ -66,7 +67,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     return _.find(this.get('axes'), a => a.name.startsWith('y')).scale
   }
 
-  get plotMargin () {
+  get margin () {
     const margin = _.cloneDeep(this.attributes.margin)
     _.each(this.attributes.axes, (config, name) => {
       // TODO move to set method
@@ -113,7 +114,7 @@ export default class CompositeYConfigModel extends ContrailChartsConfigModel {
     const axis = this.get('axes.' + name)
     const direction = AxisConfigModel.getDirection(axis.position)
     const config = _.extend({
-      margin: this.plotMargin,
+      margin: this.margin,
       height: this.attributes.height,
       width: this.attributes.width,
       accessors: this.getAxisAccessors(name),

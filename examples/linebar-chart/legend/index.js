@@ -43,9 +43,8 @@ const config = {
     type: 'CompositeY',
     config: {
       margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
+        left: 60,
+        right: 60,
       },
       height: 400,
       crosshair: 'crosshair-id',
@@ -115,6 +114,9 @@ const config = {
     type: 'Navigation',
     config: {
       height: 200,
+      margin: {
+        left: 60,
+      },
       selection: [75, 100],
       update: ['compositey-chart-id'],
       plot: {

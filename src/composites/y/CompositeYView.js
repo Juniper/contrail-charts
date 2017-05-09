@@ -10,6 +10,7 @@ import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
 import Zoom from '../../actions/Zoom'
 import SelectChartType from './actions/SelectChartType'
+import './y.scss'
 /**
  * Creates composed chart with X and Y scales and compatible components like: Line, Area, StackedBar, etc
  */
@@ -30,17 +31,8 @@ export default class CompositeYView extends ContrailChartsView {
     return _.extend(super.selectors, {
       node: '.child',
       axis: '.axis',
+      plot: 'clipPath',
     })
-  }
-
-  get innerWidth () {
-    const margin = this.config.plotMargin
-    return this.width - margin.left - margin.right
-  }
-
-  get innerHeight () {
-    const margin = this.config.plotMargin
-    return this.height - margin.top - margin.bottom
   }
 
   render () {
@@ -48,6 +40,14 @@ export default class CompositeYView extends ContrailChartsView {
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
+
+    let plot = this.d3.select(this.selectors.plot)
+    if (plot.empty()) {
+      plot = this.d3.append(this.selectors.plot)
+        .attr('id', `${this.id}-${this.selectors.plot}`)
+        .append('rect')
+    }
+    plot.attr('width', this.innerWidth).attr('height', this.innerHeight)
 
     // force composite scale for children components
     const components = this._composite.getByType(_(this.config.yAccessors).map('chart').uniq().value())
@@ -109,7 +109,7 @@ export default class CompositeYView extends ContrailChartsView {
       // all sub charts should not react on model change as some preparation for them is done here
       frozen: true,
       // TODO add axes space to the chart margins
-      margin: this.config.plotMargin,
+      margin: this.config.margin,
       width: this.width,
       height: this.height,
       x: {
@@ -138,6 +138,7 @@ export default class CompositeYView extends ContrailChartsView {
           container: this._container,
         })
         component.d3.classed(this.selectorClass('node'), true)
+          .attr('clip-path', `url(#${this.id}-${this.selectors.plot})`)
         component.el.__data__ = {key: child.key}
       }
 

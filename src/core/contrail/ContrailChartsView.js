@@ -114,7 +114,7 @@ export default class ContrailChartsView extends ContrailView {
   }
 
   get innerWidth () {
-    const margin = this.config.get('margin')
+    const margin = this.config.margin
     return this.width - margin.left - margin.right
   }
 
@@ -123,7 +123,7 @@ export default class ContrailChartsView extends ContrailView {
   }
 
   get innerHeight () {
-    const margin = this.config.get('margin')
+    const margin = this.config.margin
     return this.height - margin.top - margin.bottom
   }
   /**
@@ -185,7 +185,7 @@ export default class ContrailChartsView extends ContrailView {
           //.sort()
           //.datum(null)
       }
-      const margin = this.config.get('margin')
+      const margin = this.config.margin
       this.d3.attr('transform', `translate(${margin.left},${margin.top})`)
     } else {
       // non vector components
