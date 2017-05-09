@@ -30,34 +30,47 @@
 
     .control-panel-item {
       position: relative;
-      width: 32px;
-      height: 32px;
-      margin: 2px;
+      display: inline-block;
+      vertical-align: top;
+      margin: 2px 4px;
 
       button {
-        width: 100%;
-        height: 32px;
-        font-size: 14px;
-        background-color: $p_item_bg_color;
-        padding: 5px;
+        width: 36px;
+        height: 36px;
+        line-height: 39px;
+        text-align: center;
+        font-size: 19px;
+        /* background-color: $p_item_bg_color; */
+        background-color: rgba(0,0,0,.08);
+        /* padding: 5px;
         border-width: $p_item_border_width;
         border-style: $p_item_border_style;
         border-color: $p_item_border_color;
-        color: $p_item_fg_color;
+        color: $p_item_fg_color; */
         transition: background-color .25s;
+        border-radius: 50%;
+        color: rgba(0,0,0,.5);
+        border: none;
+        box-sizing: border-box;
+        
+        
         &:hover {
-          background-color: $p_item_hovered_bg_color;
+          /* background-color: $p_item_hovered_bg_color; */
+          background-color: rgba(0,0,0,.65);
+          color: #fff;
         }
       }
       .opener {
         position: absolute;
         display: block;
-        left: 2px;
-        bottom: 2px;
+        left: 50%;
+        bottom: 4px;
         width: 0;
         height: 0;
-        border-bottom: 5px solid $ashGrey;
-        border-right: 5px solid transparent;
+        border-bottom: 4px solid $ashGrey;
+        border-right: 4px solid transparent;
+        transform: rotate(-45deg);
+        margin-left: -2px;
       }
     }
   }
@@ -70,19 +83,33 @@
     border-style: $p_panel_border_style;
     border-color: $p_panel_border_color;
     background-color: $p_panel_bg_color;
+    padding: 0;
+    box-shadow: 0 2px 7px rgba(0,0,0,.1);
+    min-height: inherit;
+    width: auto;
 
     .head {
-      padding: 5px 10px;
-      background-color: $p_panel_header_bg_color;
+      padding: 15px 25px;
+      /* background-color: $p_panel_header_bg_color; */
       color: $p_panel_header_fg_color;
       font-size: 0;
+      border-bottom: 1px solid rgba(0,0,0,.065);
+      text-align: center;
 
       > * {
         font-size: $p_panel_popup_header_font_size;
       }
+      
+      .title {
+          font-size: 13px;
+          color: rgba(0,0,0,.35);
+          font-weight: 700;
+      }
 
       .head-icon {
         margin-right: 10px;
+        font-size: 14px;
+        color: rgba(0,0,0,.35);
       }
 
       .close {
@@ -90,8 +117,10 @@
         cursor: pointer;
       }
     }
+    
+    
     .body {
-      padding: 10px;
+      padding: 16px 25px;
       color: $p_panel_popup_body_fg_color;
       font-size: $p_panel_popup_body_font_size;
     }
