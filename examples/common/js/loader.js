@@ -100,8 +100,17 @@ const allExamples = {
   }
 }
 
-$('#side-menu').metisMenu()
-const $content = $('.content')
+$('.nav-sidebar').metisMenu()
+$('.mobilebar .navbar-toggle').on('click', e => {
+  e.preventDefault()
+  $('body').addClass('showmenu')
+})
+$('.overlay').on('click', e => {
+  e.preventDefault()
+  $('body').removeClass('showmenu')
+})
+
+const $content = $('.crailui__content')
 const $chartBox = $('#chartBox')
 
 _.forEach(allExamples, (examples, chartCategory) => {
