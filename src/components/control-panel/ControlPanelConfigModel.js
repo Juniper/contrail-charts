@@ -8,23 +8,23 @@ export default class ControlPanelConfigModel extends ContrailChartsConfigModel {
     return {
       Refresh: {
         title: 'Refresh chart',
-        icon: 'fa fa-refresh',
+        icon: 'icon-refresh',
       },
       Freeze: {
         title: 'Stop Live Update',
-        icon: 'fa fa-stop',
+        icon: 'icon-stop',
       },
       Unfreeze: {
         title: 'Start Live Update',
-        icon: 'fa fa-play',
+        icon: 'icon-play',
       },
       ColorPicker: {
         title: 'Select color for serie',
-        icon: 'fa fa-eyedropper',
+        icon: 'icon-color',
       },
       Filter: {
         title: 'Select serie to show',
-        icon: 'fa fa-filter',
+        icon: 'icon-eye',
       }
     }
   }
