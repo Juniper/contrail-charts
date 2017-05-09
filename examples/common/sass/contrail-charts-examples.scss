@@ -1278,6 +1278,57 @@ a, .btn {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-charttype-area:before {
+  content: "\e915";
+}
+.icon-charttype-pie:before {
+  content: "\e916";
+}
+.icon-stop:before {
+  content: "\e914";
+}
+.icon-color:before {
+  content: "\e90f";
+}
+.icon-color-alt:before {
+  content: "\e910";
+}
+.icon-eye:before {
+  content: "\e911";
+}
+.icon-pause:before {
+  content: "\e912";
+}
+.icon-play:before {
+  content: "\e913";
+}
+.icon-charttype-bar:before {
+  content: "\e908";
+}
+.icon-charttype-line:before {
+  content: "\e909";
+}
+.icon-charttype-stacked:before {
+  content: "\e90a";
+}
+.icon-dots:before {
+  content: "\e90b";
+}
+.icon-minus:before {
+  content: "\e90c";
+}
+.icon-plus:before {
+  content: "\e90d";
+}
+.icon-question:before {
+  content: "\e90e";
+}
+.icon-edit:before {
+  content: "\e906";
+}
+.icon-refresh:before {
+  content: "\e907";
+}
 .icon-chart-advanced:before {
   content: "\e900";
 }
@@ -1295,7 +1346,7 @@ a, .btn {
 }
 .icon-chart-radial:before {
   content: "\e905";
-}
+} 
  
 
 
