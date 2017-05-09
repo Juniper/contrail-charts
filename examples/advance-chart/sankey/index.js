@@ -11,7 +11,6 @@ const chartConfig = {
     id: 'sankey-chart-component',
     type: 'Sankey',
     config: {
-      marginInner: 10,
       marginLeft: 80,
       marginRight: 80,
       marginBottom: 40,
