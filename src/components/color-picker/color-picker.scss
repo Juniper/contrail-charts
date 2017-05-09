@@ -1,31 +1,68 @@
 .color-picker.cc-component {
 	position: relative;
+        
 
 	.color-select {
 		display: block;
-		width: 150px;
-		height: 25px;
-		line-height: 25px;
-		text-align: center;
-		margin: 0 4px 4px 0;
+		padding: 8px 25px;
+                padding-left: 45px;
+		line-height: 1em;
+                border-radius: 25px;
+		text-align: left;
+		margin: 4px 0;
+                background-color: rgba(0,0,0,.05);
+                transition: .2s all;
+                position: relative;
+                
+                &:hover {
+                    background-color: rgba(0,0,0,.1);
+                }
+                
+                &:after {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    right: 9px;
+                    top: 50%;
+                    width: 0;
+                    height: 0;
+                    border-bottom: 4px solid rgba(0,0,0,.25);
+                    border-right: 4px solid transparent;
+                    transform: rotate(-45deg);
+                    margin-top: -3px;
+                }
+                
+                .color-badge {
+                    width: 28px;
+                    height: 18px;
+                    display: inline-block;
+                    border-radius: 20px;
+                    position: absolute;
+                    left: 8px;
+                    top: 6px;
+                }
 
 		.label {
 			font-size: 14px;
 			font-weight: bold;
-			color: #fff;
+			color: #222;
+                        padding: 0;
 		}
 	}
 	.color-select:hover {
 		cursor: pointer;
 	}
 	.color-picker-palette {
-		width: 300px;
-		border: 1px solid #ddd;
+		width: 240px;
+		border: 1px solid rgba(0,0,0,.1);
 		position: absolute;
+                border-radius: 6px;
+                box-shadow: 0 2px 7px rgba(0,0,0,.1);
+                background-color: #fff;
 
 		.color-picker-palette-header {
-			padding: 5px 10px 5px 10px;
-			background-color: #ddd;
+			padding: 8px 14px;
+			border-bottom: 1px solid rgba(0,0,0,.065);
 
 			.color-picker-palette-title {
 				font-weight: bold;
@@ -36,15 +73,20 @@
 			}
 		}
 		.color-picker-palette-body {
-			padding: 10px;
-			background-color: #fff;
-
+			padding: 14px;
+			
 			.color-picker-palette-color {
 				display: inline-block;
+                                margin: 3px;
 				width: 32px;
 				height: 32px;
-				margin: 1px;
+                                border-radius: 50%;
 				cursor: pointer;
+                                transition: .2s all;
+                                
+                                &:hover {
+                                    box-shadow: 0 0 0 3px rgba(0,0,0,.06);
+                                }
 			}
 		}
 	}
