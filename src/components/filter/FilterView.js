@@ -4,12 +4,13 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ChartView from 'chart-view'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import _template from './filter.html'
 import './filter.scss'
 
 export default class FilterView extends ChartView {
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
 
   constructor (p) {
     super(p)

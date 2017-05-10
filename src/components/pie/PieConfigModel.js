@@ -33,8 +33,8 @@ export default class PieConfigModel extends ConfigModel {
   /**
    * @return Array of Objects with labels which serve as accessors for values
    */
-  getAccessors (dataProvider) {
+  getAccessors (dataModel) {
     const labelFormatter = this.get('serie').getLabel
-    return _.map(dataProvider.getLabels(labelFormatter), label => { return { label } })
+    return _.map(dataModel.getLabels(labelFormatter), label => { return { label } })
   }
 }

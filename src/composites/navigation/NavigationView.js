@@ -4,13 +4,14 @@
 import _ from 'lodash'
 import ChartView from 'chart-view'
 import Config from './NavigationConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import CompositeYView from 'composites/y/CompositeYView'
 import BrushView from 'components/brush/BrushView'
 
 export default class NavigationView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
 
   constructor (...args) {
     super(...args)

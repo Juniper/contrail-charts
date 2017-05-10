@@ -7,6 +7,7 @@ import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
 import ChartView from 'chart-view'
 import Config from './ScatterPlotConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
 import BucketView from 'helpers/bucket/BucketView'
@@ -14,7 +15,7 @@ import './scatter-plot.scss'
 
 export default class ScatterPlotView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
 
   constructor (...args) {
     super(...args)

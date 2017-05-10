@@ -6,12 +6,13 @@ import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ChartView from 'chart-view'
 import Config from './PieConfigModel'
+import Model from 'models/Serie'
 import actionman from 'core/Actionman'
 import './pie.scss'
 
 export default class PieView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'Serie' }
+  static get Model () { return Model }
 
   constructor (p = {}) {
     super(p)

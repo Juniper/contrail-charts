@@ -4,7 +4,6 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
-import * as Providers from 'providers'
 import ConfigModel from 'config-model'
 import actionman from 'core/Actionman'
 import ToggleFreeze from '../actions/ToggleFreeze'
@@ -23,10 +22,6 @@ export default class ChartView extends ContrailView {
     // TODO remove
     this.params = {}
 
-    const Provider = Providers[this.constructor.dataType + 'Provider']
-    if (Provider) {
-      if (p.model instanceof Provider) this.model = p.model
-      else this.model = new Provider(undefined, p.model)
     }
     this.setConfig(p.config)
     this._onResize = this._onResize.bind(this)

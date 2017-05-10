@@ -5,6 +5,7 @@ import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import ChartView from 'chart-view'
 import Config from './CompositeYConfigModel'
+import Model from 'models/DataFrame'
 import CompositeChart from 'helpers/CompositeChart'
 import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
@@ -16,7 +17,7 @@ import './y.scss'
  */
 export default class CompositeYView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
   static get Actions () { return {SelectColor, SelectAccessor, SelectChartType, Zoom} }
 
   constructor (...args) {

@@ -5,8 +5,8 @@ import _ from 'lodash'
 import ConfigModel from 'config-model'
 
 export default class LegendConfigModel extends ConfigModel {
-  getData (dataProvider) {
-    const accessors = this._parent.getAccessors(dataProvider)
+  getData (dataModel) {
+    const accessors = this._parent.getAccessors(dataModel)
     return _.map(accessors, accessor => {
       return {
         label: this.getLabel(undefined, accessor),

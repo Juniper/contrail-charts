@@ -11,12 +11,13 @@ import * as d3Scale from 'd3-scale'
 import {interpolatePath as d3InterpolatePath} from 'd3-interpolate-path'
 import ChartView from 'chart-view'
 import Config from './LineConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import './line.scss'
 
 export default class LineView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
 
   constructor (...args) {
     super(...args)

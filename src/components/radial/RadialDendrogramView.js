@@ -8,6 +8,7 @@ import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import ChartView from 'chart-view'
 import Config from './RadialDendrogramConfigModel'
+import Model from 'models/Serie'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
@@ -15,7 +16,7 @@ import './radial-dendrogram.scss'
 
 export default class RadialDendrogramView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'Serie' }
+  static get Model () { return Model }
   static get Actions () { return {SelectColor, SelectAccessor} }
 
   constructor (p) {

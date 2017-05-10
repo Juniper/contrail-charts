@@ -4,7 +4,6 @@
 import _ from 'lodash'
 import * as Components from 'components'
 import * as Composites from 'composites'
-import * as Providers from 'providers'
 /**
  * Creates a chart as a composition of components or other compositions
  */
@@ -20,22 +19,6 @@ export default class CompositeChart {
       .filter(c => c.model)
       .uniqBy(c => c.model)
       .each(c => c.setData(data))
-  }
-  /**
-   * Sets the configuration for this chart as a simple object.
-   * Instantiate the required views if they do not exist yet, set their configurations otherwise.
-   * Updating configuration to a rendered chart will trigger a ConfigModel change event that will cause the chart to be re-rendered.
-   * calling setConfig on already rendered chart will update the chart.
-   */
-  setConfig (config = {}) {
-    if (this._config) this.remove()
-    this._config = _.cloneDeep(config)
-
-    // if config specified create common provider for all components to prepare (format) data just once
-    if (config.provider && config.provider.type) {
-      const Provider = Providers[config.provider.type + 'Provider']
-      if (Provider) this._provider = new Provider(config.provider.config)
-    }
   }
   /**
    * Get component by id
@@ -56,21 +39,14 @@ export default class CompositeChart {
    * Initialize individual component
    * @param {String} type
    * @param {Object} config
-   * @param {Object} providerConfig
-   * @param {Provider} model optional for dependent components
+   * @param {Model} p.model optional for dependent components
    */
   add (p) {
     const {type, config} = p
     if (!_.isObject(config) || config.enable === false) return false
     const Component = Components[type + 'View'] || Composites[type + 'View']
-
-    // Share first initialized provider with all other components
-    //if (!this._provider) this._provider = model
-    //model = model || this._provider
-
     const component = new Component(p)
     this._components.push(component)
-
     return component
   }
 

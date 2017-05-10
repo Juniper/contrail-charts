@@ -7,12 +7,13 @@ import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import ChartView from 'chart-view'
 import Config from './AreaConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import './area.scss'
 
 export default class AreaView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
 
   constructor (...args) {
     super(...args)

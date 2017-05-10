@@ -8,11 +8,11 @@ describe('cc', function () {
     expect(cc).toBeDefined()
   })
 
-  it('cc has components, providers, helpers', function () {
+  it('cc has components, models, helpers', function () {
     expect(cc.components.TooltipConfigModel).toBeDefined()
     expect(cc.components.TooltipView).toBeDefined()
-    expect(cc.providers.SerieProvider).toBeDefined()
-    expect(cc.providers.DataFrameProvider).toBeDefined()
+    expect(cc.models.Serie).toBeDefined()
+    expect(cc.models.DataFrame).toBeDefined()
     expect(cc.composites.CompositeView).toBeDefined()
     expect(cc.composites.CompositeYConfigModel).toBeDefined()
     expect(cc.composites.CompositeYView).toBeDefined()

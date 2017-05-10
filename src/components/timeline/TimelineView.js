@@ -6,6 +6,7 @@ import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
 import ChartView from 'chart-view'
 import Config from './TimelineConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import Zoom from '../../actions/Zoom'
 import BrushView from 'components/brush/BrushView'
@@ -13,7 +14,7 @@ import './timeline.scss'
 
 export default class TimelineView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'DataFrame' }
+  static get Model () { return Model }
   static get Actions () { return {Zoom} }
 
   constructor (...args) {

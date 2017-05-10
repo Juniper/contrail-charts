@@ -6,12 +6,13 @@ import * as d3Selection from 'd3-selection'
 import * as d3Sankey from 'd3-sankey'
 import ChartView from 'chart-view'
 import Config from './SankeyConfigModel'
+import Model from 'models/Serie'
 import actionman from 'core/Actionman'
 import './sankey.scss'
 
 export default class SankeyView extends ChartView {
   static get Config () { return Config }
-  static get dataType () { return 'Serie' }
+  static get Model () { return Model }
 
   get tagName () { return 'g' }
   get className () { return 'sankey' }
