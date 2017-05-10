@@ -22,6 +22,11 @@ export default class ChartView extends ContrailView {
     // TODO remove
     this.params = {}
 
+    // override simple Backbone.View model set
+    const Model = this.constructor.Model
+    if (Model && (!this.model || !(this.model instanceof Model))) {
+      if (p.model instanceof Model) this.model = p.model
+      else this.model = new Model(undefined, p.model)
     }
     this.setConfig(p.config)
     this._onResize = this._onResize.bind(this)
@@ -128,7 +133,12 @@ export default class ChartView extends ContrailView {
     if (this.config.get('frozen')) return
     this.model.data = data
   }
-
+  /**
+   * Sets the configuration for this component as a simple object
+   * or already instantiated ConfigModel of corresponding type.
+   *
+   * Calling setConfig on already rendered chart will update the chart.
+   */
   setConfig (config = {}) {
     const Config = this.constructor.Config || ConfigModel
     if (Config) {

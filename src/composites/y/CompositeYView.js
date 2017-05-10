@@ -13,7 +13,7 @@ import Zoom from '../../actions/Zoom'
 import SelectChartType from './actions/SelectChartType'
 import './y.scss'
 /**
- * Creates composed chart with X and Y scales and compatible components like: Line, Area, StackedBar, etc
+ * Creates composited chart with X and Y axes and compatible components like: Line, Area, StackedBar, etc
  */
 export default class CompositeYView extends ChartView {
   static get Config () { return Config }

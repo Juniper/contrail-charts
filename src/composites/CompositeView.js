@@ -4,20 +4,27 @@
 import _ from 'lodash'
 import ChartView from 'chart-view'
 import CompositeChart from 'helpers/CompositeChart'
+import * as Models from 'models'
 import TitleView from 'helpers/title/TitleView'
 /**
- * This view enables creation of composed visualization out of multiple components
+ * This view enables creation of composited visualization out of multiple components
  */
 export default class CompositeView extends ChartView {
   setData (data) {
-    this._composite.setData(data)
+    this.composite.setData(data)
   }
   /**
    * As CompositeView doesn't render anything itself its id is used as container HTML element id
-   * while for all other components id of component is used as it's element id due to Backbone.View
+   * while for all other components id of component is used as its element id due to Backbone.View
    */
   setConfig (config) {
-    if (!this._composite) this._composite = new CompositeChart()
+    if (!this.composite) this.composite = new CompositeChart()
+
+    // if config specified create common model for all components to prepare (format) data just once
+    if (config.model && config.model.type) {
+      const Model = Models[config.model.type]
+      if (Model) this._model = new Model(config.model.config)
+    }
 
     // TODO any component should not access global DOM scope via document
     this._container = config.container || document.querySelector('#' + config.id)
@@ -37,29 +44,31 @@ export default class CompositeView extends ChartView {
     // TODO add ability to update / remove components in composition
 
     _.each(config.components, (component, index) => {
+      component.config.id = component.id
+      component.model = component.model || this._model
       // component id is used to find its container in template
       component.container = this._container.querySelector(`[component="${component.id}"]`) || this._container
-      component.config.id = component.id
       component.config.order = index
     })
+
     const [dependent, independent] = _.partition(config.components, c => c.config.sourceComponent)
-    _.each(independent, component => { this._composite.add(component) })
+    _.each(independent, component => { this.composite.add(component) })
     _.each(dependent, component => {
-      const sourceComponent = this._composite.get(component.config.sourceComponent)
+      const sourceComponent = this.composite.get(component.config.sourceComponent)
       // source component may be defined but disabled
       if (sourceComponent) {
         component.model = sourceComponent.model
-        const componentView = this._composite.add(component)
+        const componentView = this.composite.add(component)
         componentView.config.parent = sourceComponent.config
       }
     })
   }
 
   render (p) {
-    this._composite.render()
+    _.each(this.composite.components, component => component.render())
   }
 
   remove (p) {
-    this._composite.remove()
+    this.composite.remove()
   }
 }

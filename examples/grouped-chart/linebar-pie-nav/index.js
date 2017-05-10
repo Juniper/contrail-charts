@@ -40,6 +40,9 @@ let chart
 const config = {
   id: 'chartBox',
   template,
+  model: {
+    type: 'DataFrame',
+  },
   components: [{
     id: 'legend-panel-id',
     type: 'LegendPanel',
@@ -176,7 +179,7 @@ const config = {
   }, {
     id: 'pie-chart-id',
     type: 'Pie',
-    provider: {
+    model: {
       formatter: pieDataParser,
     },
     config: {
@@ -267,12 +270,12 @@ export default {
     chart.setData(data)
 
     // Update pie chart data on Navigation zoom
-    const navigation = chart.get('navigation-id')
+    const navigation = chart.composite.get('navigation-id')
     const zoom = navigation.actionman.get('Zoom')
-    const pieChart = chart.get('pie-chart-id')
+    const pie = chart.composite.get('pie-chart-id')
     zoom.on('fired', (componentIds, ranges) => {
       const data = navigation.model.filter('x', ranges['x'])
-      pieChart.model.data = data
+      pie.model.data = data
     })
   },
   remove: () => {

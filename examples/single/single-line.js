@@ -16,7 +16,6 @@ const data = fixture({
   },
 })
 
-// TODO add color to single line and change it on second setConfig
 let chart
 const container = document.querySelector('#chartBox')
 const config = {

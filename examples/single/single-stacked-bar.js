@@ -54,6 +54,7 @@ export default {
     }, 1000)
     setTimeout(() => {
       config.y[1].enabled = false
+      config.x.domain = [0, length]
       chart.setConfig(config)
     }, 2000)
     setTimeout(() => {

@@ -5,14 +5,19 @@ import _ from 'lodash'
 import * as Components from 'components'
 import * as Composites from 'composites'
 /**
- * Creates a chart as a composition of components or other compositions
+ * Components manager for composited components
  */
 export default class CompositeChart {
   constructor (p) {
     this._components = []
-    this.setConfig(p)
   }
 
+  get components () {
+    return this._components
+  }
+  /**
+   * Set data for all children components which have unique data models
+   */
   setData (data) {
     if (!_.isArray(data)) return
     _(this._components)
@@ -36,9 +41,9 @@ export default class CompositeChart {
     return _.filter(this._components, component => type.includes(component.type))
   }
   /**
-   * Initialize individual component
-   * @param {String} type
-   * @param {Object} config
+   * Add component
+   * @param {String} p.type
+   * @param {Object} p.config
    * @param {Model} p.model optional for dependent components
    */
   add (p) {
@@ -50,13 +55,6 @@ export default class CompositeChart {
     return component
   }
 
-  render () {
-    _.each(this._components, component => component.render())
-  }
-  /**
-   * Removes chart view and its components.
-   * All actions will be unregistered, individual components will be removed except the parent container.
-   */
   remove (id) {
     if (id) {
       const component = this.get(id)

@@ -133,6 +133,6 @@ export default class ScatterPlotView extends ChartView {
 
   _onBackgroundClick () {
     const accessor = this.config.get('x.accessor')
-    this.actionman.fire('Zoom', null, {[accessor]: this.model.getRangeFor(accessor, true)})
+    actionman.fire('Zoom', null, {[accessor]: this.model.getRangeFor(accessor, true)})
   }
 }
