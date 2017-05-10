@@ -10,21 +10,24 @@
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/json2.js"></script>
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
 	<script src="../node_modules/jasmine-core/lib/console/console.js"></script>
-	<!-- contrail-charts -->
+
+  <!--third-party libraries-->
 	<script src="../node_modules/jquery/dist/jquery.js"></script>
 	<script src="../node_modules/lodash/lodash.js"></script>
 	<script src="../node_modules/backbone/backbone.js"></script>
 	<script src="../node_modules/d3/build/d3.js"></script>
-	<link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+	<!-- contrail-charts -->
 	<script src="../build/contrail-charts.js"></script>
 	<link href="../build/contrail-charts.css" rel="stylesheet">
 </head>
 <body>
-<div id="chart" style="visibility: hidden;"></div>
-<script src="./specs/ChartView.js"></script>
-<script src="./specs/PieView.js"></script>
-<!-- Fix following specs
-<script src="./specs/XYChartView.js"></script>
--->
+  <!--default container-->
+  <div id="chart" style="visibility: hidden;"></div>
+
+  <script src="./specs/cc.js"></script>
+  <script src="./specs/core/ChartView.js"></script>
+  <script src="./specs/components/Line.js"></script>
+  <script src="./specs/components/Pie.js"></script>
 </body>
 </html>
