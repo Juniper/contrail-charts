@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import * as d3Axis from 'd3-axis'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './AxisConfigModel'
 import './axis.scss'
 
-export default class AxisView extends ContrailChartsView {
+export default class AxisView extends ChartView {
   static get Config () { return Config }
 
   constructor (...args) {

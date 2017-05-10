@@ -4,12 +4,12 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Sankey from 'd3-sankey'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './SankeyConfigModel'
 import actionman from 'core/Actionman'
 import './sankey.scss'
 
-export default class SankeyView extends ContrailChartsView {
+export default class SankeyView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'Serie' }
 

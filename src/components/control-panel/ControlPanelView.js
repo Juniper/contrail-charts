@@ -3,7 +3,7 @@
  */
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './ControlPanelConfigModel'
 import actionman from 'core/Actionman'
 import ToggleFreeze from '../../actions/ToggleFreeze'
@@ -12,7 +12,7 @@ import _panelTemplate from './panel.html'
 import _actionTemplate from './action.html'
 import './control-panel.scss'
 
-export default class ControlPanelView extends ContrailChartsView {
+export default class ControlPanelView extends ChartView {
   static get Config () { return Config }
   static get Actions () { return {ToggleFreeze} }
 

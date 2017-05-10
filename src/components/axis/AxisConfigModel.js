@@ -2,11 +2,11 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
 */
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 /**
  * Axis name is required to start with 'x' or 'y' to designate it's mathematical position
  */
-export default class AxisConfigModel extends ContrailChartsConfigModel {
+export default class AxisConfigModel extends ConfigModel {
   /**
    * @return {String} Visual direction of Axis
    */

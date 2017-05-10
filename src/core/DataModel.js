@@ -6,7 +6,7 @@ import ContrailModel from 'contrail-model'
 /**
  * Base data model.
  */
-export default class ContrailChartsDataModel extends ContrailModel {
+export default class DataModel extends ContrailModel {
   get defaults () {
     return {
       // The formatted data

@@ -3,12 +3,12 @@
  */
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import actionman from 'core/Actionman'
 import _template from './filter.html'
 import './filter.scss'
 
-export default class FilterView extends ContrailChartsView {
+export default class FilterView extends ChartView {
   static get dataType () { return 'DataFrame' }
 
   constructor (p) {

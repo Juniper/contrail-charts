@@ -3,9 +3,9 @@
  */
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 
-export default class NavigationConfigModel extends ContrailChartsConfigModel {
+export default class NavigationConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, {
       // Scale to transform values from percentage based selection to visual coordinates

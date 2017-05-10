@@ -3,9 +3,9 @@
  */
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 
-export default class TimelineConfigModel extends ContrailChartsConfigModel {
+export default class TimelineConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, {
       isSharedContainer: true,

@@ -4,11 +4,11 @@
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import * as d3Shape from 'd3-shape'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 import ScalableChart from 'helpers/scale/ScalableChart'
 
-export default class AreaConfigModel extends ContrailChartsConfigModel {
+export default class AreaConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults,
       ColoredChart.defaults,

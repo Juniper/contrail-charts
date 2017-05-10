@@ -8,10 +8,10 @@ import * as d3Ease from 'd3-ease'
 import actionman from 'core/Actionman'
 import {hashCode} from '../../core/Util'
 import Cluster from './Cluster'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import './bucket.scss'
 
-export default class BucketView extends ContrailChartsView {
+export default class BucketView extends ChartView {
   get tagName () { return 'g' }
 
   get zIndex () { return 2 }

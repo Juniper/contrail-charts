@@ -2,13 +2,13 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './NavigationConfigModel'
 import actionman from 'core/Actionman'
 import CompositeYView from 'composites/y/CompositeYView'
 import BrushView from 'components/brush/BrushView'
 
-export default class NavigationView extends ContrailChartsView {
+export default class NavigationView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 

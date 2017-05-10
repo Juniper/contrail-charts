@@ -4,12 +4,12 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './PieConfigModel'
 import actionman from 'core/Actionman'
 import './pie.scss'
 
-export default class PieView extends ContrailChartsView {
+export default class PieView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'Serie' }
 

@@ -5,14 +5,14 @@ import _ from 'lodash'
 import 'd3-transition'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './ScatterPlotConfigModel'
 import actionman from 'core/Actionman'
 import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
 import BucketView from 'helpers/bucket/BucketView'
 import './scatter-plot.scss'
 
-export default class ScatterPlotView extends ContrailChartsView {
+export default class ScatterPlotView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 

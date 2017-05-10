@@ -1,12 +1,12 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './LegendConfigModel'
 import _template from './legend.html'
 import './legend.scss'
 
-export default class LegendView extends ContrailChartsView {
+export default class LegendView extends ChartView {
   static get Config () { return Config }
 
   constructor (...args) {

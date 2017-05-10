@@ -4,7 +4,7 @@
 import $ from 'jquery'
 import _ from 'lodash'
 import * as d3Color from 'd3-color'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './LegendPanelConfigModel'
 import actionman from 'core/Actionman'
 import _template from './legend.html'
@@ -14,7 +14,7 @@ const _states = {
   EDIT: 'edit'
 }
 
-export default class LegendPanelView extends ContrailChartsView {
+export default class LegendPanelView extends ChartView {
   static get Config () { return Config }
 
   constructor (p) {

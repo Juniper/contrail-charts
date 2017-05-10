@@ -2,12 +2,12 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
 */
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 import ScalableChart from 'helpers/scale/ScalableChart'
 import AxisConfigModel from 'components/axis/AxisConfigModel'
 
-export default class CompositeYConfigModel extends ContrailChartsConfigModel {
+export default class CompositeYConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults,
       ColoredChart.defaults,

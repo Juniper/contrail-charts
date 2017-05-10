@@ -3,7 +3,7 @@
  */
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './CompositeYConfigModel'
 import CompositeChart from 'helpers/CompositeChart'
 import SelectColor from '../../actions/SelectColor'
@@ -14,7 +14,7 @@ import './y.scss'
 /**
  * Creates composed chart with X and Y scales and compatible components like: Line, Area, StackedBar, etc
  */
-export default class CompositeYView extends ContrailChartsView {
+export default class CompositeYView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
   static get Actions () { return {SelectColor, SelectAccessor, SelectChartType, Zoom} }

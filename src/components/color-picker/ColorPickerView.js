@@ -2,14 +2,14 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './ColorPickerConfigModel'
 import actionman from 'core/Actionman'
 import ToggleVisibility from '../../actions/ToggleVisibility'
 import _template from './color-picker.html'
 import './color-picker.scss'
 
-export default class ColorPickerView extends ContrailChartsView {
+export default class ColorPickerView extends ChartView {
   static get Config () { return Config }
   static get Actions () { return {ToggleVisibility} }
 

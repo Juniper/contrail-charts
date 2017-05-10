@@ -5,13 +5,13 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
 import * as Providers from 'providers'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import actionman from 'core/Actionman'
-import ToggleFreeze from '../../actions/ToggleFreeze'
+import ToggleFreeze from '../actions/ToggleFreeze'
 /**
  * View base class
  */
-export default class ContrailChartsView extends ContrailView {
+export default class ChartView extends ContrailView {
   /**
    * @param {HTMLElement} p.container must be specified
    */
@@ -135,9 +135,9 @@ export default class ContrailChartsView extends ContrailView {
   }
 
   setConfig (config = {}) {
-    const ConfigModel = this.constructor.Config || ContrailChartsConfigModel
-    if (ConfigModel) {
-      if (config instanceof ConfigModel) this.config = config
+    const Config = this.constructor.Config || ConfigModel
+    if (Config) {
+      if (config instanceof Config) this.config = config
       else {
         if (!this.config) {
           // clone config as this object may be changed outside and passed again
@@ -145,7 +145,7 @@ export default class ContrailChartsView extends ContrailView {
 
           // View and Config model share the same id - "Component id"
           config.id = this.id
-          this.config = new ConfigModel(config)
+          this.config = new Config(config)
           this.listenTo(this.config, 'change', this.render)
         } else {
           this.config.set(config)

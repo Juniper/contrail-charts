@@ -2,10 +2,10 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class PieConfigModel extends ContrailChartsConfigModel {
+export default class PieConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, ColoredChart.defaults, {
       // sets the position for shared svg container

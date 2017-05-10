@@ -1,13 +1,13 @@
 // Copyright (c) Juniper Networks, Inc. All rights reserved.
 
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './TooltipConfigModel'
 import ToggleVisibility from '../../actions/ToggleVisibility'
 import TitleView from 'helpers/title/TitleView'
 import _template from './tooltip.html'
 import './tooltip.scss'
 
-export default class TooltipView extends ContrailChartsView {
+export default class TooltipView extends ChartView {
   static get Config () { return Config }
   static get Actions () { return {ToggleVisibility} }
 

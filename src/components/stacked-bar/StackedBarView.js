@@ -4,14 +4,14 @@
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './StackedBarConfigModel'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
 import './bar.scss'
 
-export default class StackedBarView extends ContrailChartsView {
+export default class StackedBarView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
   static get Actions () { return {SelectColor, SelectAccessor} }

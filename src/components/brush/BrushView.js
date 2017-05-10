@@ -6,11 +6,11 @@ import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Brush from 'd3-brush'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './BrushConfigModel'
 import './brush.scss'
 
-export default class BrushView extends ContrailChartsView {
+export default class BrushView extends ChartView {
   static get Config () { return Config }
 
   constructor (...args) {

@@ -2,13 +2,13 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import CompositeChart from 'helpers/CompositeChart'
 import TitleView from 'helpers/title/TitleView'
 /**
  * This view enables creation of composed visualization out of multiple components
  */
-export default class CompositeView extends ContrailChartsView {
+export default class CompositeView extends ChartView {
   setData (data) {
     this._composite.setData(data)
   }

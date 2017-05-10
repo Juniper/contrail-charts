@@ -4,14 +4,14 @@
 import _ from 'lodash'
 import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './TimelineConfigModel'
 import actionman from 'core/Actionman'
 import Zoom from '../../actions/Zoom'
 import BrushView from 'components/brush/BrushView'
 import './timeline.scss'
 
-export default class TimelineView extends ContrailChartsView {
+export default class TimelineView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
   static get Actions () { return {Zoom} }

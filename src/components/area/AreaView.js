@@ -5,12 +5,12 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './AreaConfigModel'
 import actionman from 'core/Actionman'
 import './area.scss'
 
-export default class AreaView extends ContrailChartsView {
+export default class AreaView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 

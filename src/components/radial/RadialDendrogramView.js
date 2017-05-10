@@ -6,14 +6,14 @@ import * as d3Hierarchy from 'd3-hierarchy'
 import * as d3Scale from 'd3-scale'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './RadialDendrogramConfigModel'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
 import './radial-dendrogram.scss'
 
-export default class RadialDendrogramView extends ContrailChartsView {
+export default class RadialDendrogramView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'Serie' }
   static get Actions () { return {SelectColor, SelectAccessor} }

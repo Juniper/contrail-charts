@@ -2,9 +2,9 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 
-export default class LegendConfigModel extends ContrailChartsConfigModel {
+export default class LegendConfigModel extends ConfigModel {
   getData (dataProvider) {
     const accessors = this._parent.getAccessors(dataProvider)
     return _.map(accessors, accessor => {

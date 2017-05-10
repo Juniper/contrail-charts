@@ -5,10 +5,10 @@ import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
 import * as d3Ease from 'd3-ease'
 import * as d3Shape from 'd3-shape'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class SankeyConfigModel extends ContrailChartsConfigModel {
+export default class SankeyConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, ColoredChart.defaults, {
       /*

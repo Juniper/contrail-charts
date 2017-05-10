@@ -1,10 +1,10 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './StandaloneConfigModel'
 
-export default class StandaloneView extends ContrailChartsView {
+export default class StandaloneView extends ChartView {
   static get Config () { return Config }
 
   constructor (p) {

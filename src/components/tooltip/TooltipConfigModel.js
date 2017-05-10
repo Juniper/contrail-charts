@@ -2,9 +2,9 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 
-export default class TooltipConfigModel extends ContrailChartsConfigModel {
+export default class TooltipConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, {
       // Which tooltip ids to accept. If empty accept all.

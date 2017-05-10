@@ -3,13 +3,13 @@
  */
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import SendMessage from './actions/SendMessage'
 import ClearMessage from './actions/ClearMessage'
 import _template from './message.html'
 import './message.scss'
 
-export default class MessageView extends ContrailChartsView {
+export default class MessageView extends ChartView {
   static get Actions () { return {SendMessage, ClearMessage} }
   constructor (p) {
     super(p)

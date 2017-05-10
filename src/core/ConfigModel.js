@@ -4,7 +4,7 @@
 import _ from 'lodash'
 import ContrailModel from 'contrail-model'
 
-export default class ContrailChartsConfigModel extends ContrailModel {
+export default class ConfigModel extends ContrailModel {
   constructor (p = {}) {
     super(p)
     this.id = p.id

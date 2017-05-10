@@ -6,12 +6,12 @@ import * as d3Scale from 'd3-scale'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './GroupedBarConfigModel'
 import actionman from 'core/Actionman'
 import './bar.scss'
 
-export default class GroupedBarView extends ContrailChartsView {
+export default class GroupedBarView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 

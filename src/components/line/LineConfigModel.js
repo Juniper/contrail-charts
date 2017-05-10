@@ -3,10 +3,10 @@
 */
 import _ from 'lodash'
 import * as d3Shape from 'd3-shape'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ScalableChart from 'helpers/scale/ScalableChart'
 
-export default class LineConfigModel extends ContrailChartsConfigModel {
+export default class LineConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults,
       {

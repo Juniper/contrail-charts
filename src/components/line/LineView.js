@@ -9,12 +9,12 @@ import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
 import {interpolatePath as d3InterpolatePath} from 'd3-interpolate-path'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
 import Config from './LineConfigModel'
 import actionman from 'core/Actionman'
 import './line.scss'
 
-export default class LineView extends ContrailChartsView {
+export default class LineView extends ChartView {
   static get Config () { return Config }
   static get dataType () { return 'DataFrame' }
 

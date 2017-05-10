@@ -1,9 +1,9 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 
-export default class BrushConfigModel extends ContrailChartsConfigModel {
+export default class BrushConfigModel extends ConfigModel {
   /**
    * Brush selection in percentage [xMin%, xMax%]
    */
