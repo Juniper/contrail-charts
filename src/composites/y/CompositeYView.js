@@ -132,7 +132,10 @@ export default class CompositeYView extends ChartView {
       const type = this.config.getComponentType(child.accessors)
       config.id = `${this.id}-${child.key}`
       if (this.config.isMultiAccessor(type)) config.y = child.accessors
-      else config.y = child.accessors[0]
+      else {
+        config.y = child.accessors[0]
+        config.tooltip = child.accessors[0].tooltip
+      }
       if (type === 'ScatterPlot') config.size = child.accessors[0].size
 
       let component = this._composite.get(`${this.id}-${child.key}`)

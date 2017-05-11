@@ -90,6 +90,7 @@ export default class ScatterPlotView extends ChartView {
     const xAccessor = this.config.get('x.accessor')
     const accessor = this.config.get('y')
     const key = accessor.accessor
+    const sizeKey = this.config.get('size.accessor')
     const points = []
 
     _.map(this.model.data, d => {
@@ -99,12 +100,12 @@ export default class ScatterPlotView extends ChartView {
           id: x + '-' + key,
           x: this.config.xScale(x),
           y: this.config.yScale(_.get(d, key)),
-          area: this.config.sizeScale(_.get(d, accessor.sizeAccessor)),
+          area: this.config.sizeScale(_.get(d, sizeKey)),
           color: this.config.getColor(accessor.accessor, d),
           accessor: accessor,
           data: d,
-          halfWidth: Math.sqrt(this.config.sizeScale(_.get(d, accessor.sizeAccessor))) / 2,
-          halfHeight: Math.sqrt(this.config.sizeScale(_.get(d, accessor.sizeAccessor))) / 2,
+          halfWidth: Math.sqrt(this.config.sizeScale(_.get(d, sizeKey))) / 2,
+          halfHeight: Math.sqrt(this.config.sizeScale(_.get(d, sizeKey))) / 2,
         }
         points.push(obj)
       }
@@ -115,18 +116,17 @@ export default class ScatterPlotView extends ChartView {
   // Event handlers
 
   _onMouseover (d, el, event) {
-    if (d.accessor.tooltip) {
+    const tooltipId = this.config.get('tooltip')
+    if (tooltipId) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, {left, top}, d.data)
+      actionman.fire('ToggleVisibility', tooltipId, true, {left, top}, d.data)
     }
     el.classList.add(this.selectorClass('active'))
   }
 
   _onMouseout (d, el) {
-    const tooltipId = d && d.accessor ? d.accessor.tooltip : this.config.get('y.tooltip')
-    if (!_.isEmpty(tooltipId)) {
-      actionman.fire('ToggleVisibility', tooltipId, false)
-    }
+    const tooltipId = this.config.get('tooltip')
+    if (tooltipId) actionman.fire('ToggleVisibility', tooltipId, false)
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
   }

@@ -29,7 +29,6 @@ const config = {
   },
   size: {
     accessor: 'group.size1',
-    range: [undefined, 100],
   }
 }
 
