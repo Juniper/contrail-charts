@@ -101,6 +101,12 @@ export default class SankeyView extends ContrailChartsView {
       .nodes(this._nodes)
       .links(this._links)
       .layout(32)
+    // Fix node dimmensions if they are too small.
+    _.each(this._nodes, (node) => {
+      if (node.dy < 1) {
+        node.dy = 1
+      }
+    })
   }
 
   _render () {
