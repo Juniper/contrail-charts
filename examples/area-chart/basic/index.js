@@ -11,9 +11,9 @@ const data = fixture({
   length: length,
   data: {
     'group.t': {linear: true, range: [1475760930000, 1475800930000]},
-    'group.a': {random: true, range: [0, length * 3]},
-    b: {random: true, range: [0, -length * 5]},
-    c: {random: true, range: [0, -length * 5]},
+    'group.a': {linear: true, range: [0, length * 3]},
+    b: {linear: true, range: [0, -length * 5]},
+    c: {linear: true, range: [0, -length * 7]},
   },
 })
 data[5].a = -10

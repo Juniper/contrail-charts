@@ -32,7 +32,7 @@ export default class CompositeYView extends ChartView {
     return _.extend(super.selectors, {
       node: '.child',
       axis: '.axis',
-      plot: 'clipPath',
+      clip: 'clipPath',
     })
   }
 
@@ -41,14 +41,7 @@ export default class CompositeYView extends ChartView {
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
-
-    let plot = this.d3.select(this.selectors.plot)
-    if (plot.empty()) {
-      plot = this.d3.append(this.selectors.plot)
-        .attr('id', `${this.id}-${this.selectors.plot}`)
-        .append('rect')
-    }
-    plot.attr('width', this.innerWidth).attr('height', this.innerHeight)
+    this._renderClip()
 
     // force composite scale for children components
     const components = this._composite.getByType(_(this.config.yAccessors).map('chart').uniq().value())
@@ -73,6 +66,16 @@ export default class CompositeYView extends ChartView {
       const range = d3Array.extent(_(accessors).map(accessor => ranges[accessor.accessor]).flatten().value())
       if (range[0] !== range[1] || _.isNil(range[0])) this.config.set(`axes.${axisName}.domain`, range)
     })
+  }
+
+  _renderClip () {
+    let clip = this.d3.select(this.selectors.clip)
+    if (clip.empty()) {
+      clip = this.d3.append(this.selectors.clip)
+        .attr('id', `${this.id}-${this.selectors.clip}`)
+        .append('rect')
+    }
+    clip.attr('width', this.innerWidth).attr('height', this.innerHeight)
   }
   /**
    * Render axes and calculate inner margins for charts
@@ -122,6 +125,9 @@ export default class CompositeYView extends ChartView {
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
 
+    _.each(this.config.get('axes'), axis => {
+      this.config.set(`axes.${axis.name}.calculatedDomain`, [], {silent: true})
+    })
     children.enter().merge(children).each(child => {
       const type = this.config.getComponentType(child.accessors)
       config.id = `${this.id}-${child.key}`
@@ -139,14 +145,14 @@ export default class CompositeYView extends ChartView {
           container: this._container,
         })
         component.d3.classed(this.selectorClass('node'), true)
-          .attr('clip-path', `url(#${this.id}-${this.selectors.plot})`)
+          .attr('clip-path', `url(#${this.id}-${this.selectors.clip})`)
         component.el.__data__ = {key: child.key}
       }
 
       component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
       const axisName = this.config.getAxisName(child.accessors)
       let calculatedDomain = this.config.get(`axes.${axisName}.calculatedDomain`) || []
-      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('y.scale').domain()))
+      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.yScale.domain()))
       this.config.set(`axes.${axisName}.calculatedDomain`, calculatedDomain, {silent: true})
     })
 

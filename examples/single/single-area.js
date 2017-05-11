@@ -12,7 +12,7 @@ const data = fixture({
     'group.x': {linear: true, range: [0, length]},
     'group.a': {random: true, range: [0, length * 3]},
     b: {random: true, range: [0, (length - 1) * -5]},
-    c: {linear: true, range: [-5, (length - 1) * -5]},
+    c: {linear: true, range: [-5, (length - 1) * -7]},
   },
 })
 

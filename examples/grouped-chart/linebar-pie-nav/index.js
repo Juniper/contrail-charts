@@ -169,7 +169,7 @@ const config = {
       axes: {
         x: {
           formatter: formatter.extendedISOTime,
-          ticks: 10,
+          ticks: 4,
         },
         y: {
           ticks: 5,

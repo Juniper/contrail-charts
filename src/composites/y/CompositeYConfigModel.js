@@ -54,7 +54,7 @@ export default class CompositeYConfigModel extends ConfigModel {
   get children () {
     const accessorsByChart = _.groupBy(this.yAccessors, accessor => {
       const axis = this.getAxisName(accessor)
-      return `${axis}-${accessor.stack || (this.isMultiAccessor(accessor.chart) ? accessor.chart : accessor.accessor)}`
+      return `${axis}-${this.isMultiAccessor(accessor.chart) ? accessor.chart : accessor.accessor}`
     })
     return _.map(accessorsByChart, (accessors, key) => { return {key, accessors} })
   }
