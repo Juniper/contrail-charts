@@ -21,7 +21,7 @@ export default class CompositeChart {
   setData (data) {
     if (!_.isArray(data)) return
     _(this._components)
-      .filter(c => c.model)
+      .filter(c => c.isMaster)
       .uniqBy(c => c.model)
       .each(c => c.setData(data))
   }

@@ -46,12 +46,6 @@ export default class ConfigModel extends ContrailModel {
     this._computed = {}
     return _.extend(this._computed, JSON.parse(JSON.stringify(this.toJSON())))
   }
-  // TODO this listener should be removed on component remove
-  set parent (model) {
-    model.on('change', () => { this.trigger('change') })
-    this._parent = model
-    this.trigger('change')
-  }
   /**
    * @param {Object} data to extract value from
    * @param {Object} config on how to extract

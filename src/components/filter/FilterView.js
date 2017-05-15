@@ -36,6 +36,6 @@ export default class FilterView extends ChartView {
     d3Selection.event.stopPropagation()
     const accessorName = el.value
     const isChecked = el.checked
-    actionman.fire('SelectSerie', accessorName, isChecked)
+    actionman.fire('SelectKey', accessorName, isChecked)
   }
 }

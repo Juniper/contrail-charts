@@ -69,6 +69,11 @@ export default class ChartView extends ContrailView {
   set id (id) {
     // do nothing
   }
+  // Component is master by default
+  get isMaster () {
+    const isMaster = this.constructor.isMaster
+    return _.isNil(isMaster) ? true : isMaster
+  }
   /**
    * @returns {Object} d3.selection - Looks for svg container
    */
@@ -97,6 +102,7 @@ export default class ChartView extends ContrailView {
   }
   /**
    * One-time setter
+   * Container cannot be changed from outside
    */
   set container (el) {
     if (!this._container) this._container = el
@@ -198,13 +204,12 @@ export default class ChartView extends ContrailView {
     }
   }
 
-  show (container) {
-    if (this._container !== container) {
-      this._container = container
-      this.render()
-    }
-    this.d3.classed('hide', false)
+  show (data, config = {}) {
     this._visible = true
+    if (config.container) this._container = config.container
+    this.config.set(config, {silent: true})
+    this.setData(data)
+    this.d3.classed('hide', false)
   }
 
   hide () {

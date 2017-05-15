@@ -51,17 +51,7 @@ export default class CompositeView extends ChartView {
       component.config.order = index
     })
 
-    const [dependent, independent] = _.partition(config.components, c => c.config.sourceComponent)
-    _.each(independent, component => { this.composite.add(component) })
-    _.each(dependent, component => {
-      const sourceComponent = this.composite.get(component.config.sourceComponent)
-      // source component may be defined but disabled
-      if (sourceComponent) {
-        component.model = sourceComponent.model
-        const componentView = this.composite.add(component)
-        componentView.config.parent = sourceComponent.config
-      }
-    })
+    _.each(config.components, component => { this.composite.add(component) })
   }
 
   render (p) {
