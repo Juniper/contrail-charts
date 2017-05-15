@@ -5,13 +5,20 @@ import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
+import ChartView from 'chart-view'
+import Config from './BucketConfigModel'
 import actionman from 'core/Actionman'
+import ToggleVisibility from '../../actions/ToggleVisibility'
+import ClusterAction from './actions/Cluster'
 import {hashCode} from '../../core/Util'
 import Cluster from './Cluster'
-import ChartView from 'chart-view'
 import './bucket.scss'
 
 export default class BucketView extends ChartView {
+  static get Config () { return Config }
+  static get isMaster () { return false }
+  static get Actions () { return {ToggleVisibility, ClusterAction} }
+
   get tagName () { return 'g' }
 
   get zIndex () { return 2 }
@@ -32,10 +39,14 @@ export default class BucketView extends ChartView {
     })
   }
 
-  render (points) {
-    super.render()
-    this.d3.attr('clip-path', `url(#${this.config.get('clip')})`)
-    const data = this._bucketize(points)
+  render () {
+    if (!this.el.parentElement) {
+      super.render()
+      this.svg.delegate('click', 'svg', this._onBackgroundClick.bind(this))
+      this.d3.attr('clip-path', `url(#${this.config.get('clip')})`)
+    }
+
+    const data = this._cluster(this.model.data)
 
     const buckets = this.d3.selectAll(this.selectors.node)
       .data(data, d => d.id)
@@ -68,7 +79,7 @@ export default class BucketView extends ChartView {
     this._ticking = false
   }
 
-  _bucketize (data) {
+  _cluster (data) {
     const cluster = new Cluster()
     cluster
       .x(d => d.x)
@@ -83,6 +94,7 @@ export default class BucketView extends ChartView {
     this.config.scale
       .domain(d3Array.extent(buckets, d => d.area))
 
+    actionman.fire('Cluster', this.config.get('update'), cluster.overlapping())
     return buckets
   }
 
@@ -107,7 +119,8 @@ export default class BucketView extends ChartView {
     const tooltip = this.config.get('tooltip')
     if (tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ShowComponent', tooltip, {left, top}, d.bucket)
+      const config = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', tooltip, true, d.bucket, config)
     }
     el.classList.add(this.selectorClass('active'))
   }
@@ -127,10 +140,14 @@ export default class BucketView extends ChartView {
     const ranges = {}
     _(d.bucket).map('accessor.accessor')
       .uniq()
-      .push(this.config.xAccessor)
+      .push(this.config.get('xAccessor'))
       .each(accessor => {
         ranges[accessor] = d3Array.extent(_.map(d.bucket, 'data.' + accessor))
       })
-    actionman.fire('Zoom', this.config.updateComponents, ranges)
+    actionman.fire('Zoom', this.config.get('update'), ranges)
+  }
+
+  _onBackgroundClick () {
+    actionman.fire('Zoom')
   }
 }

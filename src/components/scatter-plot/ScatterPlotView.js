@@ -9,27 +9,14 @@ import ChartView from 'chart-view'
 import Config from './ScatterPlotConfigModel'
 import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
-import BucketConfigModel from 'helpers/bucket/BucketConfigModel'
-import BucketView from 'helpers/bucket/BucketView'
+import ClusterAction from '../bucket/actions/Cluster'
+import Zoom from '../../actions/Zoom'
 import './scatter-plot.scss'
 
 export default class ScatterPlotView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-
-  constructor (...args) {
-    super(...args)
-    const bucketConfig = this.config.get('bucket')
-    if (bucketConfig) {
-      this._bucketConfigModel = new BucketConfigModel(bucketConfig)
-      this._bucketConfigModel.set('clip', this._parent.clip)
-      this._bucketConfigModel.parent = this.config
-      this._bucketView = new BucketView({
-        config: this._bucketConfigModel,
-      })
-    }
-    this.listenTo(this.model, 'change', this.render)
-  }
+  static get Actions () { return {ClusterAction, Zoom} }
 
   get tagName () { return 'g' }
 
@@ -50,18 +37,22 @@ export default class ScatterPlotView extends ChartView {
     }
   }
 
+  get isWaiting () {
+    return this._waiting
+  }
+
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    // just render points if was waiting on cluster result
+    if (!this._waiting) {
+      this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+      this._data = this.prepareData()
 
-    const data = this._prepareData()
-    if (this._bucketView) {
-      this._bucketView.container = this._container
-      this._bucketView.render(data)
+      // do not render points before it is known what of them to skip due to bucketization
+      if (this._cluster()) return
     }
-
     let points = this.d3.selectAll(this.selectors.node)
-      .data(data, d => d.id)
+      .data(this._data, d => d.id)
 
     points.enter()
       .append('text')
@@ -69,8 +60,7 @@ export default class ScatterPlotView extends ChartView {
       .attr('transform', d => `translate(${d.x},${d.y})`)
       .merge(points)
       .html(d => d.accessor.shape)
-      // overlap attribute is set in Bucket View
-      .attr('fill', d => d.overlap ? 'none' : d.color)
+      .attr('fill', d => _.find(this._overlapping, {id: d.id}) ? 'none' : d.color)
       .style('font-size', d => Math.sqrt(d.area))
 
     // Update
@@ -79,14 +69,33 @@ export default class ScatterPlotView extends ChartView {
       .attr('transform', d => `translate(${d.x},${d.y})`)
 
     points.exit().remove()
-    if (this._bucketView) this.svg.delegate('click', 'svg', this._onBackgroundClick.bind(this))
 
     this._ticking = false
+  }
+
+  cluster (overlapping) {
+    this._overlapping = overlapping
+    this.render()
+    this._waiting = false
+  }
+
+  zoom (ranges) {
+    // TODO return if ranges didn't change
+    ranges || (ranges = {
+      [this.config.get('x.accessor')]: [],
+      [this.config.get('y.accessor')]: [],
+    })
+    _.each(ranges, (range, accessor) => {
+      const key = this.config.get('x.accessor') === accessor ? 'x' : 'y'
+      this.config.set(key + '.domain', range, {silent: true})
+    })
+
+    this.render()
   }
   /**
    * Create a flat data structure
    */
-  _prepareData () {
+  prepareData () {
     const xAccessor = this.config.get('x.accessor')
     const accessor = this.config.get('y')
     const key = accessor.accessor
@@ -113,13 +122,26 @@ export default class ScatterPlotView extends ChartView {
     return points
   }
 
+  _cluster () {
+    const bucketId = this.config.get('bucket')
+    if (!bucketId) return false
+    this._waiting = true
+
+    const config = {
+      update: this.id,
+      xAccessor: this.config.get('x.accessor'),
+    }
+    return actionman.fire('ToggleVisibility', bucketId, true, this._data, config)
+  }
+
   // Event handlers
 
   _onMouseover (d, el, event) {
     const tooltipId = this.config.get('tooltip')
     if (tooltipId) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ToggleVisibility', tooltipId, true, {left, top}, d.data)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', tooltipId, true, d.data, tooltipConfig)
     }
     el.classList.add(this.selectorClass('active'))
   }
@@ -129,10 +151,5 @@ export default class ScatterPlotView extends ChartView {
     if (tooltipId) actionman.fire('ToggleVisibility', tooltipId, false)
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
     els.classed('active', false)
-  }
-
-  _onBackgroundClick () {
-    const accessor = this.config.get('x.accessor')
-    actionman.fire('Zoom', null, {[accessor]: this.model.getRangeFor(accessor, true)})
   }
 }

@@ -7,9 +7,11 @@ import ChartView from 'chart-view'
 import Config from './CompositeYConfigModel'
 import Model from 'models/DataFrame'
 import CompositeChart from 'helpers/CompositeChart'
+import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
 import SelectAccessor from '../../actions/SelectAccessor'
 import Zoom from '../../actions/Zoom'
+import ClusterAction from '../../components/bucket/actions/Cluster'
 import SelectChartType from './actions/SelectChartType'
 import './y.scss'
 /**
@@ -18,7 +20,7 @@ import './y.scss'
 export default class CompositeYView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {SelectColor, SelectAccessor, SelectChartType, Zoom} }
+  static get Actions () { return {SelectColor, SelectKey, SelectChartType, Zoom, ClusterAction} }
 
   constructor (...args) {
     super(...args)
@@ -48,8 +50,10 @@ export default class CompositeYView extends ChartView {
       const componentAxis = this.config.getAxisName(component.config.get('y'))
       // TODO even without silent this will not trigger config 'change' because of nested attribute
       component.config.set('y.scale', this.config.get(`axes.${componentAxis}.scale`), {silent: true})
+      if (this.config.get('bucket') && component.type === 'ScatterPlot') return
       component.render()
     })
+    this._cluster()
 
     this._ticking = false
   }
@@ -60,11 +64,33 @@ export default class CompositeYView extends ChartView {
   zoom (ranges) {
     const accessorsByAxis = _.groupBy(this.config.yAccessors, 'axis')
     accessorsByAxis.x = [{accessor: this.config.get('plot.x.accessor')}]
+
     _.each(accessorsByAxis, (accessors, axisName) => {
-      if (_.isEmpty(_.filter(accessors, a => ranges[a.accessor]))) return
-      const range = d3Array.extent(_(accessors).map(accessor => ranges[accessor.accessor]).flatten().value())
-      if (range[0] !== range[1] || _.isNil(range[0])) this.config.set(`axes.${axisName}.domain`, range)
+      // change domains only for specified accessors or
+      // if no ranges specified - reset all
+      if (_.isEmpty(_.filter(accessors, a => !ranges || ranges[a.accessor]))) return
+
+      // combine ranges of different accessors on the same axis
+      const range = d3Array.extent(_(accessors).map(accessor => {
+        return ranges ? ranges[accessor.accessor] : []
+      }).flatten().value())
+
+      // Skip equal start-end ranges except they are "undefined"
+      console.log(range);
+      if (range[0] !== range[1] || _.isNil(range[0])) {
+        this.config.set(`axes.${axisName}.domain`, range, {silent: true})
+      }
     })
+
+    this.render()
+  }
+  /**
+   * React on "Cluster" action fired
+   */
+  cluster (overlapping) {
+    this._overlapping = overlapping
+    const scatterPlots = this._composite.getByType('ScatterPlot')
+    _.each(scatterPlots, component => component.cluster(overlapping))
   }
 
   _renderClip () {
@@ -162,4 +188,30 @@ export default class CompositeYView extends ChartView {
       this._composite.remove(`${this.id}-${child.key}`)
     })
   }
+  /**
+   * If bucket is specified for this component perform scatterplot data bundling for Bucket
+   */
+  _cluster () {
+    const bucketId = this.config.get('bucket')
+    if (!bucketId) return
+    const points = []
+
+    const scatterPlots = this._composite.getByType('ScatterPlot')
+    _.each(scatterPlots, component => {
+      // TODO performance optimization: cluster only visible points
+      points.push(...component.prepareData())
+    })
+
+    const config = {
+      clip: `${this.id}-${this.selectors.clip}`,
+      margin: this.config.margin,
+      update: this.id,
+      xAccessor: this.config.get('plot.x.accessor'),
+    }
+    // TODO performance optimization: do not calculate cluster on Zoom action if start-end distance didn't change
+    actionman.fire('ToggleVisibility', this.config.get('bucket'), true, points, config)
+  }
+
+  // Event handlers
+
 }

@@ -35,6 +35,7 @@ const config = {
     id: 'multishape-bubble-chart',
     type: 'CompositeY',
     config: {
+      bucket: 'bucket-id',
       margin: {
         right: 60,
       },
@@ -100,11 +101,6 @@ const config = {
           label: 'Y value of Square and Star',
         }
       },
-      bucket: {
-        range: [400, 600],
-        shape: bubbleShapes.circleFill,
-        tooltip: 'tooltip-bucket',
-      },
     }
   }, {
     id: 'tooltip-id',
@@ -137,6 +133,14 @@ const config = {
           valueFormatter: formatter.toInteger,
         }
       ]
+    }
+  }, {
+    id: 'bucket-id',
+    type: 'Bucket',
+    config: {
+      range: [400, 600],
+      shape: bubbleShapes.circleFill,
+      tooltip: 'tooltip-bucket',
     }
   }, {
     id: 'tooltip-bucket',
