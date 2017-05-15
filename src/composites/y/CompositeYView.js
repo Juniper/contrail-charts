@@ -23,7 +23,6 @@ export default class CompositeYView extends ChartView {
   constructor (...args) {
     super(...args)
     this._composite = new CompositeChart()
-    this.listenTo(this.model, 'change', this.render)
   }
 
   get tagName () { return 'g' }

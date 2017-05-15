@@ -14,11 +14,6 @@ export default class PieView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
 
-  constructor (p = {}) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get tagName () { return 'g' }
   /**
    * follow same naming convention for all charts

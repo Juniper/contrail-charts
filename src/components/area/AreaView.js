@@ -15,11 +15,6 @@ export default class AreaView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
 
-  constructor (...args) {
-    super(...args)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get tagName () { return 'g' }
 
   get zIndex () { return 2 }

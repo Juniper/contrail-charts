@@ -5,6 +5,7 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
 import ConfigModel from 'config-model'
+import DataModel from 'models/Data'
 import actionman from 'core/Actionman'
 import ToggleFreeze from '../actions/ToggleFreeze'
 /**
@@ -23,8 +24,8 @@ export default class ChartView extends ContrailView {
     this.params = {}
 
     // override simple Backbone.View model set
-    const Model = this.constructor.Model
-    if (Model && (!this.model || !(this.model instanceof Model))) {
+    const Model = this.constructor.Model || DataModel
+    if (!this.model || !(this.model instanceof Model)) {
       if (p.model instanceof Model) this.model = p.model
       else this.model = new Model(undefined, p.model)
     }
@@ -141,20 +142,18 @@ export default class ChartView extends ContrailView {
    */
   setConfig (config = {}) {
     const Config = this.constructor.Config || ConfigModel
-    if (Config) {
-      if (config instanceof Config) this.config = config
-      else {
-        if (!this.config) {
-          // clone config as this object may be changed outside and passed again
-          config = _.cloneDeep(config)
+    if (config instanceof Config) this.config = config
+    else {
+      if (!this.config) {
+        // clone config as this object may be changed outside and passed again
+        config = _.cloneDeep(config)
 
-          // View and Config model share the same id - "Component id"
-          config.id = this.id
-          this.config = new Config(config)
-          this.listenTo(this.config, 'change', this.render)
-        } else {
-          this.config.set(config)
-        }
+        // View and Config model share the same id - "Component id"
+        config.id = this.id
+        this.config = new Config(config)
+        if (!this.config.get('frozen')) this.listenTo(this.config, 'change', this.render)
+      } else {
+        this.config.set(config)
       }
     }
   }

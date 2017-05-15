@@ -12,11 +12,6 @@ import './filter.scss'
 export default class FilterView extends ChartView {
   static get Model () { return Model }
 
-  constructor (p) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get selectors () {
     return _.extend({}, super.selectors, {
       item: '.filter-item-input',

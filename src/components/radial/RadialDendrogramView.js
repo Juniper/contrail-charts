@@ -19,10 +19,6 @@ export default class RadialDendrogramView extends ChartView {
   static get Model () { return Model }
   static get Actions () { return {SelectColor, SelectAccessor} }
 
-  constructor (p) {
-    super(p)
-    this.listenTo(this.model, 'change', this._onDataModelChange)
-  }
 
   get tagName () { return 'g' }
 

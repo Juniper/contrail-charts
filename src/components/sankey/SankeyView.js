@@ -24,11 +24,6 @@ export default class SankeyView extends ChartView {
     }
   }
 
-  constructor (p = {}) {
-    super(p)
-    this.listenTo(this.model, 'change', this._onDataModelChange)
-  }
-
   render () {
     this.resetParams()
     this._calculateDimensions()
@@ -169,10 +164,6 @@ export default class SankeyView extends ChartView {
   }
 
   // Event handlers
-
-  _onDataModelChange () {
-    this.render()
-  }
 
   _onConfigModelChange () {
     this.render()
