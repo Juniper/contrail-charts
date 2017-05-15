@@ -19,6 +19,7 @@ export default class CompositeYConfigModel extends ConfigModel {
           right: 15,
           label: 15,
         },
+        isPrimary: true,
         isSharedContainer: true,
 
         // default chart type to plot

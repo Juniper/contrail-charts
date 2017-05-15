@@ -12,7 +12,6 @@ export default class SankeyConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, ColoredChart.defaults, {
       /*
-      isPrimary: true,
       // by default will use common shared container under the parent
       isSharedContainer: true,
       */

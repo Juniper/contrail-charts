@@ -248,7 +248,7 @@ export default class ChartView extends ContrailView {
       this._insertSorted(wrapper)
     }
     const wrapperPosition = this.svg.node().parentNode.dataset.order
-    if (this.params.isPrimary && wrapperPosition !== this.config.get('order')) {
+    if (this.config.get('isPrimary') && wrapperPosition !== this.config.get('order')) {
       const wrapper = this.svg.node().parentNode
       wrapper.remove() // detach
       this._insertSorted(wrapper)
@@ -264,7 +264,7 @@ export default class ChartView extends ContrailView {
   _insertSorted (el) {
     if (el.parentElement === this._container) return
 
-    if (!this.config.get('isSharedContainer') || this.params.isPrimary) {
+    if (!this.config.get('isSharedContainer') || this.config.get('isPrimary')) {
       el.dataset['order'] = this.config.get('order')
     }
     el.classList.add(this.selectorClass('component'))
