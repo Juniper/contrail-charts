@@ -47,21 +47,15 @@ const config = {
     id: 'legend-panel-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-chart-id',
-      editable: {
-        colorSelector: false,
-        chartSelector: false
-      },
-      placement: 'horizontal',
-      filter: true,
     },
   }, {
     id: 'compositey-chart-id',
     type: 'CompositeY',
     config: {
-      height: 300,
+      legend: 'legend-panel-id',
       crosshair: 'crosshair-id',
-      possibleChartTypes: {
+      height: 300,
+      chartTypes: {
         y1: ['GroupedBar', 'Line'],
         y2: ['GroupedBar', 'Line']
       },
@@ -92,7 +86,7 @@ const config = {
         y: {
           ticks: 5,
         }
-      }
+      },
     }
   }, {
     id: 'crosshair-id',
@@ -138,20 +132,14 @@ const config = {
     id: 'legend-panel-id2',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-chart-id2',
-      editable: {
-        colorSelector: false,
-        chartSelector: false
-      },
-      placement: 'horizontal',
-      filter: true,
     },
   }, {
     type: 'CompositeY',
     id: 'compositey-chart-id2',
     config: {
+      legend: 'legend-panel-id2',
       height: 300,
-      possibleChartTypes: ['GroupedBar', 'Line'],
+      chartTypes: ['GroupedBar', 'Line'],
       plot: {
         x: {
           accessor: 'x',
@@ -174,7 +162,7 @@ const config = {
         y: {
           ticks: 5,
         }
-      }
+      },
     },
   }, {
     id: 'pie-chart-id',
@@ -183,6 +171,7 @@ const config = {
       formatter: pieDataParser,
     },
     config: {
+      legend: 'legend-pie',
       margin: {
         left: 60,
       },
@@ -226,7 +215,6 @@ const config = {
     id: 'legend-pie',
     type: 'Legend',
     config: {
-      sourceComponent: 'pie-chart-id',
     },
   }, {
     id: 'navigation-id',

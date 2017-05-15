@@ -11,14 +11,13 @@ import Config from './RadialDendrogramConfigModel'
 import Model from 'models/Serie'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
-import SelectAccessor from '../../actions/SelectAccessor'
+import SelectKey from '../../actions/SelectKey'
 import './radial-dendrogram.scss'
 
 export default class RadialDendrogramView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {SelectColor, SelectAccessor} }
-
+  static get Actions () { return {SelectColor, SelectKey} }
 
   get tagName () { return 'g' }
 
@@ -51,6 +50,7 @@ export default class RadialDendrogramView extends ChartView {
     this._prepareHierarchy()
     super.render()
     this._render()
+    this._showLegend()
     this._ticking = false
   }
 
@@ -501,11 +501,13 @@ export default class RadialDendrogramView extends ChartView {
     }
   }
 
-  // Event handlers
-
-  _onDataModelChange () {
-    this.render()
+  _showLegend () {
+    const legendId = this.config.get('legend')
+    if (!legendId) return
+    actionman.fire('ToggleVisibility', legendId, true, this.config.legendData, this.config.legendConfig)
   }
+
+  // Event handlers
 
   _onConfigModelChange () {
     this.render()

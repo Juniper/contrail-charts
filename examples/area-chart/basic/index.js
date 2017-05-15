@@ -23,25 +23,19 @@ const config = {
   id: 'chartBox',
   title: 'Area Chart',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-id',
       editable: {
-        colorSelector: true,
+        color: true,
       },
-      placement: 'horizontal',
-      filter: true,
     },
   }, {
     id: 'compositey-id',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       crosshair: 'crosshair-id',
+      legend: 'legend-id',
       plot: {
         x: {
           accessor: 'group.t',
@@ -79,7 +73,7 @@ const config = {
         y: {
           ticks: 10,
         }
-      }
+      },
     }
   }, {
     id: 'crosshair-id',

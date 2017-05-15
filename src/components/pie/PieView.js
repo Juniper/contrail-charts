@@ -66,7 +66,24 @@ export default class PieView extends ChartView {
 
     sectors.exit().remove()
 
+    this._showLegend()
     this._ticking = false
+  }
+  /**
+   * Prepare data for legend component if any
+   */
+  _showLegend () {
+    const legendId = this.config.get('legend')
+    if (!legendId) return
+
+    const serieConfig = this.config.get('serie')
+    const data = _.map(this.model.data, serie => {
+      return {
+        label: this.config.getLabel(serie, serieConfig),
+        color: this.config.getColor(serie),
+      }
+    })
+    actionman.fire('ToggleVisibility', legendId, true, data)
   }
 
   // Event handlers

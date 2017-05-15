@@ -158,7 +158,7 @@ export default class CompositeYConfigModel extends ConfigModel {
     this.trigger('change')
   }
 
-  setAccessor (accessorName, isEnabled) {
+  setKey (accessorName, isEnabled) {
     const accessor = _.find(this.accessors, a => a.accessor === accessorName)
     if (!accessor) return
     accessor.disabled = !isEnabled

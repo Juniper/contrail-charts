@@ -24,17 +24,18 @@ let chart
 const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'multishape-bubble-chart',
       editable: {
-        colorSelector: true,
+        color: true,
       },
     },
   }, {
     id: 'multishape-bubble-chart',
     type: 'CompositeY',
     config: {
+      legend: 'legend-id',
       bucket: 'bucket-id',
       margin: {
         right: 60,

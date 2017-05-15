@@ -9,7 +9,7 @@ import Model from 'models/DataFrame'
 import CompositeChart from 'helpers/CompositeChart'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
-import SelectAccessor from '../../actions/SelectAccessor'
+import SelectKey from '../../actions/SelectKey'
 import Zoom from '../../actions/Zoom'
 import ClusterAction from '../../components/bucket/actions/Cluster'
 import SelectChartType from './actions/SelectChartType'
@@ -54,6 +54,7 @@ export default class CompositeYView extends ChartView {
       component.render()
     })
     this._cluster()
+    this._showLegend()
 
     this._ticking = false
   }
@@ -187,6 +188,27 @@ export default class CompositeYView extends ChartView {
     children.exit().each(child => {
       this._composite.remove(`${this.id}-${child.key}`)
     })
+  }
+  _showLegend () {
+    const legendId = this.config.get('legend')
+    if (!legendId) return
+
+    const config = {
+      colorScheme: this.config.get('colorScheme'),
+      chartTypes: this.config.get('chartTypes'),
+    }
+    const data = _.map(this.config.accessors, accessor => {
+      return {
+        key: accessor.accessor,
+        disabled: accessor.disabled,
+        label: this.config.getLabel(undefined, accessor),
+        color: this.config.getColor(accessor.accessor),
+        chartType: config.chartTypes ? accessor.chart : undefined,
+        axis: accessor.axis,
+        shape: accessor.shape,
+      }
+    })
+    actionman.fire('ToggleVisibility', legendId, true, data, config)
   }
   /**
    * If bucket is specified for this component perform scatterplot data bundling for Bucket

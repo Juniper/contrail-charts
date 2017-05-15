@@ -37,6 +37,8 @@ const config = {
     id: 'donut-chart-id',
     type: 'Pie',
     config: {
+      legend: 'legend-id',
+      tooltip: 'tooltip-id',
       type: 'donut',
       radius: 150,
       colorScale: d3Scale.scaleOrdinal(d3Scale.schemeCategory20c),
@@ -47,7 +49,6 @@ const config = {
         getLabel: getLabel,
         valueFormatter: formatter.commaGroupedInteger,
       },
-      tooltip: 'tooltip-id',
     },
   }, {
     id: 'tooltip-id',
@@ -65,12 +66,11 @@ const config = {
       ],
     },
   }, {
+    id: 'legend-id',
     type: 'Legend',
     config: {
-      sourceComponent: 'donut-chart-id',
     },
-  }
-  ]
+  }]
 }
 
 export default {

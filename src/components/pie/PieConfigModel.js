@@ -30,11 +30,4 @@ export default class PieConfigModel extends ConfigModel {
     accessor.color = datum => this.attributes.colorScale(accessor.label || this.getLabel(datum, this.attributes.serie))
     return ColoredChart.getColor(data, accessor)
   }
-  /**
-   * @return Array of Objects with labels which serve as accessors for values
-   */
-  getAccessors (dataModel) {
-    const labelFormatter = this.get('serie').getLabel
-    return _.map(dataModel.getLabels(labelFormatter), label => { return { label } })
-  }
 }

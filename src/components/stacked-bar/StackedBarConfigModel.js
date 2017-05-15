@@ -71,6 +71,6 @@ export default class StackedBarConfigModel extends ConfigModel {
   setColor () {
   }
   // TODO
-  setAccessor () {
+  setKey () {
   }
 }
