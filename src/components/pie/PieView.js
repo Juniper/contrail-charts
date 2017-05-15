@@ -104,8 +104,12 @@ export default class PieView extends ChartView {
   }
 
   _onMousemove (d, el, event) {
-    const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d.data)
+    const tooltipId = this.config.get('tooltip')
+    if (tooltipId) {
+      const [left, top] = d3Selection.mouse(this._container)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', tooltipId, true, d.data, tooltipConfig)
+    }
   }
 
   _onMouseout (d, el) {

@@ -99,7 +99,8 @@ export default class AreaView extends ChartView {
       const xAccessor = this.config.get('x.accessor')
       const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
-      actionman.fire('ToggleVisibility', tooltipId, true, {left, top}, dataItem)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', d.tooltip, true, dataItem, tooltipConfig)
     }
     el.classList.add(this.selectorClass('active'))
   }

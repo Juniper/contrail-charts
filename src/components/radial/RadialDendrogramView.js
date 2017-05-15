@@ -520,7 +520,8 @@ export default class RadialDendrogramView extends ChartView {
     })
     this._render()
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d.data)
+    const tooltipConfig = {left, top, container: this._container}
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d.data, tooltipConfig)
   }
 
   _onMouseout (d, el) {

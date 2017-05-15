@@ -39,11 +39,22 @@ export default class TooltipConfigModel extends ConfigModel {
     })
   }
 
-  get sourceId () {
-    return this._parent.id
+  get clip () {
+    return this.attributes.clip
   }
   // TODO
   get stickyMargin () {
     return {left: 0, right: 0}
+  }
+
+  get position () {
+    return {
+      left: this.attributes.left,
+      top: this.attributes.top,
+    }
+  }
+
+  get height () {
+    return this.attributes.height
   }
 }

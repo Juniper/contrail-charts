@@ -171,7 +171,8 @@ export default class SankeyView extends ChartView {
 
   _onMouseoverLink (d, el) {
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d)
+    const tooltipConfig = {left, top, container: this._container}
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d, tooltipConfig)
   }
 
   _onMouseoutLink (d, el) {

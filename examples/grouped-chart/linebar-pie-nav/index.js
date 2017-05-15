@@ -40,9 +40,6 @@ let chart
 const config = {
   id: 'chartBox',
   template,
-  model: {
-    type: 'DataFrame',
-  },
   components: [{
     id: 'legend-panel-id',
     type: 'LegendPanel',

@@ -131,7 +131,6 @@ const config = {
     id: 'sticky-tooltip',
     type: 'Tooltip',
     config: {
-      sourceComponent: 'compositey-id2',
       sticky: true,
       dataConfig: [
         {

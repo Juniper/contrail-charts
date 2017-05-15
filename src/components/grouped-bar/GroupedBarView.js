@@ -128,7 +128,8 @@ export default class GroupedBarView extends ChartView {
   _onMousemove (d, el, event) {
     if (d.accessor.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, {left, top}, d.data)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, d.data, tooltipConfig)
     }
     el.classList.add(this.selectorClass('active'))
   }

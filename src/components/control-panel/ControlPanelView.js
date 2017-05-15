@@ -74,7 +74,8 @@ export default class ControlPanelView extends ChartView {
     panel.innerHTML = _panelTemplate(config)
     const container = panel.querySelector(this.selectors.container)
     panel.classList.toggle('hide')
-    actionman.fire('ToggleVisibility', config.component, !this._opened, container)
+    // TODO pass current selection if any instead of null
+    actionman.fire('ToggleVisibility', config.component, !this._opened, null, {container})
     this._opened = !this._opened
   }
 
