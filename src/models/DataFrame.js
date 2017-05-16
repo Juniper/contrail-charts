@@ -3,19 +3,18 @@
  */
 import _ from 'lodash'
 import * as d3Array from 'd3-array'
-import Events from 'contrail-events'
+import DataModel from './Data'
 /**
  * Data preparation
  */
-export default class DataFrameProvider {
-  constructor (data, config) {
-    this.data = data
-    this.config = config
+export default class DataFrameModel extends DataModel {
+  constructor (...args) {
+    super(...args)
     this._ranges = {}
   }
 
   get data () {
-    return this._data
+    return super.data
   }
 
   set data (data) {
@@ -23,15 +22,9 @@ export default class DataFrameProvider {
     this._ranges = {}
     this.trigger('change')
   }
-
-  set config ({formatter} = {}) {
-    if (!formatter) return
-    this._formatter = formatter
-    this.trigger('change')
-  }
-
-  parse (data) {
-    return _.isFunction(this._formatter) ? this._formatter(data) : data
+  // TODO loop through all data and find all accessors
+  get accessors () {
+    return _.keys(this._data[0])
   }
   /**
    * Calculate and cache range of a serie
@@ -93,5 +86,3 @@ export default class DataFrameProvider {
     })
   }
 }
-// TODO replace with class extends syntax
-_.extend(DataFrameProvider.prototype, Events)

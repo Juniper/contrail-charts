@@ -14,6 +14,7 @@ import stackedBar from '../../linebar-chart/stacked-bar-chart'
 import groupedBar from '../../linebar-chart/grouped-bar-chart'
 import liveData from '../../linebar-chart/live'
 // Scatter
+import scatterPlotBuckets from '../../bubble-chart/bucketization'
 import shapes from '../../bubble-chart/multiple-shapes'
 // Radial
 import pieChart from '../../radial-chart/pie'
@@ -71,6 +72,9 @@ const allExamples = {
     }
   },
   'bubble': {
+    'Buckets': {
+      view: scatterPlotBuckets,
+    },
     'Shapes': {
       view: shapes,
     }

@@ -9,20 +9,18 @@ let chart
 const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'dendrogram-chart-id',
       editable: {
-        colorSelector: true,
-        chartSelector: false
+        color: true,
       },
-      placement: 'horizontal',
-      filter: true
     }
   }, {
     id: 'dendrogram-chart-id',
     type: 'RadialDendrogram',
     config: {
+      legend: 'legend-id',
       parentSeparation: 1.0,
       parentSeparationShrinkFactor: 0.05,
       parentSeparationDepthThreshold: 4,

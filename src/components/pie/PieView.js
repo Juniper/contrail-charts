@@ -14,11 +14,6 @@ export default class PieView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
 
-  constructor (p = {}) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get tagName () { return 'g' }
   /**
    * follow same naming convention for all charts
@@ -71,7 +66,24 @@ export default class PieView extends ChartView {
 
     sectors.exit().remove()
 
+    this._showLegend()
     this._ticking = false
+  }
+  /**
+   * Prepare data for legend component if any
+   */
+  _showLegend () {
+    const legendId = this.config.get('legend')
+    if (!legendId) return
+
+    const serieConfig = this.config.get('serie')
+    const data = _.map(this.model.data, serie => {
+      return {
+        label: this.config.getLabel(serie, serieConfig),
+        color: this.config.getColor(serie),
+      }
+    })
+    actionman.fire('ToggleVisibility', legendId, true, data)
   }
 
   // Event handlers
@@ -92,8 +104,12 @@ export default class PieView extends ChartView {
   }
 
   _onMousemove (d, el, event) {
-    const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d.data)
+    const tooltipId = this.config.get('tooltip')
+    if (tooltipId) {
+      const [left, top] = d3Selection.mouse(this._container)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', tooltipId, true, d.data, tooltipConfig)
+    }
   }
 
   _onMouseout (d, el) {

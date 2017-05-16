@@ -76,7 +76,7 @@
       margin-bottom: 4px;
     }
     
-    .attribute {
+    .key {
       display: block;
 
       &:not(:last-child) {
@@ -90,7 +90,7 @@
     overflow-x: auto;
   }
 
-  .attributes {
+  .keys {
     display: inline-block;
     line-height: 12px;
     vertical-align: middle;
@@ -119,7 +119,7 @@
     }
   }
 
-  .attribute {
+  .key {
     display: inline-block;
     border-width: $p_attr_item_border_width;
     border-style: $p_attr_item_border_style;
@@ -135,7 +135,7 @@
       margin-right: 0;
     }
 
-    .edit-attribute {
+    .edit-key {
       display: none;
     }
 
@@ -143,7 +143,7 @@
       border-color: $p_attr_item_active_border_color;
       border-radius: $p_attr_item_active_border_radius;
 
-      .edit-attribute {
+      .edit-key {
         display: inline-block;
       }
 
@@ -153,7 +153,7 @@
     }
   }
 
-  .legend-attribute {
+  .legend-key {
     display: inline-block;
     padding: 10px 0;
     margin: 0;
@@ -201,7 +201,7 @@
     border-radius: 50%;
     background-color: $p_color_indicator_bg_color;
 
-    .legend-attribute input:checked ~ & {
+    .legend-key input:checked ~ & {
       background-color: $p_color_indicator_active_bg_color;
     }
 
@@ -210,15 +210,15 @@
       display: none;
       content: ' ';
 
-      .legend-attribute input:checked ~ & {
+      .legend-key input:checked ~ & {
         display: block;
       }
 
-      .legend-attribute.disabled input:checked ~ & {
+      .legend-key.disabled input:checked ~ & {
         display: none;
       }
 
-      .legend-attribute & {
+      .legend-key & {
         left: 1px;
         top: 1px;
         width: 8px;

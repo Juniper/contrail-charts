@@ -21,36 +21,28 @@ let chart
 const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-chart-id',
       editable: {
-        colorSelector: true,
-        chartSelector: true
+        color: true,
+        chart: true,
       },
-      placement: 'horizontal',
-      filter: true,
-    },
-  }, {
-    type: 'ControlPanel',
-    config: {
-      menu: [
-        { id: 'Refresh' },
-      ],
     },
   }, {
     id: 'compositey-chart-id',
     type: 'CompositeY',
     config: {
+      legend: 'legend-id',
+      crosshair: 'crosshair-id',
       margin: {
         left: 60,
         right: 60,
+        label: 30,
       },
-      height: 400,
-      crosshair: 'crosshair-id',
-      possibleChartTypes: {
+      chartTypes: {
         y1: ['GroupedBar', 'StackedBar'],
-        y2: ['Line']
+        y2: ['Line'],
       },
       plot: {
         x: {
@@ -108,7 +100,7 @@ const config = {
           position: 'right',
           formatter: formatter.toFixed1,
         }
-      }
+      },
     },
   }, {
     type: 'Navigation',

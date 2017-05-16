@@ -77,34 +77,37 @@ export default class RadialDendrogramConfigModel extends ConfigModel {
     super.set(...args)
   }
 
-  getColor (accessorName) {
-    const configured = _.find(this.accessors, {accessor: accessorName}).color
-    return configured || this.attributes.colorScale(accessorName)
+  get legendData () {
+    return _.map(this.attributes.levels, level => {
+      return {
+        key: level.level,
+        label: level.label,
+        color: this.getColor(level.level),
+        disabled: level.level >= this.attributes.drillDownLevel,
+      }
+    })
   }
 
-  setColor (accessorName, color) {
+  get legendConfig () {
+    return {colorScheme: this.attributes.colorScheme}
+  }
+
+  getColor (key) {
+    const configured = _.find(this.attributes.levels, {level: key}).color
+    return configured || this.attributes.colorScale(key)
+  }
+
+  setColor (key, color) {
     const levels = this.get('levels')
-    const level = _.find(levels, level => level.level === accessorName)
+    const level = _.find(levels, level => level.level === key)
     if (!level) return
     level.color = color
     this.trigger('change', this.config)
   }
 
-  get accessors () {
-    return _.map(this.attributes.levels, level => {
-      return {
-        accessor: level.level,
-        level: level.level,
-        label: level.label,
-        color: level.color,
-        disabled: level.level >= this.attributes.drillDownLevel
-      }
-    })
-  }
-
-  setAccessor (accessorName, isEnabled) {
+  setKey (key, isEnabled) {
     const levels = this.attributes.levels
-    const level = _.find(levels, level => level.level === accessorName)
+    const level = _.find(levels, level => level.level === key)
     if (!level) return
     let drillDownLevel = isEnabled ? level.level + 1 : level.level
     if (drillDownLevel < 1) drillDownLevel = 1

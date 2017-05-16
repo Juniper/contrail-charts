@@ -5,14 +5,15 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Ease from 'd3-ease'
 import ChartView from 'chart-view'
+import Config from './CrosshairConfigModel'
 import actionman from 'core/Actionman'
+import ToggleVisibility from '../../actions/ToggleVisibility'
 import './crosshair.scss'
 
 export default class CrosshairView extends ChartView {
-  constructor (p) {
-    super(p)
-    //this.render()
-  }
+  static get Config () { return Config }
+  static get Actions () { return { ToggleVisibility } }
+  static get isMaster () { return false }
 
   get tagName () { return 'g' }
   get zIndex () { return 9 }
@@ -21,32 +22,40 @@ export default class CrosshairView extends ChartView {
    */
   get selectors () {
     return _.extend(super.selectors, {
-      node: '.crosshair-line',
-      line: '.x-line',
-      text: '.x-text',
+      node: '.crosshair-node',
+      line: '.line',
+      text: '.text',
       bubble: '.bubble',
     })
   }
   /**
-   * @param data
    * @param {Array [x, y]} point mouse offset relative to svg container
-   * @param config
    */
-  show (data, point, config) {
-    if (!data) return this.hide()
-
-    if (point[0] < config.x1 || point[0] > config.x2 || point[1] < config.y1 || point[1] > config.y2) {
-      return this.hide()
-    }
+  render () {
+    super.render()
+    const data = this.model.data
     // Draw crosshair line
-    const lines = this.d3.selectAll(this.selectors.node).data([config.line])
+    // TODO implement half lines
+    if (this.config.get('lines') !== 'full') return
+    const lineCoords = _.map(data.labels, label => {
+      return {
+        id: label.position,
+        x1: data.dataPoint[0],
+        x2: data.dataPoint[0],
+        y1: this.innerHeight,
+        y2: 0,
+        label: label.value,
+      }
+    })
+    const margin = this.config.get('margin')
+    const lines = this.d3.selectAll(this.selectors.node).data(lineCoords)
     const linesEnter = lines.enter().append('g')
       .attr('class', this.selectorClass('node'))
     linesEnter
-      .attr('transform', d => `translate(${d.x(data)}, 0)`)
+      .attr('transform', d => `translate(${d.x1}, ${d.y2})`)
       .merge(lines)
       .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-      .attr('transform', d => `translate(${d.x(data)}, 0)`)
+      .attr('transform', d => `translate(${d.x1}, ${d.y2})`)
     linesEnter.append('line')
       .attr('class', this.selectorClass('line'))
       .attr('x1', 0)
@@ -55,48 +64,44 @@ export default class CrosshairView extends ChartView {
       .attr('y2', d => d.y2)
     linesEnter.append('text')
       .attr('class', this.selectorClass('text'))
-      .attr('y', d => d.y1 + 15)
-      .text(d => d.text(data))
+      .attr('y', d => d.y1 + margin.label)
+      .text(d => d.label)
     const update = linesEnter.merge(lines)
     update.selectAll(this.selectors.line)
       .attr('y1', d => d.y1)
       .attr('y2', d => d.y2)
     update.selectAll(this.selectors.text)
-      .attr('y', d => d.y1 + 15)
-      .text(d => d.text(data))
+      .attr('y', d => d.y1 + margin.label)
+      .text(d => d.label)
 
     // Draw bubbles for all enabled y accessors.
     update.each((d, i, els) => {
-      const bubbleData = _.filter(config.bubbles, bubble => !!_.get(data, bubble.id))
       const bubbles = d3Selection.select(els[i]).selectAll(this.selectors.bubble)
-        .data(bubbleData, d => d.id)
+        .data(data.points, d => d.id)
       bubbles.enter().append('circle')
         .classed(this.selectorClass('bubble'), true)
         .attr('cx', 0)
-        .attr('cy', d => d.y(data))
+        .attr('cy', d => d.y)
         .attr('fill', d => d.color)
         .attr('r', 0)
         .merge(bubbles)
         .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-        .attr('cy', d => d.y(data))
+        .attr('cy', d => d.y)
         .attr('r', this.config.get('bubbleR'))
       bubbles.exit().remove()
     })
-    lines.exit().remove()
 
     // Show tooltip
-    const tooltipPosition = {
-      left: this.svgOffset.left + point[0],
-      top: this.svgOffset.top + point[1],
+    const tooltipConfig = {
+      left: this.svgOffset.left + margin.left + data.dataPoint[0],
+      top: this.svgOffset.top + margin.top + data.dataPoint[1],
+      placement: 'horizontal',
     }
-    const tooltipOptions = {placement: 'horizontal'}
-    actionman.fire('ShowComponent', this.config.get('tooltip'), tooltipPosition, data, tooltipOptions)
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, data.item, tooltipConfig)
   }
 
   hide () {
-    const lines = this.d3.selectAll(this.selectors.node).data([])
-    lines.exit().remove()
-
+    super.hide()
     actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 }

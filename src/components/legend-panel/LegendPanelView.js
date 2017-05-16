@@ -7,15 +7,25 @@ import * as d3Color from 'd3-color'
 import ChartView from 'chart-view'
 import Config from './LegendPanelConfigModel'
 import actionman from 'core/Actionman'
+import ToggleVisibility from '../../actions/ToggleVisibility'
 import _template from './legend.html'
 import './legend-panel.scss'
 const _states = {
   DEFAULT: 'default',
   EDIT: 'edit'
 }
+const icons = {
+  'GroupedBar': 'fa-bar-chart',
+  'StackedBar': 'fa-signal', // Todo find something better
+  'Line': 'fa-line-chart',
+  'Area': 'fa-area-chart',
+  'Pie': 'fa-pie-chart'
+}
 
 export default class LegendPanelView extends ChartView {
   static get Config () { return Config }
+  static get Actions () { return {ToggleVisibility} }
+  static get isMaster () { return false }
 
   constructor (p) {
     super(p)
@@ -24,7 +34,7 @@ export default class LegendPanelView extends ChartView {
 
   get selectors () {
     return _.extend({}, super.selectors, {
-      attribute: '.legend-attribute',
+      key: '.legend-key',
       mode: '.edit-legend',
       select: '.select',
       color: '.switch--color',
@@ -35,7 +45,7 @@ export default class LegendPanelView extends ChartView {
 
   get events () {
     return {
-      'change attribute': '_toggleAttribute',
+      'change key': '_toggleKey',
       'click mode': '_toggleEditMode',
       'click select': '_toggleSelector',
       'click color': '_selectColor',
@@ -45,35 +55,65 @@ export default class LegendPanelView extends ChartView {
 
   render () {
     const template = this.config.get('template') || _template
-    const content = template(this.config.data)
+    const data = this._prepareData()
+    const content = template(data)
     super.render(content)
 
-    if (!this.config.attributes.filter || this.config.data.attributes.length === 1) {
-      this.d3.selectAll(this.selectors.attribute)
+    if (!this.config.attributes.filter || data.keys.length === 1) {
+      this.d3.selectAll(this.selectors.key)
         .classed('disabled', true)
         .select('input')
         .property('disabled', true)
     }
 
-    this.d3.classed('vertical', this.config.attributes.placement === 'vertical')
-    this.d3.selectAll(this.selectors.axis).classed('active', this.config.data.axesCount > 1)
+    this.d3.classed('vertical', this.config.keys.placement === 'vertical')
+    this.d3.selectAll(this.selectors.axis).classed('active', data.axesCount > 1)
     if (this._state === _states.EDIT) this._setEditState()
   }
+  /**
+   * Format data for template
+   */
+  _prepareData () {
+    let chartTypes = []
+    _.each(this.config.get('chartTypes'), (configChartTypes, axisLabel) => {
+      chartTypes = chartTypes.concat(_.map(configChartTypes, chartType => {
+        return {
+          axisLabel,
+          chartType,
+          icon: icons[chartType],
+        }
+      }))
+    })
 
-  _toggleAttribute (d, el) {
-    const accessorName = $(el).parents('.attribute').data('accessor')
-    const isChecked = el.querySelector('input').checked
-    actionman.fire('SelectAccessor', accessorName, isChecked)
+    const data = {
+      colors: this.config.get('colorScheme'),
+      chartTypes,
+      editable: this.config.get('editable.color') || this.config.get('editable.chart'),
+    }
+    data.keys = _.map(this.model.data, item => {
+      return _.extend(item, {
+        icon: icons[item.chartType],
+        checked: this.config.get('filter') && !item.disabled,
+      })
+    })
+
+    return data
+  }
+
+  _toggleKey (d, el) {
+    const key = $(el).parents('.key').data('key')
+    const isSelected = el.querySelector('input').checked
+    actionman.fire('SelectKey', key, isSelected)
   }
 
   _setEditState () {
-    this.$('.attribute').toggleClass('edit')
+    this.$('.key').toggleClass('edit')
     this.d3.selectAll('.selector').classed('active', false)
 
-    this.d3.selectAll(this.selectors.color).classed('hide', !this.config.get('editable.colorSelector'))
-    this.d3.selectAll(this.selectors.chartType).classed('hide', !this.config.get('editable.chartSelector'))
+    this.d3.selectAll(this.selectors.color).classed('hide', !this.config.get('editable.color'))
+    this.d3.selectAll(this.selectors.chartType).classed('hide', !this.config.get('editable.chart'))
 
-    _.each(this.el.querySelectorAll(this.selectors.attribute + ' > input'), el => {
+    _.each(this.el.querySelectorAll(this.selectors.key + ' > input'), el => {
       el.disabled = this._state !== _states.DEFAULT
     })
   }
@@ -84,58 +124,56 @@ export default class LegendPanelView extends ChartView {
     this._setEditState()
   }
 
-  _addChartTypes (attributeAxis) {
+  _addChartTypes (keyAxis) {
     this.d3.selectAll(this.selectors.chartType)
-      .classed('show', false)
-      .filter((d, i, n) => n[i].dataset.axis === attributeAxis)
-      .classed('show', true)
+      .classed('hide', true)
+      .filter((d, i, n) => n[i].dataset.axis === keyAxis)
+      .classed('hide', false)
   }
 
   _toggleSelector (d, el) {
-    this._accessor = $(el).parents('.attribute').data('accessor')
+    this._key = $(el).parents('.key').data('key')
+    const currentSelector = el.classList.contains('select--chart') ? 'chartType' : 'color'
 
-    const selectorElement = this.d3.select('.selector')
-    selectorElement
-      .classed('select--color', false)
-      .classed('select--chart', false)
-    selectorElement.selectAll('.switch').classed('selected', false)
+    const selector = this.d3.select('.selector')
+    selector
+      .classed(this.selectorClass('color'), currentSelector === 'color')
+      .classed(this.selectorClass('chartType'), currentSelector === 'chartType')
+      .classed('active', !selector.classed('active'))
+    selector.selectAll('.switch').classed('selected', false)
 
-    if (this.el.querySelector('.selector').classList.contains('active')) {
-      selectorElement.classed('active', false)
-    } else if (el.classList.contains('select--color')) {
-      selectorElement.classed('active', true).classed('select--color', true)
+    if (currentSelector === 'color') {
       const currentColor = d3Color.color(el.dataset.color)
-      selectorElement.selectAll(this.selectors.color)
+      selector.selectAll(this.selectors.color)
         .filter((d, i, n) => {
           return d3Color.color(n[i].dataset.color).toString() === currentColor.toString()
         })
         .classed('selected', true)
-    } else if (el.classList.contains('select--chart')) {
-      const currentAttribute = _.find(this.config.data.attributes, { 'accessor': this._accessor })
-      this._addChartTypes(currentAttribute.axis)
-      selectorElement
-        .classed('active', true)
-        .classed('select--chart', true)
+    }
+    if (currentSelector === 'chart') {
+      const currentKey = _.find(this._prepareData().keys, { 'key': this._key })
+      this._addChartTypes(currentKey.axis)
+
       const currentChart = el.dataset.chartType
-      selectorElement.selectAll(this.selectors.chartType)
+      selector.selectAll(this.selectors.chartType)
         .filter((d, i, n) => n[i].dataset.chartType === currentChart)
         .classed('selected', true)
     }
 
     const elemOffset = $(el).position()
     elemOffset.top += $(el).outerHeight() + 1
-    selectorElement
+    selector
       .style('top', elemOffset.top + 'px')
       .style('left', elemOffset.left + 'px')
   }
 
   _selectColor (d, el) {
     const color = window.getComputedStyle(el).backgroundColor
-    actionman.fire('SelectColor', this._accessor, color)
+    actionman.fire('SelectColor', this._key, color)
   }
 
   _selectChartType (d, el) {
     const chartType = el.dataset.chartType
-    actionman.fire('SelectChartType', this._accessor, chartType)
+    actionman.fire('SelectChartType', this._key, chartType)
   }
 }

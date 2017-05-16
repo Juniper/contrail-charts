@@ -11,6 +11,10 @@ import ColoredChart from 'helpers/color/ColoredChart'
 export default class SankeyConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, ColoredChart.defaults, {
+      /*
+      // by default will use common shared container under the parent
+      isSharedContainer: true,
+      */
 
       // Side margins.
       margin: {

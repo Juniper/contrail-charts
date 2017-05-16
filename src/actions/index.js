@@ -1,5 +1,5 @@
 export {default as Refresh} from 'actions/Refresh'
-export {default as SelectAccessor} from 'actions/SelectAccessor'
+export {default as SelectKey} from 'actions/SelectKey'
 export {default as SelectColor} from 'actions/SelectColor'
 export {default as ToggleFreeze} from 'actions/ToggleFreeze'
 export {default as ToggleVisibility} from 'actions/ToggleVisibility'

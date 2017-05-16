@@ -11,18 +11,13 @@ import Config from './RadialDendrogramConfigModel'
 import Model from 'models/Serie'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
-import SelectAccessor from '../../actions/SelectAccessor'
+import SelectKey from '../../actions/SelectKey'
 import './radial-dendrogram.scss'
 
 export default class RadialDendrogramView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {SelectColor, SelectAccessor} }
-
-  constructor (p) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-  }
+  static get Actions () { return {SelectColor, SelectKey} }
 
   get tagName () { return 'g' }
 
@@ -55,6 +50,7 @@ export default class RadialDendrogramView extends ChartView {
     this._prepareHierarchy()
     super.render()
     this._render()
+    this._showLegend()
     this._ticking = false
   }
 
@@ -493,7 +489,17 @@ export default class RadialDendrogramView extends ChartView {
     }
   }
 
+  _showLegend () {
+    const legendId = this.config.get('legend')
+    if (!legendId) return
+    actionman.fire('ToggleVisibility', legendId, true, this.config.legendData, this.config.legendConfig)
+  }
+
   // Event handlers
+
+  _onConfigModelChange () {
+    this.render()
+  }
 
   _onMousemove (d, el) {
     const leaves = d.leaves()
@@ -502,7 +508,8 @@ export default class RadialDendrogramView extends ChartView {
     })
     this._render()
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, {left, top}, d.data)
+    const tooltipConfig = {left, top, container: this._container}
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d.data, tooltipConfig)
   }
 
   _onMouseout (d, el) {

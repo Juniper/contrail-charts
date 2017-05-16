@@ -13,6 +13,12 @@ export default class CrosshairConfigModel extends ConfigModel {
       isSharedContainer: true,
       duration: 100,
       bubbleR: 5,
+
+      // draw bubbles on cross of crosshair and chart
+      bubbles: false,
+
+      // draw lines across all chart height / width
+      lines: 'full',
     })
   }
 }
