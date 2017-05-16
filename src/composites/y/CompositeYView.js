@@ -55,6 +55,7 @@ export default class CompositeYView extends ChartView {
     })
     this._cluster()
     this._showLegend()
+    this._initCrosshair()
 
     this._ticking = false
   }
@@ -189,6 +190,75 @@ export default class CompositeYView extends ChartView {
       this._composite.remove(`${this.id}-${child.key}`)
     })
   }
+
+  _initCrosshair () {
+    const crosshairId = this.config.get('crosshair')
+    if (!crosshairId) return
+    this.svg.delegate('mousemove', 'svg', this._onMousemove.bind(this))
+  }
+
+  _toggleCrosshair (point) {
+    const crosshairId = this.config.get('crosshair')
+    if (point[0] < 0 || point[0] > this.innerWidth || point[1] < 0 || point[1] > this.innerHeight) {
+      actionman.fire('ToggleVisibility', crosshairId, false)
+      this._ticking = false
+      return
+    }
+    const xScale = this.config.get('axes.x.scale')
+    const mouseX = xScale.invert(point[0])
+    const xAccessor = this.config.get('plot.x.accessor')
+    const serie = this.model.getNearest(xAccessor, mouseX)
+
+    const config = {
+      container: this._container,
+      margin: this.config.margin,
+      bubbles: true,
+      lines: 'full',
+    }
+
+    const data = {
+      hoverPoint: point,
+      dataPoint: [],
+      item: serie,
+      labels: [],
+      points: [],
+    }
+
+    data.dataPoint[0] = xScale(_.get(serie, xAccessor))
+    // TODO if scatterplot - calculate snapped y coord too
+    data.dataPoint[1] = point[1]
+
+    data.labels = _.map(this.config.activeAxes, axisConfig => {
+      const axis = this._composite.get(`${this.id}-${axisConfig.name}`)
+      const accessor = this.config.getAxisAccessors(axisConfig.name)[0]
+      let value = _.get(serie, accessor)
+      const formatter = axis.config.formatter
+      if (formatter) value = formatter(value)
+      return {
+        position: 'bottom',
+        value: value,
+      }
+    })
+    // TODO enable not only for x axis
+    data.labels = [data.labels[0]]
+
+    _.each(this.config.children, child => {
+      const component = this._composite.get(this.id + '-' + child.key)
+      _.each(child.accessors, accessor => {
+        const accessorName = accessor.accessor
+        data.points.push({
+          id: accessorName,
+          x: component.getScreenX(serie, accessorName),
+          y: component.getScreenY(serie, accessorName),
+          color: this.config.getColor(accessorName),
+        })
+      })
+    })
+
+    actionman.fire('ToggleVisibility', crosshairId, true, data, config)
+    this._ticking = false
+  }
+
   _showLegend () {
     const legendId = this.config.get('legend')
     if (!legendId) return
@@ -236,4 +306,11 @@ export default class CompositeYView extends ChartView {
 
   // Event handlers
 
+  _onMousemove (d, el, e) {
+    const point = d3.mouse(this.el)
+    if (!this._ticking) {
+      window.requestAnimationFrame(this._toggleCrosshair.bind(this, point))
+      this._ticking = true
+    }
+  }
 }

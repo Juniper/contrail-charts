@@ -37,6 +37,14 @@ export default class LineView extends ChartView {
       'mouseout node': '_onMouseout',
     }
   }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
+
+  getScreenY (datum, yAccessor) {
+    return this.config.yScale(_.get(datum, yAccessor))
+  }
   /**
    * Draw a line path
    */

@@ -51,7 +51,9 @@ const config = {
     config: {
       legend: 'legend-panel-id',
       crosshair: 'crosshair-id',
-      height: 300,
+      margin: {
+        label: 40,
+      },
       chartTypes: {
         y1: ['GroupedBar', 'Line'],
         y2: ['GroupedBar', 'Line']

@@ -108,6 +108,7 @@ export default class CompositeYConfigModel extends ConfigModel {
   }
 
   getAxisAccessors (name) {
+    if (name.startsWith('x')) return [this.get('plot.x.accessor')]
     return _.filter(this.get('plot.y'), accessor => this.getAxisName(accessor) === name)
   }
 

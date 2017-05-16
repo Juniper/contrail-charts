@@ -51,14 +51,14 @@ export default class GroupedBarView extends ChartView {
     return this.config.getOuterWidth(this.model, this.width) / data.length * paddedPart
   }
 
-  getScreenX (datum, xAccessor, yAccessor) {
+  getScreenX (datum, yAccessor) {
     let delta = 0
     _.each(this.config.yAccessors, (accessor, j) => {
       if (accessor.accessor === yAccessor) {
         delta = this._innerBandScale(j) + this._innerBandScale.bandwidth() / 2
       }
     })
-    return this.config.xScale(_.get(datum, xAccessor)) + delta
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor'))) + delta
   }
 
   getScreenY (datum, yAccessor) {

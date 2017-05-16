@@ -6,13 +6,13 @@
   $p_bubble_border_width: map-get($crosshair, "jointBubbleEdgeWidth");
   $p_bubble_border_color: map-get($crosshair, "jointBubbleEdgeColor");
 
-  .crosshair-line {
-    .x-line {
+  .crosshair-node {
+    line {
       stroke-width: $p_line_width;
       stroke: $p_line_color;
       shape-rendering: crispEdges;
     }
-    .x-text {
+    .text {
       text-anchor: middle;
       font-size: $p_footer_size;
       font-weight: bold;

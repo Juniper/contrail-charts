@@ -33,8 +33,11 @@ export default class AreaView extends ChartView {
       'mouseout node': '_onMouseout',
     }
   }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
   /**
-  * @override
   * Y coordinate calculation considers position is being stacked
   */
   getScreenY (datum, yAccessor) {

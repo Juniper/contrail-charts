@@ -36,6 +36,9 @@ const config = {
     config: {
       crosshair: 'crosshair-id',
       legend: 'legend-id',
+      margin: {
+        label: 30,
+      },
       plot: {
         x: {
           accessor: 'group.t',

@@ -30,23 +30,16 @@ const config = {
       },
     },
   }, {
-    type: 'ControlPanel',
-    config: {
-      menu: [
-        { id: 'Refresh' },
-      ],
-    },
-  }, {
     id: 'compositey-chart-id',
     type: 'CompositeY',
     config: {
       legend: 'legend-id',
+      crosshair: 'crosshair-id',
       margin: {
         left: 60,
         right: 60,
+        label: 30,
       },
-      height: 400,
-      crosshair: 'crosshair-id',
       chartTypes: {
         y1: ['GroupedBar', 'StackedBar'],
         y2: ['Line'],
