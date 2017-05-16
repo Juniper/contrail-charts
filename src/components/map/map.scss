@@ -1,0 +1,39 @@
+.cc-svg .map {
+  .stroke {
+    fill: none;
+    stroke: #000;
+    stroke-width: 3px;
+  }
+
+  .fill {
+    fill: #fff;
+  }
+
+  .graticule {
+    fill: none;
+    stroke: #777;
+    stroke-width: .5px;
+    stroke-opacity: .5;
+  }
+
+  .feature {
+    fill: #989898;
+  }
+
+  .boundary {
+    fill: none;
+    stroke: #fff;
+    stroke-width: .5px;
+  }
+
+  .point {
+    fill: #fcb134;
+  }
+
+  .link {
+	  fill: none;
+	  stroke-width: 2px;
+	  stroke: #fcb134;
+	  pointer-events: none;
+  }
+}

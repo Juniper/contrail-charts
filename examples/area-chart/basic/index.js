@@ -21,7 +21,6 @@ data[5].a = -10
 let chart
 const config = {
   id: 'chartBox',
-  title: 'Area Chart',
   components: [{
     id: 'legend-id',
     type: 'LegendPanel',
@@ -97,10 +96,10 @@ const config = {
           accessor: 'group.a',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'b',
+          accessor: 'group.b',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'c',
+          accessor: 'group.c',
           valueFormatter: formatter.toInteger,
         }
       ]

@@ -16,6 +16,7 @@ import liveData from '../../linebar-chart/live'
 // Scatter
 import scatterPlotBuckets from '../../bubble-chart/bucketization'
 import shapes from '../../bubble-chart/multiple-shapes'
+import map from '../../bubble-chart/map'
 // Radial
 import pieChart from '../../radial-chart/pie'
 import dendrogramChart from '../../radial-chart/dendrogram'
@@ -76,7 +77,10 @@ const allExamples = {
     },
     'Shapes': {
       view: shapes,
-    }
+    },
+    'Map': {
+      view: map,
+    },
   },
   'radial': {
     'Pie Chart': {
@@ -130,12 +134,21 @@ const allExamples = {
   'advance': {
     'Sankey': {
       view: sankeyChart,
-    }
+    },
   }
 }
 
-$('#side-menu').metisMenu()
-const $content = $('.content')
+$('.nav-sidebar').metisMenu()
+$('.mobilebar .navbar-toggle').on('click', e => {
+  e.preventDefault()
+  $('body').addClass('showmenu')
+})
+$('.overlay').on('click', e => {
+  e.preventDefault()
+  $('body').removeClass('showmenu')
+})
+
+const $content = $('.crailui__content')
 const $chartBox = $('#chartBox')
 
 _.forEach(allExamples, (examples, chartCategory) => {
