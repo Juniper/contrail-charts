@@ -39,14 +39,6 @@ export default class ConfigModel extends ContrailModel {
     return this.attributes.duration
   }
   /**
-   * TODO remove
-   * Initialize the computed parameters with the config parameters.
-   */
-  computeParams () {
-    this._computed = {}
-    return _.extend(this._computed, JSON.parse(JSON.stringify(this.toJSON())))
-  }
-  /**
    * @param {Object} data to extract value from
    * @param {Object} config on how to extract
    */

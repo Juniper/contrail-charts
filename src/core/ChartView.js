@@ -20,8 +20,6 @@ export default class ChartView extends ContrailView {
     this._id = p.id || _.get(p, 'config.id')
     this.d3.attr('id', this.id)
     this._container = p.container
-    // TODO remove
-    this.params = {}
 
     // override simple Backbone.View model set
     const Model = this.constructor.Model || DataModel
@@ -164,15 +162,6 @@ export default class ChartView extends ContrailView {
     }
   }
   /**
-   * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
-   * The view may modify the params object with calculated values.
-   */
-  // TODO deprecate
-  resetParams (params) {
-    if (params) this.config.set(params)
-    this.params = this.config.computeParams()
-  }
-  /**
    * Appends components element to container in the order specified in this._order
    *
    * Components which renders vector graphics should call super.render() firsthand
@@ -255,8 +244,6 @@ export default class ChartView extends ContrailView {
     window.removeEventListener('resize', this._onResize)
     _.each(this.constructor.Actions, action => actionman.unset(action, this))
 
-    // TODO remove
-    this.params = {}
     super.remove()
   }
   /**
