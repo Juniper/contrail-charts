@@ -16,6 +16,7 @@ const config = {
         left: 80,
         right: 80,
         bottom: 40,
+        top: 5
       },
       colorScheme: d3Scale.schemeCategory20,
       levels: [ { level: 0, label: 'Virtual Network' }, { level: 1, label: 'IP' }, { level: 2, label: 'Port' } ],

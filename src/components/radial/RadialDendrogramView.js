@@ -24,7 +24,8 @@ export default class RadialDendrogramView extends ChartView {
   get selectors () {
     return _.extend(super.selectors, {
       node: '.arc',
-      link: '.ribbon',
+      link: '.link',
+      ribbon: '.ribbon',
       active: '.active',
     })
   }
@@ -32,9 +33,9 @@ export default class RadialDendrogramView extends ChartView {
   get events () {
     return _.extend(super.events, {
       'click node': '_onClickNode',
-      'click link': '_onEvent',
+      'click ribbon': '_onEvent',
       'dblclick node': '_onEvent',
-      'dblclick link': '_onEvent',
+      'dblclick ribbon': '_onEvent',
       'mousemove node': '_onMousemove',
       'mouseout node': '_onMouseout',
     })
@@ -45,7 +46,6 @@ export default class RadialDendrogramView extends ChartView {
   }
 
   render () {
-    this.resetParams()
     this._calculateDimensions()
     this._prepareHierarchy()
     super.render()
@@ -55,19 +55,11 @@ export default class RadialDendrogramView extends ChartView {
   }
 
   _calculateDimensions () {
-    if (this.params.widthDelta) {
-      this.params.width += this.params.widthDelta
-    }
-    if (!this.params.radius) {
-      this.params.radius = Math.min(this.width, this.height) / 2
-    }
-    if (!this.params.labelMargin) {
-      this.params.labelMargin = 50
-    }
-    if (!this.params.innerRadius) {
-      this.params.innerRadius = this.params.radius - this.params.labelMargin
+    if (!this.config.get('innerRadius')) {
+      this.config.set({ 'innerRadius': Math.min(this.innerWidth, this.innerHeight) / 2 }, { silent: true })
     }
   }
+
   /**
   * Build the root node tree structure that will be the input for the d3.hierarchy() layout.
   * We build one more level than configured in order to allow branching of the last configured level.
@@ -76,13 +68,13 @@ export default class RadialDendrogramView extends ChartView {
     const data = this.model.data
     const hierarchyConfig = this.config.get('hierarchyConfig')
     const leafNodes = []
-    this.maxDepth = 0
+    this._maxDepth = 0
     // The root node of the hierarchy (tree) we are building.
-    this.rootNode = {
+    this._rootNode = {
       name: 'root',
       children: []
     }
-    this.valueSum = 0
+    this._valueSum = 0
     _.each(data, (d, index) => {
       // Parsing a data element should return a 2 element array: [source, destination]
       const leafs = hierarchyConfig.parse(d)
@@ -107,16 +99,16 @@ export default class RadialDendrogramView extends ChartView {
       if (foundLeafNode) {
         foundLeafNode.value += (foundLeafNode.id === leafs[0].id) ? leafs[0].value : leafs[1].value
         foundLeafNode.otherNode.value += (foundLeafNode.otherNode.id === leafs[0].id) ? leafs[0].value : leafs[1].value
-        this.valueSum += leafs[0].value + leafs[1].value
+        this._valueSum += leafs[0].value + leafs[1].value
       } else {
         _.each(leafs, (leaf, i) => {
           // leaf node contains an array of 'names' (ie. the path from root to leaf) and a 'value'
-          let children = this.rootNode.children
+          let children = this._rootNode.children
           let node = null
           const namePath = []
           _.each(leaf.names, (name, depth) => {
-            this.maxDepth = Math.max(this.maxDepth, depth + 1)
-            if (depth >= this.params.drillDownLevel) {
+            this._maxDepth = Math.max(this._maxDepth, depth + 1)
+            if (depth >= this.config.get('drillDownLevel')) {
               return
             }
             namePath.push(name)
@@ -141,69 +133,63 @@ export default class RadialDendrogramView extends ChartView {
             linkId: leafs[0].id + '-' + leafs[1].id,
           }
           node.children.push(leafNode)
-          this.valueSum += leafNode.value
+          this._valueSum += leafNode.value
           leafNodes.push(leafNode)
         })
       }
     })
-    // console.log('maxDepth: ', this.maxDepth)
-    // console.log('rootNode: ', this.rootNode, this.valueSum)
   }
 
   _prepareHierarchyRootNode () {
-    const valueScale = this.config.get('valueScale').domain([0.01, this.valueSum]).range([0, 360])
-    this.hierarchyRootNode = d3Hierarchy.hierarchy(this.rootNode).sum((d) => valueScale(d.value)).sort((a, b) => b.value - a.value)
-    // console.log('hierarchyRootNode: ', this.hierarchyRootNode)
+    const valueScale = this.config.get('valueScale').domain([0.01, this._valueSum]).range([0, 360])
+    this._hierarchyRootNode = d3Hierarchy.hierarchy(this._rootNode).sum((d) => valueScale(d.value)).sort((a, b) => b.value - a.value)
   }
 
   _prepareLinks () {
-    this.links = []
+    this._links = []
     let i = 0
-    const leaves = this.hierarchyRootNode.leaves()
+    const leaves = this._hierarchyRootNode.leaves()
     _.each(leaves, (leaf, leafIndex) => {
       for (i = leafIndex + 1; i < leaves.length; i++) {
         if (leaf.data.linkId === leaves[i].data.linkId) {
-          this.links.push(leaf.path(leaves[i]))
+          this._links.push(leaf.path(leaves[i]))
         }
       }
     })
-    // console.log('Links: ', this.links)
   }
 
   _prepareCluster () {
-    const extraPaddingPerDepth = _.fill(_.range(this.params.drillDownLevel + 1), 0)
+    const extraPaddingPerDepth = _.fill(_.range(this.config.get('drillDownLevel') + 1), 0)
     // Create the cluster layout.
-    const cluster = d3Hierarchy.cluster().size([360, this.params.innerRadius])
-    // const cluster = d3Hierarchy.tree().size([360, this.params.innerRadius])
+    const cluster = d3Hierarchy.cluster().size([360, this.config.get('innerRadius')])
     .separation((a, b) => {
       let distance = (a.value + b.value) / 2
       if (a.parent !== b.parent) {
         // Count how many ancestors differ the two nodes.
         const aAncestors = a.ancestors()
         const bAncestors = b.ancestors()
-        const differences = Math.max(0, _.difference(aAncestors, bAncestors).length - this.params.parentSeparationDepthThreshold)
-        const extraPadding = this.params.parentSeparation * differences * this.hierarchyRootNode.value / 360
+        const differences = Math.max(0, _.difference(aAncestors, bAncestors).length - this.config.get('parentSeparationDepthThreshold'))
+        const extraPadding = this.config.get('parentSeparation') * differences * this._hierarchyRootNode.value / 360
         distance += extraPadding
         extraPaddingPerDepth[a.depth] += extraPadding
       }
       return distance
     })
-    cluster(this.hierarchyRootNode)
+    cluster(this._hierarchyRootNode)
   }
 
   _prepareCircles () {
-    this.circles = []
-    const radiusScale = d3Scale.scaleLinear().domain([0, this.params.drillDownLevel]).range([0, this.params.innerRadius]).clamp(true)
-    this.hierarchyRootNode.each((n) => {
+    this._circles = []
+    const radiusScale = d3Scale.scaleLinear().domain([0, this.config.get('drillDownLevel')]).range([0, this.config.get('innerRadius')]).clamp(true)
+    this._hierarchyRootNode.each((n) => {
       if (!n.parent || !n.children) {
         return
       }
       n.y = radiusScale(n.depth)
-      if (this.circles.length === n.depth) {
-        this.circles[n.depth] = { r: n.y }
+      if (this._circles.length === n.depth) {
+        this._circles[n.depth] = { r: n.y }
       }
     })
-    // console.log('circles: ', this.circles)
   }
 
   /**
@@ -211,10 +197,10 @@ export default class RadialDendrogramView extends ChartView {
   */
   _prepareAngleRanges () {
     const depthValueOffset = [0]
-    this.hierarchyRootNode.angleRange = [0, 360]
-    this.hierarchyRootNode.valueRange = [0, this.hierarchyRootNode.value]
-    this.hierarchyRootNode.angleScale = d3Scale.scaleLinear().domain(this.hierarchyRootNode.valueRange).range(this.hierarchyRootNode.angleRange)
-    this.hierarchyRootNode.each((n) => {
+    this._hierarchyRootNode.angleRange = [0, 360]
+    this._hierarchyRootNode.valueRange = [0, this._hierarchyRootNode.value]
+    this._hierarchyRootNode.angleScale = d3Scale.scaleLinear().domain(this._hierarchyRootNode.valueRange).range(this._hierarchyRootNode.angleRange)
+    this._hierarchyRootNode.each((n) => {
       if (!n.parent) {
         return
       }
@@ -229,8 +215,8 @@ export default class RadialDendrogramView extends ChartView {
       let maxAngle = n.parent.angleScale(maxValue)
       // Shrink the angle range in order to create padding between nodes.
       n.separationValue = 0
-      if (n.depth < this.params.parentSeparationDepthThreshold) {
-        n.separationValue = this.params.parentSeparationShrinkFactor * (maxAngle - minAngle) / 2
+      if (n.depth < this.config.get('parentSeparationDepthThreshold')) {
+        n.separationValue = this.config.get('parentSeparationShrinkFactor') * (maxAngle - minAngle) / 2
       }
       minAngle += n.separationValue
       maxAngle -= n.separationValue
@@ -238,7 +224,7 @@ export default class RadialDendrogramView extends ChartView {
       n.angleScale = d3Scale.scaleLinear().domain(n.valueRange).range(n.angleRange)
     })
     // Now shrink the parent nodes by the amount of sepration added to children.
-    this.hierarchyRootNode.each((n) => {
+    this._hierarchyRootNode.each((n) => {
       if (!n.parent) {
         return
       }
@@ -261,8 +247,8 @@ export default class RadialDendrogramView extends ChartView {
   * - inner edge of the source leaf arc.
   */
   _prepareRibbons () {
-    this.ribbons = []
-    _.each(this.links, (link) => {
+    this._ribbons = []
+    _.each(this._links, (link) => {
       const src = link[0]
       const dst = link[link.length - 1]
       const srcAncestors = src.ancestors()
@@ -284,7 +270,7 @@ export default class RadialDendrogramView extends ChartView {
               }
             })
             if (!found) {
-              // console.log('Never found')
+              console.error('Ribbon connection (outer edge from source leaf to root) never found.')
             }
           }
           outerPoints.push([n.angleScale(valueStart), n.y])
@@ -310,7 +296,7 @@ export default class RadialDendrogramView extends ChartView {
               }
             }
             if (!found) {
-              // console.log('Never found')
+              console.error('Ribbon connection (outer edge from root to target leaf) never found.')
             }
           }
           outerPoints.push([n.angleScale(valueStart), n.y])
@@ -333,7 +319,7 @@ export default class RadialDendrogramView extends ChartView {
               }
             })
             if (!found) {
-              // console.log('Never found')
+              console.error('Ribbon connection (inner edge from target leaf to root) never found.')
             }
           }
           innerPoints.push([n.angleScale(valueStart), n.y])
@@ -357,33 +343,35 @@ export default class RadialDendrogramView extends ChartView {
                 valueStart -= child.valueRange[1] - child.valueRange[0]
               }
             }
+            if (!found) {
+              console.error('Ribbon connection (inner edge from root to source leaf) never found.')
+            }
           }
           innerPoints.push([n.angleScale(valueStart), n.y])
         }
       }
-      this.ribbons.push({
+      this._ribbons.push({
         outerPoints: outerPoints,
         innerPoints: innerPoints,
         id: src.data.linkId
       })
     })
-    // console.log('ribbons: ', this.ribbons)
   }
 
   _prepareArcs () {
-    this.arcs = []
-    this.hierarchyRootNode.each((n) => {
+    this._arcs = []
+    this._hierarchyRootNode.each((n) => {
       if (!n.parent || !n.children) {
         return
       }
       // Estimate arc length and wheather the label will fit (default letter width is assumed to be 5px).
-      n.arcLength = 6 * (n.y - this.params.arcLabelYOffset) * (n.angleRange[1] - n.angleRange[0]) / 360
+      n.arcLength = 6 * (n.y - this.config.get('arcLabelYOffset')) * (n.angleRange[1] - n.angleRange[0]) / 360
       n.label = '' + n.data.namePath[n.data.namePath.length - 1]
-      n.labelFits = this.params.arcLabelLetterWidth * n.label.length < n.arcLength
-      if (this.params.labelFlow === 'perpendicular') {
-        n.labelFits = (n.arcLength > 9) && ((this.params.innerRadius / this.params.drillDownLevel) - this.params.arcLabelYOffset > this.params.arcLabelLetterWidth * n.label.length)
+      n.labelFits = this.config.get('arcLabelLetterWidth') * n.label.length < n.arcLength
+      if (this.config.get('labelFlow') === 'perpendicular') {
+        n.labelFits = (n.arcLength > 9) && ((this.config.get('innerRadius') / this.config.get('drillDownLevel')) - this.config.get('arcLabelYOffset') > this.config.get('arcLabelLetterWidth') * n.label.length)
       }
-      this.arcs.push(n)
+      this._arcs.push(n)
     })
   }
 
@@ -401,7 +389,7 @@ export default class RadialDendrogramView extends ChartView {
   _render () {
     this.d3.attr('transform', `translate(${this.width / 2}, ${this.height / 2})`)
     // Circles
-    const svgCircles = this.d3.selectAll('.circle').data(this.circles)
+    const svgCircles = this.d3.selectAll('.circle').data(this._circles)
     svgCircles.enter().append('circle')
       .attr('class', 'circle')
       .attr('r', 0)
@@ -409,10 +397,10 @@ export default class RadialDendrogramView extends ChartView {
       .attr('r', (d) => d.r + 1)
     svgCircles.exit().remove()
 
-    if (this.params.drawLinks) {
+    if (this.config.get('drawLinks')) {
       // Links
       const radialLine = d3Shape.radialLine().angle((d) => d.x / 180 * Math.PI).radius((d) => d.y).curve(this.config.get('curve'))
-      const svgLinks = this.d3.selectAll('.link').data(this.links)
+      const svgLinks = this.d3.selectAll(this.selectors.link).data(this._links)
       svgLinks.enter().append('path')
         .attr('class', (d) => 'link ' + d[0].data.id)
         .classed(this.selectorClass('interactive'), this.config.hasAction('node'))
@@ -422,13 +410,13 @@ export default class RadialDendrogramView extends ChartView {
         .style('stroke-width', (d) => (d[0].y * Math.sin((d[0].angleRange[1] - d[0].angleRange[0]) * Math.PI / 180)) + 'px')
         .attr('d', radialLine)
     }
-    if (this.params.drawRibbons) {
+    if (this.config.get('drawRibbons')) {
       // Ribbons
       const radialLine = d3Shape.radialLine().angle((d) => d[0] / 180 * Math.PI).radius((d) => d[1]).curve(this.config.get('curve'))
-      const svgLinks = this.d3.selectAll('.ribbon').data(this.ribbons, (d) => d.id)
+      const svgLinks = this.d3.selectAll(this.selectors.ribbon).data(this._ribbons, (d) => d.id)
       svgLinks.enter().append('path')
         .attr('class', (d) => 'ribbon' + ((d.active) ? ' active' : ''))
-        .merge(svgLinks)// .transition().ease(this.config.get('ease')).duration(this.params.duration)
+        .merge(svgLinks)
         .attr('class', (d) => 'ribbon' + ((d.active) ? ' active' : ''))
         .classed(this.selectorClass('interactive'), this.config.hasAction('link'))
         .attr('d', (d) => {
@@ -441,22 +429,22 @@ export default class RadialDendrogramView extends ChartView {
       svgLinks.exit().remove()
 
       // Arc labels
-      const arcLabelsAlongArcData = (this.params.labelFlow === 'along-arc') ? this.arcs : []
-      const arcLabelsPerpendicularData = (this.params.labelFlow === 'perpendicular') ? this.arcs : []
+      const arcLabelsAlongArcData = (this.config.get('labelFlow') === 'along-arc') ? this._arcs : []
+      const arcLabelsPerpendicularData = (this.config.get('labelFlow') === 'perpendicular') ? this._arcs : []
       // Along Arc
       let svgArcLabels = this.d3.selectAll('.arc-label.along-arc').data(arcLabelsAlongArcData)
       let svgArcLabelsEnter = svgArcLabels.enter().append('text')
         .attr('class', 'arc-label along-arc')
-        .attr('x', this.params.arcLabelXOffset)
-        .attr('dy', this.params.arcLabelYOffset)
+        .attr('x', this.config.get('arcLabelXOffset'))
+        .attr('dy', this.config.get('arcLabelYOffset'))
       svgArcLabelsEnter
         .append('textPath')
         .attr('xlink:href', (d) => '#' + d.data.namePath.join('-'))
-      let svgArcLabelsEdit = svgArcLabelsEnter.merge(svgArcLabels).transition().ease(this.config.get('ease')).duration(this.params.duration)
-        .attr('x', this.params.arcLabelXOffset)
-        .attr('dy', this.params.arcLabelYOffset)
+      let svgArcLabelsEdit = svgArcLabelsEnter.merge(svgArcLabels).transition().ease(this.config.get('ease')).duration(this.config.get('duration'))
+        .attr('x', this.config.get('arcLabelXOffset'))
+        .attr('dy', this.config.get('arcLabelYOffset'))
       svgArcLabelsEdit.select('textPath')
-        .text((d) => (this.params.showArcLabels && d.labelFits) ? d.label : '')
+        .text((d) => (this.config.get('showArcLabels') && d.labelFits) ? d.label : '')
       svgArcLabels.exit().remove()
       // Perpendicular
       svgArcLabels = this.d3.selectAll('.arc-label.perpendicular').data(arcLabelsPerpendicularData)
@@ -468,12 +456,12 @@ export default class RadialDendrogramView extends ChartView {
           if ((d.angleRange[1] + d.angleRange[0]) / 2 < 180) {
             alpha -= 180
           }
-          const x = (d.y + this.params.arcLabelYOffset) * Math.cos((d.angleRange[1] + d.angleRange[0] - 180) * Math.PI / 360) + this.params.arcLabelXOffset
-          const y = (d.y + this.params.arcLabelYOffset) * Math.sin((d.angleRange[1] + d.angleRange[0] - 180) * Math.PI / 360)
+          const x = (d.y + this.config.get('arcLabelYOffset')) * Math.cos((d.angleRange[1] + d.angleRange[0] - 180) * Math.PI / 360) + this.config.get('arcLabelXOffset')
+          const y = (d.y + this.config.get('arcLabelYOffset')) * Math.sin((d.angleRange[1] + d.angleRange[0] - 180) * Math.PI / 360)
           return `translate(${x}, ${y}) rotate(${alpha})`
         })
         .style('text-anchor', (d) => ((d.angleRange[1] + d.angleRange[0]) / 2 < 180) ? 'start' : 'end')
-        .text((d) => (this.params.showArcLabels && d.labelFits) ? d.label : '')
+        .text((d) => (this.config.get('showArcLabels') && d.labelFits) ? d.label : '')
       svgArcLabels.exit().remove()
 
       // Arcs for parent nodes.
@@ -484,18 +472,18 @@ export default class RadialDendrogramView extends ChartView {
         .endAngle((n) => Math.PI * n.angleRange[1] / 180)
       const arc = d3Shape.arc()
         .innerRadius((n) => n.y)
-        .outerRadius((n) => n.y + this.params.arcWidth)
+        .outerRadius((n) => n.y + this.config.get('arcWidth'))
         .startAngle((n) => Math.PI * n.angleRange[0] / 180)
         .endAngle((n) => Math.PI * n.angleRange[1] / 180)
-      const svgArcs = this.d3.selectAll('.arc').data(this.arcs, (d) => d.data.namePath.join('-'))
+      const svgArcs = this.d3.selectAll(this.selectors.node).data(this._arcs, (d) => d.data.namePath.join('-'))
       svgArcs.enter().append('path')
         .attr('id', (d) => d.data.namePath.join('-'))
         .attr('class', (d) => 'arc arc-' + d.depth)
         .attr('d', arcEnter)
-        .merge(svgArcs).transition().ease(this.config.get('ease')).duration(this.params.duration)
+        .merge(svgArcs).transition().ease(this.config.get('ease')).duration(this.config.get('duration'))
         .style('fill', d => this.config.getColor(d.depth - 1))
         .attr('d', arc)
-      svgArcs.exit().transition().ease(this.config.get('ease')).duration(this.params.duration)
+      svgArcs.exit().transition().ease(this.config.get('ease')).duration(this.config.get('duration'))
         .attr('d', arcEnter)
         .remove()
     }
@@ -515,7 +503,7 @@ export default class RadialDendrogramView extends ChartView {
 
   _onMousemove (d, el) {
     const leaves = d.leaves()
-    _.each(this.ribbons, (ribbon) => {
+    _.each(this._ribbons, (ribbon) => {
       ribbon.active = Boolean(_.find(leaves, (leaf) => leaf.data.linkId === ribbon.id))
     })
     this._render()
@@ -525,7 +513,7 @@ export default class RadialDendrogramView extends ChartView {
   }
 
   _onMouseout (d, el) {
-    _.each(this.ribbons, (ribbon) => {
+    _.each(this._ribbons, (ribbon) => {
       ribbon.active = false
     })
     this._render()
@@ -533,12 +521,12 @@ export default class RadialDendrogramView extends ChartView {
   }
 
   _onClickNode (d, el, e) {
-    if (d.depth < this.maxDepth && d.depth === this.params.drillDownLevel) {
+    if (d.depth < this._maxDepth && d.depth === this.config.get('drillDownLevel')) {
       // Expand
-      this.config.set('drillDownLevel', this.params.drillDownLevel + 1)
-    } else if (d.depth < this.params.drillDownLevel) {
+      this.config.set('drillDownLevel', this.config.get('drillDownLevel') + 1)
+    } else if (d.depth < this.config.get('drillDownLevel')) {
       // Collapse
-      this.config.set('drillDownLevel', this.params.drillDownLevel - 1)
+      this.config.set('drillDownLevel', this.config.get('drillDownLevel') - 1)
     }
     el.classList.remove(this.selectorClass('active'))
     super._onEvent(d, el, e)

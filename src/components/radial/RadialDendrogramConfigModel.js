@@ -19,18 +19,33 @@ export default class RadialDendrogramConfigModel extends ConfigModel {
       ease: d3Ease.easeCubic,
       duration: 500,
 
+      margin: {
+        top: 50,
+        bottom: 50,
+        left: 50,
+        right: 50
+      },
+
+      // The radius of the outer circle. Will be computed if undefined.
+      //innerRadius: 300,
+
+      // The scale used to display throuput.
       valueScale: d3Scale.scaleLog(),
       // valueScale: d3Scale.scaleLinear(),
 
       // The separation in degrees between nodes with different parents
       parentSeparation: 1,
       parentSeparationThreshold: 0,
+      parentSeparationDepthThreshold: 4,
+      parentSeparationShrinkFactor: 0.05,
 
       // Arc width
       arcWidth: 10,
 
       // Show arc labels
       showArcLabels: true,
+      drawLinks: false,
+      drawRibbons: true,
 
       // Define how will the labels be rendered: 'along-arc', 'perpendicular'
       labelFlow: 'along-arc',
