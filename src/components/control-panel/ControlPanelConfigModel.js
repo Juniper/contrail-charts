@@ -11,16 +11,16 @@ export default class ControlPanelConfigModel extends ConfigModel {
         title: 'Refresh chart',
         icon: 'fa fa-refresh',
       },
-      Freeze: {
-        action: 'ToggleFreeze',
-        attribute: 'frozen',
+      Halt: {
+        action: 'ToggleHalt',
+        attribute: 'halted',
         toggle: true,
         title: 'Stop Live Update',
         icon: 'fa fa-stop',
       },
-      Unfreeze: {
-        action: 'ToggleFreeze',
-        attribute: 'frozen',
+      Start: {
+        action: 'ToggleHalt',
+        attribute: 'halted',
         toggle: false,
         title: 'Start Live Update',
         icon: 'fa fa-play',

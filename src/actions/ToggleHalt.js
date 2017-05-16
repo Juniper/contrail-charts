@@ -3,15 +3,15 @@
  */
 import Action from '../core/Action'
 /**
- * fired to stop any update happening on action
+ * fired to stop updating component by setData
  */
-export default class ToggleFreeze extends Action {
+export default class ToggleHalt extends Action {
   constructor (p) {
     super(p)
     this._deny = false
   }
 
   _execute (toggle) {
-    if (this._registrar.config) this._registrar.config.set('frozen', toggle)
+    if (this._registrar.config) this._registrar.setHalt(toggle)
   }
 }

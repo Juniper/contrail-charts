@@ -55,6 +55,10 @@ export default class ControlPanelView extends ChartView {
       .remove()
   }
 
+  setHalt (isHalted) {
+    this.config.set('halted', isHalted)
+  }
+
   addMenuItem (config) {
     this.config.set(this.config.get('menu').push(config))
   }

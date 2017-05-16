@@ -15,7 +15,7 @@ const config = {
     type: 'ControlPanel',
     config: {
       menu: [{
-        id: 'Freeze',
+        id: 'Halt',
       }],
     }
   }, {

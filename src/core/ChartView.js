@@ -7,7 +7,7 @@ import ContrailView from 'contrail-view'
 import ConfigModel from 'config-model'
 import DataModel from 'models/Data'
 import actionman from 'core/Actionman'
-import ToggleFreeze from '../actions/ToggleFreeze'
+import ToggleHalt from '../actions/ToggleHalt'
 /**
  * View base class
  */
@@ -28,12 +28,13 @@ export default class ChartView extends ContrailView {
     if (!this.model || !(this.model instanceof Model)) {
       if (p.model instanceof Model) this.model = p.model
       else this.model = new Model(undefined, p.model)
+      if (!p.config.frozen) this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
     }
     this.setConfig(p.config)
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
-    if (this.model) actionman.set(ToggleFreeze, this)
     _.each(this.constructor.Actions, action => actionman.set(action, this))
+    actionman.set(ToggleHalt, this)
   }
 
   get selectors () {
@@ -137,7 +138,6 @@ export default class ChartView extends ContrailView {
   * @param {Array} data
   */
   setData (data) {
-    if (this.config.get('frozen')) return
     this.model.data = data
   }
   /**
@@ -215,6 +215,33 @@ export default class ChartView extends ContrailView {
   hide () {
     this.d3.classed('hide', true)
     this._visible = false
+  }
+  /**
+   * Set / Remove any automatic update by public methods or actions
+   * TODO consider halted state
+   */
+  setFrozen (isFrozen) {
+    if (this.config.get('frozen') === isFrozen) return
+    this.config.set('frozen', isFrozen, {silent: true})
+    if (isFrozen) {
+      this.stopListening(this.config)
+      this.stopListening(this.model)
+      _.each(this.constructor.Actions, action => actionman.unset(action, this))
+    } else {
+      this.listenTo(this.config, 'change', this.render)
+      this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
+      _.each(this.constructor.Actions, action => actionman.set(action, this))
+    }
+  }
+
+  setHalt (isHalted) {
+    if (this.config.get('halted') === isHalted) return
+    this.config.set('halted', isHalted, {silent: true})
+    if (isHalted) {
+      this.stopListening(this.model)
+    } else {
+      this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
+    }
   }
   /**
    * Stop listening to config and model. Remove the view from the dom.
