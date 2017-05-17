@@ -34,6 +34,7 @@ import singleArea from '../../single/single-area'
 import singleScatterPlot from '../../single/single-scatter-plot'
 import singlePie from '../../single/single-pie'
 import singleComposite from '../../single/single-composite-y'
+import singleRadialLine from '../../single/single-radial-line'
 /**
  * structure of an example:
  * 'example title': {
@@ -117,6 +118,9 @@ const allExamples = {
     },
     'Composite Y Chart': {
       view: singleComposite,
+    },
+    'Radial Line Chart': {
+      view: singleRadialLine,
     },
   },
   'grouped': {
