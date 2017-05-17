@@ -2,10 +2,10 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import * as d3Geo from 'd3-geo'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class MapConfigModel extends ContrailChartsConfigModel {
+export default class MapConfigModel extends ConfigModel {
   get defaults () {
     return Object.assign(super.defaults, ColoredChart.defaults, {
       isSharedContainer: true,
