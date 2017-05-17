@@ -78,7 +78,6 @@ export default class CompositeYView extends ChartView {
       }).flatten().value())
 
       // Skip equal start-end ranges except they are "undefined"
-      console.log(range);
       if (range[0] !== range[1] || _.isNil(range[0])) {
         this.config.set(`axes.${axisName}.domain`, range, {silent: true})
       }

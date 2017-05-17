@@ -36,6 +36,10 @@ export default class ControlPanelConfigModel extends ConfigModel {
     }
   }
 
+  get update () {
+    return this.attributes.update.concat([this.id])
+  }
+
   set (key, value, options) {
     if (_.isString(key) && !this.attributes[key]) {
       const currentActionId = _.findKey(this.menuItems, item => {

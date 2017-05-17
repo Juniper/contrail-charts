@@ -6,7 +6,7 @@ import * as d3Selection from 'd3-selection'
 import ChartView from 'chart-view'
 import Config from './ControlPanelConfigModel'
 import actionman from 'core/Actionman'
-import ToggleFreeze from '../../actions/ToggleFreeze'
+import ToggleHalt from '../../actions/ToggleHalt'
 import _template from './control-panel.html'
 import _panelTemplate from './panel.html'
 import _actionTemplate from './action.html'
@@ -14,7 +14,7 @@ import './control-panel.scss'
 
 export default class ControlPanelView extends ChartView {
   static get Config () { return Config }
-  static get Actions () { return {ToggleFreeze} }
+  static get Actions () { return {ToggleHalt} }
 
   constructor (...args) {
     super(...args)
@@ -91,8 +91,11 @@ export default class ControlPanelView extends ChartView {
 
   _onMenuItemClick (d, el) {
     d3Selection.event.stopPropagation()
+    let actionId
     if (d.component) this.open(d)
-    else if (d.action) actionman.fire(d.action, d.toggle)
-    else actionman.fire(d.id, d)
+    else {
+      actionId = d.action ? d.action : d.id
+      actionman.fire(actionId, this.config.update, d.toggle)
+    }
   }
 }
