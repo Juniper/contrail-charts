@@ -67,6 +67,7 @@ export default class GroupedBarView extends ChartView {
 
   render () {
     super.render()
+    this._onMouseout()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     // Create a flat data structure

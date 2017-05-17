@@ -69,6 +69,7 @@ export default class StackedBarView extends ChartView {
 
   render () {
     super.render()
+    this._onMouseout()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     const start = this.config.yScale.range()[0]

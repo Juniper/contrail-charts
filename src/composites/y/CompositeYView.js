@@ -2,6 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
+import * as d3Selection from 'd3-selection'
 import * as d3Array from 'd3-array'
 import ChartView from 'chart-view'
 import Config from './CompositeYConfigModel'
@@ -56,6 +57,7 @@ export default class CompositeYView extends ChartView {
     this._cluster()
     this._showLegend()
     this._initCrosshair()
+    this._toggleCrosshair()
 
     this._ticking = false
   }
@@ -198,7 +200,7 @@ export default class CompositeYView extends ChartView {
 
   _toggleCrosshair (point) {
     const crosshairId = this.config.get('crosshair')
-    if (point[0] < 0 || point[0] > this.innerWidth || point[1] < 0 || point[1] > this.innerHeight) {
+    if (!point || point[0] < 0 || point[0] > this.innerWidth || point[1] < 0 || point[1] > this.innerHeight) {
       actionman.fire('ToggleVisibility', crosshairId, false)
       this._ticking = false
       return
@@ -308,7 +310,7 @@ export default class CompositeYView extends ChartView {
   // Event handlers
 
   _onMousemove (d, el, e) {
-    const point = d3.mouse(this.el)
+    const point = d3Selection.mouse(this.el)
     if (!this._ticking) {
       window.requestAnimationFrame(this._toggleCrosshair.bind(this, point))
       this._ticking = true
