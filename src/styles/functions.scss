@@ -42,7 +42,7 @@
         map-get-safe($config, "color-indicator", ()),
         map-get-safe($config, "selector-trigger", ()),
         map-get-safe($config, "selector-panel", ()),
-        map-get-safe($config, "selector-panel-swatch", ()),
+        map-get-safe($config, "selector-panel-switch", ()),
       );
     } @else if ($componentId == $messageId) {
       @return (

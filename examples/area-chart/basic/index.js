@@ -96,10 +96,10 @@ const config = {
           accessor: 'group.a',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'group.b',
+          accessor: 'b',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'group.c',
+          accessor: 'c',
           valueFormatter: formatter.toInteger,
         }
       ]

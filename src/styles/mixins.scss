@@ -43,7 +43,7 @@
         $legend-panel-color-indicator: nth($arg, 5),
         $legend-panel-selector-trigger: nth($arg, 6),
         $legend-panel-selector-panel: nth($arg, 7),
-        $legend-panel-selector-panel-swatch: nth($arg, 8)
+        $legend-panel-selector-panel-switch: nth($arg, 8)
       );
     } @else if ($componentId == $messageId) {
       @include messageRules(

@@ -1,11 +1,13 @@
 <div class="legend-inner-container">
-  {{#if editable}}<div class="edit-legend"><i class="fa fa-pencil-square fs" aria-hidden="true"></i></div>{{/if}}
+  {{#if editable}}<div class="edit-legend"><i class="icon-edit" aria-hidden="true"></i></div>{{/if}}
   <div class="keys">
   	{{#each keys}}
   	<div class="key" data-key="{{ key }}">
   		<div class="edit-key">
   			<div class="select select--color" style="background-color: {{ color }}; border-color: {{ color }}" data-color="{{color}}"><div class="triangle"></div></div>
+        {{#if ../chartTypes }}
   			<div class="select select--chart fa {{ icon }}" data-chart-type="{{chartType}}"><div class="triangle"></div></div>
+        {{/if}}
   		</div>
   		<label class="legend-key checkbox">
   			<input type="checkbox" {{#if checked}} checked {{/if}} />
