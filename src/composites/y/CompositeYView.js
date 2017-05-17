@@ -152,7 +152,7 @@ export default class CompositeYView extends ChartView {
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
 
-    _.each(this.config.get('axes'), axis => {
+    _.each(this.config.activeAxes, axis => {
       this.config.set(`axes.${axis.name}.calculatedDomain`, [], {silent: true})
     })
     children.enter().merge(children).each(child => {
@@ -211,6 +211,8 @@ export default class CompositeYView extends ChartView {
 
     const config = {
       container: this._container,
+      width: this.width,
+      height: this.height,
       margin: this.config.margin,
       bubbles: true,
       lines: 'full',

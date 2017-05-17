@@ -50,8 +50,11 @@ export default class StackedBarView extends ChartView {
     // or fill the gaps in it beforehand
     return this.config.getOuterWidth(this.model, this.innerWidth) / this.model.data.length * paddedPart
   }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
   /**
-  * @override
   * Y coordinate calculation considers position is being stacked
   */
   getScreenY (datum, yAccessor) {

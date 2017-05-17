@@ -40,6 +40,7 @@ const config = {
         right: 60,
         label: 30,
       },
+      height: 400,
       chartTypes: {
         y1: ['GroupedBar', 'StackedBar'],
         y2: ['Line'],
