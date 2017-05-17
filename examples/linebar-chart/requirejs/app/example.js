@@ -33,8 +33,7 @@ define([ // eslint-disable-line no-undef
       type: 'CompositeY',
       config: {
         margin: {
-          left: 80,
-          right: 80,
+          right: 60,
           bottom: 40,
         },
         height: 450,
@@ -82,6 +81,9 @@ define([ // eslint-disable-line no-undef
           ]
         },
         axes: {
+          x: {
+            formatter: d3.timeFormat('%H:%M:%S'),
+          },
           y1: {
             position: 'left',
             formatter: value => value.toFixed(0),
@@ -118,11 +120,6 @@ define([ // eslint-disable-line no-undef
       id: 'chart-id2',
       type: 'CompositeY',
       config: {
-        margin: {
-          Left: 80,
-          right: 80,
-          bottom: 40,
-        },
         height: 200,
         plot: {
           x: {
@@ -138,6 +135,9 @@ define([ // eslint-disable-line no-undef
           ]
         },
         axes: {
+          x: {
+            formatter: d3.timeFormat('%H:%M:%S'),
+          },
           y: {
             ticks: 5,
           }
