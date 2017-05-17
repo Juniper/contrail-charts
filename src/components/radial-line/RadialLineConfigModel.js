@@ -21,8 +21,8 @@ export default class LineConfigModel extends ConfigModel {
     )
   }
 
-  get xScale () {
-    return this.get('x.scale')
+  get angleScale () {
+    return this.get('angle.scale')
   }
 
   get rScale () {
@@ -34,8 +34,8 @@ export default class LineConfigModel extends ConfigModel {
    * @param height
    */
   calculateScales (model, width, height) {
-    let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.x)
-    _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
+    let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
+    _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
     config = _.merge({}, this.attributes.r, {range: [0, height / 2]})
     _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
   }

@@ -25,7 +25,7 @@ const config = {
     top: 10,
     bottom: 10
   },
-  x: {
+  angle: {
     accessor: 'group.x',
     labelFormatter: 'Value',
     scale: 'scaleLinear',
@@ -42,6 +42,7 @@ export default {
     chart = new components.RadialLineView({config, container})
     chart.setData(data)
 
+    /*
     setTimeout(() => {
       config.r.accessor = 'b'
       config.r.color = colorScheme[3]
@@ -51,6 +52,7 @@ export default {
       const length = _.random(3, 20)
       chart.setData(data.slice(0, length))
     }, 2000)
+    */
   },
 
   remove: () => {
