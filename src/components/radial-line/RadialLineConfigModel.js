@@ -6,7 +6,7 @@ import * as d3Shape from 'd3-shape'
 import ConfigModel from 'config-model'
 import ScalableChart from 'helpers/scale/ScalableChart'
 
-export default class LineConfigModel extends ConfigModel {
+export default class RadialLineConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults,
       {
