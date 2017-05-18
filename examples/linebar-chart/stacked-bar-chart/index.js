@@ -24,11 +24,6 @@ const config = {
     id: 'grouped-bar-compositey',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       crosshair: 'crosshair-id',
       plot: {
         x: {

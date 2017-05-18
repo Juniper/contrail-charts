@@ -51,9 +51,6 @@ const config = {
     config: {
       legend: 'legend-panel-id',
       crosshair: 'crosshair-id',
-      margin: {
-        label: 40,
-      },
       chartTypes: {
         y1: ['GroupedBar', 'Line'],
         y2: ['GroupedBar', 'Line']
@@ -171,9 +168,6 @@ const config = {
     },
     config: {
       legend: 'legend-pie',
-      margin: {
-        left: 60,
-      },
       type: 'donut',
       radius: 100,
       width: 200,

@@ -36,9 +36,8 @@ const config = {
       legend: 'legend-id',
       crosshair: 'crosshair-id',
       margin: {
-        left: 60,
-        right: 60,
-        label: 30,
+        left: 16,
+        right: 20,
       },
       height: 400,
       chartTypes: {
@@ -91,6 +90,7 @@ const config = {
       axes: {
         x: {
           scale: 'scaleLinear',
+          label: 'X',
         },
         y1: {
           position: 'left',
@@ -106,10 +106,10 @@ const config = {
   }, {
     type: 'Navigation',
     config: {
-      height: 200,
       margin: {
-        left: 60,
+        left: 16,
       },
+      height: 200,
       selection: [75, 100],
       update: ['compositey-chart-id'],
       plot: {

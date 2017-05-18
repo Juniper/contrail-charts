@@ -19,14 +19,9 @@ let chart
 const config = {
   id: 'chartBox',
   components: [{
-    id: 'composite-grouped-bar',
+    id: 'stacked-bar-compositey',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       plot: {
         x: {
           accessor: 'group.x',
