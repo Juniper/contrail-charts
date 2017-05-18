@@ -177,12 +177,6 @@ export default class ChartView extends ContrailView {
       if (this.svg.select(`#${this.id}`).empty()) {
         this.el.setAttribute('data-order', this.zIndex)
         this.svg.node().append(this.el)
-        // TODO constrain selector to direct descendants ":scope > g"
-        //this.svg
-          //.selectAll('g[data-order]')
-          //.datum(function () { return this.getAttribute('data-order') })
-          //.sort()
-          //.datum(null)
       }
       const margin = this.config.margin
       this.d3.attr('transform', `translate(${margin.left},${margin.top})`)

@@ -42,6 +42,8 @@ export default class CompositeYView extends ChartView {
     super.render()
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    // reset axes ticks
+    this.config.set('ticks', {}, {silent: true, unset: true})
     this._renderAxes()
     this._renderClip()
 
@@ -60,6 +62,11 @@ export default class CompositeYView extends ChartView {
     this._toggleCrosshair()
 
     this._ticking = false
+  }
+
+  remove () {
+    this._composite.remove()
+    super.remove()
   }
   /**
    * Works only with incremental values at x scale, as range is set as min / max values for x scale
@@ -101,9 +108,9 @@ export default class CompositeYView extends ChartView {
     if (clip.empty()) {
       clip = this.d3.append(this.selectors.clip)
         .attr('id', `${this.id}-${this.selectors.clip}`)
-        .append('rect')
+      clip.append('rect')
     }
-    clip.attr('width', this.innerWidth).attr('height', this.innerHeight)
+    clip.select('rect').attr('width', this.innerWidth).attr('height', this.innerHeight)
   }
   /**
    * Render axes and calculate inner margins for charts
@@ -124,7 +131,8 @@ export default class CompositeYView extends ChartView {
     elements.each(axis => {
       const component = this._composite.get(axis.id)
       // if only a scale is changed Backbone doesn't trigger "change" event and no render will happen
-      component.config.set(this.config.getAxisConfig(axis.name))
+      component.config.set(this.config.getAxisConfig(axis.name), {silent: true})
+      component.render()
     })
 
     elements.exit().each(axis => {
@@ -153,6 +161,7 @@ export default class CompositeYView extends ChartView {
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
 
+    // reset calculated domain from previous render
     _.each(this.config.activeAxes, axis => {
       this.config.set(`axes.${axis.name}.calculatedDomain`, [], {silent: true})
     })

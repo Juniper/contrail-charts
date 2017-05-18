@@ -199,8 +199,10 @@ export default class CompositeYConfigModel extends ConfigModel {
    * Sync ticks of the scales in the same direction
    */
   syncScales (direction, scale, ticksAmount) {
-    if (this.attributes.ticks[direction]) return this.attributes.ticks[direction]
-    else this.attributes.ticks[direction] = _.map(scale.ticks(ticksAmount), v => scale(v))
+    const attributes = this.attributes
+    attributes.ticks || (attributes.ticks = {})
+    if (attributes.ticks[direction]) return attributes.ticks[direction]
+    else attributes.ticks[direction] = _.map(scale.ticks(ticksAmount), v => scale(v))
   }
 
   isMultiAccessor (type) {
