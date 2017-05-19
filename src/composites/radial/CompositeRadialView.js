@@ -46,7 +46,7 @@ export default class CompositeRadialView extends ChartView {
     super.render()
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
-    //this._renderAxes()
+    this._renderAxes()
     this._renderClip()
 
     // force composite scale for children components
@@ -119,14 +119,13 @@ export default class CompositeRadialView extends ChartView {
   /**
    * Render axes and calculate inner margins for charts
    */
-   /*
   _renderAxes () {
     const elements = this.svg.selectAll(this.selectors.axis)
-      .data(this.config.activeAxes, d => d.name)
+      .data(this.config.activeAngleAxes, d => d.name)
 
     elements.enter().each(axis => {
       const component = this._composite.add({
-        type: 'Axis',
+        type: 'RadialAxis',
         config: this.config.getAxisConfig(axis.name),
         container: this._container,
       })
@@ -143,7 +142,6 @@ export default class CompositeRadialView extends ChartView {
       this._composite.remove(axis.id)
     })
   }
-  */
 
   /**
    * Child components are initialized on the first call

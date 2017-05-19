@@ -1,0 +1,9 @@
+@import "radial-axis-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg {
+  @include axisRules($axis);
+
+  @include themify($axisId, $themes);
+}

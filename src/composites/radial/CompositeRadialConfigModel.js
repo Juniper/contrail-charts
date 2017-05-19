@@ -36,16 +36,13 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   }
 
   /**
-   * @return {Array} all enabled y accessors
+   * @return {Array} all enabled accessors
    */
-  /*
-  get yAccessors () {
-    return _.filter(this.get('plot.y'), a => !a.disabled)
+  get activeAccessors () {
+    return _.filter(this.get('accessors'), a => !a.disabled)
   }
-  */
 
   /**
-   * TODO update name to considering that this is only y accessors with no filter for disabled
    * @return {Array} all y accessors
    */
   get accessors () {
@@ -63,16 +60,6 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     })
   }
 
-  /*
-  get xScale () {
-    return this.get(`axes.${this.get('plot.x.axis')}.scale`)
-  }
-  // TODO should this return all scales or just first?
-  get yScales () {
-    return _.find(this.get('axes'), a => a.name.startsWith('y')).scale
-  }
-  */
-
   get margin () {
     const margin = _.cloneDeep(this.attributes.margin)
     _.each(this.attributes.axes, (config, name) => {
@@ -85,13 +72,21 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   /**
    * @return axes with enabled accessors to plot
    */
-  get activeAxes () {
-    const plotYAxes = _(this.yAccessors).map(a => this.getAxisName(a)).uniq().value()
+  get activeAngleAxes () {
+    const angleAxisNames = _(this.activeAccessors).map(a => this.getAngleAxisName(a)).uniq().value()
     return _.filter(this.attributes.axes, (axis, name) => {
-      // TODO move to set method
       axis.id = `${this.id}-${name}`
       axis.name = name
-      return name.startsWith('x') || plotYAxes.includes(name)
+      return angleAxisNames.includes(name)
+    })
+  }
+
+  get activeRAxes () {
+    const rAxisNames = _(this.activeAccessors).map(a => this.getRAxisName(a)).uniq().value()
+    return _.filter(this.attributes.axes, (axis, name) => {
+      axis.id = `${this.id}-${name}`
+      axis.name = name
+      return rAxisNames.includes(name)
     })
   }
 
@@ -106,13 +101,6 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     return accessor.chart || 'RadialLine'
   }
 
-  /*
-  getAxisName (accessors = [{}]) {
-    _.isArray(accessors) || (accessors = [accessors])
-    return accessors[0].axis || 'y'
-  }
-  */
-
   getAngleAxisName (accessor) {
     return accessor.angleAxis || 'angleAxis'
   }
@@ -122,8 +110,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   }
 
   getAxisAccessors (name) {
-    if (name.startsWith('x')) return [this.get('plot.x.accessor')]
-    return _.filter(this.get('plot.y'), accessor => this.getAxisName(accessor) === name)
+    return _.filter(this.accessors, accessor => this.getAngleAxisName(accessor) === name || this.getRAxisName(accessor) === name)
   }
 
   getAxisConfig (name) {
@@ -134,7 +121,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
       height: this.attributes.height,
       width: this.attributes.width,
       accessors: this.getAxisAccessors(name),
-      tickCoords: this.syncScales(direction, axis.scale, axis.ticks)
+      //tickCoords: this.syncScales(direction, axis.scale, axis.ticks)
     }, axis)
     return config
   }
@@ -193,12 +180,15 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     this.trigger('change')
   }
 
+  /*
   setKey (accessorName, isEnabled) {
     const accessor = _.find(this.accessors, a => a.accessor === accessorName)
     if (!accessor) return
     accessor.disabled = !isEnabled
     this.trigger('change')
   }
+  */
+
   /**
    * Changing anyone chart type from GroupedBar to StackedBar or vise versa will affect all bars for no bars overlap
    * @param accessorName
