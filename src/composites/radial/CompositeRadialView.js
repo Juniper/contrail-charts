@@ -45,18 +45,17 @@ export default class CompositeRadialView extends ChartView {
   render () {
     super.render()
     this._updateComponents()
-    // TODO: do we need to calculate scales of the composite? we are calculating scales for all the components anyway
-    //this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     //this._renderAxes()
     this._renderClip()
 
     // force composite scale for children components
     const components = this._composite.getByType(_(this.config.accessors).map('chart').uniq().value())
     _.each(components, component => {
-      //const componentAxis = this.config.getAxisName(component.config.get('y'))
-      // TODO even without silent this will not trigger config 'change' because of nested attribute
-      //component.config.set('y.scale', this.config.get(`axes.${componentAxis}.scale`), {silent: true})
-      //if (this.config.get('bucket') && component.type === 'ScatterPlot') return
+      const componentAngleAxisName = this.config.getAngleAxisName(component.config.get('angle'))
+      component.config.set('angle.scale', this.config.get(`axes.${componentAngleAxisName}.scale`), {silent: true})
+      const componentRAxisName = this.config.getRAxisName(component.config.get('r'))
+      component.config.set('r.scale', this.config.get(`axes.${componentRAxisName}.scale`), {silent: true})
       component.render()
     })
     //this._cluster()

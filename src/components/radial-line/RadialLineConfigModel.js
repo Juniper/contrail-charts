@@ -35,9 +35,9 @@ export default class RadialLineConfigModel extends ConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
-    _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
-    config = _.merge({}, this.attributes.r, {range: [0, height / 2]})
-    _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
+    if (!_.has(this.attributes, 'angle.scale')) _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
+    config = _.merge({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
+    if (!_.has(this.attributes, 'r.scale')) _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
   }
 
   getColor () {

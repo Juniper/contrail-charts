@@ -138,26 +138,45 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     }, axis)
     return config
   }
+
   /**
    * @param model
    * @param width
    * @param height
    */
   calculateScales (model, width, height) {
-    const config = _.extend({range: [0, width]}, this.get('plot.x'), this.get('axes.x'))
-    _.set(this.attributes, 'axes.x.scale', ScalableChart.getScale(model, config))
-
-    const accessorsByAxis = _.groupBy(this.get('plot.y'), a => this.getAxisName(a))
-    _.each(accessorsByAxis, (accessors, axisName) => {
-      const accessorNames = _.map(accessors, 'accessor')
+    const accessorsByAngleAxis = _.groupBy(this.accessors, a => this.getAngleAxisName(a))
+    _.each(accessorsByAngleAxis, (accessors, axisName) => {
+      const accessorNames = _(accessors).map('angle').uniq().value()
       const config = _.extend(
         {
           domain: this.get(`axes.${axisName}.calculatedDomain`),
-          range: [height, 0],
+          range: [0, 2 * Math.PI],
           accessor: accessorNames
         },
-        this.get('axes.' + axisName)
+        this.get(`axes.${axisName}`)
       )
+      _.set(this.attributes, `axes.${axisName}.scale`, ScalableChart.getScale(model, config))
+    })
+    const accessorsByRAxis = _.groupBy(this.accessors, a => this.getRAxisName(a))
+    const availableR = Math.min(width / 2, height / 2)
+    _.each(accessorsByRAxis, (accessors, axisName) => {
+      const accessorNames = _(accessors).map('r').uniq().value()
+      const config = _.extend(
+        {
+          domain: this.get(`axes.${axisName}.calculatedDomain`),
+          range: [0, availableR],
+          accessor: accessorNames
+        },
+        this.get(`axes.${axisName}`)
+      )
+      // Handle ranges given in %
+      _.each(config.range, (range, i) => {
+        if (_.endsWith(range, '%')) {
+          const percent = parseInt(_.trim(range, ' %'))
+          config.range[i] = (percent / 100) * availableR
+        }
+      })
       _.set(this.attributes, `axes.${axisName}.scale`, ScalableChart.getScale(model, config))
     })
   }

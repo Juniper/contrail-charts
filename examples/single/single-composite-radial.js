@@ -4,6 +4,7 @@
 import _ from 'lodash'
 import {composites} from 'contrail-charts'
 import {fixture} from 'commons'
+import {schemeCategory10 as colorScheme} from 'd3-scale'
 
 const data = fixture()
 
@@ -22,13 +23,15 @@ const config = {
       angle: 'x',
       r: 'a',
       angleAxis: 'angleAxis',
-      rAxis: 'rAxis',
+      rAxis: 'rAxis1',
+      color: colorScheme[0],
     }, {
       chart: 'RadialLine',
       angle: 'x',
       r: 'random',
       angleAxis: 'angleAxis',
-      rAxis: 'rAxis',
+      rAxis: 'rAxis2',
+      color: colorScheme[1],
     },
   ],
   axes: {
@@ -36,9 +39,15 @@ const config = {
       scale: 'scaleLinear',
       label: 'Angle',
     },
-    rAxis: {
+    rAxis1: {
       scale: 'scaleLinear',
-      label: 'R',
+      label: 'R1',
+      range: ['5%', '45%'],
+    },
+    rAxis2: {
+      scale: 'scaleLinear',
+      label: 'R2',
+      range: ['55%', '95%'],
     },
   },
 }
@@ -50,9 +59,7 @@ export default {
     chart = new composites.CompositeRadialView({config, container})
     chart.setData(data)
     console.log('data: ', data)
-    console.log('chart._composite: ', chart._composite)
-    console.log('chart._composite domain: ', chart._composite._components[0].config.get('angle.scale').domain())
-    console.log('chart._composite range: ', chart._composite._components[0].config.get('angle.scale').range())
+    console.log('chart: ', chart)
   },
 
   remove: () => {
