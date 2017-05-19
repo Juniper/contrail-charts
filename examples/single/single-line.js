@@ -25,12 +25,10 @@ const config = {
   },
   x: {
     accessor: 'group.x',
-    labelFormatter: 'Value',
     scale: 'scaleLinear',
   },
   y: {
     accessor: 'group.a',
-    labelFormatter: 'Label Group.A',
     color: colorScheme[2],
   }
 }

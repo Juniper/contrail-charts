@@ -21,18 +21,15 @@ const container = document.querySelector('#chartBox')
 const config = {
   x: {
     accessor: 'group.x',
-    labelFormatter: 'Value',
   },
   y: [
     {
       accessor: 'group.a',
       stack: 'positive',
-      labelFormatter: 'Label Group.A',
       color: colorScheme[2],
     }, {
       accessor: 'b',
       stack: 'negative',
-      labelFormatter: 'Label B',
       color: colorScheme[3],
     }, {
       accessor: 'c',

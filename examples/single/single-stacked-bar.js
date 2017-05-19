@@ -25,16 +25,13 @@ const config = {
   },
   x: {
     accessor: 'group.x',
-    labelFormatter: 'Value',
     domain: [5, length],
   },
   y: [
     {
       accessor: 'group.a',
-      labelFormatter: 'Label Group.A',
     }, {
       accessor: 'b',
-      labelFormatter: 'Label B',
       color: d => d.group.a > 50 ? 'red' : undefined
     }
   ]
@@ -48,7 +45,6 @@ export default {
     setTimeout(() => {
       config.y.push({
         accessor: 'c',
-        labelFormatter: 'Label C',
       })
       chart.setConfig(config)
     }, 1000)
