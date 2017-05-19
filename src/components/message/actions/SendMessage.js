@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Juniper Networks, Inc. All rights reserved.
+ */
 import Action from '../../../core/Action'
 
 export default class SendMessage extends Action {

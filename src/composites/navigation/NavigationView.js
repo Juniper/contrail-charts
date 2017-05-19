@@ -37,6 +37,7 @@ export default class NavigationView extends ChartView {
         config: {
           isSharedContainer: true,
           margin: this._yChart.config.margin,
+          height: this.height,
         },
       })
       this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))

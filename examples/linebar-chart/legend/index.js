@@ -193,20 +193,19 @@ export default {
     chart = new composites.CompositeView({config})
     chart.setData(data)
     chart.actionman.fire('SendMessage', {
-      componentId: 'compositey-chart-id',
       action: 'once',
       messages: [{
         level: 'info',
         title: 'Message 1',
-        message: 'This is an example message. It will disappear after 5 seconds.'
+        text: 'This is an example message. It will disappear after 5 seconds.'
       }, {
         level: 'error',
         title: 'A Fatal Error',
-        message: 'This is an error.'
+        text: 'This is an error.'
       }, {
         level: 'warn',
-        title: 'A waring message',
-        message: 'This is another example message.'
+        title: 'A warning message',
+        text: 'This is another example message.'
       }]
     })
   },

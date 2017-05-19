@@ -181,12 +181,12 @@ const config = {
       tooltip: 'tooltip-id2',
       action: {
         'click node': data => {
-          chart.renderMessage({
-            action: 'once',
+          chart.actionman.fire('SendMessage', {
+            action: 'update',
             messages: [{
               level: 'info',
               title: 'Pie chart message',
-              message: `Sum of selected "${data.label}" values: ${data.value}`,
+              text: `Sum of selected "${data.label}" values: ${data.value}`,
             }]
           })
         },
