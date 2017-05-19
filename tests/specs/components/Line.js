@@ -50,7 +50,7 @@ describe('LineView.', () => {
       }
       chart.setConfig(config)
       chart.setData(data)
-      expect(chart.el.querySelector('path.line')).toBeDefined()
+      expect(container.querySelector('path.line')).toBeDefined()
     })
   })
 
@@ -149,17 +149,56 @@ describe('LineView.', () => {
 
     it('should render empty chart without data', () => {
       chart.render()
-      expect(chart.el.querySelector('path.line')).toBeNull()
+      expect(container.querySelector('path.line')).toBeNull()
     })
 
     it('should render empty chart with empty data', () => {
       chart.setData([])
-      expect(chart.el.querySelector('path.line')).toBeNull()
+      expect(container.querySelector('path.line')).toBeNull()
     })
 
     it('should render one point', () => {
       chart.setData([{ x: 1, y: 2 }])
-      expect(chart.el.querySelector('path.line')).toBeDefined()
+      expect(container.querySelector('path.line')).toBeDefined()
+    })
+
+    it('should correctly calculate position of two points', (done) => {
+      config.width = 300
+      config.height = 200
+      chart.setConfig(config)
+      chart.setData([
+        { x: 1, y: 1 },
+        { x: 2, y: 2 }
+      ])
+      let path = container.querySelector('path.line')
+
+      observer('attr', path, 'd', () => {
+        let d = path.getAttribute('d')
+        expect(d).toBe('M0,200L300,0')
+        done()
+      })
+    })
+
+    it('should  not be render with NaN data', () => {
+      data = [
+        { x: 1, y: 1 },
+        { x: 2, y: NaN },
+        { x: NaN, y: 3 },
+        { x: 4, y: 4 }
+      ]
+      chart.setData(data)
+      expect(container.querySelector('path.line')).not.toBeDefined()
+    })
+
+    it('should not be render with undefined data', () => {
+      data = [
+        { x: undefined, y: 1 },
+        { x: 2, y: undefined },
+        { x: 3, y: 3 },
+        { x: 4, y: 4 }
+      ]
+      chart.setData(data)
+      expect(container.querySelector('path.line')).not.toBeDefined()
     })
   })
 })

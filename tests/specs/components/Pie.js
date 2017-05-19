@@ -17,10 +17,10 @@ describe('PieView', () => {
       }
     }
     data = [
-      { x: 'System process', y: 4499890 },
-      { x: 'Process 1', y: 2704659 },
-      { x: 'Process 2', y: 2159981 },
-      { x: 'Process 3', y: 3853788 },
+      { x: 'System process', y: 1 },
+      { x: 'Process 1', y: 5 },
+      { x: 'Process 2', y: 3 },
+      { x: 'Process 3', y: 10 },
     ]
     chart = new cc.components.PieView({config, container})
   })
@@ -29,8 +29,27 @@ describe('PieView', () => {
     while (container.firstChild) { container.firstChild.remove() }
   })
 
-  it('Pie chart should be rendered with svg path', () => {
-    chart.setData(data)
-    expect(chart.el.querySelectorAll('path.arc').length).toEqual(4)
+  describe('Render with default config.', () => {
+    it('Pie chart render with default config.', () => {
+      config = {
+        serie: {
+          getValue: v => v.y,
+        }
+      }
+      chart.setConfig(config)
+      chart.setData(data)
+      expect(container.querySelectorAll('path.arc').length).toEqual(4)
+    })
+  })
+
+  describe('Render with changed config.', () => {
+    it('should be change pie type', () => {
+      config.type = 'pie'
+      chart.setConfig(config)
+      chart.setData(data)
+      let path = container.querySelector('path.arc')
+      let d = path.getAttribute('d')
+      expect(d).toContain('L0,0Z')
+    })
   })
 })
