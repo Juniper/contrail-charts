@@ -179,26 +179,60 @@ describe('LineView.', () => {
       })
     })
 
-    it('should  not be render with NaN data', () => {
+    it('should render with NaN data on x', () => {
       data = [
         { x: 1, y: 1 },
-        { x: 2, y: NaN },
+        { x: 2, y: 2 },
         { x: NaN, y: 3 },
         { x: 4, y: 4 }
       ]
       chart.setData(data)
-      expect(container.querySelector('path.line')).not.toBeDefined()
+      expect(chart.model.data.length).toBe(3)
+      expect(container.querySelector('path.line')).toBeDefined()
     })
 
-    it('should not be render with undefined data', () => {
+    it('should render with undefined data on x', () => {
       data = [
         { x: undefined, y: 1 },
-        { x: 2, y: undefined },
+        { x: 2, y: 2 },
         { x: 3, y: 3 },
         { x: 4, y: 4 }
       ]
       chart.setData(data)
+      expect(chart.model.data.length).toBe(3)
       expect(container.querySelector('path.line')).not.toBeDefined()
+    })
+
+    it('should render with NaN data on y', (done) => {
+      data = [
+        { x: 1, y: 1 },
+        { x: 2, y: NaN },
+        { x: 3, y: 3 }
+      ]
+      chart.setData(data)
+      let path = container.querySelector('path.line')
+
+      observer('attr', path, 'd', () => {
+        let d = path.getAttribute('d')
+        expect(d).not.toContain('NaN')
+        done()
+      })
+    })
+
+    it('should render with undefined data on y', (done) => {
+      data = [
+        { x: 1, y: 1 },
+        { x: 2, y: undefined },
+        { x: 3, y: 3 }
+      ]
+      chart.setData(data)
+      let path = container.querySelector('path.line')
+
+      observer('attr', path, 'd', () => {
+        let d = path.getAttribute('d')
+        expect(d).not.toContain('NaN')
+        done()
+      })
     })
   })
 })
