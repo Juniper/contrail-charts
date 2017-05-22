@@ -2,11 +2,11 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 
-export default class TooltipConfigModel extends ContrailChartsConfigModel {
+export default class TooltipConfigModel extends ConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, {
+    return _.merge(super.defaults, {
       // Which tooltip ids to accept. If empty accept all.
       acceptFilters: [],
 
@@ -39,11 +39,22 @@ export default class TooltipConfigModel extends ContrailChartsConfigModel {
     })
   }
 
-  get sourceId () {
-    return this._parent.id
+  get clip () {
+    return this.attributes.clip
   }
   // TODO
   get stickyMargin () {
     return {left: 0, right: 0}
+  }
+
+  get position () {
+    return {
+      left: this.attributes.left,
+      top: this.attributes.top,
+    }
+  }
+
+  get height () {
+    return this.attributes.height
   }
 }

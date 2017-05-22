@@ -1,12 +1,12 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
 
 const length = 100
 const data = fixture({
-  length: length,
+  length,
   data: {
     x: {linear: true, range: [0, length]},
     a: {random: true, range: [3, (length - 1) * 3]},
@@ -17,39 +17,32 @@ const data = fixture({
   },
 })
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-chart-id',
       editable: {
-        colorSelector: true,
-        chartSelector: true
+        color: true,
+        chart: true,
       },
-      placement: 'horizontal',
-      filter: true,
-    },
-  }, {
-    type: 'ControlPanel',
-    config: {
-      menu: [
-        { id: 'Refresh' },
-      ],
     },
   }, {
     id: 'compositey-chart-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
-      height: 400,
+      legend: 'legend-id',
       crosshair: 'crosshair-id',
-      possibleChartTypes: {
-        y1: ['BarChart', 'StackedBarChart'],
-        y2: ['LineChart']
+      margin: {
+        left: 16,
+        right: 20,
+      },
+      height: 400,
+      chartTypes: {
+        y1: ['GroupedBar', 'StackedBar'],
+        y2: ['Line'],
       },
       plot: {
         x: {
@@ -61,46 +54,43 @@ const chartConfig = {
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
-            enabled: false,
-            chart: 'BarChart',
+            disabled: true,
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
             color: '#d62728',
-            enabled: true,
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'e',
             labelFormatter: 'Label E',
             color: '#9467bd',
-            enabled: true,
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
+          label: 'X',
         },
         y1: {
           position: 'left',
@@ -111,42 +101,35 @@ const chartConfig = {
           position: 'right',
           formatter: formatter.toFixed1,
         }
-      }
+      },
     },
   }, {
     type: 'Navigation',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 16,
+      },
       height: 200,
       selection: [75, 100],
+      update: ['compositey-chart-id'],
       plot: {
         x: {
           accessor: 'x',
           labelFormatter: 'X Values',
-          axis: 'x',
         },
         y: [
           {
-            enabled: true,
             accessor: 'a',
             labelFormatter: 'Label A',
-            chart: 'StackedBarChart',
-            axis: 'y1',
+            chart: 'StackedBar',
           }, {
-            enabled: true,
             accessor: 'b',
             labelFormatter: 'Label B',
-            chart: 'StackedBarChart',
-            axis: 'y1',
+            chart: 'StackedBar',
           }, {
-            enabled: true,
             accessor: 'd',
             labelFormatter: 'Label D',
-            chart: 'LineChart',
-            axis: 'y2',
+            chart: 'Line',
           }
         ]
       },
@@ -154,16 +137,10 @@ const chartConfig = {
         x: {
           scale: 'scaleLinear',
         },
-        y1: {
-          position: 'left',
+        y: {
           formatter: formatter.toInteger,
           ticks: 5,
         },
-        y2: {
-          position: 'right',
-          formatter: formatter.toFixed1,
-          ticks: 5,
-        }
       }
     },
   }, {
@@ -201,7 +178,6 @@ const chartConfig = {
     id: 'message-id',
     type: 'Message',
     config: {
-      enabled: true,
     }
   }, {
     id: 'crosshair-id',
@@ -212,27 +188,24 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
-    chart.renderMessage({
-      componentId: 'compositey-chart-id',
+    chart.actionman.fire('SendMessage', {
       action: 'once',
       messages: [{
         level: 'info',
         title: 'Message 1',
-        message: 'This is an example message. It will disappear after 5 seconds.'
+        text: 'This is an example message. It will disappear after 5 seconds.'
       }, {
         level: 'error',
         title: 'A Fatal Error',
-        message: 'This is an error.'
+        text: 'This is an error.'
       }, {
         level: 'warn',
-        title: 'A waring message',
-        message: 'This is another example message.'
+        title: 'A warning message',
+        text: 'This is another example message.'
       }]
     })
   },

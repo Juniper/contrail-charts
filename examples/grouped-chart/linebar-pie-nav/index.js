@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
 import template from './template.html'
 const colorScheme = _c.d3ColorScheme20
@@ -10,7 +10,7 @@ const colorScheme = _c.d3ColorScheme20
 const now = _.now()
 const length = 100
 const data = fixture({
-  length: length,
+  length,
   data: {
     x: {linear: true, range: [now - 30000000, now]},
     a: {random: true, range: [2, (length - 1) * 2]},
@@ -36,30 +36,24 @@ function pieDataParser (tsData) {
   })
 }
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   template,
   components: [{
     id: 'legend-panel-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-chart-id',
-      editable: {
-        colorSelector: false,
-        chartSelector: false
-      },
-      placement: 'horizontal',
-      filter: true,
     },
   }, {
     id: 'compositey-chart-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      height: 300,
+      legend: 'legend-panel-id',
       crosshair: 'crosshair-id',
-      possibleChartTypes: {
-        y1: ['BarChart', 'LineChart'],
-        y2: ['BarChart', 'LineChart']
+      chartTypes: {
+        y1: ['GroupedBar', 'Line'],
+        y2: ['GroupedBar', 'Line']
       },
       plot: {
         x: {
@@ -69,27 +63,26 @@ const chartConfig = {
         y: [
           {
             accessor: 'a',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[0],
             axis: 'y',
           }, {
             accessor: 'b',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[1],
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
-          ticks: 6
+          ticks: 6,
+          formatter: formatter.extendedISOTime,
         },
         y: {
-          ticks: 5
+          ticks: 5,
         }
-      }
+      },
     }
   }, {
     id: 'crosshair-id',
@@ -102,7 +95,6 @@ const chartConfig = {
     id: 'message-id',
     type: 'Message',
     config: {
-      enabled: true,
     }
   }, {
     id: 'tooltip-id',
@@ -136,20 +128,14 @@ const chartConfig = {
     id: 'legend-panel-id2',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-chart-id2',
-      editable: {
-        colorSelector: false,
-        chartSelector: false
-      },
-      placement: 'horizontal',
-      filter: true,
     },
   }, {
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     id: 'compositey-chart-id2',
     config: {
+      legend: 'legend-panel-id2',
       height: 300,
-      possibleChartTypes: ['BarChart', 'LineChart'],
+      chartTypes: ['GroupedBar', 'Line'],
       plot: {
         x: {
           accessor: 'x',
@@ -158,27 +144,30 @@ const chartConfig = {
         y: [
           {
             accessor: 'c',
-            enabled: true,
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
             color: colorScheme[2],
           }
         ]
       },
-      axis: {
+      axes: {
+        x: {
+          formatter: formatter.extendedISOTime,
+          ticks: 4,
+        },
         y: {
-          ticks: 5
+          ticks: 5,
         }
-      }
+      },
     },
   }, {
     id: 'pie-chart-id',
-    type: 'PieChart',
-    provider: {
+    type: 'Pie',
+    model: {
       formatter: pieDataParser,
     },
     config: {
-      marginLeft: 60,
+      legend: 'legend-pie',
       type: 'donut',
       radius: 100,
       width: 200,
@@ -192,12 +181,12 @@ const chartConfig = {
       tooltip: 'tooltip-id2',
       action: {
         'click node': data => {
-          chart.renderMessage({
-            action: 'once',
+          chart.actionman.fire('SendMessage', {
+            action: 'update',
             messages: [{
               level: 'info',
               title: 'Pie chart message',
-              message: `Sum of selected "${data.label}" values: ${data.value}`,
+              text: `Sum of selected "${data.label}" values: ${data.value}`,
             }]
           })
         },
@@ -219,17 +208,14 @@ const chartConfig = {
     id: 'legend-pie',
     type: 'Legend',
     config: {
-      sourceComponent: 'pie-chart-id',
     },
   }, {
     id: 'navigation-id',
     type: 'Navigation',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 250,
       selection: [75, 100],
+      update: ['compositey-chart-id2'],
       plot: {
         x: {
           accessor: 'x',
@@ -240,37 +226,37 @@ const chartConfig = {
           {
             accessor: 'd',
             label: 'Label D',
-            enabled: true,
-            chart: 'LineChart',
+            chart: 'Line',
             color: colorScheme[4],
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
+        x: {
+          ticks: 8,
+          formatter: formatter.extendedISOTime,
+        },
         y: {
-          ticks: 6
+          ticks: 6,
         }
       },
-      updateComponents: ['compositey-chart-id2'],
     }
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
 
     // Update pie chart data on Navigation zoom
-    const navigation = chart.getComponent('navigation-id')
+    const navigation = chart.composite.get('navigation-id')
     const zoom = navigation.actionman.get('Zoom')
-    const pieChart = chart.getComponent('pie-chart-id')
+    const pie = chart.composite.get('pie-chart-id')
     zoom.on('fired', (componentIds, ranges) => {
       const data = navigation.model.filter('x', ranges['x'])
-      pieChart.model.data = data
+      pie.model.data = data
     })
   },
   remove: () => {

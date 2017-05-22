@@ -1,30 +1,27 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {fixture} from 'commons'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
-    'group.a': {linear: true, range: [3, (length - 1) * 3], gap: true},
+    'group.a': {linear: true, range: [3, (length - 1) * 3]},
     b: {linear: true, range: [5, (length - 1) * 5], repeat: true},
     c: {linear: true, range: [7, (length - 1) * 7]},
   },
 })
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
-    id: 'grouped-bar-compositey',
-    type: 'CompositeYChart',
+    id: 'stacked-bar-compositey',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       plot: {
         x: {
           accessor: 'group.x',
@@ -34,29 +31,26 @@ const chartConfig = {
         y: [
           {
             accessor: 'group.a',
+            chart: 'GroupedBar',
             labelFormatter: 'Label Group.A',
-            enabled: true,
-            chart: 'BarChart',
-            axis: 'y1',
             tooltip: 'default-tooltip',
+            axis: 'y1',
           }, {
             accessor: 'b',
+            chart: 'GroupedBar',
             labelFormatter: 'Label B',
-            enabled: true,
-            chart: 'BarChart',
-            axis: 'y1',
             tooltip: 'default-tooltip',
+            axis: 'y1',
           }, {
             accessor: 'c',
+            chart: 'GroupedBar',
             labelFormatter: 'Label C',
-            enabled: true,
-            chart: 'BarChart',
-            axis: 'y1',
             tooltip: 'default-tooltip',
+            axis: 'y1',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },
@@ -88,11 +82,9 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

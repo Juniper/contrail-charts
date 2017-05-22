@@ -6,30 +6,25 @@ import * as d3Selection from 'd3-selection'
 import * as d3Zoom from 'd3-zoom'
 import * as d3Geo from 'd3-geo'
 import * as topojson from 'topojson'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
+import Config from './MapConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import './map.scss'
 
-export default class MapView extends ContrailChartsView {
-  static get dataType () { return 'DataFrame' }
-
-  constructor (...args) {
-    super(...args)
-    this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
-  }
+export default class MapView extends ChartView {
+  static get Config () { return Config }
+  static get Model () { return Model }
 
   get tagName () { return 'g' }
 
   get selectors () {
     return _.extend(super.selectors, {
+      node: '.point',
+      link: '.link',
       graticule: '.graticule',
       feature: '.feature',
       boundary: '.boundary',
-      node: '.point',
-      link: '.link',
     })
   }
 
@@ -222,10 +217,10 @@ export default class MapView extends ContrailChartsView {
 
   _onMousemove (d, el) {
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d)
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d, {left, top})
   }
 
   _onMouseout (d, el) {
-    actionman.fire('HideComponent', this.config.get('tooltip'))
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 }

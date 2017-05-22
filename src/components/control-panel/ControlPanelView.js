@@ -3,20 +3,24 @@
  */
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
+import Config from './ControlPanelConfigModel'
 import actionman from 'core/Actionman'
+import ToggleHalt from '../../actions/ToggleHalt'
 import _template from './control-panel.html'
 import _panelTemplate from './panel.html'
 import _actionTemplate from './action.html'
 import './control-panel.scss'
 
-export default class ControlPanelView extends ContrailChartsView {
+export default class ControlPanelView extends ChartView {
+  static get Config () { return Config }
+  static get Actions () { return {ToggleHalt} }
+
   constructor (...args) {
     super(...args)
     super.render(_template())
     this._opened = false
     this.render()
-    this.listenTo(this.config, 'change', this.render)
   }
 
   get selectors () {
@@ -55,6 +59,10 @@ export default class ControlPanelView extends ContrailChartsView {
       .remove()
   }
 
+  setHalt (isHalted) {
+    this.config.set('halted', isHalted)
+  }
+
   addMenuItem (config) {
     this.config.set(this.config.get('menu').push(config))
   }
@@ -74,16 +82,20 @@ export default class ControlPanelView extends ContrailChartsView {
     panel.innerHTML = _panelTemplate(config)
     const container = panel.querySelector(this.selectors.container)
     panel.classList.toggle('hide')
-    const actionId = this._opened ? 'HideComponent' : 'ShowComponent'
+    // TODO pass current selection if any instead of null
+    actionman.fire('ToggleVisibility', config.component, !this._opened, null, {container})
     this._opened = !this._opened
-    actionman.fire(actionId, config.component, container)
   }
 
   // Event handlers
 
   _onMenuItemClick (d, el) {
     d3Selection.event.stopPropagation()
+    let actionId
     if (d.component) this.open(d)
-    else actionman.fire(d.id, d)
+    else {
+      actionId = d.action ? d.action : d.id
+      actionman.fire(actionId, this.config.update, d.toggle)
+    }
   }
 }

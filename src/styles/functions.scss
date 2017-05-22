@@ -42,7 +42,7 @@
         map-get-safe($config, "color-indicator", ()),
         map-get-safe($config, "selector-trigger", ()),
         map-get-safe($config, "selector-panel", ()),
-        map-get-safe($config, "selector-panel-swatch", ()),
+        map-get-safe($config, "selector-panel-switch", ()),
       );
     } @else if ($componentId == $messageId) {
       @return (
@@ -60,7 +60,7 @@
         map-get-safe($config, "title", ()),
         map-get-safe($config, "item", ()),
       );
-    } @else if ($componentId == $compositeYId) {
+    } @else if ($componentId == $axisId) {
       @return (
         map-get-safe($config, "general", ()),
       );
@@ -76,7 +76,7 @@
       @return (
         map-get-safe($config, "general", ()),
       );
-    } @else if ($componentId == $scatterBubbleChartId) {
+    } @else if ($componentId == $scatterPlotId) {
       @return (
         map-get-safe($config, "general", ()),
       );

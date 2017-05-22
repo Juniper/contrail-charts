@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView, Util} from 'coCharts'
+import {composites, Util} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
 
 const data = fixture({
@@ -20,22 +20,23 @@ const data = fixture({
 const colorScheme = _c.radialColorScheme10
 const bubbleShapes = Util.bubbleShapes
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'multishape-bubble-chart',
       editable: {
-        colorSelector: true,
+        color: true,
       },
     },
   }, {
     id: 'multishape-bubble-chart',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginLeft: 50,
-      marginRight: 50,
+      legend: 'legend-id',
+      bucket: 'bucket-id',
       height: 450,
       plot: {
         x: {
@@ -44,35 +45,38 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'group.data1',
             label: 'Data 1',
             chart: 'ScatterPlot',
-            sizeAccessor: 'group.size1',
-            sizeAxis: 'sizeAxis',
+            size: {
+              accessor: 'group.size1',
+              range: [1, 500],
+            },
             // this is a circle symbol from fontawesome
             shape: bubbleShapes.circleFill,
             color: d => colorScheme[0],
             axis: 'y1',
             tooltip: 'tooltip-id',
           }, {
-            enabled: true,
             accessor: 'data2',
             label: 'Data 2',
             chart: 'ScatterPlot',
-            sizeAccessor: 'size2',
-            sizeAxis: 'sizeAxis',
+            size: {
+              accessor: 'size2',
+              range: [1, 500],
+            },
+            color: colorScheme[5],
             shape: bubbleShapes.cloud,
-            color: d => colorScheme[5],
             axis: 'y2',
             tooltip: 'tooltip-id',
           }, {
-            enabled: true,
             accessor: 'data3',
             label: 'Data 3',
             chart: 'ScatterPlot',
-            sizeAccessor: 'size2',
-            sizeAxis: 'sizeAxis',
+            size: {
+              accessor: 'size2',
+              range: [1, 500],
+            },
             shape: bubbleShapes.network,
             color: d => d.data3 > 80 ? colorScheme[9] : colorScheme[8],
             axis: 'y2',
@@ -80,9 +84,9 @@ const chartConfig = {
           }
         ]
       },
-      axis: {
-        sizeAxis: {
-          range: [1, 500]
+      axes: {
+        x: {
+          formatter: formatter.extendedISOTime,
         },
         y1: {
           position: 'left',
@@ -94,11 +98,6 @@ const chartConfig = {
           formatter: formatter.toInteger,
           label: 'Y value of Square and Star',
         }
-      },
-      bucket: {
-        range: [500, 800],
-        shape: bubbleShapes.square,
-        tooltip: 'tooltip-bucket',
       },
     }
   }, {
@@ -134,6 +133,14 @@ const chartConfig = {
       ]
     }
   }, {
+    id: 'bucket-id',
+    type: 'Bucket',
+    config: {
+      range: [500, 800],
+      shape: bubbleShapes.square,
+      tooltip: 'tooltip-bucket',
+    }
+  }, {
     id: 'tooltip-bucket',
     type: 'Tooltip',
     config: {
@@ -145,40 +152,39 @@ const chartConfig = {
     id: 'navigation-id',
     type: 'Navigation',
     config: {
-      marginInner: 5,
       height: 200,
+      selection: [50, 100],
+      update: ['multishape-bubble-chart'],
       plot: {
         x: {
           accessor: 'group.x',
-          axis: 'x',
         },
         y: [
           {
-            enabled: true,
             accessor: 'nav',
-            chart: 'LineChart',
+            chart: 'Line',
             color: colorScheme[1],
-            axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
+        x: {
+          formatter: formatter.extendedISOTime,
+        },
         y: {
-          ticks: 6
+          ticks: 6,
         },
       }
     }
   }]
 }
 
-const chartView = new ChartView()
-
 export default {
   render: () => {
-    chartView.setConfig(chartConfig)
-    chartView.setData(data)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
   },
   remove: () => {
-    chartView.remove()
+    chart.remove()
   }
 }

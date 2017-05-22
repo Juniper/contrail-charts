@@ -11,7 +11,7 @@
     $legend-panel-color-indicator,
     $legend-panel-selector-trigger,
     $legend-panel-selector-panel,
-    $legend-panel-selector-panel-swatch);
+    $legend-panel-selector-panel-switch);
 
   @include themify($legendPanelId, $themes);
 }

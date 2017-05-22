@@ -112,7 +112,7 @@ $legend-panel-selector-panel: (
   borderColor: $ashGrey2,
   borderRadius: 6px
 ) !default;
-$legend-panel-selector-panel-swatch: (
+$legend-panel-selector-panel-switch: (
   selectedBorderWidth: 2px,
   selectedBorderStyle: solid,
   selectedBorderColor: $black
@@ -155,8 +155,8 @@ $tooltip-item: (
   separatorColor: $snowWhite
 ) !default;
 
-// compositeY chart
-$compositeY: (
+// axis
+$axis: (
   gridlineColor: $ashGrey2,
   tickSize: 11px,
   tickColor: $darkGrey,
@@ -181,8 +181,8 @@ $line-chart: (
   lineOpacity: 0.8
 ) !default;
 
-// scatter bubble chart
-$scatter-bubble-chart: (
+// scatter plot
+$scatter-plot: (
   pointOpacity: 0.7,
   hoveredPointOpacity: 0.9,
   hoveredPointEdgeWidth: 1px,

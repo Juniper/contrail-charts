@@ -1,9 +1,0 @@
-@import "line-chart-rules";
-@import "../../styles/variables";
-@import "../../styles/mixins";
-
-.cc-svg .line-chart {
-  @include lineChartRules($line-chart);
-
-  @include themify($lineChartId, $themes);
-}

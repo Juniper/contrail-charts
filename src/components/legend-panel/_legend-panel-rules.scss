@@ -1,3 +1,4 @@
+
 @import "../../styles/variables";
 @import "../../styles/colors";
 
@@ -9,7 +10,7 @@
   $legend-panel-color-indicator,
   $legend-panel-selector-trigger,
   $legend-panel-selector-panel,
-  $legend-panel-selector-panel-swatch) {
+  $legend-panel-selector-panel-switch) {
   $p_panel_font_size: map-get($legend-panel, "fontSize");
   $p_panel_fg_color: map-get($legend-panel, "fgColor");
   $p_panel_border_width: map-get($legend-panel, "borderWidth");
@@ -51,9 +52,9 @@
   $p_selector_panel_border_color: map-get($legend-panel-selector-panel, "borderColor");
   $p_selector_panel_border_radius: map-get($legend-panel-selector-panel, "borderRadius");
 
-  $p_selector_swatch_selected_border_width: map-get($legend-panel-selector-panel-swatch, "selectedBorderWidth");
-  $p_selector_swatch_selected_border_style: map-get($legend-panel-selector-panel-swatch, "selectedBorderStyle");
-  $p_selector_swatch_selected_border_color: map-get($legend-panel-selector-panel-swatch, "selectedBorderColor");
+  $p_selector_switch_selected_border_width: map-get($legend-panel-selector-panel-switch, "selectedBorderWidth");
+  $p_selector_switch_selected_border_style: map-get($legend-panel-selector-panel-switch, "selectedBorderStyle");
+  $p_selector_switch_selected_border_color: map-get($legend-panel-selector-panel-switch, "selectedBorderColor");
 
   z-index: $control;
 
@@ -79,7 +80,7 @@
       margin-bottom: 4px;
     }
     
-    .attribute {
+    .key {
       display: block;
 
       &:not(:last-child) {
@@ -108,7 +109,7 @@
     }
   }
 
-  .attributes {
+  .keys {
     display: inline-block;
     line-height: 12px;
     vertical-align: middle;
@@ -164,7 +165,7 @@
       
   }
 
-  .attribute {
+  .key {
     display: inline-block;
     /*
     border-width: $p_attr_item_border_width;
@@ -192,7 +193,7 @@
         top: -1px;
     }
 
-    .edit-attribute {
+    .edit-key {
       display: none;
     }
 
@@ -200,7 +201,7 @@
       border-color: $p_attr_item_active_border_color;
       border-radius: $p_attr_item_active_border_radius;
 
-      .edit-attribute {
+      .edit-key {
         display: inline-block;
       }
 
@@ -210,7 +211,7 @@
     }
   }
 
-  .legend-attribute {
+  .legend-key {
     display: inline-block;
     padding: 13px 0;
     margin: 0;
@@ -258,7 +259,7 @@
     border-radius: 12px;
     background-color: $p_color_indicator_bg_color;
 
-    .legend-attribute input:checked ~ & {
+    .legend-key input:checked ~ & {
       background-color: $p_color_indicator_active_bg_color;
     }
 
@@ -267,16 +268,16 @@
       display: none;
       content: ' ';
 
-      .legend-attribute input:checked ~ & {
+      .legend-key input:checked ~ & {
         /* display: block; */
         display: none;
       }
 
-      .legend-attribute.disabled input:checked ~ & {
+      .legend-key.disabled input:checked ~ & {
         display: none;
       }
 
-      .legend-attribute & {
+      .legend-key & {
         left: 1px;
         top: 1px;
         width: 8px;
@@ -446,9 +447,9 @@
               bottom: -3px;
               right: -3px;
               /*
-              border-width: $p_selector_swatch_selected_border_width;
-              border-style: $p_selector_swatch_selected_border_style;
-              border-color: $p_selector_swatch_selected_border_color; */
+              border-width: $p_selector_switch_selected_border_width;
+              border-style: $p_selector_switch_selected_border_style;
+              border-color: $p_selector_switch_selected_border_color; */
               border-radius: 50%;
               box-shadow: 0 0 5px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.1);
             }
@@ -491,7 +492,7 @@
       
     }
 
-    .swatch--chart {
+    .switch--chart {
       display: none;
       padding: 4px;
       text-align: center;

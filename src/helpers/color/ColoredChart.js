@@ -15,8 +15,8 @@ export default {
     return p
   },
   /**
-   * @param {Object} data to extract label from
-   * @param {Object} config on how to extract label from data
+   * @param {Object} data to extract color from
+   * @param {Object} config on how to extract color from data
    * TODO should the getColor function if provided be evaluated on empty data?
    * Legend Panel needs to display a color not for particular data point but for the whole serie
    */

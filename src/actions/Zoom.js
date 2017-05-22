@@ -14,17 +14,9 @@ export default class Zoom extends Action {
    * while zooming by axes will require components to have the same corresponding axes names
    * @param ranges Hash of ranges by accessor
    */
-  _execute (componentIds, ranges) {
-    const chart = this._registrar
-    let components = []
-    if (componentIds) components = _.map(componentIds, id => chart.getComponent(id))
-    else {
-      components.push(...chart.getComponentsByType('CompositeYChart'))
-      components.push(...chart.getComponentsByType('Navigation'))
-    }
-
-    _.each(components, component => {
-      if (component) component.zoom(ranges)
-    })
+  _execute (...args) {
+    let ids = args.length > 1 ? args.shift() : null
+    if (!_.isNil(ids) && !_.isArray(ids)) ids = [ids]
+    if (!ids || ids.includes(this._registrar.id)) this._registrar.zoom(...args)
   }
 }

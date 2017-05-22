@@ -1,11 +1,11 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {formatter} from 'commons'
 import * as d3Scale from 'd3-scale'
 
-const pieData = [
+const data = [
   { label: 'Process 1', value: 2704659 },
   { label: 'Process 2', value: 2159981 },
   { label: 'Process 3', value: 3853788 },
@@ -22,7 +22,8 @@ function getValue (serie) {
   return serie.value
 }
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   title: 'Donut Chart',
   components: [{
@@ -34,8 +35,10 @@ const chartConfig = {
     }
   }, {
     id: 'donut-chart-id',
-    type: 'PieChart',
+    type: 'Pie',
     config: {
+      legend: 'legend-id',
+      tooltip: 'tooltip-id',
       type: 'donut',
       radius: 150,
       colorScale: d3Scale.scaleOrdinal(d3Scale.schemeCategory20c),
@@ -46,7 +49,6 @@ const chartConfig = {
         getLabel: getLabel,
         valueFormatter: formatter.commaGroupedInteger,
       },
-      tooltip: 'tooltip-id',
     },
   }, {
     id: 'tooltip-id',
@@ -64,20 +66,17 @@ const chartConfig = {
       ],
     },
   }, {
+    id: 'legend-id',
     type: 'Legend',
     config: {
-      sourceComponent: 'donut-chart-id',
     },
-  }
-  ]
+  }]
 }
-
-const chart = new ChartView()
 
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
-    chart.setData(pieData)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
   },
   remove: () => {
     chart.remove()

@@ -1,12 +1,13 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import * as providers from 'providers/index'
-import * as components from 'components/index'
-import * as actions from 'actions/index'
+import * as helpers from 'helpers'
+import * as models from 'models'
+import * as components from 'components'
+import * as composites from 'composites'
+import * as actions from 'actions'
 import * as Util from 'core/Util'
-import ChartView from 'core/ChartView'
 
-export {ChartView, components, providers, actions, Util}
+export {composites, components, helpers, models, actions, Util}
 
 import './styles/index.scss'

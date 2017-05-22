@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {_c, fixture} from 'commons'
 import template from './template.html'
 
@@ -9,26 +9,24 @@ const colorScheme = _c.lbColorScheme17
 
 const length = 20
 const data = fixture({
-  length: 30,
+  length,
   data: {
     x: {linear: true, range: [0, length]},
-    a: {random: true, range: [0, length * 7], repeat: true},
-    b: {linear: true, range: [0, length * 5], repeat: true},
-    c: {random: true, range: [0, -length * 5]},
-    d: {linear: true, range: [0, length * 7]},
+    a: {random: true, range: [0, length * 5], repeat: true},
+    b: {linear: true, range: [0, length * 3], repeat: true},
+    c: {random: true, range: [0, -length * 3]},
+    d: {linear: true, range: [0, length * 5]},
   },
 })
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   template,
   components: [{
     id: 'stacked-bar-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 350,
       plot: {
         x: {
@@ -39,21 +37,19 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            enabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             color: colorScheme[1],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
-            enabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             color: colorScheme[3],
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'X',
@@ -65,11 +61,8 @@ const chartConfig = {
     }
   }, {
     id: 'grouped-bar-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 350,
       plot: {
         x: {
@@ -80,21 +73,19 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label A',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[7],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             color: colorScheme[6],
             axis: 'y',
           },
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'X',
@@ -106,12 +97,8 @@ const chartConfig = {
     },
   }, {
     id: 'area-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       height: 300,
       plot: {
         x: {
@@ -120,24 +107,22 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'a',
             label: 'Label A',
-            chart: 'AreaChart',
+            chart: 'Area',
             axis: 'y',
             color: colorScheme[2],
           }, {
-            enabled: true,
             accessor: 'c',
             label: 'Label C',
-            chart: 'AreaChart',
+            chart: 'Area',
             stack: 'negative',
             axis: 'y',
             color: colorScheme[4],
           },
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'X',
@@ -149,12 +134,8 @@ const chartConfig = {
     }
   }, {
     id: 'line-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       height: 300,
       plot: {
         x: {
@@ -163,23 +144,21 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'a',
             label: 'Label A',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
             color: colorScheme[11],
           }, {
-            enabled: true,
             accessor: 'c',
             label: 'Label C',
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
             color: colorScheme[9],
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
           label: 'D',
@@ -194,11 +173,9 @@ const chartConfig = {
     id: 'navigation-id',
     type: 'Navigation',
     config: {
-      marginLeft: 60,
-      marginRight: 60,
-      marginBottom: 40,
       height: 250,
       selection: [60, 100],
+      update: ['area-id', 'stacked-bar-id', 'grouped-bar-id'],
       plot: {
         x: {
           accessor: 'x',
@@ -209,14 +186,13 @@ const chartConfig = {
           {
             accessor: 'a',
             label: 'Label D',
-            enabled: true,
             color: colorScheme[8],
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },
@@ -228,11 +204,9 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

@@ -1,27 +1,26 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {_c} from 'commons'
 import dendrogamData from './data.json'
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'dendrogram-chart-id',
       editable: {
-        colorSelector: true,
-        chartSelector: false
+        color: true,
       },
-      placement: 'horizontal',
-      filter: true
     }
   }, {
     id: 'dendrogram-chart-id',
     type: 'RadialDendrogram',
     config: {
+      legend: 'legend-id',
       parentSeparation: 1.0,
       parentSeparationShrinkFactor: 0.05,
       parentSeparationDepthThreshold: 4,
@@ -59,9 +58,9 @@ const chartConfig = {
       tooltip: 'tooltip-id',
       action: {
         'click node': data => console.warn('click node'),
-        'click link': data => console.warn('click link'),
+        'click ribbon': data => console.warn('click ribbon'),
         'dblclick node': data => console.warn('dblclick node'),
-        'dblclick link': data => console.warn('dblclick link'),
+        'dblclick ribbon': data => console.warn('dblclick ribbon'),
       },
     }
   }, {
@@ -85,11 +84,9 @@ const chartConfig = {
   ]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(dendrogamData.data)
   },
   remove: () => {
