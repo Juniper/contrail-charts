@@ -59,6 +59,14 @@ describe('PieView', () => {
         i++
       })
     })
+
+    it('should select sector on hover', () => {
+      chart.setData(data)
+      let sector = container.querySelectorAll('path.arc')[0]
+      let event = new Event('mouseover', {bubbles: true})
+      sector.dispatchEvent(event)
+      expect(container.querySelectorAll('.highlight')).toBeDefined()
+    })
   })
 
   describe('Render with changed config.', () => {
