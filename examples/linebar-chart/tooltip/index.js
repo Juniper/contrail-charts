@@ -92,6 +92,7 @@ const config = {
     id: 'compositey-id2',
     type: 'CompositeY',
     config: {
+      enable: false,
       height: 200,
       plot: {
         x: {

@@ -7,7 +7,7 @@ import '../sass/contrail-charts-examples.scss'
 import _ from 'lodash'
 // LineBar
 import legend from '../../linebar-chart/legend'
-import controls from '../../linebar-chart/control-panel'
+//import controls from '../../linebar-chart/control-panel'
 import timeline from '../../linebar-chart/timeline'
 import tooltips from '../../linebar-chart/tooltip'
 import stackedBar from '../../linebar-chart/stacked-bar-chart'
@@ -46,9 +46,9 @@ const allExamples = {
     'Legend': {
       view: legend,
     },
-    'Controls': {
-      view: controls,
-    },
+    //'Controls': {
+      //view: controls,
+    //},
     'Timeline': {
       view: timeline,
     },
