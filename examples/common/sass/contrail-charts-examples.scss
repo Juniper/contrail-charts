@@ -725,36 +725,41 @@ a, .btn {
     }
 }
 
-.panels {
+.ccpanels {
     display: flex;
     flex-wrap: wrap;
     margin: 0 -8px;
     
-    > .panel {
-        width: calc(50% - 16px);
-        margin: 8px;
+    > .ccpanel {
+        width: calc(50% - 10px);
         
-        &.panel--full {
+        &.ccpanel--full {
             flex: 0 1 auto;
-            width: calc(100% - 16px);
+            width: calc(100% - 10px);
             min-height: inherit;
         }
         
-        &.panel--8 {
+        &.ccpanel--8 {
             flex: .6;
         }
         
-        &.panel--4 {
+        &.ccpanel--4 {
             flex: .4;
         }
     }
 }
 
-.panel {
+.ccpanel {
     background-color: #fff;
     border-radius: 6px;
-    padding: 5px;
+    padding: 8px;
     min-height: 350px;
+    border: 1px solid rgba(0,0,0,.06);
+    margin: 5px;
+    
+    .ccpanel__inner {
+        position: relative;
+    }
 }
 
 
@@ -846,6 +851,10 @@ a, .btn {
                         color: #fff;
                     }
                     
+                    &.active {
+                        background-color: rgba(255,255,255,.08);
+                        color: #fff;
+                    }
                     
                 }
             }
@@ -1278,6 +1287,12 @@ a, .btn {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-chart-dendogram:before {
+  content: "\e917";
+}
+.icon-chart-sankey:before {
+  content: "\e918";
+} 
 .icon-charttype-area:before {
   content: "\e915";
 }
@@ -1425,24 +1440,24 @@ a, .btn {
     
     
     
-    .panels {
+    .ccpanels {
         margin: 0;
         
-        > .panel {
+        > .ccpanel {
             flex-direction: column;
             width: 100%;
             margin: 0;
             margin-bottom: 10px;
             
-            &.panel--full {
+            &.ccpanel--full {
                 width: 100%;
             }
             
-            &.panel--4 {
+            &.ccpanel--4 {
                 width: 100%;
             }
             
-            &.panel--8 {
+            &.ccpanel--8 {
                 width: 100%;
             }
         }
