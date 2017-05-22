@@ -27,13 +27,13 @@ import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav'
 
 import sankeyChart from '../../advance-chart/sankey'
 // Single
-import singleLine from '../../single/single-line'
-import singleStackedBar from '../../single/single-stacked-bar'
-import singleGroupedBar from '../../single/single-grouped-bar'
-import singleArea from '../../single/single-area'
-import singleScatterPlot from '../../single/single-scatter-plot'
-import singlePie from '../../single/single-pie'
-import singleComposite from '../../single/single-composite-y'
+//import singleLine from '../../single/single-line'
+//import singleStackedBar from '../../single/single-stacked-bar'
+//import singleGroupedBar from '../../single/single-grouped-bar'
+//import singleArea from '../../single/single-area'
+//import singleScatterPlot from '../../single/single-scatter-plot'
+//import singlePie from '../../single/single-pie'
+//import singleComposite from '../../single/single-composite-y'
 /**
  * structure of an example:
  * 'example title': {
@@ -95,30 +95,30 @@ const allExamples = {
       view: areaBasic,
     }
   },
-  'single': {
-    'Line Chart': {
-      view: singleLine,
-    },
-    'Grouped Bar Chart': {
-      view: singleGroupedBar,
-    },
-    'Stacked Bar Chart': {
-      view: singleStackedBar,
-    },
-    'Area Chart': {
-      view: singleArea,
-    },
-    'Scatter Plot': {
-      view: singleScatterPlot,
-    },
-    'Pie Chart': {
-      view: singlePie,
-      desc: `After 2 seconds the chart is set with changed config and then updated with new data`,
-    },
-    'Composite Y Chart': {
-      view: singleComposite,
-    },
-  },
+  //'single': {
+    //'Line Chart': {
+      //view: singleLine,
+    //},
+    //'Grouped Bar Chart': {
+      //view: singleGroupedBar,
+    //},
+    //'Stacked Bar Chart': {
+      //view: singleStackedBar,
+    //},
+    //'Area Chart': {
+      //view: singleArea,
+    //},
+    //'Scatter Plot': {
+      //view: singleScatterPlot,
+    //},
+    //'Pie Chart': {
+      //view: singlePie,
+      //desc: `After 2 seconds the chart is set with changed config and then updated with new data`,
+    //},
+    //'Composite Y Chart': {
+      //view: singleComposite,
+    //},
+  //},
   'grouped': {
     'Navigation': {
       view: navigation,
