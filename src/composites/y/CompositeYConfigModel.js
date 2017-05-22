@@ -138,8 +138,8 @@ export default class CompositeYConfigModel extends ConfigModel {
    * @param width
    * @param height
    */
-  calculateScales (model, width, height) {
-    const config = _.extend({range: [0, width]}, this.get('plot.x'), this.get('axes.x'))
+  calculateScales (model) {
+    const config = _.extend({}, this.get('plot.x'), this.get('axes.x'))
     _.set(this.attributes, 'axes.x.scale', ScalableChart.getScale(model, config))
 
     const accessorsByAxis = _.groupBy(this.get('plot.y'), a => this.getAxisName(a))
@@ -148,7 +148,6 @@ export default class CompositeYConfigModel extends ConfigModel {
       const config = _.extend(
         {
           domain: this.get(`axes.${axisName}.calculatedDomain`),
-          range: [height, 0],
           accessor: accessorNames
         },
         this.get('axes.' + axisName)

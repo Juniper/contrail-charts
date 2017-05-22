@@ -6,7 +6,7 @@ import {fixture} from 'commons'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
     'group.a': {linear: true, range: [3, (length - 1) * 3]},

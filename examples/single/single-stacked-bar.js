@@ -7,7 +7,7 @@ import {fixture} from 'commons'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
     'group.a': {linear: true, range: [3, (length - 1) * 3]},
@@ -19,10 +19,6 @@ const data = fixture({
 let chart
 const container = document.querySelector('#chartBox')
 const config = {
-  margin: {
-    left: 20,
-    right: 20,
-  },
   x: {
     accessor: 'group.x',
     domain: [5, length],

@@ -41,7 +41,7 @@ export default class CompositeYView extends ChartView {
   render () {
     super.render()
     this._updateComponents()
-    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    this.config.calculateScales(this.model)
     // reset axes ticks
     this.config.set('ticks', {}, {silent: true, unset: true})
     this._renderAxes()
@@ -52,6 +52,7 @@ export default class CompositeYView extends ChartView {
     _.each(components, component => {
       const componentAxis = this.config.getAxisName(component.config.get('y'))
       // TODO even without silent this will not trigger config 'change' because of nested attribute
+      component.config.set('x.scale', this.config.get(`axes.x.scale`), {silent: true})
       component.config.set('y.scale', this.config.get(`axes.${componentAxis}.scale`), {silent: true})
       if (this.config.get('bucket') && component.type === 'ScatterPlot') return
       component.render()
@@ -161,44 +162,57 @@ export default class CompositeYView extends ChartView {
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
 
-    // reset calculated domain from previous render
+    // reset calculated values from previous render
     _.each(this.config.activeAxes, axis => {
-      this.config.set(`axes.${axis.name}.calculatedDomain`, [], {silent: true})
+      this.config.set(`axes.${axis.name}.calculatedDomain`, undefined, {silent: true})
+      this.config.set(`axes.${axis.name}.range`, undefined, {silent: true})
     })
-    children.enter().merge(children).each(child => {
-      const type = this.config.getComponentType(child.accessors)
-      config.id = `${this.id}-${child.key}`
-      if (this.config.isMultiAccessor(type)) config.y = child.accessors
-      else {
-        config.y = child.accessors[0]
-        config.tooltip = child.accessors[0].tooltip
-      }
-      if (type === 'ScatterPlot') config.size = child.accessors[0].size
-
-      let component = this._composite.get(`${this.id}-${child.key}`)
-      if (component) component.config.set(config, {silent: true})
-      else {
-        component = this._composite.add({
-          type,
-          config,
-          model: this.model,
-          container: this._container,
-        })
-        component.d3.classed(this.selectorClass('node'), true)
-          .attr('clip-path', `url(#${this.id}-${this.selectors.clip})`)
-        component.el.__data__ = {key: child.key}
-      }
-
-      component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
-      const axisName = this.config.getAxisName(child.accessors)
-      let calculatedDomain = this.config.get(`axes.${axisName}.calculatedDomain`) || []
-      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.yScale.domain()))
-      this.config.set(`axes.${axisName}.calculatedDomain`, calculatedDomain, {silent: true})
-    })
+    children.enter().merge(children).each(child => this._updateComponent(child, config))
 
     children.exit().each(child => {
       this._composite.remove(`${this.id}-${child.key}`)
     })
+  }
+
+  _updateComponent (child, config) {
+    const type = this.config.getComponentType(child.accessors)
+    config.id = `${this.id}-${child.key}`
+    if (this.config.isMultiAccessor(type)) config.y = child.accessors
+    else {
+      config.y = child.accessors[0]
+      config.tooltip = child.accessors[0].tooltip
+    }
+    if (type === 'ScatterPlot') config.size = child.accessors[0].size
+
+    let component = this._composite.get(`${this.id}-${child.key}`)
+    if (component) component.config.set(config, {silent: true})
+    else {
+      component = this._composite.add({
+        type,
+        config,
+        model: this.model,
+        container: this._container,
+      })
+      component.d3.classed(this.selectorClass('node'), true)
+        .attr('clip-path', `url(#${this.id}-${this.selectors.clip})`)
+      component.el.__data__ = {key: child.key}
+    }
+
+    // TODO must be a less verbose method to get scale from component (make it calculate)
+    component.calculateScales()
+    const axisName = this.config.getAxisName(child.accessors)
+    let yDomain = this.config.get(`axes.${axisName}.calculatedDomain`) || []
+    let xRange = this.config.get(`axes.x.range`) || [0, this.innerWidth]
+    let yRange = this.config.get(`axes.${axisName}.range`) || [this.innerHeight, 0]
+    yDomain = d3Array.extent(yDomain.concat(component.config.yScale.domain()))
+    let componentXRange = component.config.xScale.range()
+    let componentYRange = component.config.yScale.range()
+    xRange = [Math.max(xRange[0], componentXRange[0]), Math.min(xRange[1], componentXRange[1])]
+    yRange = [Math.min(yRange[0], componentYRange[0]), Math.max(yRange[1], componentYRange[1])]
+
+    this.config.set(`axes.${axisName}.calculatedDomain`, yDomain, {silent: true})
+    this.config.set(`axes.x.range`, xRange, {silent: true})
+    this.config.set(`axes.${axisName}.range`, yRange, {silent: true})
   }
 
   _initCrosshair () {

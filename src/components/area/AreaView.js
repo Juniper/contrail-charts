@@ -50,12 +50,18 @@ export default class AreaView extends ChartView {
     })
     return this.config.yScale(stackedValue)
   }
+
+  calculateScales () {
+    this.config.set('x.range', [this.padding.left, this.innerWidth - this.padding.right], {silent: true})
+    this.config.set('y.range', [this.innerHeight - this.padding.bottom, this.padding.top], {silent: true})
+    this.config.calculateScales(this.model)
+  }
   /**
    * Render all areas in a single stack unless specific stack names specified
    */
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    this.calculateScales()
 
     const data = this.model.data
     const xAccessor = this.config.get('x.accessor')

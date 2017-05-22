@@ -10,7 +10,7 @@ const colorScheme = _c.d3ColorScheme20
 const now = _.now()
 const length = 100
 const data = fixture({
-  length: length,
+  length,
   data: {
     x: {linear: true, range: [now - 30000000, now]},
     a: {random: true, range: [2, (length - 1) * 2]},
