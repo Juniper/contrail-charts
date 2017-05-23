@@ -50,7 +50,7 @@ const config = {
             chart: 'ScatterPlot',
             size: {
               accessor: 'group.size1',
-              range: [1, 500],
+              range: [1, 1000],
             },
             // this is a circle symbol from fontawesome
             shape: bubbleShapes.circleFill,
@@ -96,7 +96,7 @@ const config = {
         y2: {
           position: 'right',
           formatter: formatter.toInteger,
-          label: 'Y value of Square and Star',
+          label: 'Y value of Cloud and Network',
         }
       },
     }
@@ -115,11 +115,11 @@ const config = {
           valueFormatter: formatter.toInteger,
         }, {
           accessor: 'data2',
-          labelFormatter: 'Square',
+          labelFormatter: 'Cloud',
           valueFormatter: formatter.toInteger,
         }, {
           accessor: 'data3',
-          labelFormatter: 'Star',
+          labelFormatter: 'Network',
           valueFormatter: formatter.toInteger,
         }, {
           accessor: 'group.size1',
@@ -127,7 +127,7 @@ const config = {
           valueFormatter: formatter.toInteger,
         }, {
           accessor: 'size2',
-          labelFormatter: 'Size of Square and Star',
+          labelFormatter: 'Size of Cloud and Network',
           valueFormatter: formatter.toInteger,
         }
       ]
