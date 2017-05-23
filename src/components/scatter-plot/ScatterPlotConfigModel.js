@@ -42,14 +42,14 @@ export default class ScatterPlotConfigModel extends ConfigModel {
   }
 
   calculateScales (model, width, height) {
-    let config = _.extend({range: [0, width]}, this.attributes.x)
+    let config = this.attributes.x
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
-    config = _.merge({}, this.attributes.y, {range: [height, 0]})
+    config = this.attributes.y
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
 
     if (this.get('size.accessor')) {
-      config = _.extend({}, this.attributes.size)
+      config = this.attributes.size
       _.set(this.attributes, 'size.scale', ScalableChart.getScale(model, config))
     }
   }
