@@ -8,7 +8,7 @@ import {schemeCategory10 as colorScheme} from 'd3-scale'
 
 const length = 10
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.t': {linear: true, range: [1475760930000, 1475800930000]},
     'group.a': {random: true, range: [0, length * 3]},
@@ -35,9 +35,6 @@ const config = {
     config: {
       crosshair: 'crosshair-id',
       legend: 'legend-id',
-      margin: {
-        label: 30,
-      },
       plot: {
         x: {
           accessor: 'group.t',

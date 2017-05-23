@@ -95,6 +95,6 @@ export default class AxisConfigModel extends ConfigModel {
 
   get labels () {
     if (this.attributes.label) return [this.attributes.label]
-    return _.map(this.attributes.accessors, 'labelFormatter')
+    return _.map(this.attributes.accessors, a => this.getLabel([], a))
   }
 }

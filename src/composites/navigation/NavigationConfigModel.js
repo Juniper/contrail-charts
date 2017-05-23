@@ -16,11 +16,11 @@ export default class NavigationConfigModel extends ConfigModel {
 
       // Following is translated to internal yChart
       margin: {
-        top: 10,
-        left: 40,
-        bottom: 40,
-        right: 15,
-        label: 15,
+        top: 8,
+        left: 8,
+        bottom: 8,
+        right: 8,
+        label: 16,
       },
       plot: {
         x: {
