@@ -102,17 +102,17 @@ $legend-panel-color-indicator: (
   activeBgColor: $black
 ) !default;
 $legend-panel-selector-trigger: (
-  fgColor: $white,
-  bgColor: darken($ashGrey, 30%)
+  fgColor: $darkGrey,
+  bgColor: rgba(0,0,0,.15)
 ) !default;
 $legend-panel-selector-panel: (
   bgColor: $white,
   borderWidth: 1px,
   borderStyle: solid,
   borderColor: $ashGrey2,
-  borderRadius: 2px
+  borderRadius: 6px
 ) !default;
-$legend-panel-selector-panel-swatch: (
+$legend-panel-selector-panel-switch: (
   selectedBorderWidth: 2px,
   selectedBorderStyle: solid,
   selectedBorderColor: $black

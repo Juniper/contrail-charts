@@ -12,11 +12,6 @@ import './filter.scss'
 export default class FilterView extends ChartView {
   static get Model () { return Model }
 
-  constructor (p) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get selectors () {
     return _.extend({}, super.selectors, {
       item: '.filter-item-input',
@@ -41,6 +36,6 @@ export default class FilterView extends ChartView {
     d3Selection.event.stopPropagation()
     const accessorName = el.value
     const isChecked = el.checked
-    actionman.fire('SelectSerie', accessorName, isChecked)
+    actionman.fire('SelectKey', accessorName, isChecked)
   }
 }

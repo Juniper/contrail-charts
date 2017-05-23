@@ -9,31 +9,35 @@ export default class ControlPanelConfigModel extends ConfigModel {
     return {
       Refresh: {
         title: 'Refresh chart',
-        icon: 'fa fa-refresh',
+        icon: 'icon-refresh',
       },
-      Freeze: {
-        action: 'ToggleFreeze',
-        attribute: 'frozen',
+      Halt: {
+        action: 'ToggleHalt',
+        attribute: 'halted',
         toggle: true,
         title: 'Stop Live Update',
-        icon: 'fa fa-stop',
+        icon: 'icon-stop',
       },
-      Unfreeze: {
-        action: 'ToggleFreeze',
-        attribute: 'frozen',
+      Start: {
+        action: 'ToggleHalt',
+        attribute: 'halted',
         toggle: false,
         title: 'Start Live Update',
-        icon: 'fa fa-play',
+        icon: 'icon-play',
       },
       ColorPicker: {
         title: 'Select color for serie',
-        icon: 'fa fa-eyedropper',
+        icon: 'icon-color',
       },
       Filter: {
         title: 'Select serie to show',
-        icon: 'fa fa-filter',
+        icon: 'icon-eye',
       }
     }
+  }
+
+  get update () {
+    return this.attributes.update.concat([this.id])
   }
 
   set (key, value, options) {

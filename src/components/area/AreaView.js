@@ -15,11 +15,6 @@ export default class AreaView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
 
-  constructor (...args) {
-    super(...args)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get tagName () { return 'g' }
 
   get zIndex () { return 2 }
@@ -38,8 +33,11 @@ export default class AreaView extends ChartView {
       'mouseout node': '_onMouseout',
     }
   }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
   /**
-  * @override
   * Y coordinate calculation considers position is being stacked
   */
   getScreenY (datum, yAccessor) {
@@ -104,7 +102,8 @@ export default class AreaView extends ChartView {
       const xAccessor = this.config.get('x.accessor')
       const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
-      actionman.fire('ToggleVisibility', tooltipId, true, {left, top}, dataItem)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', d.tooltip, true, dataItem, tooltipConfig)
     }
     el.classList.add(this.selectorClass('active'))
   }

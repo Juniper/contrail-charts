@@ -15,7 +15,6 @@ export default class NavigationView extends ChartView {
 
   constructor (...args) {
     super(...args)
-    this.listenTo(this.model, 'change', this.render)
     // needs more time to not encounter onSelection event after zoom
     this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration') * 2)
   }

@@ -19,11 +19,6 @@ export default class LineView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
 
-  constructor (...args) {
-    super(...args)
-    this.listenTo(this.model, 'change', this.render)
-  }
-
   get tagName () { return 'g' }
 
   get zIndex () { return 3 }
@@ -41,6 +36,14 @@ export default class LineView extends ChartView {
       'mouseover node': '_onMouseover',
       'mouseout node': '_onMouseout',
     }
+  }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
+
+  getScreenY (datum, yAccessor) {
+    return this.config.yScale(_.get(datum, yAccessor))
   }
   /**
    * Draw a line path
@@ -102,7 +105,8 @@ export default class LineView extends ChartView {
       const xAccessor = this.config.get('x.accessor')
       const xVal = this.config.xScale.invert(left)
       const dataItem = this.model.getNearest(xAccessor, xVal)
-      actionman.fire('ToggleVisibility', d.tooltip, true, {left, top}, dataItem)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', d.tooltip, true, dataItem, tooltipConfig)
     }
     el.classList.add(this.selectorClass('active'))
   }

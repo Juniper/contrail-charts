@@ -3,13 +3,13 @@
  */
 import Action from '../core/Action'
 
-export default class SelectAccessor extends Action {
+export default class SelectKey extends Action {
   constructor (p) {
     super(p)
     this._deny = false
   }
 
-  _execute (accessorName, isSelected) {
-    this._registrar.config.setAccessor(accessorName, isSelected)
+  _execute (...args) {
+    this._registrar.config.setKey(...args)
   }
 }

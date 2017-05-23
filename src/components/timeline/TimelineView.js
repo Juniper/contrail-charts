@@ -24,7 +24,6 @@ export default class TimelineView extends ChartView {
       config: { isSharedContainer: true, },
     })
 
-    this.listenTo(this.model, 'change', this.render)
     this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
     this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration'))
   }

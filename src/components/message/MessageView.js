@@ -34,12 +34,12 @@ export default class MessageView extends ChartView {
     })
   }
 
-  show (data) {
+  render () {
     let msgObj = _.assignIn({
       componentId: 'default',
       action: 'update',  // 'new', 'once', 'update'. future: 'dismiss', 'block'
       messages: [],
-    }, data)
+    }, this.model.data)
     let template = this.config.get('template') || _template
 
     if (!this._containerList[msgObj.componentId]) {

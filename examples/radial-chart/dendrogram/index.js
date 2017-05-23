@@ -9,20 +9,18 @@ let chart
 const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'dendrogram-chart-id',
       editable: {
-        colorSelector: true,
-        chartSelector: false
+        color: true,
       },
-      placement: 'horizontal',
-      filter: true
     }
   }, {
     id: 'dendrogram-chart-id',
     type: 'RadialDendrogram',
     config: {
+      legend: 'legend-id',
       parentSeparation: 1.0,
       parentSeparationShrinkFactor: 0.05,
       parentSeparationDepthThreshold: 4,
@@ -60,9 +58,9 @@ const config = {
       tooltip: 'tooltip-id',
       action: {
         'click node': data => console.warn('click node'),
-        'click link': data => console.warn('click link'),
+        'click ribbon': data => console.warn('click ribbon'),
         'dblclick node': data => console.warn('dblclick node'),
-        'dblclick link': data => console.warn('dblclick link'),
+        'dblclick ribbon': data => console.warn('dblclick ribbon'),
       },
     }
   }, {

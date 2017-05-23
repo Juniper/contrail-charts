@@ -3,6 +3,8 @@
  */
 export {default as BrushView} from './brush/BrushView'
 export {default as BrushConfigModel} from './brush/BrushConfigModel'
+export {default as BucketView} from './bucket/BucketView'
+export {default as BucketConfigModel} from './bucket/BucketConfigModel'
 export {default as ColorPickerConfigModel} from './color-picker/ColorPickerConfigModel'
 export {default as ColorPickerView} from './color-picker/ColorPickerView'
 
@@ -42,3 +44,5 @@ export {default as TooltipConfigModel} from './tooltip/TooltipConfigModel'
 export {default as TooltipView} from './tooltip/TooltipView'
 export {default as AxisConfigModel} from './axis/AxisConfigModel'
 export {default as AxisView} from './axis/AxisView'
+export {default as MapView} from './map/MapView'
+export {default as MapConfigModel} from './map/MapConfigModel'

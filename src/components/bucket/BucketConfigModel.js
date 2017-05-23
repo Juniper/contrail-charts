@@ -13,9 +13,6 @@ export default class BucketConfigModel extends ConfigModel {
       range: [256, 512],
       scale: d3Scale.scaleLinear(),
       shape: '&#xf111;',
-
-      // default value is set in css
-      color: undefined,
     })
   }
 
@@ -25,17 +22,5 @@ export default class BucketConfigModel extends ConfigModel {
     const start = _.isNil(configRange[0]) ? defaultRange[0] : configRange[0]
     const end = _.isNil(configRange[1]) ? defaultRange[1] : configRange[1]
     return this.attributes.scale.range([start, end])
-  }
-
-  get duration () {
-    return this._parent.get('duration') || this.attributes.duration
-  }
-
-  get xAccessor () {
-    return this._parent.get('plot.x.accessor')
-  }
-
-  get updateComponents () {
-    return this._parent.get('updateComponents')
   }
 }

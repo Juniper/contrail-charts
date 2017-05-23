@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import './sankey.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Sankey from 'd3-sankey'
@@ -22,18 +21,6 @@ export default class SankeyView extends ChartView {
       'mouseover .link': '_onMouseoverLink',
       'mouseout .link': '_onMouseoutLink'
     }
-  }
-
-  constructor (...args) {
-    super(...args)
-    this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
-    /**
-     * Let's bind super _onResize to this. Also .bind returns new function ref.
-     * we need to store this for successful removal from window event
-     */
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
   }
 
   get selectors () {
@@ -166,7 +153,8 @@ export default class SankeyView extends ChartView {
 
   _onMouseoverLink (d, el) {
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d)
+    const tooltipConfig = {left, top, container: this._container}
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d, tooltipConfig)
   }
 
   _onMouseoutLink (d, el) {

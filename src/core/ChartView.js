@@ -5,8 +5,9 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import ContrailView from 'contrail-view'
 import ConfigModel from 'config-model'
+import DataModel from 'models/Data'
 import actionman from 'core/Actionman'
-import ToggleFreeze from '../actions/ToggleFreeze'
+import ToggleHalt from '../actions/ToggleHalt'
 /**
  * View base class
  */
@@ -19,20 +20,19 @@ export default class ChartView extends ContrailView {
     this._id = p.id || _.get(p, 'config.id')
     this.d3.attr('id', this.id)
     this._container = p.container
-    // TODO remove
-    this.params = {}
 
     // override simple Backbone.View model set
-    const Model = this.constructor.Model
-    if (Model && (!this.model || !(this.model instanceof Model))) {
+    const Model = this.constructor.Model || DataModel
+    if (!this.model || !(this.model instanceof Model)) {
       if (p.model instanceof Model) this.model = p.model
       else this.model = new Model(undefined, p.model)
+      if (!p.config.frozen) this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
     }
     this.setConfig(p.config)
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
-    if (this.model) actionman.set(ToggleFreeze, this)
     _.each(this.constructor.Actions, action => actionman.set(action, this))
+    actionman.set(ToggleHalt, this)
   }
 
   get selectors () {
@@ -68,6 +68,11 @@ export default class ChartView extends ContrailView {
   set id (id) {
     // do nothing
   }
+  // Component is master by default
+  get isMaster () {
+    const isMaster = this.constructor.isMaster
+    return _.isNil(isMaster) ? true : isMaster
+  }
   /**
    * @returns {Object} d3.selection - Looks for svg container
    */
@@ -96,6 +101,7 @@ export default class ChartView extends ContrailView {
   }
   /**
    * One-time setter
+   * Container cannot be changed from outside
    */
   set container (el) {
     if (!this._container) this._container = el
@@ -130,7 +136,6 @@ export default class ChartView extends ContrailView {
   * @param {Array} data
   */
   setData (data) {
-    if (this.config.get('frozen')) return
     this.model.data = data
   }
   /**
@@ -141,31 +146,20 @@ export default class ChartView extends ContrailView {
    */
   setConfig (config = {}) {
     const Config = this.constructor.Config || ConfigModel
-    if (Config) {
-      if (config instanceof Config) this.config = config
-      else {
-        if (!this.config) {
-          // clone config as this object may be changed outside and passed again
-          config = _.cloneDeep(config)
+    if (config instanceof Config) this.config = config
+    else {
+      if (!this.config) {
+        // clone config as this object may be changed outside and passed again
+        config = _.cloneDeep(config)
 
-          // View and Config model share the same id - "Component id"
-          config.id = this.id
-          this.config = new Config(config)
-          this.listenTo(this.config, 'change', this.render)
-        } else {
-          this.config.set(config)
-        }
+        // View and Config model share the same id - "Component id"
+        config.id = this.id
+        this.config = new Config(config)
+        if (!this.config.get('frozen')) this.listenTo(this.config, 'change', this.render)
+      } else {
+        this.config.set(config)
       }
     }
-  }
-  /**
-   * Save the config '_computed' parameters in the view's 'params' local object for easier reference (this.params instead of this.config._computed).
-   * The view may modify the params object with calculated values.
-   */
-  // TODO deprecate
-  resetParams (params) {
-    if (params) this.config.set(params)
-    this.params = this.config.computeParams()
   }
   /**
    * Appends components element to container in the order specified in this._order
@@ -199,18 +193,44 @@ export default class ChartView extends ContrailView {
     }
   }
 
-  show (container) {
-    if (this._container !== container) {
-      this._container = container
-      this.render()
-    }
-    this.d3.classed('hide', false)
+  show (data, config = {}) {
     this._visible = true
+    if (config.container) this._container = config.container
+    this.config.set(config, {silent: true})
+    this.setData(data)
+    this.d3.classed('hide', false)
   }
 
   hide () {
     this.d3.classed('hide', true)
     this._visible = false
+  }
+  /**
+   * Set / Remove any automatic update by public methods or actions
+   * TODO consider halted state
+   */
+  setFrozen (isFrozen) {
+    if (this.config.get('frozen') === isFrozen) return
+    this.config.set('frozen', isFrozen, {silent: true})
+    if (isFrozen) {
+      this.stopListening(this.config)
+      this.stopListening(this.model)
+      _.each(this.constructor.Actions, action => actionman.unset(action, this))
+    } else {
+      this.listenTo(this.config, 'change', this.render)
+      this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
+      _.each(this.constructor.Actions, action => actionman.set(action, this))
+    }
+  }
+
+  setHalt (isHalted) {
+    if (this.config.get('halted') === isHalted) return
+    this.config.set('halted', isHalted, {silent: true})
+    if (isHalted) {
+      this.stopListening(this.model)
+    } else {
+      this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
+    }
   }
   /**
    * Stop listening to config and model. Remove the view from the dom.
@@ -224,8 +244,6 @@ export default class ChartView extends ContrailView {
     window.removeEventListener('resize', this._onResize)
     _.each(this.constructor.Actions, action => actionman.unset(action, this))
 
-    // TODO remove
-    this.params = {}
     super.remove()
   }
   /**
@@ -249,7 +267,7 @@ export default class ChartView extends ContrailView {
       this._insertSorted(wrapper)
     }
     const wrapperPosition = this.svg.node().parentNode.dataset.order
-    if (this.params.isPrimary && wrapperPosition !== this.config.get('order')) {
+    if (this.config.get('isPrimary') && wrapperPosition !== this.config.get('order')) {
       const wrapper = this.svg.node().parentNode
       wrapper.remove() // detach
       this._insertSorted(wrapper)
@@ -265,7 +283,7 @@ export default class ChartView extends ContrailView {
   _insertSorted (el) {
     if (el.parentElement === this._container) return
 
-    if (!this.config.get('isSharedContainer') || this.params.isPrimary) {
+    if (!this.config.get('isSharedContainer') || this.config.get('isPrimary')) {
       el.dataset['order'] = this.config.get('order')
     }
     el.classList.add(this.selectorClass('component'))

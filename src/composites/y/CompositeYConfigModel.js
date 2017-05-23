@@ -19,6 +19,7 @@ export default class CompositeYConfigModel extends ConfigModel {
           right: 15,
           label: 15,
         },
+        isPrimary: true,
         isSharedContainer: true,
 
         // default chart type to plot
@@ -107,6 +108,7 @@ export default class CompositeYConfigModel extends ConfigModel {
   }
 
   getAxisAccessors (name) {
+    if (name.startsWith('x')) return [this.get('plot.x.accessor')]
     return _.filter(this.get('plot.y'), accessor => this.getAxisName(accessor) === name)
   }
 
@@ -158,7 +160,7 @@ export default class CompositeYConfigModel extends ConfigModel {
     this.trigger('change')
   }
 
-  setAccessor (accessorName, isEnabled) {
+  setKey (accessorName, isEnabled) {
     const accessor = _.find(this.accessors, a => a.accessor === accessorName)
     if (!accessor) return
     accessor.disabled = !isEnabled

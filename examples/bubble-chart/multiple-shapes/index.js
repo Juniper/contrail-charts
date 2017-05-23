@@ -5,7 +5,7 @@ import {composites, Util} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
 
 const data = fixture({
-  length: 40,
+  length: 20,
   data: {
     'group.x': {linear: true, range: [1475760930000, 1475800930000]},
     'group.data1': {random: true, range: [0, 50], gap: true},
@@ -17,24 +17,26 @@ const data = fixture({
   },
 })
 
-const colorScheme = _c.bubbleColorScheme6
+const colorScheme = _c.radialColorScheme10
 const bubbleShapes = Util.bubbleShapes
 
 let chart
 const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'multishape-bubble-chart',
       editable: {
-        colorSelector: true,
+        color: true,
       },
     },
   }, {
     id: 'multishape-bubble-chart',
     type: 'CompositeY',
     config: {
+      legend: 'legend-id',
+      bucket: 'bucket-id',
       margin: {
         right: 60,
       },
@@ -55,7 +57,7 @@ const config = {
             },
             // this is a circle symbol from fontawesome
             shape: bubbleShapes.circleFill,
-            color: colorScheme[0],
+            color: d => colorScheme[0],
             axis: 'y1',
             tooltip: 'tooltip-id',
           }, {
@@ -66,8 +68,8 @@ const config = {
               accessor: 'size2',
               range: [1, 500],
             },
-            shape: bubbleShapes.square,
-            color: colorScheme[4],
+            color: colorScheme[5],
+            shape: bubbleShapes.cloud,
             axis: 'y2',
             tooltip: 'tooltip-id',
           }, {
@@ -78,8 +80,8 @@ const config = {
               accessor: 'size2',
               range: [1, 500],
             },
-            shape: bubbleShapes.star,
-            color: d => d.data3 > 80 ? 'red' : colorScheme[5],
+            shape: bubbleShapes.network,
+            color: d => d.data3 > 80 ? colorScheme[9] : colorScheme[8],
             axis: 'y2',
             tooltip: 'tooltip-id',
           }
@@ -99,11 +101,6 @@ const config = {
           formatter: formatter.toInteger,
           label: 'Y value of Square and Star',
         }
-      },
-      bucket: {
-        range: [400, 600],
-        shape: bubbleShapes.circleFill,
-        tooltip: 'tooltip-bucket',
       },
     }
   }, {
@@ -137,6 +134,14 @@ const config = {
           valueFormatter: formatter.toInteger,
         }
       ]
+    }
+  }, {
+    id: 'bucket-id',
+    type: 'Bucket',
+    config: {
+      range: [500, 800],
+      shape: bubbleShapes.square,
+      tooltip: 'tooltip-bucket',
     }
   }, {
     id: 'tooltip-bucket',

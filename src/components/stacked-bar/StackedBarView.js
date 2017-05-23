@@ -9,18 +9,13 @@ import Config from './StackedBarConfigModel'
 import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
-import SelectAccessor from '../../actions/SelectAccessor'
+import SelectKey from '../../actions/SelectKey'
 import './bar.scss'
 
 export default class StackedBarView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {SelectColor, SelectAccessor} }
-
-  constructor (...args) {
-    super(...args)
-    this.listenTo(this.model, 'change', this.render)
-  }
+  static get Actions () { return {SelectColor, SelectKey} }
 
   get tagName () { return 'g' }
 
@@ -55,8 +50,11 @@ export default class StackedBarView extends ChartView {
     // or fill the gaps in it beforehand
     return this.config.getOuterWidth(this.model, this.innerWidth) / this.model.data.length * paddedPart
   }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
   /**
-  * @override
   * Y coordinate calculation considers position is being stacked
   */
   getScreenY (datum, yAccessor) {
@@ -71,6 +69,7 @@ export default class StackedBarView extends ChartView {
 
   render () {
     super.render()
+    this._onMouseout()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     const start = this.config.yScale.range()[0]
@@ -128,7 +127,8 @@ export default class StackedBarView extends ChartView {
   _onMousemove (d, el, event) {
     if (d.accessor.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, {left, top}, d.data)
+      const tooltipConfig = {left, top, container: this._container}
+      actionman.fire('ToggleVisibility', d.accessor.tooltip, true, d.data, tooltipConfig)
     }
     el.classList.add(this.selectorClass('active'))
   }
