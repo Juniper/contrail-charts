@@ -50,7 +50,7 @@ const config = {
             chart: 'ScatterPlot',
             size: {
               accessor: 'group.size1',
-              range: [1, 1000],
+              range: [100, 1000],
             },
             // this is a circle symbol from fontawesome
             shape: bubbleShapes.circleFill,
@@ -63,7 +63,7 @@ const config = {
             chart: 'ScatterPlot',
             size: {
               accessor: 'size2',
-              range: [1, 500],
+              range: [100, 500],
             },
             color: colorScheme[5],
             shape: bubbleShapes.cloud,
@@ -75,7 +75,7 @@ const config = {
             chart: 'ScatterPlot',
             size: {
               accessor: 'size2',
-              range: [1, 500],
+              range: [100, 500],
             },
             shape: bubbleShapes.network,
             color: d => d.data3 > 80 ? colorScheme[9] : colorScheme[8],
