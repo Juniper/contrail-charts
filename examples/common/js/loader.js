@@ -7,7 +7,7 @@ import '../sass/contrail-charts-examples.scss'
 import _ from 'lodash'
 // LineBar
 import legend from '../../linebar-chart/legend'
-import controls from '../../linebar-chart/control-panel'
+//import controls from '../../linebar-chart/control-panel'
 import timeline from '../../linebar-chart/timeline'
 import tooltips from '../../linebar-chart/tooltip'
 import stackedBar from '../../linebar-chart/stacked-bar-chart'
@@ -16,6 +16,7 @@ import liveData from '../../linebar-chart/live'
 // Scatter
 import scatterPlotBuckets from '../../bubble-chart/bucketization'
 import shapes from '../../bubble-chart/multiple-shapes'
+import map from '../../bubble-chart/map'
 // Radial
 import pieChart from '../../radial-chart/pie'
 import dendrogramChart from '../../radial-chart/dendrogram'
@@ -48,9 +49,9 @@ const allExamples = {
     'Legend': {
       view: legend,
     },
-    'Controls': {
-      view: controls,
-    },
+    //'Controls': {
+      //view: controls,
+    //},
     'Timeline': {
       view: timeline,
     },
@@ -79,7 +80,10 @@ const allExamples = {
     },
     'Shapes': {
       view: shapes,
-    }
+    },
+    'Map': {
+      view: map,
+    },
   },
   'radial': {
     'Pie Chart': {
@@ -139,12 +143,21 @@ const allExamples = {
   'advance': {
     'Sankey': {
       view: sankeyChart,
-    }
+    },
   }
 }
 
-$('#side-menu').metisMenu()
-const $content = $('.content')
+$('.nav-sidebar').metisMenu()
+$('.mobilebar .navbar-toggle').on('click', e => {
+  e.preventDefault()
+  $('body').addClass('showmenu')
+})
+$('.overlay').on('click', e => {
+  e.preventDefault()
+  $('body').removeClass('showmenu')
+})
+
+const $content = $('.crailui__content')
 const $chartBox = $('#chartBox')
 
 _.forEach(allExamples, (examples, chartCategory) => {

@@ -1,9 +1,0 @@
-@import "radial-line-rules";
-@import "../../styles/variables";
-@import "../../styles/mixins";
-
-.cc-svg .radial-line {
-  @include lineChartRules($line-chart);
-
-  @include themify($lineChartId, $themes);
-}

@@ -7,7 +7,7 @@ import {fixture} from 'commons'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
     'group.a': {linear: true, range: [3, (length - 1) * 3]},
@@ -19,22 +19,15 @@ const data = fixture({
 let chart
 const container = document.querySelector('#chartBox')
 const config = {
-  margin: {
-    left: 20,
-    right: 20,
-  },
   x: {
     accessor: 'group.x',
-    labelFormatter: 'Value',
     domain: [5, length],
   },
   y: [
     {
       accessor: 'group.a',
-      labelFormatter: 'Label Group.A',
     }, {
       accessor: 'b',
-      labelFormatter: 'Label B',
       color: d => d.group.a > 50 ? 'red' : undefined
     }
   ]
@@ -48,7 +41,6 @@ export default {
     setTimeout(() => {
       config.y.push({
         accessor: 'c',
-        labelFormatter: 'Label C',
       })
       chart.setConfig(config)
     }, 1000)

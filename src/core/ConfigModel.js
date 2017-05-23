@@ -18,6 +18,12 @@ export default class ConfigModel extends ContrailModel {
         right: 0,
         bottom: 0,
       },
+      padding: {
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+      },
       duration: 300,
 
       // if set true - no render will occur on config and data updates
@@ -33,6 +39,10 @@ export default class ConfigModel extends ContrailModel {
 
   get margin () {
     return this.attributes.margin
+  }
+
+  get padding () {
+    return this.attributes.padding
   }
 
   get duration () {

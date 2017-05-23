@@ -1,11 +1,19 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+import _ from 'lodash'
 import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
 
-let counter = 0
-const length = 21
+const length = 20
+let counter = length
+const data = fixture({
+  length,
+  data: {
+    x: {linear: true, range: [0, length]},
+    a: {linear: true, range: [0, length * 3]},
+  },
+})
 
 let chart
 const config = {
@@ -17,16 +25,12 @@ const config = {
       menu: [{
         id: 'Halt',
       }],
+      update: ['compositey-id'],
     }
   }, {
     id: 'compositey-id',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       height: 600,
       crosshair: 'crosshair-id',
       plot: {
@@ -83,21 +87,16 @@ let intervalId = -1
 export default {
   render: () => {
     chart = new composites.CompositeView({config})
-    clearInterval(intervalId)
+    chart.setData(data)
     intervalId = setInterval(() => {
-      const dataConfig = {
-        length: length,
-        data: {
-          x: {linear: true, range: [counter, counter + length]},
-          a: {linear: true, range: [counter, counter + length * 3]},
-        },
-      }
-      const data = fixture(dataConfig)
+      data.shift()
+      data.push({x: counter, a: _.random(0, length * 3)})
       chart.setData(data)
       counter++
     }, 1000)
   },
   remove: () => {
+    clearInterval(intervalId)
     chart.remove()
   },
   stopUpdating: () => {

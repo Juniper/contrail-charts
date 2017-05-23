@@ -42,10 +42,12 @@ export default class GroupedBarConfigModel extends ConfigModel {
    * @param width
    * @param height
    */
-  calculateScales (model, width, height) {
-    let config = _.extend({range: [0, width]}, this.attributes.x)
+  calculateScales (model) {
+    let config = this.attributes.x
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
-    config = { range: [height, 0], accessor: _.map(this.attributes.y, 'accessor') }
+    config = _.merge({
+      accessor: _.map(this.yAccessors, 'accessor'),
+    }, this.attributes.y)
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
   /**

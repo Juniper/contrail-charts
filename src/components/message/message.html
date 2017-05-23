@@ -1,13 +1,9 @@
-{{#each messages}}
-<div class="message-row {{msgLevel}}" data-component-id="{{../componentId}}" data-action="{{../action}}" data-msg-level="{{level}}">
-  {{#if title}}
-  <div class="message-heading">
-    <i class="fa {{iconLevel}}" aria-hidden="true"></i>
-    <span class="message-title">
-        {{this.title}}
-    </span>
-  </div>
-  {{/if}}
-  <div class="message-body">{{this.message}}</div>
+{{#if title}}
+<div class="message-heading">
+  <i class="fa {{iconLevel}}" aria-hidden="true"></i>
+  <span class="message-title">
+      {{this.title}}
+  </span>
 </div>
-{{/each}}
+{{/if}}
+<div class="message-body">{{this.text}}</div>

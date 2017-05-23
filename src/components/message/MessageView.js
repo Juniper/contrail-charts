@@ -2,7 +2,6 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import * as d3Selection from 'd3-selection'
 import ChartView from 'chart-view'
 import SendMessage from './actions/SendMessage'
 import ClearMessage from './actions/ClearMessage'
@@ -11,14 +10,11 @@ import './message.scss'
 
 export default class MessageView extends ChartView {
   static get Actions () { return {SendMessage, ClearMessage} }
-  constructor (p) {
-    super(p)
-    this._containerList = {}
-    this.render()
-  }
+  static get isMaster () { return false }
 
   get selectors () {
     return _.extend(super.selectors, {
+      node: '.message-row',
       message: {
         default: 'msg-default',
         info: 'msg-info',
@@ -35,62 +31,34 @@ export default class MessageView extends ChartView {
   }
 
   render () {
-    let msgObj = _.assignIn({
-      componentId: 'default',
+    super.render()
+    const messages = this.model.data.messages || []
+    let config = _.assignIn({
       action: 'update',  // 'new', 'once', 'update'. future: 'dismiss', 'block'
-      messages: [],
     }, this.model.data)
-    let template = this.config.get('template') || _template
+    const template = this.config.get('template') || _template
 
-    if (!this._containerList[msgObj.componentId]) {
-      let componentElemD3 = d3Selection.select(`#${msgObj.componentId}`)
-
-      // TODO el.closest is not supported in IE15
-      if (componentElemD3.node() && componentElemD3.node().closest(this.selectors.chart)) {
-        this._containerList[msgObj.componentId] = componentElemD3
-      }
-    }
-
-    let associatedComponent = this._containerList[msgObj.componentId]
-
-    if (associatedComponent) {
-      if (!associatedComponent.classed(this.selectors.component.substring(1))) {
-        // TODO el.closest is not supported in IE15
-        associatedComponent = d3Selection.select(associatedComponent.node().closest(this.selectors.component))
-      }
-
-      this.d3.remove()
-      associatedComponent.append(() => this.d3.node())
-    } else {
-      console.warn(`MessageView.show: invalid componentId (${msgObj.componentId})`)
-    }
-
-    if (msgObj.action === 'update') {
-      // update message so remove any previous messages from this component
-      this.clear(msgObj.componentId)
-    }
-    _.forEach(msgObj.messages, (msg) => {
+    _.forEach(messages, msg => {
       _.assignIn(msg, {
+        action: config.action,
         level: msg.level || 'default',
         iconLevel: this.selectors.icon[msg.level || 'default'],
         msgLevel: this.selectors.message[msg.level || 'default'],
       })
     })
 
-    this.$el.html(template(msgObj))
-
-    this.d3.selectAll('[data-action="once"')
-      .style('opacity', 1)
-      .transition()
-      .duration(5000)
-      .style('opacity', 1e-06)
-      .remove()
-  }
-
-  clear (componentId) {
-    const messageSelector = `.message-row[data-component-id="${componentId}"]`
-    this.$(messageSelector).fadeOut('fast', () => {
-      this.$(messageSelector).remove()
-    })
+    // only messages with 'update' action should be udpated
+    const update = this.d3.selectAll(this.selectors.node).filter(d => d.action === 'update')
+      .data(messages, d => d.text)
+    const enter = update.enter().append('div')
+      .html(d => template(d))
+      .attr('class', d => `${this.selectorClass('node')} ${d.msgLevel}`)
+    if (config.action === 'once') {
+      enter
+        .transition().duration(5000)
+        .style('opacity', 1e-06)
+        .remove()
+    }
+    update.exit().remove()
   }
 }

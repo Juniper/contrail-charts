@@ -10,122 +10,115 @@
   
   <title>Contrail Charts</title>
   
-  <link rel="shortcut icon" sizes="196x196" href="examples/common/assets/images/contrail.png">
-  <!-- third-party styles -->
-  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css" type="text/css"/>
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" type="text/css"/>
-  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" type="text/css"/>
-  
-  <!-- theme styles -->
-  <link href="node_modules/metismenu/dist/metisMenu.css" rel="stylesheet">
-  <link href="examples/common/assets/theme/css/sb-admin-2.css" rel="stylesheet">
+  <link rel="shortcut icon" href="examples/common/images/favicon.ico">
   
   <!-- library styles -->
   <link rel="stylesheet" href="build/contrail-charts.css" type="text/css"/>
+  
+  <!-- theme styles -->
   <link rel="stylesheet" href="build/examples/css/contrail-charts-examples.css" type="text/css">
 </head>
 
 <body>
-<div id="wrapper">
-  <!-- Navigation -->
-  <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="">Contrail Charts v0.0.1</a>
-    </div>
-    <!-- /.navbar-header -->
-    
-    <ul class="nav navbar-top-links navbar-right">
-      <!-- /.dropdown -->
-    </ul>
-    <!-- /.navbar-top-links -->
-    
-    <div class="navbar-default sidebar" role="navigation">
-      <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-object-group fa-2"></i></span>
-              <span id="grouped" class="nav-text">Grouped</span>
-            </a>
-            <ul id="groupedLinks" class="nav nav-second-level"></ul>
-          </li>
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-line-chart"></i></span>
-              <span id="linebar" class="nav-text">Line Bar</span>
-            </a>
-            <ul id="lineBarLinks" class="nav nav-second-level"></ul>
-          </li>
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-circle-thin"></i></span>
-              <span class="nav-text">Bubble</span>
-            </a>
-            <ul id="bubbleLinks" class="nav nav-second-level"></ul>
-          </li>
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-pie-chart"></i></span>
-              <span class="nav-text">Radial</span>
-            </a>
-            <ul id="radialLinks" class="nav nav-second-level"></ul>
-          </li>
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-area-chart"></i></span>
-              <span class="nav-text">Area</span>
-            </a>
-            <ul id="areaLinks" class="nav nav-second-level"></ul>
-          </li>
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-folder-open"></i></span>
-              <span class="nav-text">Advance</span>
-            </a>
-            <ul id="advanceLinks" class="nav nav-second-level"></ul>
-          </li>
-          <li class="example-group">
-            <a class="title">
-              <span class="nav-icon"><i class="fa fa-folder-open"></i></span>
-              <span class="nav-text">Single</span>
-            </a>
-            <ul id="singleLinks" class="nav nav-second-level"></ul>
-          </li>
-        </ul>
-      </div>
-      <!-- /.sidebar-collapse -->
-    </div>
-    <!-- /.navbar-static-side -->
-  </nav>
+  <div class="overlay"></div>
   
-  <div id="page-wrapper" class="content">
-    <div class="row">
-      <div class="col-lg-12">
-        <h1 id="page-title"></h1>
-        <p id="page-description" class="text-muted"></p>
-      </div>
-      <!-- /.col-lg-12 -->
+  <!-- Mobile bar -->
+  <div class="mobilebar">
+    <div class="mobilebar__nav">
+      <button aria-expanded="false" class="navbar-toggle" type="button"> 
+        <span class="sr-only">Toggle navigation</span> 
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+        <span class="icon-bar"></span>
+        <!-- <p>MENU</p> -->
+      </button>
     </div>
-    <!-- /.row -->
-    <div class="row">
-      <div class="col-sm-12 col-md-12">
-        <!-- TODO: Get the height from css -->
+    <div class="mobilebar__logo">
+      <h1>Contrail Charts</h1>
+    </div>
+  </div> <!-- End Mobile bar -->
+  
+  <!-- Contrail UI holder -->
+  <section class="crailui">
+
+    <!-- Sidebar -->
+    <div class="crailui__sidebar">
+      <div class="crailui__sidehead">
+        <h1>Contrail Charts</h1>
+        <p>v.0.0.1</p>
+      </div>
+      <nav class="crailui__nav">
+        <ul class="nav nav-sidebar">
+          <li class="nav-sidebar__hassub">
+            <a href="#">
+              <i class="icon-chart-group"></i>
+              Grouped
+            </a>
+            <ul id="groupedLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>
+          </li>
+          <li class="nav-sidebar__hassub">
+            <a href="#">
+              <i class="icon-chart-line"></i>
+              Line Bar
+            </a>
+            <ul id="lineBarLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>
+          </li>
+          <li class="nav-sidebar__hassub">
+            <a href="#">
+              <i class="icon-chart-bubble"></i>
+              Bubble
+            </a>
+            <ul id="bubbleLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>
+          </li>
+          <li class="nav-sidebar__hassub">
+            <a href="#">
+              <i class="icon-chart-radial"></i>
+              Radial
+            </a>
+            <ul id="radialLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>
+          </li>
+          <li class="nav-sidebar__hassub">
+            <a href="#">
+              <i class="icon-chart-area"></i>
+              Area
+            </a>
+            <ul id="areaLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>
+          </li>
+          <li class="nav-sidebar__hassub">
+            <a href="#">
+              <i class="icon-chart-advanced"></i>
+              Advance
+            </a>
+            <ul id="advanceLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>
+          </li>
+          <!--<li class="nav-sidebar__hassub">-->
+            <!--<a href="#">-->
+              <!--<i class="fa fa-folder-open"></i>-->
+              <!--Single-->
+            <!--</a>-->
+            <!--<ul id="singleLinks" class="nav nav-sidebar__sub collapse" aria-expanded="false"></ul>-->
+          <!--</li>-->
+        </ul>
+      </nav>
+    </div> <!-- End Sidebar -->
+    
+    <!-- Main Content -->
+    <main class="crailui__content">
+      <header class="crailui__heder">
+        <h2 id="page-title"></h2>
+        <p id="page-description"></p>
+      </header>
+      <div class="crailui__body">
         <div id="chartBox"></div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="pull-right text-muted">
-          &copy; Copyright <strong>Juniper Networks</strong> <span class="hidden-xs-down">- v0.0.1</span>
-          <a ui-scroll-to="content"><i class="fa fa-long-arrow-up p-x-sm"></i></a>
-        </div>
-      </div>
-    </div>
-    <!-- /.row -->
-  </div>
-  <!-- /#page-wrapper -->
-</div>
-<!-- /#wrapper -->
+    </main> <!-- End Main Content -->
+    
+    <footer class="crailui__footer">
+      <p>© Copyright Juniper Networks - v0.0.1</p>
+      <a href="#" class="btn-backtop"><i class=""></i></a>
+    </footer>
+    
+  </section>
 
 <!-- loading chart library and its external dependencies -->
 <script src="node_modules/jquery/dist/jquery.js"></script>
@@ -137,7 +130,9 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="node_modules/metismenu/dist/metisMenu.js"></script>
+<script src="node_modules/prefixfree/prefixfree.js"></script>
 
+<!-- Loading examples -->
 <script src="build/examples/loader.bundle.js"></script>
 
 </body>

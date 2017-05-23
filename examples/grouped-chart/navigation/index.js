@@ -5,17 +5,17 @@ import {composites} from 'contrail-charts'
 import {_c, fixture} from 'commons'
 import template from './template.html'
 
-const colorScheme = _c.lbColorScheme7
+const colorScheme = _c.lbColorScheme17
 
 const length = 20
 const data = fixture({
-  length: 20,
+  length,
   data: {
     x: {linear: true, range: [0, length]},
-    a: {linear: true, range: [0, length * 3], repeat: true},
-    b: {linear: true, range: [0, length * 5], repeat: true},
-    c: {random: true, range: [0, -length * 5]},
-    d: {linear: true, range: [0, length * 7]},
+    a: {random: true, range: [0, length * 5], repeat: true},
+    b: {linear: true, range: [0, length * 3], repeat: true},
+    c: {random: true, range: [0, -length * 3]},
+    d: {linear: true, range: [0, length * 5]},
   },
 })
 
@@ -74,13 +74,13 @@ const config = {
             accessor: 'a',
             label: 'Label A',
             chart: 'GroupedBar',
-            color: colorScheme[1],
+            color: colorScheme[7],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
             chart: 'GroupedBar',
-            color: colorScheme[3],
+            color: colorScheme[6],
             axis: 'y',
           },
         ]
@@ -148,13 +148,13 @@ const config = {
             label: 'Label A',
             chart: 'Line',
             axis: 'y',
-            color: colorScheme[2],
+            color: colorScheme[11],
           }, {
             accessor: 'c',
             label: 'Label C',
             chart: 'Line',
             axis: 'y',
-            color: colorScheme[4],
+            color: colorScheme[9],
           }
         ]
       },
@@ -186,7 +186,7 @@ const config = {
           {
             accessor: 'a',
             label: 'Label D',
-            color: colorScheme[2],
+            color: colorScheme[8],
             chart: 'Line',
             axis: 'y',
           }

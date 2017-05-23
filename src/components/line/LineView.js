@@ -45,16 +45,22 @@ export default class LineView extends ChartView {
   getScreenY (datum, yAccessor) {
     return this.config.yScale(_.get(datum, yAccessor))
   }
+
+  calculateScales () {
+    this.config.set('x.range', [this.padding.left, this.plotWidth - this.padding.right], {silent: true})
+    this.config.set('y.range', [this.plotHeight - this.padding.bottom, this.padding.top], {silent: true})
+    this.config.calculateScales(this.model)
+  }
   /**
    * Draw a line path
    */
   render () {
     super.render()
+    this.calculateScales()
     const data = this.model.data
     const xAccessor = this.config.get('x.accessor')
     const accessor = this.config.get('y')
     const key = accessor.accessor
-    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     this._line = d3Shape.line()
       .x(d => this.config.xScale(_.get(d, xAccessor)))

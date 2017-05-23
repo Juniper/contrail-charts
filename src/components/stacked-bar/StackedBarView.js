@@ -35,23 +35,24 @@ export default class StackedBarView extends ChartView {
       'mouseout node': '_onMouseout',
     }
   }
-  /**
-   * @override
-   */
-  get xMarginInner () {
-    if (this.model.data.length < 2) return 0
-    return this.bandWidth / 2
-  }
   // TODO use memoize function
   get bandWidth () {
     if (_.isEmpty(this.model.data)) return 0
-    const paddedPart = 1 - (this.config.get('barPadding') / 2 / 100)
+    const paddedPart = 1 - (this.config.get('barPadding') / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
     return this.config.getOuterWidth(this.model, this.innerWidth) / this.model.data.length * paddedPart
   }
+
+  get padding () {
+    const horizontal = this.model.data.length < 2 ? 0 : this.bandWidth / 2
+    return _.defaultsDeep({left: horizontal, right: horizontal}, this.config.padding)
+  }
+
+  getScreenX (datum) {
+    return this.config.xScale(_.get(datum, this.config.get('x.accessor')))
+  }
   /**
-  * @override
   * Y coordinate calculation considers position is being stacked
   */
   getScreenY (datum, yAccessor) {
@@ -64,9 +65,16 @@ export default class StackedBarView extends ChartView {
     return this.config.yScale(stackedValue)
   }
 
+  calculateScales () {
+    this.config.set('x.range', [this.padding.left, this.innerWidth - this.padding.right], {silent: true})
+    this.config.set('y.range', [this.innerHeight - this.padding.bottom, this.padding.top], {silent: true})
+    this.config.calculateScales(this.model)
+  }
+
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    this._onMouseout()
+    this.calculateScales()
 
     const start = this.config.yScale.range()[0]
     const barGroups = this.d3

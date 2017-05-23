@@ -34,21 +34,19 @@ export default class GroupedBarView extends ChartView {
       'mouseout node': '_onMouseout',
     }
   }
-  /**
-   * @override
-   */
-  get xMarginInner () {
-    if (this.model.data.length < 2) return 0
-    return this.bandWidth / 2
-  }
 
   get bandWidth () {
     const data = this.model.data
     if (_.isEmpty(data)) return 0
-    const paddedPart = 1 - (this.config.get('barPadding') / 2 / 100)
+    const paddedPart = 1 - (this.config.get('barPadding') / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
-    return this.config.getOuterWidth(this.model, this.width) / data.length * paddedPart
+    return this.config.getOuterWidth(this.model, this.innerWidth) / data.length * paddedPart
+  }
+
+  get padding () {
+    const horizontal = this.model.data.length < 2 ? 0 : this.bandWidth / 2
+    return _.defaultsDeep({left: horizontal, right: horizontal}, this.config.padding)
   }
 
   getScreenX (datum, yAccessor) {
@@ -65,9 +63,16 @@ export default class GroupedBarView extends ChartView {
     return this.config.yScale(_.get(datum, yAccessor))
   }
 
+  calculateScales () {
+    this.config.set('x.range', [this.padding.left, this.innerWidth - this.padding.right], {silent: true})
+    this.config.set('y.range', [this.innerHeight - this.padding.bottom, this.padding.top], {silent: true})
+    this.config.calculateScales(this.model)
+  }
+
   render () {
     super.render()
-    this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+    this._onMouseout()
+    this.calculateScales()
 
     // Create a flat data structure
     const numOfAccessors = _.keys(this.config.yAccessors).length

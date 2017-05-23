@@ -54,11 +54,11 @@ export default class CompositeView extends ChartView {
     _.each(config.components, component => { this.composite.add(component) })
   }
 
-  render (p) {
+  render () {
     _.each(this.composite.components, component => component.render())
   }
 
-  remove (p) {
+  remove () {
     this.composite.remove()
   }
 }

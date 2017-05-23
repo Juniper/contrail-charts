@@ -28,9 +28,7 @@ const config = {
     type: 'CompositeY',
     config: {
       margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
+        right: 20,
       },
       height: 500,
       plot: {

@@ -15,11 +15,11 @@ const _states = {
   EDIT: 'edit'
 }
 const icons = {
-  'GroupedBar': 'fa-bar-chart',
-  'StackedBar': 'fa-signal', // Todo find something better
-  'Line': 'fa-line-chart',
-  'Area': 'fa-area-chart',
-  'Pie': 'fa-pie-chart'
+  'GroupedBar': 'icon-charttype-bar',
+  'StackedBar': 'icon-charttype-stacked',
+  'Line': 'icon-charttype-line',
+  'Area': 'icon-charttype-area',
+  'Pie': 'icon-charttype-pie'
 }
 
 export default class LegendPanelView extends ChartView {
@@ -37,8 +37,8 @@ export default class LegendPanelView extends ChartView {
       key: '.legend-key',
       mode: '.edit-legend',
       select: '.select',
-      color: '.switch--color',
-      chartType: '.switch--chart',
+      colorSwitch: '.switch--color',
+      chartTypeSwitch: '.switch--chart',
       axis: '.axis',
     })
   }
@@ -48,8 +48,8 @@ export default class LegendPanelView extends ChartView {
       'change key': '_toggleKey',
       'click mode': '_toggleEditMode',
       'click select': '_toggleSelector',
-      'click color': '_selectColor',
-      'click chartType': '_selectChartType',
+      'click colorSwitch': '_selectColor',
+      'click chartTypeSwitch': '_selectChartType',
     }
   }
 
@@ -110,8 +110,8 @@ export default class LegendPanelView extends ChartView {
     this.$('.key').toggleClass('edit')
     this.d3.selectAll('.selector').classed('active', false)
 
-    this.d3.selectAll(this.selectors.color).classed('hide', !this.config.get('editable.color'))
-    this.d3.selectAll(this.selectors.chartType).classed('hide', !this.config.get('editable.chart'))
+    this.d3.select('switches-colors').classed('hide', !this.config.get('editable.color'))
+    this.d3.select('switches-charts').classed('hide', !this.config.get('editable.chart'))
 
     _.each(this.el.querySelectorAll(this.selectors.key + ' > input'), el => {
       el.disabled = this._state !== _states.DEFAULT
@@ -125,7 +125,7 @@ export default class LegendPanelView extends ChartView {
   }
 
   _addChartTypes (keyAxis) {
-    this.d3.selectAll(this.selectors.chartType)
+    this.d3.selectAll(this.selectors.chartTypeSwitch)
       .classed('hide', true)
       .filter((d, i, n) => n[i].dataset.axis === keyAxis)
       .classed('hide', false)
@@ -133,18 +133,18 @@ export default class LegendPanelView extends ChartView {
 
   _toggleSelector (d, el) {
     this._key = $(el).parents('.key').data('key')
-    const currentSelector = el.classList.contains('select--chart') ? 'chartType' : 'color'
+    const currentSelector = el.classList.contains('select--chart') ? 'chart' : 'color'
 
     const selector = this.d3.select('.selector')
     selector
-      .classed(this.selectorClass('color'), currentSelector === 'color')
-      .classed(this.selectorClass('chartType'), currentSelector === 'chartType')
-      .classed('active', !selector.classed('active'))
+      .classed('active', !(selector.classed('active') && selector.classed('select--' + currentSelector)))
+      .classed('select--color', currentSelector === 'color')
+      .classed('select--chart', currentSelector === 'chart')
     selector.selectAll('.switch').classed('selected', false)
 
     if (currentSelector === 'color') {
       const currentColor = d3Color.color(el.dataset.color)
-      selector.selectAll(this.selectors.color)
+      selector.selectAll(this.selectors.colorSwitch)
         .filter((d, i, n) => {
           return d3Color.color(n[i].dataset.color).toString() === currentColor.toString()
         })
@@ -155,7 +155,7 @@ export default class LegendPanelView extends ChartView {
       this._addChartTypes(currentKey.axis)
 
       const currentChart = el.dataset.chartType
-      selector.selectAll(this.selectors.chartType)
+      selector.selectAll(this.selectors.chartTypeSwitch)
         .filter((d, i, n) => n[i].dataset.chartType === currentChart)
         .classed('selected', true)
     }

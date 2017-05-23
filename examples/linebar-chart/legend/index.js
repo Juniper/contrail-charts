@@ -6,7 +6,7 @@ import {formatter, fixture} from 'commons'
 
 const length = 100
 const data = fixture({
-  length: length,
+  length,
   data: {
     x: {linear: true, range: [0, length]},
     a: {random: true, range: [3, (length - 1) * 3]},
@@ -36,10 +36,10 @@ const config = {
       legend: 'legend-id',
       crosshair: 'crosshair-id',
       margin: {
-        left: 60,
-        right: 60,
-        label: 30,
+        left: 16,
+        right: 20,
       },
+      height: 400,
       chartTypes: {
         y1: ['GroupedBar', 'StackedBar'],
         y2: ['Line'],
@@ -90,6 +90,7 @@ const config = {
       axes: {
         x: {
           scale: 'scaleLinear',
+          label: 'X',
         },
         y1: {
           position: 'left',
@@ -105,10 +106,10 @@ const config = {
   }, {
     type: 'Navigation',
     config: {
-      height: 200,
       margin: {
-        left: 60,
+        left: 16,
       },
+      height: 200,
       selection: [75, 100],
       update: ['compositey-chart-id'],
       plot: {
@@ -192,20 +193,19 @@ export default {
     chart = new composites.CompositeView({config})
     chart.setData(data)
     chart.actionman.fire('SendMessage', {
-      componentId: 'compositey-chart-id',
       action: 'once',
       messages: [{
         level: 'info',
         title: 'Message 1',
-        message: 'This is an example message. It will disappear after 5 seconds.'
+        text: 'This is an example message. It will disappear after 5 seconds.'
       }, {
         level: 'error',
         title: 'A Fatal Error',
-        message: 'This is an error.'
+        text: 'This is an error.'
       }, {
         level: 'warn',
-        title: 'A waring message',
-        message: 'This is another example message.'
+        title: 'A warning message',
+        text: 'This is another example message.'
       }]
     })
   },

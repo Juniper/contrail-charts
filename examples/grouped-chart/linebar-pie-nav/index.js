@@ -10,7 +10,7 @@ const colorScheme = _c.d3ColorScheme20
 const now = _.now()
 const length = 100
 const data = fixture({
-  length: length,
+  length,
   data: {
     x: {linear: true, range: [now - 30000000, now]},
     a: {random: true, range: [2, (length - 1) * 2]},
@@ -51,9 +51,6 @@ const config = {
     config: {
       legend: 'legend-panel-id',
       crosshair: 'crosshair-id',
-      margin: {
-        label: 40,
-      },
       chartTypes: {
         y1: ['GroupedBar', 'Line'],
         y2: ['GroupedBar', 'Line']
@@ -171,9 +168,6 @@ const config = {
     },
     config: {
       legend: 'legend-pie',
-      margin: {
-        left: 60,
-      },
       type: 'donut',
       radius: 100,
       width: 200,
@@ -187,12 +181,12 @@ const config = {
       tooltip: 'tooltip-id2',
       action: {
         'click node': data => {
-          chart.renderMessage({
-            action: 'once',
+          chart.actionman.fire('SendMessage', {
+            action: 'update',
             messages: [{
               level: 'info',
               title: 'Pie chart message',
-              message: `Sum of selected "${data.label}" values: ${data.value}`,
+              text: `Sum of selected "${data.label}" values: ${data.value}`,
             }]
           })
         },
