@@ -40,12 +40,24 @@ export default class ScatterPlotView extends ChartView {
   get isWaiting () {
     return this._waiting
   }
+  // assume max shape extension out of scale range as of circle's radius
+  get padding () {
+    const maxR = Math.sqrt(this.config.get('size.range')[1])
+    return {left: maxR, top: maxR, right: maxR, bottom: maxR}
+  }
+
+  calculateScales () {
+    this.config.set('x.range', [this.padding.left, this.innerWidth - this.padding.right], {silent: true})
+    this.config.set('y.range', [this.innerHeight - this.padding.bottom, this.padding.top], {silent: true})
+    this.config.calculateScales(this.model)
+  }
 
   render () {
     super.render()
     // just render points if was waiting on cluster result
     if (!this._waiting) {
-      this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
+      // frozen component is completely controlled from outside
+      if (!this.config.get('frozen')) this.calculateScales()
       this._data = this.prepareData()
 
       // do not render points before it is known what of them to skip due to bucketization
