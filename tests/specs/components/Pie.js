@@ -29,8 +29,8 @@ describe('PieView', () => {
     while (container.firstChild) { container.firstChild.remove() }
   })
 
-  describe('Render with default config.', () => {
-    it('Pie chart render with default config.', () => {
+  describe('Render with minimal config.', () => {
+    it('should accept accessor function', () => {
       config = {
         serie: {
           getValue: v => v.y,
@@ -41,7 +41,7 @@ describe('PieView', () => {
       expect(container.querySelectorAll('path.arc').length).toEqual(4)
     })
 
-    it('should render with default color schema', () => {
+    it('should apply default colors', () => {
       config = {
         serie: {
           getValue: v => v.y,
@@ -50,13 +50,12 @@ describe('PieView', () => {
       chart.setConfig(config)
       chart.setData(data)
       let chartSectors = container.querySelectorAll('path.arc')
-      let i = 0
-      _.forEach(chartSectors, function (sector) {
+      _.each(chartSectors, (sector, i) => {
         let hex = d3.schemeCategory20[i]
         let rgb = hexToRGB(parseInt(hex.slice(1), 16))
         let color = sector.style.fill
+
         expect(color).toBe(rgb)
-        i++
       })
     })
 
@@ -65,90 +64,101 @@ describe('PieView', () => {
       let sector = container.querySelectorAll('path.arc')[0]
       let event = new Event('mouseover', {bubbles: true})
       sector.dispatchEvent(event)
+
       expect(container.querySelectorAll('.highlight')).toBeDefined()
     })
   })
 
   describe('Render with changed config.', () => {
-    it('should be change pie type', () => {
+    it('should apply changed pie type', () => {
       config.type = 'pie'
       chart.setConfig(config)
       chart.setData(data)
       let path = container.querySelector('path.arc')
       let d = path.getAttribute('d')
+
+      // verify pie sector contains pie center point as the last one
       expect(d).toContain('L0,0Z')
     })
 
-    it('should be change radius', () => {
+    it('should apply changed radius', () => {
       config.radius = 150
       chart.setConfig(config)
       chart.setData(data)
       let path = container.querySelector('path.arc')
       let d = path.getAttribute('d')
+
+      // verify pie sector contains point on the updated radius distance from the center
       expect(d).toContain('A150,150')
     })
 
-    it('should be change radius and type', () => {
+    it('should apply changed radius and type', () => {
       config.radius = 150
       config.type = 'pie'
       chart.setConfig(config)
       chart.setData(data)
       let path = container.querySelector('path.arc')
       let d = path.getAttribute('d')
+
       expect(d).toContain('A150,150')
       expect(d).toContain('L0,0Z')
     })
   })
 
   describe('Render with data variants', () => {
-    it('should render empty chart without data', () => {
+    it('no arcs should be rendered with no data provided', () => {
       chart.render()
+
       expect(container.querySelector('path.arc')).toBeNull()
     })
 
-    it('should render empty chart with empty data', () => {
+    it('no arcs should be rendered on empty data provided', () => {
       chart.setData([])
+
       expect(container.querySelector('path.arc')).toBeNull()
     })
 
-    it('should render chart with one sector', () => {
+    it('should render chart as a sole circle', () => {
       chart.setData([{ x: 1, y: 2 }])
+
       expect(container.querySelectorAll('path.arc').length).toBe(1)
     })
 
-    it('should render chart with two sectors', () => {
+    it('number of arcs should correspond to number of data series', () => {
       chart.setData([
         { x: 1, y: 2 },
         { x: 2, y: 3 },
       ])
+
       expect(container.querySelectorAll('path.arc').length).toEqual(2)
     })
 
-    it('should render chart with two sectors with some color', () => {
+    it('sectors with the same label should feature same color', () => {
       chart.setData([
         { x: 1, y: 2 },
         { x: 1, y: 3 }
       ])
-      let firstElement = container.querySelectorAll('path.arc')[0]
-      let secondElement = container.querySelectorAll('path.arc')[1]
-      expect(firstElement.style.fill).toBe(secondElement.style.fill)
+      let firstSector = container.querySelectorAll('path.arc')[0]
+      let secondSector = container.querySelectorAll('path.arc')[1]
+
+      expect(firstSector.style.fill).toBe(secondSector.style.fill)
     })
 
-    it('should render chart with two some sectors', () => {
+    it('verify if sectors are positioned correctly', () => {
       chart.setData([
         { x: 1, y: 2 },
         { x: 1, y: 2 }
       ])
       let firstD = container.querySelectorAll('path.arc')[0].getAttribute('d')
       let secondD = container.querySelectorAll('path.arc')[1].getAttribute('d')
-      let firstElementStartPosition = firstD.slice(0, firstD.indexOf('A')).split(',')
-      let secondElementStartPosition = secondD.slice(0, secondD.indexOf('A')).split(',')
+      let firstSectorStartPoint = getPathStartPoint(firstD, 'A').split(',')
+      let secondSectorStartPoint = getPathStartPoint(secondD, 'A').split(',')
 
-      expect(firstElementStartPosition[0]).toBe(secondElementStartPosition[0])
-      expect(Math.abs(+firstElementStartPosition[1])).toBe(+secondElementStartPosition[1])
+      expect(firstSectorStartPoint[0]).toBe(secondSectorStartPoint[0])
+      expect(Math.abs(+firstSectorStartPoint[1])).toBe(+secondSectorStartPoint[1])
     })
 
-    it('should render chart whith NaN data on y', () => {
+    it('should ignore data with "NaN" y value', () => {
       data = [
         {x: '1', y: 1},
         {x: '2', y: NaN},
@@ -161,7 +171,7 @@ describe('PieView', () => {
       expect(d).not.toContain('A')
     })
 
-    it('should render chart whith undefined data on y', () => {
+    it('should ignore data with "undefined" y value', () => {
       data = [
         {x: '1', y: 1},
         {x: '2', y: undefined},
@@ -174,7 +184,7 @@ describe('PieView', () => {
       expect(d).not.toContain('A')
     })
 
-    it('should render chart whith null data on y', () => {
+    it('should ignore data with "null" y value', () => {
       data = [
         {x: '1', y: 1},
         {x: '2', y: null},
