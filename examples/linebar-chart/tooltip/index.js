@@ -15,10 +15,6 @@ const config = {
     id: 'compositey-id1',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 60,
-        right: 50,
-      },
       height: 300,
       plot: {
         x: {
@@ -29,19 +25,16 @@ const config = {
         y: [
           {
             accessor: 'a',
-            labelFormatter: 'Label A',
             chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
-            labelFormatter: 'Label B',
             chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'custom-tooltip',
           }, {
             accessor: 'c',
-            labelFormatter: 'Label C',
             color: 'grey',
             chart: 'Line',
             axis: 'y2',
@@ -99,6 +92,7 @@ const config = {
     id: 'compositey-id2',
     type: 'CompositeY',
     config: {
+      enable: false,
       height: 200,
       plot: {
         x: {
@@ -109,7 +103,6 @@ const config = {
         y: [
           {
             accessor: 'a',
-            labelFormatter: 'Label A',
             chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'sticky-tooltip',

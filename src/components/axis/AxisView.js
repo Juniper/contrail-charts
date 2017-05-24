@@ -64,7 +64,7 @@ export default class AxisView extends ChartView {
     const offset = {
       along: this._plotLength / 2,
       across: this._tickLength * +(this.config.location === 'end') +
-        this.config.get('margin.' + this.config.position) * 0.75 * this.config.side,
+        this.config.margin[this.config.position] * this.config.side,
     }
 
     const labels = this.d3.selectAll(this.selectors.label)
@@ -75,9 +75,10 @@ export default class AxisView extends ChartView {
       .attr('class', this.selectorClass('label'))
       .text(d => d)
       .merge(labels)
+      .style('dominant-baseline', this.config.isHorizontal ? 'text-after-edge' : 'text-before-edge')
       .attr('transform', (d, i) => {
-        offset.across += i * this.config.get('margin.label') * this.config.side
-        const position = this.config.isHorizontal ? [offset.along, offset.across] : [offset.across, offset.along]
+        const across = offset.across + i * this.config.margin.label * -this.config.side
+        const position = this.config.isHorizontal ? [offset.along, across] : [across, offset.along]
 
         return `translate(${position[0]}, ${position[1]})
           rotate(${90 * this.config.side * +!this.config.isHorizontal})`

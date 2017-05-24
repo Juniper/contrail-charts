@@ -37,9 +37,6 @@ const config = {
     config: {
       legend: 'legend-id',
       bucket: 'bucket-id',
-      margin: {
-        right: 60,
-      },
       height: 450,
       plot: {
         x: {

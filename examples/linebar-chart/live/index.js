@@ -8,7 +8,7 @@ import {formatter, fixture} from 'commons'
 const length = 20
 let counter = length
 const data = fixture({
-  length: length,
+  length,
   data: {
     x: {linear: true, range: [0, length]},
     a: {linear: true, range: [0, length * 3]},

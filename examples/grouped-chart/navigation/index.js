@@ -9,13 +9,13 @@ const colorScheme = _c.lbColorScheme17
 
 const length = 20
 const data = fixture({
-  length: 30,
+  length,
   data: {
     x: {linear: true, range: [0, length]},
-    a: {random: true, range: [0, length * 7], repeat: true},
-    b: {linear: true, range: [0, length * 5], repeat: true},
-    c: {random: true, range: [0, -length * 5]},
-    d: {linear: true, range: [0, length * 7]},
+    a: {random: true, range: [0, length * 5], repeat: true},
+    b: {linear: true, range: [0, length * 3], repeat: true},
+    c: {random: true, range: [0, -length * 3]},
+    d: {linear: true, range: [0, length * 5]},
   },
 })
 

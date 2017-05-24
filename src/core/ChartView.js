@@ -29,6 +29,7 @@ export default class ChartView extends ContrailView {
       if (!p.config.frozen) this.listenTo(this.model, 'change', this._onDataModelChange || this.render)
     }
     this.setConfig(p.config)
+    // overwrite _onResize handler with instance specific one
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
     _.each(this.constructor.Actions, action => actionman.set(action, this))
@@ -114,23 +115,53 @@ export default class ChartView extends ContrailView {
     const top = this.svg.node().getBoundingClientRect().top - this._container.getBoundingClientRect().top
     return {left, top}
   }
-
+  /**
+   * Padding depends on view size and rendered data
+   */
+  get padding () {
+    return this.config.padding
+  }
+  /**
+   * @return {Number} width of the component container
+   * This is total available width to take for rendering own element into
+   */
   get width () {
     return this.config.get('width') || this._container.getBoundingClientRect().width
   }
-
+  /**
+   * @return {Number} width in px
+   */
   get innerWidth () {
     const margin = this.config.margin
     return this.width - margin.left - margin.right
   }
-
+  /**
+   * @return {Number} width in px of the plot area
+   */
+  get plotWidth () {
+    const padding = this.padding
+    return this.innerWidth - padding.left - padding.right
+  }
+  /**
+   * @return {Number} height of the component container
+   * This is total available height to take for rendering own element into
+   */
   get height () {
     return this.config.get('height') || Math.round(this.width / 2)
   }
-
+  /**
+   * @return {Number} height in px
+   */
   get innerHeight () {
     const margin = this.config.margin
     return this.height - margin.top - margin.bottom
+  }
+  /**
+   * @return {Number} height in px of the plot area
+   */
+  get plotHeight () {
+    const padding = this.padding
+    return this.innerHeight - padding.top - padding.bottom
   }
   /**
   * @param {Array} data
@@ -177,22 +208,21 @@ export default class ChartView extends ContrailView {
       if (this.svg.select(`#${this.id}`).empty()) {
         this.el.setAttribute('data-order', this.zIndex)
         this.svg.node().append(this.el)
-        // TODO constrain selector to direct descendants ":scope > g"
-        //this.svg
-          //.selectAll('g[data-order]')
-          //.datum(function () { return this.getAttribute('data-order') })
-          //.sort()
-          //.datum(null)
       }
-      const margin = this.config.margin
-      this.d3.attr('transform', `translate(${margin.left},${margin.top})`)
+      const offset = {
+        left: this.config.margin.left + this.padding.left,
+        top: this.config.margin.top + this.padding.top,
+      }
+      this.d3.attr('transform', `translate(${this.config.margin.left},${this.config.margin.top})`)
     } else {
       // non vector components
       if (content) this.el.innerHTML = content
       this._insertSorted(this.el)
     }
   }
-
+  /**
+   * Shortcut to set container, data and config
+   */
   show (data, config = {}) {
     this._visible = true
     if (config.container) this._container = config.container
@@ -200,7 +230,9 @@ export default class ChartView extends ContrailView {
     this.setData(data)
     this.d3.classed('hide', false)
   }
-
+  /**
+   * Visually hide own element
+   */
   hide () {
     this.d3.classed('hide', true)
     this._visible = false
@@ -222,7 +254,10 @@ export default class ChartView extends ContrailView {
       _.each(this.constructor.Actions, action => actionman.set(action, this))
     }
   }
-
+  /**
+   * Unsubscribe component from model updates
+   * TODO actually the model should stop updating its public "data" attribute
+   */
   setHalt (isHalted) {
     if (this.config.get('halted') === isHalted) return
     this.config.set('halted', isHalted, {silent: true})
@@ -233,6 +268,7 @@ export default class ChartView extends ContrailView {
     }
   }
   /**
+   * This is more like destroy component.
    * Stop listening to config and model. Remove the view from the dom.
    */
   remove () {
@@ -248,7 +284,7 @@ export default class ChartView extends ContrailView {
   }
   /**
    * First component which uses shared svg container appends svg element to container
-   * There is a div wrapper over svg to workaround FF bug, when svg data-order attribute is not set
+   * There is a div wrapper on top of svg to workaround FF bug, when svg data-order attribute is not set
    */
   _initSvg () {
     const isSharedContainer = this.config.get('isSharedContainer')
@@ -278,7 +314,7 @@ export default class ChartView extends ContrailView {
       .attr('height', this.height)
   }
   /**
-   * insert own element into the DOM in the right order
+   * Insert own element into the DOM in the specified order
    */
   _insertSorted (el) {
     if (el.parentElement === this._container) return

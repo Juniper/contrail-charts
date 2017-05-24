@@ -7,7 +7,7 @@ import {schemeCategory10 as colorScheme} from 'd3-scale'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
     'group.a': {random: true, range: [0, length * 3]},
@@ -21,18 +21,15 @@ const container = document.querySelector('#chartBox')
 const config = {
   x: {
     accessor: 'group.x',
-    labelFormatter: 'Value',
   },
   y: [
     {
       accessor: 'group.a',
       stack: 'positive',
-      labelFormatter: 'Label Group.A',
       color: colorScheme[2],
     }, {
       accessor: 'b',
       stack: 'negative',
-      labelFormatter: 'Label B',
       color: colorScheme[3],
     }, {
       accessor: 'c',

@@ -33,8 +33,7 @@ define([ // eslint-disable-line no-undef
       type: 'CompositeY',
       config: {
         margin: {
-          right: 60,
-          bottom: 40,
+          right: 20,
         },
         height: 450,
         plot: {

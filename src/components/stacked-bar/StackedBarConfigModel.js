@@ -41,20 +41,19 @@ export default class StackedBarConfigModel extends ConfigModel {
   }
 
   getOuterWidth (model, width) {
-    return ScalableChart.outerWidth(width, model, this.get('x.accessor'), this.get('x.scale'))
+    return ScalableChart.outerWidth(width, model, this.get('x.accessor'), this.xScale)
   }
   /**
    * @param model
    * @param width
    * @param height
    */
-  calculateScales (model, width, height) {
-    let config = _.extend({range: [0, width]}, this.attributes.x)
+  calculateScales (model) {
+    let config = this.attributes.x
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
     config = _.merge({}, this.attributes.y, {
       stacked: true,
-      range: [height, 0],
       accessor: _.map(this.yAccessors, 'accessor'),
     })
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))

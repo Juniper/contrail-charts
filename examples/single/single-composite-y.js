@@ -10,10 +10,6 @@ const data = fixture()
 let chart
 const container = document.querySelector('#chartBox')
 const config = {
-  margin: {
-    left: 60,
-    right: 30,
-  },
   height: 300,
   plot: {
     x: {

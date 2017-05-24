@@ -1,5 +1,6 @@
 // Copyright (c) Juniper Networks, Inc. All rights reserved.
 
+import _ from 'lodash'
 import ChartView from 'chart-view'
 import Config from './TooltipConfigModel'
 import ToggleVisibility from '../../actions/ToggleVisibility'
@@ -89,7 +90,7 @@ export default class TooltipView extends ChartView {
     const tooltipContent = this.config.get('formatter').bind(this.config)(data)
     super.render(template(tooltipContent))
     // TODO Discuss if title needs to be handled via TitleView or using the tooltip template itself.
-    if (tooltipContent.title) {
+    if (!_.isNil(tooltipContent.title)) {
       TitleView(this.d3.select('.tooltip-content').node(), tooltipContent.title)
     }
   }

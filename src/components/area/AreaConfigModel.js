@@ -43,22 +43,22 @@ export default class AreaConfigModel extends ConfigModel {
    * @param width
    * @param height
    */
-  calculateScales (model, width, height) {
-    let config = _.extend({range: [0, width]}, this.attributes.x)
+  calculateScales (model) {
+    let config = this.attributes.x
     _.set(this.attributes, 'x.scale', ScalableChart.getScale(model, config))
 
     const stackGroups = _.groupBy(this.yAccessors, 'stack')
     const totalDomainValues = _.reduce(stackGroups, (totalDomainValues, accessors) => {
       const stackedDomain = _.reduce(accessors, (stackedDomain, accessor) => {
-        const range = model.getRangeFor(accessor.accessor)
+        const domain = model.getRangeFor(accessor.accessor)
         // Summarize ranges for stacked layers
-        return [stackedDomain[0] + range[0], stackedDomain[1] + range[1]]
+        return [stackedDomain[0] + domain[0], stackedDomain[1] + domain[1]]
       }, [0, 0])
       // Get min / max extent for non-stacked layers
       return totalDomainValues.concat(stackedDomain)
     }, [0, 0])
     const domain = d3Array.extent(totalDomainValues)
-    config = { range: [height, 0], domain }
+    config = _.merge({domain}, this.attributes.y)
     _.set(this.attributes, 'y.scale', ScalableChart.getScale(model, config))
   }
 

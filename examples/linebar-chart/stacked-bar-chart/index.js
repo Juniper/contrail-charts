@@ -6,7 +6,7 @@ import {fixture} from 'commons'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
     'group.a': {linear: true, range: [3, (length - 1) * 3]},
@@ -24,11 +24,6 @@ const config = {
     id: 'grouped-bar-compositey',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
-      },
       crosshair: 'crosshair-id',
       plot: {
         x: {

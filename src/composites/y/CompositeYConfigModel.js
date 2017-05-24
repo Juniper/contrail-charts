@@ -13,11 +13,11 @@ export default class CompositeYConfigModel extends ConfigModel {
       ColoredChart.defaults,
       {
         margin: {
-          top: 10,
-          left: 40,
-          bottom: 40,
-          right: 15,
-          label: 15,
+          top: 8,
+          left: 8,
+          bottom: 8,
+          right: 8,
+          label: 16,
         },
         isPrimary: true,
         isSharedContainer: true,
@@ -67,13 +67,17 @@ export default class CompositeYConfigModel extends ConfigModel {
   get yScales () {
     return _.find(this.get('axes'), a => a.name.startsWith('y')).scale
   }
-
+  /**
+   * Value depends on what is axis label or how many accessors plus label for axis values
+   */
   get margin () {
     const margin = _.cloneDeep(this.attributes.margin)
     _.each(this.attributes.axes, (config, name) => {
       // TODO move to set method
       config.position = config.position || AxisConfigModel.defaultPosition(name)
-      margin[config.position] += margin.label
+
+      const labelCount = this.get(`axes.${name}.label`) ? 2 : this.getAxisAccessors(name, true).length + 1
+      margin[config.position] += margin.label * labelCount
     })
     return margin
   }
@@ -106,10 +110,15 @@ export default class CompositeYConfigModel extends ConfigModel {
     _.isArray(accessors) || (accessors = [accessors])
     return accessors[0].axis || 'y'
   }
-
-  getAxisAccessors (name) {
+  /**
+   * @param {Boolean} filterActive
+   * @return {Array} accessors by axis name
+   */
+  getAxisAccessors (name, filterActive) {
     if (name.startsWith('x')) return [this.get('plot.x.accessor')]
-    return _.filter(this.get('plot.y'), accessor => this.getAxisName(accessor) === name)
+    return _.filter(this.get('plot.y'), accessor => {
+      return this.getAxisName(accessor) === name && (!filterActive || !accessor.disabled)
+    })
   }
 
   getAxisConfig (name) {
@@ -119,7 +128,7 @@ export default class CompositeYConfigModel extends ConfigModel {
       margin: this.margin,
       height: this.attributes.height,
       width: this.attributes.width,
-      accessors: this.getAxisAccessors(name),
+      accessors: this.getAxisAccessors(name, true),
       tickCoords: this.syncScales(direction, axis.scale, axis.ticks)
     }, axis)
     return config
@@ -129,8 +138,8 @@ export default class CompositeYConfigModel extends ConfigModel {
    * @param width
    * @param height
    */
-  calculateScales (model, width, height) {
-    const config = _.extend({range: [0, width]}, this.get('plot.x'), this.get('axes.x'))
+  calculateScales (model) {
+    const config = _.extend({}, this.get('plot.x'), this.get('axes.x'))
     _.set(this.attributes, 'axes.x.scale', ScalableChart.getScale(model, config))
 
     const accessorsByAxis = _.groupBy(this.get('plot.y'), a => this.getAxisName(a))
@@ -139,7 +148,6 @@ export default class CompositeYConfigModel extends ConfigModel {
       const config = _.extend(
         {
           domain: this.get(`axes.${axisName}.calculatedDomain`),
-          range: [height, 0],
           accessor: accessorNames
         },
         this.get('axes.' + axisName)
@@ -190,8 +198,10 @@ export default class CompositeYConfigModel extends ConfigModel {
    * Sync ticks of the scales in the same direction
    */
   syncScales (direction, scale, ticksAmount) {
-    if (this.attributes.ticks[direction]) return this.attributes.ticks[direction]
-    else this.attributes.ticks[direction] = _.map(scale.ticks(ticksAmount), v => scale(v))
+    const attributes = this.attributes
+    attributes.ticks || (attributes.ticks = {})
+    if (attributes.ticks[direction]) return attributes.ticks[direction]
+    else attributes.ticks[direction] = _.map(scale.ticks(ticksAmount), v => scale(v))
   }
 
   isMultiAccessor (type) {

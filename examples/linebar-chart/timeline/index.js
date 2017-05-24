@@ -18,9 +18,6 @@ const config = {
     id: 'chart-id',
     type: 'CompositeY',
     config: {
-      margin: {
-        left: 60,
-      },
       height: 300,
       plot: {
         x: {
@@ -31,12 +28,10 @@ const config = {
         y: [
           {
             accessor: 'a',
-            labelFormatter: 'Label A',
             chart: 'Line',
             axis: 'y1',
           }, {
             accessor: 'b',
-            labelFormatter: 'Label B',
             chart: 'GroupedBar',
             axis: 'y1',
           },
