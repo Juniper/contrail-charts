@@ -2,7 +2,7 @@
  * This function run callback after DOM event on target element
  * @param type - attribute or element
  * @param el - target element
- * @param attrName - target attribute
+ * @param {String} attrName - target attribute
  * @param callback
  */
 function observer (type, el, attrName, callback) {
@@ -23,7 +23,6 @@ function observer (type, el, attrName, callback) {
   })
   observer.observe(el, config)
 }
-
 /**
  * convert a hexidecimal color string to rgb string
  * @param hex
@@ -34,4 +33,21 @@ function hexToRGB (hex) {
   let g = hex >> 8 & 0xFF
   let b = hex & 0xFF
   return `rgb(${r}, ${g}, ${b})`
+}
+/**
+ *
+ * @param path
+ * @param secondComand
+ * @returns {string}
+ */
+function getPathStartPoint (path, secondComand) {
+  return path.slice(1, path.indexOf(secondComand))
+}
+/**
+ * @param path
+ * @returns {string}
+ */
+function getPathEndPoint (path) {
+  let beforeLastCommaIndex = path.lastIndexOf(',', path.lastIndexOf(',') - 1)
+  return path.slice(beforeLastCommaIndex + 1, -1)
 }

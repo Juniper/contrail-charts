@@ -38,8 +38,8 @@ describe('LineView.', () => {
     while (container.firstChild) { container.firstChild.remove() }
   })
 
-  describe('Render with default config.', () => {
-    it('Line chart render with default config.', () => {
+  describe('Render with minimal config.', () => {
+    it('should accept single accessor', () => {
       config = {
         x: {
           accessor: 'x',
@@ -55,7 +55,7 @@ describe('LineView.', () => {
   })
 
   describe('Render with changed config.', () => {
-    it('should apply margin-top and margin-left to view element.', () => {
+    it('should apply top and left margin.', () => {
       config.margin = {left: 20, top: 10}
       chart.setConfig(config)
       chart.setData(data)
@@ -64,7 +64,7 @@ describe('LineView.', () => {
       expect(el.getAttribute('transform')).toBe('translate(20,10)')
     })
 
-    it('should apply margin-bottom and margin-right to view element.', (done) => {
+    it('should apply bottom and right margin.', (done) => {
       config.margin = {right: 10, bottom: 5}
       chart.setConfig(config)
       chart.setData(data)
@@ -112,11 +112,7 @@ describe('LineView.', () => {
           let svgRect = svg.getBoundingClientRect()
           let pathRect = path.getBoundingClientRect()
 
-          if (svgRect.height === pathRect.height) {
-            expect(svgRect.height).toBe(pathRect.height)
-            done()
-          }
-          expect(svgRect.height).toBeGreaterThan(pathRect.height)
+          expect(svgRect.height).toBeGreaterThanOrEqual(pathRect.height)
           done()
         })
       })
@@ -137,11 +133,7 @@ describe('LineView.', () => {
           let svgRect = svg.getBoundingClientRect()
           let pathRect = path.getBoundingClientRect()
 
-          if (svgRect.width === pathRect.width) {
-            expect(svgRect.width).toBe(pathRect.width)
-            done()
-          }
-          expect(svgRect.width).toBeGreaterThan(pathRect.width)
+          expect(svgRect.width).toBeGreaterThanOrEqual(pathRect.width)
           done()
         })
       })
@@ -157,9 +149,17 @@ describe('LineView.', () => {
       expect(container.querySelector('path.line')).toBeNull()
     })
 
-    it('should render one point', () => {
+    it('should render one point', (done) => {
+      config.width = 300
+      config.height = 200
+      chart.setConfig(config)
       chart.setData([{ x: 1, y: 2 }])
-      expect(container.querySelector('path.line')).toBeDefined()
+      let path = container.querySelector('path.line')
+      observer('attr', path, 'd', () => {
+        let d = path.getAttribute('d')
+        expect(d).toBe(`M${config.width},-${config.height}Z`)
+        done()
+      })
     })
 
     it('should correctly calculate position of two points', (done) => {
@@ -177,30 +177,6 @@ describe('LineView.', () => {
         expect(d).toBe('M0,200L300,0')
         done()
       })
-    })
-
-    it('should render with NaN data on x', () => {
-      data = [
-        { x: 1, y: 1 },
-        { x: 2, y: 2 },
-        { x: NaN, y: 3 },
-        { x: 4, y: 4 }
-      ]
-      chart.setData(data)
-      expect(chart.model.data.length).toBe(3)
-      expect(container.querySelector('path.line')).toBeDefined()
-    })
-
-    it('should render with undefined data on x', () => {
-      data = [
-        { x: undefined, y: 1 },
-        { x: 2, y: 2 },
-        { x: 3, y: 3 },
-        { x: 4, y: 4 }
-      ]
-      chart.setData(data)
-      expect(chart.model.data.length).toBe(3)
-      expect(container.querySelector('path.line')).not.toBeDefined()
     })
 
     it('should render with NaN data on y', (done) => {
