@@ -25,13 +25,12 @@ describe('LineView.', () => {
       }
     }
     data = [
-      { x: (new Date(2016, 11, 1)).getTime(), y: 0 },
-      { x: (new Date(2016, 11, 2)).getTime(), y: 3 },
-      { x: (new Date(2016, 11, 3)).getTime(), y: 3 },
-      { x: (new Date(2016, 11, 4)).getTime(), y: 4 },
-      { x: (new Date(2016, 11, 5)).getTime(), y: 5 },
+      { x: 0, y: 0, b: 5 },
+      { x: 1, y: 3, b: 3 },
+      { x: 2, y: 3, b: 1 },
+      { x: 3, y: 4, b: 2 },
+      { x: 4, y: 5, b: 3 },
     ]
-    chart = new cc.components.LineView({config, container})
   })
 
   afterEach(() => {
@@ -48,16 +47,16 @@ describe('LineView.', () => {
           accessor: 'y',
         },
       }
-      chart.setConfig(config)
+      chart = new cc.components.LineView({config, container})
       chart.setData(data)
       expect(container.querySelector('path.line')).toBeDefined()
     })
   })
 
-  describe('Render with changed config.', () => {
+  describe('Render with non-default config.', () => {
     it('should apply top and left margin.', () => {
       config.margin = {left: 20, top: 10}
-      chart.setConfig(config)
+      chart = new cc.components.LineView({config, container})
       chart.setData(data)
       let el = container.querySelector('g.line')
 
@@ -66,7 +65,7 @@ describe('LineView.', () => {
 
     it('should apply bottom and right margin.', (done) => {
       config.margin = {right: 10, bottom: 5}
-      chart.setConfig(config)
+      chart = new cc.components.LineView({config, container})
       chart.setData(data)
       let svg = container.querySelector('svg')
       let path = container.querySelector('path.line')
@@ -83,7 +82,7 @@ describe('LineView.', () => {
 
     it('should apply color to line.', (done) => {
       config.y.color = 'red'
-      chart.setConfig(config)
+      chart = new cc.components.LineView({config, container})
       chart.setData(data)
       let path = container.querySelector('path.line')
 
@@ -104,6 +103,7 @@ describe('LineView.', () => {
           { x: 4, y: 5 },
           { x: 5, y: 3 },
         ]
+        chart = new cc.components.LineView({config, container})
         chart.setData(data)
         let path = container.querySelector('path.line')
         let svg = container.querySelector('svg')
@@ -125,6 +125,7 @@ describe('LineView.', () => {
           { x: 0, y: 4 },
           { x: 5, y: 5 },
         ]
+        chart = new cc.components.LineView({config, container})
         chart.setData(data)
         let path = container.querySelector('path.line')
         let svg = container.querySelector('svg')
@@ -140,11 +141,13 @@ describe('LineView.', () => {
     })
 
     it('should render empty chart without data', () => {
+      chart = new cc.components.LineView({config, container})
       chart.render()
       expect(container.querySelector('path.line')).toBeNull()
     })
 
     it('should render empty chart with empty data', () => {
+      chart = new cc.components.LineView({config, container})
       chart.setData([])
       expect(container.querySelector('path.line')).toBeNull()
     })
@@ -152,7 +155,7 @@ describe('LineView.', () => {
     it('should render one point', (done) => {
       config.width = 300
       config.height = 200
-      chart.setConfig(config)
+      chart = new cc.components.LineView({config, container})
       chart.setData([{ x: 1, y: 2 }])
       let path = container.querySelector('path.line')
       observer('attr', path, 'd', () => {
@@ -165,7 +168,7 @@ describe('LineView.', () => {
     it('should correctly calculate position of two points', (done) => {
       config.width = 300
       config.height = 200
-      chart.setConfig(config)
+      chart = new cc.components.LineView({config, container})
       chart.setData([
         { x: 1, y: 1 },
         { x: 2, y: 2 }
@@ -185,6 +188,7 @@ describe('LineView.', () => {
         { x: 2, y: NaN },
         { x: 3, y: 3 }
       ]
+      chart = new cc.components.LineView({config, container})
       chart.setData(data)
       let path = container.querySelector('path.line')
 
@@ -201,6 +205,7 @@ describe('LineView.', () => {
         { x: 2, y: undefined },
         { x: 3, y: 3 }
       ]
+      chart = new cc.components.LineView({config, container})
       chart.setData(data)
       let path = container.querySelector('path.line')
 
@@ -209,6 +214,46 @@ describe('LineView.', () => {
         expect(d).not.toContain('NaN')
         done()
       })
+    })
+  })
+
+  describe('Change config after render', () => {
+    it('should chang accessor y => b', (done) => {
+      chart = new cc.components.LineView({config, container})
+      chart.setData(data)
+
+      setTimeout(() => {
+        config.y.accessor = 'b'
+        config.y.color = 'green'
+        chart.setConfig(config)
+        let path = container.querySelector('path.line')
+        observer('attr', path, 'd', () => {
+          let pathD = path.getAttribute('d')
+          let lineStartPoint = getPathStartPoint(pathD, 'C')
+
+          // line with data by accessor b must start with 0,0 coordinat
+          expect(lineStartPoint).toBe('0,0')
+          done()
+        })
+      }, 0)
+    })
+
+    it('should chang color red => green', (done) => {
+      chart = new cc.components.LineView({config, container})
+      chart.setData(data)
+
+      setTimeout(() => {
+        config.y.color = 'green'
+        chart.setConfig(config)
+        let path = container.querySelector('path.line')
+        observer('attr', path, 'd', () => {
+          let color = path.getAttribute('stroke')
+
+          // line with accessor b must start with 0,0 coordinat
+          expect(color).toBe('rgb(0, 128, 0)')
+          done()
+        })
+      }, 0)
     })
   })
 })
