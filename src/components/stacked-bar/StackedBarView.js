@@ -74,7 +74,8 @@ export default class StackedBarView extends ChartView {
   render () {
     super.render()
     this._onMouseout()
-    this.calculateScales()
+    // frozen component is completely controlled from outside
+    if (!this.config.get('frozen')) this.calculateScales()
 
     const start = this.config.yScale.range()[0]
     const barGroups = this.d3
