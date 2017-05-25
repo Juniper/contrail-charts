@@ -47,7 +47,10 @@ function getPathStartPoint (path, secondComand) {
  * @param path
  * @returns {string}
  */
-function getPathEndPoint (path) {
-  let beforeLastCommaIndex = path.lastIndexOf(',', path.lastIndexOf(',') - 1)
-  return path.slice(beforeLastCommaIndex + 1, -1)
+function getPathEndPoint (path, type = 'arc') {
+  if(type === 'arc'){
+    let beforeLastCommaIndex = path.lastIndexOf(',', path.lastIndexOf(',') - 1)
+    return path.slice(beforeLastCommaIndex + 1, -1)
+  }
+  return path.slice(path.lastIndexOf('L') + 1)
 }

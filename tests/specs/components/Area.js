@@ -8,6 +8,7 @@ describe('Area Component', () => {
 
   beforeEach(() => {
     config = {
+      duration: 0,
       x: {
         accessor: 'group.x',
         labelFormatter: 'Value',
@@ -38,7 +39,6 @@ describe('Area Component', () => {
       {b: -2, c: -8, group: {a: 0, x: 3}},
       {b: -5, c: -10, group: {a: 2, x: 4}},
     ]
-    chart = new cc.components.AreaView({config, container})
   })
 
   afterEach(() => {
@@ -51,7 +51,7 @@ describe('Area Component', () => {
         x: {accessor: 'group.x'},
         y: [{accessor: 'group.a'}]
       }
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       expect(chart.el.querySelectorAll('path.area').length).toEqual(1)
     })
@@ -61,7 +61,7 @@ describe('Area Component', () => {
         x: {accessor: 'group.x'},
         y: [{accessor: 'group.a'}, {accessor: 'b'}]
       }
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[1]
 
@@ -79,10 +79,10 @@ describe('Area Component', () => {
     })
   })
 
-  describe('Render with changed config.', () => {
+  describe('Render with non-default config.', () => {
     it('should apply top and left margin', () => {
       config.margin = {left: 20, top: 10}
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let el = container.querySelector('g.area')
 
@@ -97,7 +97,7 @@ describe('Area Component', () => {
         { b: 1, c: 1, group: {a: -1, x: 1} },
         { b: 2, c: 2, group: {a: -2, x: 2} },
       ]
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let svg = container.querySelector('svg')
       let path = container.querySelectorAll('path.area')[2]
@@ -117,7 +117,7 @@ describe('Area Component', () => {
       config.y[0].color = '#FF0000'
       config.y[1].color = '#00FF00'
       config.y[2].color = '#0000FF'
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
@@ -142,7 +142,7 @@ describe('Area Component', () => {
       config.y[0].stack = 'firstGroup'
       config.y[1].stack = 'firstGroup'
       config.y[2].stack = 'firstGroup'
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
@@ -162,7 +162,7 @@ describe('Area Component', () => {
       config.y[0].stack = 'firstGroup'
       config.y[1].stack = 'firstGroup'
       config.y[2].stack = 'secondGroup'
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
@@ -187,7 +187,7 @@ describe('Area Component', () => {
       config.y[0].stack = 'firstGroup'
       config.y[1].stack = 'secondGroup'
       config.y[2].stack = 'thirdGroup'
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
@@ -223,7 +223,7 @@ describe('Area Component', () => {
             x: {accessor: 'x'},
             y: [{accessor: 'a'}]
           }
-          chart.setConfig(config)
+          chart = new cc.components.AreaView({config, container})
           chart.setData(data)
           let svg = container.querySelector('svg')
           let path = container.querySelector('path.area')
@@ -249,7 +249,7 @@ describe('Area Component', () => {
             x: {accessor: 'x'},
             y: [{accessor: 'a'}]
           }
-          chart.setConfig(config)
+          chart = new cc.components.AreaView({config, container})
           chart.setData(data)
           let svg = container.querySelector('svg')
           let path = container.querySelector('path.area')
@@ -283,7 +283,7 @@ describe('Area Component', () => {
               stack: 'group'
             }]
         }
-        chart.setConfig(config)
+        chart = new cc.components.AreaView({config, container})
         chart.setData(data)
         let svg = container.querySelector('svg')
         let path = container.querySelector('path.area')
@@ -300,6 +300,7 @@ describe('Area Component', () => {
     })
 
     it('should render empty chart without data', (done) => {
+      chart = new cc.components.AreaView({config, container})
       chart.render()
       let path = container.querySelectorAll('path.area')[2]
 
@@ -313,6 +314,7 @@ describe('Area Component', () => {
     })
 
     it('should render empty chart with empty data', (done) => {
+      chart = new cc.components.AreaView({config, container})
       chart.setData([])
       let path = container.querySelectorAll('path.area')[2]
 
@@ -330,7 +332,7 @@ describe('Area Component', () => {
         x: {accessor: 'x'},
         y: [{accessor: 'a'}]
       }
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       chart.setData([{b: 1, c: 1, a: 1, x: 0}])
       let path = container.querySelector('path.area')
 
@@ -352,7 +354,7 @@ describe('Area Component', () => {
         x: {accessor: 'x'},
         y: [{accessor: 'a'}]
       }
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       data = [
         {x: 0, a: 1},
         {x: 1, a: 2}
@@ -372,7 +374,7 @@ describe('Area Component', () => {
         x: {accessor: 'x'},
         y: [{accessor: 'a'}]
       }
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       data = [
         {x: 0, a: 1},
         {x: 1, a: NaN},
@@ -393,7 +395,7 @@ describe('Area Component', () => {
         x: {accessor: 'x'},
         y: [{accessor: 'a'}]
       }
-      chart.setConfig(config)
+      chart = new cc.components.AreaView({config, container})
       data = [
         {x: 0, a: 1},
         {x: 1, a: undefined},
@@ -407,6 +409,74 @@ describe('Area Component', () => {
         expect(d).not.toContain('NaN')
         done()
       })
+    })
+  })
+
+  describe('Change config after render', () => {
+    it('should chang y accessor group.a => c', (done) => {
+      config = {
+        duration: 0,
+        x: {accessor: 'group.x'},
+        y: [{accessor: 'group.a'}]
+      }
+      chart = new cc.components.AreaView({config, container})
+      chart.setData(data)
+
+      setTimeout(() => {
+        config.y[0].accessor = 'c'
+        chart.setConfig(config)
+        let path = container.querySelector('path.area')
+        observer('attr', path, 'd', () => {
+          let pathD = path.getAttribute('d')
+          let areaStartPoint = getPathStartPoint(pathD, 'C')
+
+          // line with data by accessor b must start with 0,0 coordinat
+          expect(areaStartPoint).toBe('0,0')
+          done()
+        })
+      }, 0)
+    })
+
+    it('should chang color red => green', (done) => {
+      config = {
+        duration: 0,
+        x: {accessor: 'group.x'},
+        y: [{accessor: 'group.a'}]
+      }
+      chart = new cc.components.AreaView({config, container})
+      chart.setData(data)
+
+      setTimeout(() => {
+        config.y[0].color = 'green'
+        chart.setConfig(config)
+        let path = container.querySelector('path.area')
+        observer('attr', path, 'fill', () => {
+          let color = path.getAttribute('fill')
+
+          expect(color).toBe('rgb(0, 128, 0)')
+          done()
+        })
+      }, 0)
+    })
+
+    it('should add to first stack accessor c', (done) => {
+      chart = new cc.components.AreaView({config, container})
+      chart.setData(data)
+
+      setTimeout(() => {
+        config.y[2].stack = 'first'
+        chart.setConfig(config)
+        let path = container.querySelectorAll('path.area')[2]
+        observer('attr', path, 'd', () => {
+          let aArea = container.getElementsByClassName('area-group.a')[0]
+          let cArea = container.querySelector('.area-c')
+          let aAreaEndPoint = getPathEndPoint(aArea.getAttribute('d'))
+          let cAreaStartPoint = getPathStartPoint(cArea.getAttribute('d'), 'C')
+
+          expect(aAreaEndPoint).toBe(cAreaStartPoint)
+          done()
+        })
+      }, 0)
     })
   })
 })
