@@ -224,7 +224,6 @@ describe('LineView.', () => {
 
       setTimeout(() => {
         config.y.accessor = 'b'
-        config.y.color = 'green'
         chart.setConfig(config)
         let path = container.querySelector('path.line')
         observer('attr', path, 'd', () => {
