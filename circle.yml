@@ -27,6 +27,6 @@ test:
         background: true
     # Wait for example app to be ready
     - curl --retry 10 --retry-delay 2 -v http://localhost:8080
-    - curl https://saucelabs.com/rest/v1/$SAUCE_USERNAME/js-tests -X POST -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -H 'Content-Type:application/json' --data '{ "platforms":[["Windows 8.1", "chrome", "58"]], "url":"http://localhost:8080", "framework":"jasmine"}'
+    - curl https://saucelabs.com/rest/v1/$SAUCE_USERNAME/js-tests -X POST -u $SAUCE_USERNAME:$SAUCE_ACCESS_KEY -H 'Content-Type:application/json' --data '{ "platforms":[["Windows 8.1", "chrome", "58"]], "url":"http://localhost:8080/tests/TestRunner.html", "framework":"jasmine"}'
   post:
     - killall --wait sc  # Wait for Sauce Connect to close the tunnel
