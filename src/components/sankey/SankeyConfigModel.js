@@ -1,9 +1,7 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import * as d3Scale from 'd3-scale'
 import * as d3Ease from 'd3-ease'
-import * as d3Shape from 'd3-shape'
 import _ from 'lodash'
 import ContrailChartsConfigModel from 'contrail-charts-config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
