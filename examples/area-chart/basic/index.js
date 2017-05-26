@@ -1,40 +1,40 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import formatter from 'formatter'
 import fixture from 'fixture'
 import {schemeCategory10 as colorScheme} from 'd3-scale'
 
 const length = 10
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.t': {linear: true, range: [1475760930000, 1475800930000]},
     'group.a': {random: true, range: [0, length * 3]},
-    'group.b': {random: true, range: [0, -length * 5]},
-    'group.c': {random: true, range: [0, -length * 5]},
+    b: {random: true, range: [0, -length * 5]},
+    c: {random: true, range: [0, -length * 7]},
   },
 })
 data[5].a = -10
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
+    id: 'legend-id',
     type: 'LegendPanel',
     config: {
-      sourceComponent: 'compositey-id',
       editable: {
-        colorSelector: true,
+        color: true,
       },
-      placement: 'horizontal',
-      filter: true,
     },
   }, {
     id: 'compositey-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
       crosshair: 'crosshair-id',
+      legend: 'legend-id',
       plot: {
         x: {
           accessor: 'group.t',
@@ -42,25 +42,22 @@ const chartConfig = {
         },
         y: [
           {
-            enabled: true,
             accessor: 'group.a',
-            chart: 'AreaChart',
+            chart: 'Area',
             stack: 'positive',
             axis: 'y',
             color: colorScheme[2],
             tooltip: 'default-tooltip',
           }, {
-            enabled: true,
-            accessor: 'group.b',
-            chart: 'AreaChart',
+            accessor: 'b',
+            chart: 'Area',
             stack: 'negative',
             axis: 'y',
             color: colorScheme[3],
             tooltip: 'default-tooltip',
           }, {
-            enabled: true,
-            accessor: 'group.c',
-            chart: 'AreaChart',
+            accessor: 'c',
+            chart: 'Area',
             stack: 'negative',
             axis: 'y',
             color: colorScheme[4],
@@ -68,14 +65,14 @@ const chartConfig = {
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           formatter: formatter.extendedISOTime,
         },
         y: {
           ticks: 10,
         }
-      }
+      },
     }
   }, {
     id: 'crosshair-id',
@@ -96,10 +93,10 @@ const chartConfig = {
           accessor: 'group.a',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'group.b',
+          accessor: 'b',
           valueFormatter: formatter.toInteger,
         }, {
-          accessor: 'group.c',
+          accessor: 'c',
           valueFormatter: formatter.toInteger,
         }
       ]
@@ -107,14 +104,12 @@ const chartConfig = {
   }]
 }
 
-const chartView = new ChartView()
-
 export default {
   render: () => {
-    chartView.setConfig(chartConfig)
-    chartView.setData(data)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
   },
   remove: () => {
-    chartView.remove()
+    chart.remove()
   }
 }

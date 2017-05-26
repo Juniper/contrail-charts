@@ -1,17 +1,18 @@
 @import "functions";
-@import "../helpers/brush/brush-rules";
+@import "../components/brush/brush-rules";
 @import "../components/control-panel/control-panel-rules";
 @import "../components/legend/legend-rules";
 @import "../components/legend-panel/legend-panel-rules";
 @import "../components/message/message-rules";
 @import "../components/timeline/timeline-rules";
 @import "../components/tooltip/tooltip-rules";
-@import "../components/composite-y/composite-y-rules";
-@import "../components/composite-y/area-chart-rules";
-@import "../components/composite-y/bar-chart-rules";
-@import "../components/composite-y/line-chart-rules";
-@import "../components/composite-y/scatter-plot-rules";
-@import "../components/pie-chart/pie-chart-rules";
+@import "../components/area/area-rules";
+@import "../components/grouped-bar/bar-rules";
+@import "../components/stacked-bar/bar-rules";
+@import "../components/line/line-rules";
+@import "../components/scatter-plot/scatter-plot-rules";
+@import "../components/pie/pie-rules";
+@import "../components/axis/axis-rules";
 @import "../components/radial/radial-dendrogram-rules";
 
 @mixin applyRuleTemplate($componentId, $arg) {
@@ -42,7 +43,7 @@
         $legend-panel-color-indicator: nth($arg, 5),
         $legend-panel-selector-trigger: nth($arg, 6),
         $legend-panel-selector-panel: nth($arg, 7),
-        $legend-panel-selector-panel-swatch: nth($arg, 8)
+        $legend-panel-selector-panel-switch: nth($arg, 8)
       );
     } @else if ($componentId == $messageId) {
       @include messageRules(
@@ -58,16 +59,16 @@
         $tooltip-title: nth($arg, 2),
         $tooltip-item: nth($arg, 3)
       );
-    } @else if ($componentId == $compositeYId) {
-      @include compositeYChartRules(nth($arg, 1));
+    } @else if ($componentId == $axisId) {
+      @include axisRules(nth($arg, 1));
     } @else if ($componentId == $areaChartId) {
       @include areaChartRules(nth($arg, 1));
     } @else if ($componentId == $barChartId) {
       @include barChartRules(nth($arg, 1));
     } @else if ($componentId == $lineChartId) {
       @include lineChartRules(nth($arg, 1));
-    } @else if ($componentId == $scatterBubbleChartId) {
-      @include scatterBubbleChartRules(nth($arg, 1));
+    } @else if ($componentId == $scatterPlotId) {
+      @include scatterPlotRules(nth($arg, 1));
     } @else if ($componentId == $pieChartId) {
       @include pieChartRules(nth($arg, 1));
     } @else if ($componentId == $dendrogramId) {

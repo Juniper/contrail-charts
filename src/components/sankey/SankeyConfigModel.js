@@ -3,24 +3,24 @@
  */
 import * as d3Ease from 'd3-ease'
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class SankeyConfigModel extends ContrailChartsConfigModel {
+export default class SankeyConfigModel extends ConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, ColoredChart.defaults, {
-
-      // The component width. If not provided will be caculated by View.
-      width: undefined,
-
-      // The component height. If not provided will be caculated by View.
-      height: undefined,
+    return _.merge(super.defaults, ColoredChart.defaults, {
+      /*
+      // by default will use common shared container under the parent
+      isSharedContainer: true,
+      */
 
       // Side margins.
-      marginTop: 5,
-      marginBottom: 5,
-      marginLeft: 50,
-      marginRight: 50,
+      margin: {
+        top: 5,
+        bottom: 5,
+        left: 50,
+        right: 50
+      },
 
       // The width of the nodes in sankey diagram.
       nodeWidth: 15,
@@ -31,7 +31,8 @@ export default class SankeyConfigModel extends ContrailChartsConfigModel {
       // The hierarhy levels.
       levels: [],
 
-      // The duration of transitions.
+      // The duration and ease of transitions.
+      duration: 200,
       ease: d3Ease.easeCubic,
     })
   }

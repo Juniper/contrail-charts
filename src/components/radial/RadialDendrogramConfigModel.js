@@ -5,17 +5,12 @@ import * as d3Scale from 'd3-scale'
 import * as d3Ease from 'd3-ease'
 import * as d3Shape from 'd3-shape'
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class RadialDendrogramConfigModel extends ContrailChartsConfigModel {
+export default class RadialDendrogramConfigModel extends ConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, ColoredChart.defaults, {
-      // The component width. If not provided will be caculated by View.
-      width: undefined,
-
-      // The component height. If not provided will be caculated by View.
-      height: undefined,
+    return _.merge(super.defaults, ColoredChart.defaults, {
 
       // The labels of the levels.
       levels: [],
@@ -24,18 +19,33 @@ export default class RadialDendrogramConfigModel extends ContrailChartsConfigMod
       ease: d3Ease.easeCubic,
       duration: 500,
 
+      margin: {
+        top: 50,
+        bottom: 50,
+        left: 50,
+        right: 50
+      },
+
+      // The radius of the outer circle. Will be computed if undefined.
+      //innerRadius: 300,
+
+      // The scale used to display throuput.
       valueScale: d3Scale.scaleLog(),
       // valueScale: d3Scale.scaleLinear(),
 
       // The separation in degrees between nodes with different parents
       parentSeparation: 1,
       parentSeparationThreshold: 0,
+      parentSeparationDepthThreshold: 4,
+      parentSeparationShrinkFactor: 0.05,
 
       // Arc width
       arcWidth: 10,
 
       // Show arc labels
       showArcLabels: true,
+      drawLinks: false,
+      drawRibbons: true,
 
       // Define how will the labels be rendered: 'along-arc', 'perpendicular'
       labelFlow: 'along-arc',
@@ -63,22 +73,44 @@ export default class RadialDendrogramConfigModel extends ContrailChartsConfigMod
   }
 
   set (...args) {
-    super.set(ColoredChart.set(...args))
+    ColoredChart.set(...args)
+    super.set(...args)
   }
 
-  getColor (data, accessor) {
-    return accessor.color || this.attributes.colorScale(accessor.level)
-  }
-
-  getAccessors () {
-    return _.map(this.attributes.levels, (level) => {
+  get legendData () {
+    return _.map(this.attributes.levels, level => {
       return {
-        accessor: level.level,
-        level: level.level,
+        key: level.level,
         label: level.label,
-        color: level.color,
-        enabled: level.level < this.attributes.drillDownLevel
+        color: this.getColor(level.level),
+        disabled: level.level >= this.attributes.drillDownLevel,
       }
     })
+  }
+
+  get legendConfig () {
+    return {colorScheme: this.attributes.colorScheme}
+  }
+
+  getColor (key) {
+    const configured = _.find(this.attributes.levels, {level: key}).color
+    return configured || this.attributes.colorScale(key)
+  }
+
+  setColor (key, color) {
+    const levels = this.get('levels')
+    const level = _.find(levels, level => level.level === key)
+    if (!level) return
+    level.color = color
+    this.trigger('change', this.config)
+  }
+
+  setKey (key, isEnabled) {
+    const levels = this.attributes.levels
+    const level = _.find(levels, level => level.level === key)
+    if (!level) return
+    let drillDownLevel = isEnabled ? level.level + 1 : level.level
+    if (drillDownLevel < 1) drillDownLevel = 1
+    this.set({drillDownLevel})
   }
 }

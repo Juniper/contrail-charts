@@ -19,9 +19,7 @@ dependencies:
 
 test:
   pre:
-    - npm install -g phantomjs-prebuilt
   override:
-    - npm run test-headless
     - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready:
         background: true
     # Wait for tunnel to be ready

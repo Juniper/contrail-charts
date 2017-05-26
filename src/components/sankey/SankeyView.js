@@ -1,18 +1,21 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import './sankey.scss'
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Sankey from 'd3-sankey'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
+import Config from './SankeyConfigModel'
+import Model from 'models/Serie'
 import actionman from 'core/Actionman'
+import './sankey.scss'
 
-export default class SankeyView extends ContrailChartsView {
-  static get dataType () { return 'Serie' }
+export default class SankeyView extends ChartView {
+  static get Config () { return Config }
+  static get Model () { return Model }
 
   get tagName () { return 'g' }
-  get className () { return 'sankey' }
+
   get events () {
     return {
       'mouseover .link': '_onMouseoverLink',
@@ -20,23 +23,16 @@ export default class SankeyView extends ContrailChartsView {
     }
   }
 
-  constructor (p = {}) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
-    /**
-     * Let's bind super _onResize to this. Also .bind returns new function ref.
-     * we need to store this for successful removal from window event
-     */
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
+  get selectors () {
+    return _.extend(super.selectors, {
+      link: '.link',
+      node: '.node'
+    })
   }
 
   render () {
-    this.resetParams()
-    this._calculateDimensions()
-    this._prepareLayout()
     super.render()
+    this._prepareLayout()
     this._render()
     this._ticking = false
   }
@@ -44,11 +40,6 @@ export default class SankeyView extends ContrailChartsView {
   remove () {
     super.remove()
     window.removeEventListener('resize', this._onResize)
-  }
-
-  _calculateDimensions () {
-    this.params.width = this.config.get('width') || this._container.getBoundingClientRect().width
-    this.params.height = this.config.get('height') || 3 * this.params.width / 5
   }
 
   _prepareLayout () {
@@ -92,9 +83,9 @@ export default class SankeyView extends ContrailChartsView {
       })
     })
     this._sankey = d3Sankey.sankey()
-      .nodeWidth(this.params.nodeWidth)
-      .nodePadding(this.params.nodePadding)
-      .size([this.params.width - this.params.marginLeft - this.params.marginRight, this.params.height - this.params.marginTop - this.params.marginBottom])
+      .nodeWidth(this.config.get('nodeWidth'))
+      .nodePadding(this.config.get('nodePadding'))
+      .size([this.innerWidth, this.innerHeight])
     this._sankey
       .nodes(this._nodes)
       .links(this._links)
@@ -108,10 +99,10 @@ export default class SankeyView extends ContrailChartsView {
   }
 
   _render () {
-    this.d3.attr('transform', `translate(${this.params.marginLeft}, ${this.params.marginTop})`)
+    this.d3.attr('transform', `translate(${this.config.get('margin.left')}, ${this.config.get('margin.top')})`)
     // Links
     const path = this._sankey.link()
-    const svgLinks = this.d3.selectAll('.link').data(this._links)
+    const svgLinks = this.d3.selectAll(this.selectors.link).data(this._links)
     svgLinks.enter().append('path')
       .attr('class', 'link')
       .attr('d', path)
@@ -125,7 +116,7 @@ export default class SankeyView extends ContrailChartsView {
       })
     svgLinks.exit().remove()
     // Nodes
-    const svgNodes = this.d3.selectAll('.node').data(this._nodes)
+    const svgNodes = this.d3.selectAll(this.selectors.node).data(this._nodes)
     const svgNodesEnter = svgNodes.enter().append('g')
       .attr('class', 'node')
       .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
@@ -137,10 +128,10 @@ export default class SankeyView extends ContrailChartsView {
       .attr('y', (d) => d.dy / 2)
       .attr('text-anchor', 'end')
       .text((d) => d.dy > 10 ? d.label : '')
-      .filter((d) => d.x > this.params.width / 2)
+      .filter((d) => d.x > this.width / 2)
       .attr('x', 5 + this._sankey.nodeWidth())
       .attr('text-anchor', 'start')
-    const svgNodesEdit = svgNodesEnter.merge(svgNodes).transition().ease(this.config.get('ease')).duration(this.params.duration)
+    const svgNodesEdit = svgNodesEnter.merge(svgNodes).transition().ease(this.config.get('ease')).duration(this.config.get('duration'))
       .attr('transform', (d) => 'translate(' + d.x + ',' + d.y + ')')
     svgNodesEdit.select('rect')
       .style('fill', (d) => this.config.getColor([], this.config.get('levels')[d.level]))
@@ -151,7 +142,7 @@ export default class SankeyView extends ContrailChartsView {
       .attr('y', (d) => d.dy / 2)
       .attr('text-anchor', 'end')
       .text((d) => d.dy > 10 ? d.label : '')
-      .filter((d) => d.x > this.params.width / 2)
+      .filter((d) => d.x > this.width / 2)
       .attr('x', 5 + this._sankey.nodeWidth())
       .attr('text-anchor', 'start')
   }
@@ -160,7 +151,8 @@ export default class SankeyView extends ContrailChartsView {
 
   _onMouseoverLink (d, el) {
     const [left, top] = d3Selection.mouse(this._container)
-    actionman.fire('ShowComponent', this.config.get('tooltip'), {left, top}, d)
+    const tooltipConfig = {left, top, container: this._container}
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d, tooltipConfig)
   }
 
   _onMouseoutLink (d, el) {

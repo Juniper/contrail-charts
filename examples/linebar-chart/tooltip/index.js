@@ -1,23 +1,20 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
 import template from './template.html'
 
 const data = fixture()
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   template,
   components: [{
     id: 'compositey-id1',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       height: 300,
       plot: {
         x: {
@@ -28,30 +25,24 @@ const chartConfig = {
         y: [
           {
             accessor: 'a',
-            labelFormatter: 'Label A',
-            enabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
-            labelFormatter: 'Label B',
-            enabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'custom-tooltip',
           }, {
             accessor: 'c',
-            labelFormatter: 'Megabytes C',
             color: 'grey',
-            enabled: true,
-            chart: 'LineChart',
+            chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           formatter: formatter.extendedISOTime,
         },
@@ -99,25 +90,20 @@ const chartConfig = {
     }
   }, {
     id: 'compositey-id2',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
-      height: 300,
+      enable: false,
+      height: 200,
       plot: {
         x: {
           accessor: 't',
           labelFormatter: 'Time',
-          axis: 'x'
+          axis: 'x',
         },
         y: [
           {
             accessor: 'a',
-            labelFormatter: 'Label A',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'sticky-tooltip',
           }
@@ -138,7 +124,6 @@ const chartConfig = {
     id: 'sticky-tooltip',
     type: 'Tooltip',
     config: {
-      sourceComponent: 'compositey-id2',
       sticky: true,
       dataConfig: [
         {
@@ -155,11 +140,9 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

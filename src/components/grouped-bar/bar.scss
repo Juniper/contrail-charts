@@ -1,0 +1,9 @@
+@import "bar-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .grouped-bar {
+  @include barChartRules($bar-chart);
+
+  @include themify($barChartId, $themes);
+}

@@ -1,0 +1,9 @@
+@import "scatter-plot-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .scatter-plot {
+  @include scatterPlotRules($scatter-plot);
+
+  @include themify($scatterPlotId, $themes);
+}

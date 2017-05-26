@@ -1,46 +1,42 @@
 // Copyright (c) Juniper Networks, Inc. All rights reserved.
 
-import ContrailChartsView from 'contrail-charts-view'
+import _ from 'lodash'
+import ChartView from 'chart-view'
+import Config from './TooltipConfigModel'
+import ToggleVisibility from '../../actions/ToggleVisibility'
 import TitleView from 'helpers/title/TitleView'
 import _template from './tooltip.html'
 import './tooltip.scss'
 
-export default class TooltipView extends ContrailChartsView {
-  constructor (p) {
-    super(p)
-    this.resetParams()
-    this.listenTo(this.config, 'change', this.resetParams)
-  }
+export default class TooltipView extends ChartView {
+  static get Config () { return Config }
+  static get Actions () { return {ToggleVisibility} }
+  static get isMaster () { return false }
 
   get width () { return this.el.offsetWidth }
   get height () { return this.el.offsetHeight }
-  /**
-   * @param {Object} position relative to container: top, left in pixels
-   * @param {Object} data to display
-   */
-  show (rect, data, p = {}) {
-    let {left, top} = rect
-    let placement
-    this._loadTemplate(data)
+
+  render () {
+    if (!this._visible) return
+    super.render()
+    let {left, top} = this.config.position
+    this._loadTemplate(this.model.data)
     this.d3.classed('active', true)
 
     if (this.config.get('sticky')) {
-      // TODO do not make assumptions on source component internal structure, just get it by ID only
-      // and get margin from its config model
-      const sourceRect = this._container.querySelector('#' + this.config.sourceId + ' clipPath rect').getBoundingClientRect()
+      // TODO do not make assumptions on source component internal structure
+      const sourceRect = this.svg.node().querySelector('#' + this.config.clip).getBoundingClientRect()
       const containerRect = this._container.getBoundingClientRect()
       left = sourceRect.left - containerRect.left
-      if (rect.left > containerRect.width / 2) {
+      if (this.config.position.left > containerRect.width / 2) {
         left += this.config.stickyMargin.left
       } else {
         left += (sourceRect.width - this.config.stickyMargin.right - this.width)
       }
       top = sourceRect.top - containerRect.top + (sourceRect.height / 2 - this.height / 2)
-    } else {
-      placement = p.placement || this.config.get('placement')
     }
-    this.place({left, top}, placement)
-    this.el.style.height = `${rect.height}px`
+    this.place({left, top}, this.config.get('placement'))
+    this.el.style.height = `${this.config.height}px`
   }
 
   hide () {
@@ -94,7 +90,7 @@ export default class TooltipView extends ContrailChartsView {
     const tooltipContent = this.config.get('formatter').bind(this.config)(data)
     super.render(template(tooltipContent))
     // TODO Discuss if title needs to be handled via TitleView or using the tooltip template itself.
-    if (tooltipContent.title) {
+    if (!_.isNil(tooltipContent.title)) {
       TitleView(this.d3.select('.tooltip-content').node(), tooltipContent.title)
     }
   }

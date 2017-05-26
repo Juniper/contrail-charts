@@ -4,28 +4,27 @@
 import _ from 'lodash'
 import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
+import Config from './TimelineConfigModel'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
-import BrushView from 'helpers/brush/BrushView'
-import BrushConfigModel from 'helpers/brush/BrushConfigModel'
+import Zoom from '../../actions/Zoom'
+import BrushView from 'components/brush/BrushView'
 import './timeline.scss'
 
-export default class TimelineView extends ContrailChartsView {
-  static get dataType () { return 'DataFrame' }
+export default class TimelineView extends ChartView {
+  static get Config () { return Config }
+  static get Model () { return Model }
+  static get Actions () { return {Zoom} }
 
   constructor (...args) {
     super(...args)
     this._brush = new BrushView({
-      config: new BrushConfigModel({
-        isSharedContainer: true,
-      }),
+      container: this._container,
+      config: { isSharedContainer: true, },
     })
 
-    this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
     this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
-    this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
     this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration'))
   }
 
@@ -42,9 +41,7 @@ export default class TimelineView extends ContrailChartsView {
   }
 
   render () {
-    this.resetParams()
     const rect = this._container.getBoundingClientRect()
-    this.params.width = rect.width
     super.render()
 
     const xAccessor = this.config.get('accessor')
@@ -67,21 +64,21 @@ export default class TimelineView extends ContrailChartsView {
       .attr('width', xRange[1] - xRange[0])
     this._bar.exit().remove()
 
-    this._brush.container = this._container
     this._brush.config.set({
       selection: this.config.selectionRange,
       xRange,
       yRange,
     }, {silent: true})
     this._brush.render()
+
     this._ticking = false
   }
 
-  zoom ({accessor, range}) {
+  zoom (ranges) {
     const sScale = this.config.get('selectionScale')
     const xScale = this.config.get('xScale')
-    const visualMin = xScale(range[0])
-    const visualMax = xScale(range[1])
+    const visualMin = xScale(ranges.x[0])
+    const visualMax = xScale(ranges.x[1])
 
     // round zoom range to integers in percents including the original exact float values
     const selection = [_.floor(sScale.invert(visualMin)), _.ceil(sScale.invert(visualMax))]
@@ -108,7 +105,7 @@ export default class TimelineView extends ContrailChartsView {
     if (_.isDate(xMax)) xMax = xMax.getTime()
 
     const data = {[xAccessor]: [xMin, xMax]}
-    actionman.fire('Zoom', this.config.get('updateComponents'), data)
+    actionman.fire('Zoom', data)
   }
   /**
    * Turn off selection for the animation period on resize

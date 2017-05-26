@@ -1,10 +1,11 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import world from './world-110m.json'
 import cities from './cities.json'
 
+let chart
 const config = {
   id: 'chartBox',
   components: [{
@@ -27,13 +28,10 @@ const config = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(config)
+    chart = new composites.CompositeView({config})
     chart.setData(cities)
-    chart.render()
   },
   remove: () => {
     chart.remove()

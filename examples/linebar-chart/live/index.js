@@ -1,55 +1,59 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import _ from 'lodash'
+import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
 
-let counter = 0
-const length = 21
+const length = 20
+let counter = length
+const data = fixture({
+  length,
+  data: {
+    x: {linear: true, range: [0, length]},
+    a: {linear: true, range: [0, length * 3]},
+  },
+})
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     id: 'control-panel-id',
     type: 'ControlPanel',
     config: {
       menu: [{
-        id: 'Freeze',
+        id: 'Halt',
       }],
+      update: ['compositey-id'],
     }
   }, {
     id: 'compositey-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       height: 600,
       crosshair: 'crosshair-id',
       plot: {
         x: {
           accessor: 'x',
           labelFormatter: 'X Value',
-          axis: 'x'
+          axis: 'x',
         },
         y: [
           {
             accessor: 'a',
             labelFormatter: 'Label A',
-            enabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },
         y1: {
-          position: 'left',
           formatter: formatter.toInteger,
         }
       },
@@ -79,26 +83,20 @@ const chartConfig = {
 }
 
 let intervalId = -1
-const chart = new ChartView()
 
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
-    clearInterval(intervalId)
+    chart = new composites.CompositeView({config})
+    chart.setData(data)
     intervalId = setInterval(() => {
-      const dataConfig = {
-        length: length,
-        data: {
-          x: {linear: true, range: [counter, counter + length]},
-          a: {linear: true, range: [counter, counter + length * 3]},
-        },
-      }
-      const data = fixture(dataConfig)
+      data.shift()
+      data.push({x: counter, a: _.random(0, length * 3)})
       chart.setData(data)
       counter++
     }, 1000)
   },
   remove: () => {
+    clearInterval(intervalId)
     chart.remove()
   },
   stopUpdating: () => {
