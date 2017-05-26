@@ -70,7 +70,7 @@ describe('LineView.', () => {
       let svg = container.querySelector('svg')
       let path = container.querySelector('path.line')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let pathRect = path.getBoundingClientRect()
         let svgRect = svg.getBoundingClientRect()
 
@@ -86,7 +86,7 @@ describe('LineView.', () => {
       chart.setData(data)
       let path = container.querySelector('path.line')
 
-      observer('attr', path, 'stroke', () => {
+      observe('attr', path, 'stroke', () => {
         expect(path.getAttribute('stroke')).toBe('rgb(255, 0, 0)')
         done()
       })
@@ -108,7 +108,7 @@ describe('LineView.', () => {
         let path = container.querySelector('path.line')
         let svg = container.querySelector('svg')
 
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let svgRect = svg.getBoundingClientRect()
           let pathRect = path.getBoundingClientRect()
 
@@ -130,7 +130,7 @@ describe('LineView.', () => {
         let path = container.querySelector('path.line')
         let svg = container.querySelector('svg')
 
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let svgRect = svg.getBoundingClientRect()
           let pathRect = path.getBoundingClientRect()
 
@@ -158,7 +158,7 @@ describe('LineView.', () => {
       chart = new cc.components.LineView({config, container})
       chart.setData([{ x: 1, y: 2 }])
       let path = container.querySelector('path.line')
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let d = path.getAttribute('d')
         expect(d).toBe(`M${config.width},-${config.height}Z`)
         done()
@@ -175,7 +175,7 @@ describe('LineView.', () => {
       ])
       let path = container.querySelector('path.line')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let d = path.getAttribute('d')
         expect(d).toBe('M0,200L300,0')
         done()
@@ -192,7 +192,7 @@ describe('LineView.', () => {
       chart.setData(data)
       let path = container.querySelector('path.line')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let d = path.getAttribute('d')
         expect(d).not.toContain('NaN')
         done()
@@ -209,7 +209,7 @@ describe('LineView.', () => {
       chart.setData(data)
       let path = container.querySelector('path.line')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let d = path.getAttribute('d')
         expect(d).not.toContain('NaN')
         done()
@@ -218,7 +218,7 @@ describe('LineView.', () => {
   })
 
   describe('Change config after render', () => {
-    it('should chang accessor y => b', (done) => {
+    it('should change y accessor y => b', (done) => {
       chart = new cc.components.LineView({config, container})
       chart.setData(data)
 
@@ -226,9 +226,9 @@ describe('LineView.', () => {
         config.y.accessor = 'b'
         chart.setConfig(config)
         let path = container.querySelector('path.line')
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let pathD = path.getAttribute('d')
-          let lineStartPoint = getPathStartPoint(pathD, 'C')
+          let lineStartPoint = getPathStartPoint(pathD)
 
           // line with data by accessor b must start with 0,0 coordinat
           expect(lineStartPoint).toBe('0,0')
@@ -237,7 +237,7 @@ describe('LineView.', () => {
       }, 0)
     })
 
-    it('should chang color red => green', (done) => {
+    it('should change color red => green', (done) => {
       chart = new cc.components.LineView({config, container})
       chart.setData(data)
 
@@ -245,7 +245,7 @@ describe('LineView.', () => {
         config.y.color = 'green'
         chart.setConfig(config)
         let path = container.querySelector('path.line')
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let color = path.getAttribute('stroke')
 
           // line with accessor b must start with 0,0 coordinat

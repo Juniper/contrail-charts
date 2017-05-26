@@ -161,8 +161,8 @@ describe('PieView', () => {
       ])
       let firstD = container.querySelectorAll('path.arc')[0].getAttribute('d')
       let secondD = container.querySelectorAll('path.arc')[1].getAttribute('d')
-      let firstSectorStartPoint = getPathStartPoint(firstD, 'A').split(',')
-      let secondSectorStartPoint = getPathStartPoint(secondD, 'A').split(',')
+      let firstSectorStartPoint = getPathStartPoint(firstD).split(',')
+      let secondSectorStartPoint = getPathStartPoint(secondD).split(',')
 
       expect(firstSectorStartPoint[0]).toBe(secondSectorStartPoint[0])
       expect(Math.abs(+firstSectorStartPoint[1])).toBe(+secondSectorStartPoint[1])
@@ -239,7 +239,7 @@ describe('PieView', () => {
         let chartSectors = container.querySelectorAll('path.arc')
         let sector = container.querySelectorAll('path.arc')[3]
 
-        observer('attr', sector, 'style', () => {
+        observe('attr', sector, 'style', () => {
           _.each(chartSectors, (sector, i) => {
             let hex = d3.schemeCategory20b[i]
             let rgb = hexToRGB(parseInt(hex.slice(1), 16))

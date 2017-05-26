@@ -5,7 +5,7 @@
  * @param {String} attrName - target attribute
  * @param callback
  */
-function observer (type, el, attrName, callback) {
+function observe (type, el, attrName, callback) {
   let config
   if (type === 'attr') {
     config = {attributes: true}
@@ -35,22 +35,26 @@ function hexToRGB (hex) {
   return `rgb(${r}, ${g}, ${b})`
 }
 /**
- *
- * @param path
- * @param secondComand
+ * @param {string} path
  * @returns {string}
  */
-function getPathStartPoint (path, secondComand) {
-  return path.slice(1, path.indexOf(secondComand))
+function getPathStartPoint (path) {
+  let commands = path.match(/[^\d\.,e-]/ig)
+  return path.slice(1, path.indexOf(commands[1]))
 }
 /**
- * @param path
+ * @param {string} path
  * @returns {string}
  */
-function getPathEndPoint (path, type = 'arc') {
-  if(type === 'arc'){
+function getPathEndPoint (path) {
+  let commands = path.match(/[^\d\.,e-]/ig)
+  if (commands[commands.length - 1] === 'Z') {
     let beforeLastCommaIndex = path.lastIndexOf(',', path.lastIndexOf(',') - 1)
     return path.slice(beforeLastCommaIndex + 1, -1)
+  } else if (commands[commands.length - 1] === 'C') {
+    let beforeLastCommaIndex = path.lastIndexOf(',', path.lastIndexOf(',') - 1)
+    return path.slice(beforeLastCommaIndex + 1)
+  } else { // last command L
+    return path.slice(path.lastIndexOf(commands[commands.length - 1]) + 1)
   }
-  return path.slice(path.lastIndexOf('L') + 1)
 }

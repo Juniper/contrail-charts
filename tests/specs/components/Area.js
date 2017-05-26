@@ -65,7 +65,7 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[1]
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let chartAreas = container.querySelectorAll('path.area')
         _.each(chartAreas, (area, i) => {
           let hex = d3.schemeCategory20[i]
@@ -102,7 +102,7 @@ describe('Area Component', () => {
       let svg = container.querySelector('svg')
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let areaContainer = container.querySelector('g.area')
         let areaContainerRect = areaContainer.getBoundingClientRect()
         let svgRect = svg.getBoundingClientRect()
@@ -121,7 +121,7 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let paths = container.querySelectorAll('path.area')
         _.each(paths, (path, i) => {
           let rgb = hexToRGB(parseInt(config.y[i].color.slice(1), 16))
@@ -146,7 +146,7 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let paths = container.querySelectorAll('path.area')
         let firstRect = paths[0].getBoundingClientRect()
         let secondRect = paths[1].getBoundingClientRect()
@@ -166,16 +166,16 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let paths = container.querySelectorAll('path.area')
         let firstD = paths[0].getAttribute('d')
         let secondD = paths[1].getAttribute('d')
         let thirdD = paths[2].getAttribute('d')
 
-        let firstStartPoint = getPathStartPoint(firstD, 'C')
+        let firstStartPoint = getPathStartPoint(firstD)
         let firstEndPoint = getPathEndPoint(firstD)
-        let secondStartPoint = getPathStartPoint(secondD, 'C')
-        let thridStartPoint = getPathStartPoint(thirdD, 'C')
+        let secondStartPoint = getPathStartPoint(secondD)
+        let thridStartPoint = getPathStartPoint(thirdD)
 
         expect(firstEndPoint).toBe(secondStartPoint)
         expect(firstStartPoint).toBe(thridStartPoint)
@@ -191,15 +191,15 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let paths = container.querySelectorAll('path.area')
         let firstD = paths[0].getAttribute('d')
         let secondD = paths[1].getAttribute('d')
         let thirdD = paths[2].getAttribute('d')
 
-        let firstStartPoint = getPathStartPoint(firstD, 'C')
-        let secondStartPoint = getPathStartPoint(secondD, 'C')
-        let thridStartPoint = getPathStartPoint(thirdD, 'C')
+        let firstStartPoint = getPathStartPoint(firstD)
+        let secondStartPoint = getPathStartPoint(secondD)
+        let thridStartPoint = getPathStartPoint(thirdD)
 
         expect(firstStartPoint).toBe(secondStartPoint)
         expect(secondStartPoint).toBe(thridStartPoint)
@@ -228,7 +228,7 @@ describe('Area Component', () => {
           let svg = container.querySelector('svg')
           let path = container.querySelector('path.area')
 
-          observer('attr', path, 'd', () => {
+          observe('attr', path, 'd', () => {
             let areaContainer = container.querySelector('g.area')
             let areaContainerRect = areaContainer.getBoundingClientRect()
             let svgRect = svg.getBoundingClientRect()
@@ -254,7 +254,7 @@ describe('Area Component', () => {
           let svg = container.querySelector('svg')
           let path = container.querySelector('path.area')
 
-          observer('attr', path, 'd', () => {
+          observe('attr', path, 'd', () => {
             let areaContainer = container.querySelector('g.area')
             let areaContainerRect = areaContainer.getBoundingClientRect()
             let svgRect = svg.getBoundingClientRect()
@@ -288,7 +288,7 @@ describe('Area Component', () => {
         let svg = container.querySelector('svg')
         let path = container.querySelector('path.area')
 
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let areaContainer = container.querySelector('g.area')
           let areaContainerRect = areaContainer.getBoundingClientRect()
           let svgRect = svg.getBoundingClientRect()
@@ -304,7 +304,7 @@ describe('Area Component', () => {
       chart.render()
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'fill', () => {
+      observe('attr', path, 'fill', () => {
         let paths = container.querySelectorAll('path.area')
         _.each(paths, (path) => {
           expect(path.getAttribute('d')).toBeNull()
@@ -318,7 +318,7 @@ describe('Area Component', () => {
       chart.setData([])
       let path = container.querySelectorAll('path.area')[2]
 
-      observer('attr', path, 'fill', () => {
+      observe('attr', path, 'fill', () => {
         let paths = container.querySelectorAll('path.area')
         _.each(paths, (path) => {
           expect(path.getAttribute('d')).toBeNull()
@@ -336,7 +336,7 @@ describe('Area Component', () => {
       chart.setData([{b: 1, c: 1, a: 1, x: 0}])
       let path = container.querySelector('path.area')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let paths = container.querySelectorAll('path.area')
         let areaContainer = container.querySelector('g.area')
         let areaContainerHeight = areaContainer.getBoundingClientRect().height
@@ -362,7 +362,7 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelector('path.area')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let path = container.querySelector('path.area')
         expect(path.getAttribute('d')).toBe(`M0,${config.height}L${config.width},${config.height}L${config.width},0L0,100Z`)
         done()
@@ -383,7 +383,7 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelector('path.area')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let d = path.getAttribute('d')
         expect(d).not.toContain('NaN')
         done()
@@ -404,7 +404,7 @@ describe('Area Component', () => {
       chart.setData(data)
       let path = container.querySelector('path.area')
 
-      observer('attr', path, 'd', () => {
+      observe('attr', path, 'd', () => {
         let d = path.getAttribute('d')
         expect(d).not.toContain('NaN')
         done()
@@ -426,9 +426,9 @@ describe('Area Component', () => {
         config.y[0].accessor = 'c'
         chart.setConfig(config)
         let path = container.querySelector('path.area')
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let pathD = path.getAttribute('d')
-          let areaStartPoint = getPathStartPoint(pathD, 'C')
+          let areaStartPoint = getPathStartPoint(pathD)
 
           // line with data by accessor b must start with 0,0 coordinat
           expect(areaStartPoint).toBe('0,0')
@@ -450,7 +450,7 @@ describe('Area Component', () => {
         config.y[0].color = 'green'
         chart.setConfig(config)
         let path = container.querySelector('path.area')
-        observer('attr', path, 'fill', () => {
+        observe('attr', path, 'fill', () => {
           let color = path.getAttribute('fill')
 
           expect(color).toBe('rgb(0, 128, 0)')
@@ -467,11 +467,11 @@ describe('Area Component', () => {
         config.y[2].stack = 'first'
         chart.setConfig(config)
         let path = container.querySelectorAll('path.area')[2]
-        observer('attr', path, 'd', () => {
+        observe('attr', path, 'd', () => {
           let aArea = container.getElementsByClassName('area-group.a')[0]
           let cArea = container.querySelector('.area-c')
           let aAreaEndPoint = getPathEndPoint(aArea.getAttribute('d'))
-          let cAreaStartPoint = getPathStartPoint(cArea.getAttribute('d'), 'C')
+          let cAreaStartPoint = getPathStartPoint(cArea.getAttribute('d'))
 
           expect(aAreaEndPoint).toBe(cAreaStartPoint)
           done()
