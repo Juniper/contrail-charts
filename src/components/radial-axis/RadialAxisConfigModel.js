@@ -34,7 +34,7 @@ export default class RadialAxisConfigModel extends ConfigModel {
       // Default axis ticks if not specified per axis.
       ticks: 10,
 
-      positions: ['left', 'right', 'top', 'bottom'],
+      //positions: ['left', 'right', 'top', 'bottom'],
 
       margin: {
         label: 10,

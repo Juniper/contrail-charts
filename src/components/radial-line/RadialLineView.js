@@ -47,6 +47,10 @@ export default class RadialLineView extends ChartView {
     return this.config.get('height') || this.width
   }
 
+  get radius () {
+    return Math.min(this.width, this.height) / 2
+  }
+
   /**
    * Draw a line path
    */
@@ -56,6 +60,7 @@ export default class RadialLineView extends ChartView {
     const angleAccessor = this.config.get('angle.accessor')
     const accessor = this.config.get('r')
     const key = accessor.accessor
+    const radius = this.radius
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     this._line = d3Shape.radialLine()
@@ -66,7 +71,7 @@ export default class RadialLineView extends ChartView {
     const linePath = this.d3.selectAll(this.selectors.node)
       .data(_.isEmpty(data) ? [] : [accessor], d => d.accessor)
 
-    this.d3.attr('transform', `translate(${this.width / 2}, ${this.height / 2})`)
+    this.d3.attr('transform', `translate(${radius}, ${radius})`)
 
     linePath.enter().append('path')
       .attr('class', 'line line-' + key)

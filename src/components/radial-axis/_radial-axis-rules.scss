@@ -1,4 +1,4 @@
-@mixin axisRules($axis) {
+@mixin radialAxisRules($axis) {
   $p_gridline_color: map-get($axis, "gridlineColor");
   $p_tick_size: map-get($axis, "tickSize");
   $p_tick_color: map-get($axis, "tickColor");
@@ -6,8 +6,15 @@
   $p_label_color: map-get($axis, "axisLabelColor");
 
   .axis {
-    .domain {
-      display: none;
+    stroke: $p_gridline_color;
+    fill: none;
+  }
+
+/*
+  .radial-axis {
+    .axis {
+      stroke: $p_gridline_color;
+      fill: none;
     }
     .tick {
       line {
@@ -26,4 +33,5 @@
       dominant-baseline: central;
     }
   }
+*/
 }

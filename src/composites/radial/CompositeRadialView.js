@@ -120,8 +120,9 @@ export default class CompositeRadialView extends ChartView {
    * Render axes and calculate inner margins for charts
    */
   _renderAxes () {
+    const allAxes = _.concat(this.config.activeAngleAxes, this.config.activeRAxes)
     const elements = this.svg.selectAll(this.selectors.axis)
-      .data(this.config.activeAngleAxes, d => d.name)
+      .data(allAxes, d => d.name)
 
     elements.enter().each(axis => {
       const component = this._composite.add({
@@ -130,6 +131,7 @@ export default class CompositeRadialView extends ChartView {
         container: this._container,
       })
       component.el.__data__ = axis
+      console.log('composite config: ', component.config)
     })
 
     elements.each(axis => {

@@ -75,18 +75,26 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   get activeAngleAxes () {
     const angleAxisNames = _(this.activeAccessors).map(a => this.getAngleAxisName(a)).uniq().value()
     return _.filter(this.attributes.axes, (axis, name) => {
-      axis.id = `${this.id}-${name}`
-      axis.name = name
-      return angleAxisNames.includes(name)
+      const includes = angleAxisNames.includes(name)
+      if (includes) {
+        axis.id = `${this.id}-${name}`
+        axis.name = name
+        axis.position = 'angle'
+      }
+      return includes
     })
   }
 
   get activeRAxes () {
     const rAxisNames = _(this.activeAccessors).map(a => this.getRAxisName(a)).uniq().value()
     return _.filter(this.attributes.axes, (axis, name) => {
-      axis.id = `${this.id}-${name}`
-      axis.name = name
-      return rAxisNames.includes(name)
+      const includes = rAxisNames.includes(name)
+      if (includes) {
+        axis.id = `${this.id}-${name}`
+        axis.name = name
+        axis.position = 'r'
+      }
+      return includes
     })
   }
 

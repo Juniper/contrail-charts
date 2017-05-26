@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import * as d3Axis from 'd3-axis'
 import * as d3Ease from 'd3-ease'
+import * as d3Shape from 'd3-shape'
 import ChartView from 'chart-view'
 import Config from './RadialAxisConfigModel'
 import './radial-axis.scss'
@@ -12,9 +12,11 @@ export default class RadialAxisView extends ChartView {
     super(...args)
     this.render()
   }
+
   get tagName () { return 'g' }
 
   get zIndex () { return 0 }
+
   /**
    * follow same naming convention for all XY chart sub views
    */
@@ -25,6 +27,15 @@ export default class RadialAxisView extends ChartView {
       tick: '.tick',
     })
   }
+
+  get height () {
+    return this.config.get('height') || this.width
+  }
+
+  get radius () {
+    return Math.min(this.width, this.height) / 2
+  }
+
   /**
    * Axis is rendered outside the container inner (width * height) area on margins
    */
@@ -32,14 +43,41 @@ export default class RadialAxisView extends ChartView {
     if (!this.config.scale) return
     super.render()
 
+    const radius = this.radius
     const margin = this.config.get('margin')
     this.d3
-      .attr('transform', `translate(${margin.left}, ${margin.top})`)
+      //.attr('transform', `translate(${margin.left}, ${margin.top})`)
+      .attr('transform', `translate(${radius}, ${radius})`)
       .classed(this.config.name, true)
 
-    console.log('RadialAxis config: ', this.config)
-    console.log('RadialAxis scale domain: ', this.config.scale.domain())
-    console.log('RadialAxis scale range: ', this.config.scale.range())
+    console.log('RadialAxis (' + this.config.get('name') + ') config: ', this.config, this.config.scale.domain(), this.config.scale.range(), this.radius)
+
+    if (this.config.get('position') === 'r') {
+      const points = [{ angle: 0, r: this.config.scale.range()[0] }, { angle: 0, r: this.config.scale.range()[1] }]
+      this._rAxisLine = d3Shape.radialLine()
+        .angle(p => p.angle)
+        .radius(p => p.r)
+        .curve(d3Shape.curveLinear)
+      const rAxisPath = this.d3.selectAll('.axis')
+        .data([this.config.toJSON()])
+      rAxisPath.enter().append('path')
+        .attr('class', 'axis')
+        .attr('d', this._rAxisLine(points))
+        //.transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
+        //.attrTween('d', this._interpolate.bind(this, data, key))
+        //.attr('stroke', this.config.getColor())
+      rAxisPath.transition()
+        .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
+        .attr('d', this._rAxisLine(points))
+        //.attrTween('d', (d, i, els) => {
+        //  const previous = els[i].getAttribute('d')
+        //  const current = this._line(data)
+        //  return d3InterpolatePath(previous, current)
+        //})
+        //.attr('stroke', this.config.getColor())
+      rAxisPath.exit().remove()
+    }
+
 
     /*
     this._d3Axis = d3Axis[_.camelCase(`axis-${this.config.position}`)](this.config.scale)
@@ -57,6 +95,7 @@ export default class RadialAxisView extends ChartView {
 
     this._ticking = false
   }
+
   /**
    * Labels are rendered at the center along axis
    * TODO not optimal label spacing

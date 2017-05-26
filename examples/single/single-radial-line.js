@@ -28,7 +28,7 @@ const config = {
   angle: {
     accessor: 'group.x',
     labelFormatter: 'Value',
-    scale: 'scaleLinear',
+    //scale: 'scaleLinear',
   },
   r: {
     accessor: 'group.a',
