@@ -83,12 +83,12 @@ const allExamples = {
     },
   },
   'radial': {
+    'Dendrogram': {
+      view: dendrogramChart,
+    },
     'Pie Chart': {
       view: pieChart,
     },
-    'Dendrogram': {
-      view: dendrogramChart,
-    }
   },
   'area': {
     'Basic': {
