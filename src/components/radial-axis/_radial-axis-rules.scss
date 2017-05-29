@@ -5,9 +5,21 @@
   $p_label_size: map-get($axis, "axisLabelSize");
   $p_label_color: map-get($axis, "axisLabelColor");
 
-  .axis {
-    stroke: $p_gridline_color;
-    fill: none;
+  .tick {
+    circle {
+      stroke: $p_gridline_color;
+      fill: none;
+    }
+    text {
+      font-size: $p_tick_size;
+      fill: $p_tick_color;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    path {
+      stroke: $p_gridline_color;
+      fill: none;
+    }
   }
 
 /*

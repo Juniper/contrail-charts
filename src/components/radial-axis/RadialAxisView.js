@@ -40,59 +40,61 @@ export default class RadialAxisView extends ChartView {
    * Axis is rendered outside the container inner (width * height) area on margins
    */
   render () {
-    if (!this.config.scale) return
+    const scale = this.config.scale
+    if (!scale) return
     super.render()
 
     const radius = this.radius
     const margin = this.config.get('margin')
     this.d3
-      //.attr('transform', `translate(${margin.left}, ${margin.top})`)
       .attr('transform', `translate(${radius}, ${radius})`)
       .classed(this.config.name, true)
 
-    console.log('RadialAxis (' + this.config.get('name') + ') config: ', this.config, this.config.scale.domain(), this.config.scale.range(), this.radius)
-
-    if (this.config.get('position') === 'r') {
-      const points = [{ angle: 0, r: this.config.scale.range()[0] }, { angle: 0, r: this.config.scale.range()[1] }]
-      this._rAxisLine = d3Shape.radialLine()
+    if (this.config.position === 'r') {
+      const rTickValues = scale.ticks(this.config.get('ticks'))
+      const rAxisTicks = this.d3.selectAll('.tick').data(rTickValues)
+      const rAxisTicksEnter = rAxisTicks.enter().append('g')
+        .attr('class', 'tick')
+      rAxisTicksEnter.append('circle')
+        .attr('r', d => scale(d))
+      rAxisTicksEnter.append('text')
+        .text(d => d)
+        .attr('dy', d => -scale(d))
+      const rAxisTicksEdit = rAxisTicks.transition()
+        .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
+      rAxisTicksEdit.select('circle')
+        .attr('r', d => scale(d))
+      rAxisTicks.exit().remove()
+    }
+    if (this.config.position === 'angle') {
+      const angleTickValues = scale.ticks(this.config.get('ticks'))
+      const angleTickLines = []
+      _.each(angleTickValues, a => {
+        _.each(this.config.get('otherAxisScales'), otherScale => {
+          const line = {
+            points: [{ angle: scale(a), r: otherScale.range()[0] }, { angle: scale(a), r: otherScale.range()[1] }]
+          }
+          angleTickLines.push(line)
+        })
+      })
+      const points = []
+      const rAxisLine = d3Shape.radialLine()
         .angle(p => p.angle)
         .radius(p => p.r)
         .curve(d3Shape.curveLinear)
-      const rAxisPath = this.d3.selectAll('.axis')
-        .data([this.config.toJSON()])
-      rAxisPath.enter().append('path')
-        .attr('class', 'axis')
-        .attr('d', this._rAxisLine(points))
-        //.transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-        //.attrTween('d', this._interpolate.bind(this, data, key))
-        //.attr('stroke', this.config.getColor())
-      rAxisPath.transition()
+      const rAxisPath = this.d3.selectAll('.tick')
+        .data(angleTickLines)
+      const rAxisPathEnter = rAxisPath.enter().append('g')
+        .attr('class', 'tick')
+      rAxisPathEnter.append('path')
+        .attr('d', d => rAxisLine(d.points))
+      const rAxisPathEdit = rAxisPath.transition()
         .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-        .attr('d', this._rAxisLine(points))
-        //.attrTween('d', (d, i, els) => {
-        //  const previous = els[i].getAttribute('d')
-        //  const current = this._line(data)
-        //  return d3InterpolatePath(previous, current)
-        //})
-        //.attr('stroke', this.config.getColor())
+      rAxisPathEdit.select('path')
+        .attr('d', d => rAxisLine(d.points))
       rAxisPath.exit().remove()
     }
-
-
-    /*
-    this._d3Axis = d3Axis[_.camelCase(`axis-${this.config.position}`)](this.config.scale)
-      .ticks(this.config.get('ticks'))
-      .tickSize(this._tickLength * this.config.side)
-      .tickPadding(10)
-
-    if (this.config.formatter) this._d3Axis.tickFormat(this.config.formatter)
-    if (this.config.tickCoords) this._d3Axis.tickValues(this.config.tickValues)
-
-    this.d3.transition().ease(d3Ease.easeLinear).duration(this.config.duration)
-    this.d3.call(this._d3Axis)
     this._renderLabel()
-    */
-
     this._ticking = false
   }
 
@@ -101,6 +103,7 @@ export default class RadialAxisView extends ChartView {
    * TODO not optimal label spacing
    * and in the first quater of the margin between container edge and tick
    */
+  /*
   _renderLabel () {
     const offset = {
       along: this._plotLength / 2,
@@ -126,4 +129,5 @@ export default class RadialAxisView extends ChartView {
 
     labels.exit().remove()
   }
+  */
 }

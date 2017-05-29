@@ -21,7 +21,7 @@ import './radial.scss'
 export default class CompositeRadialView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {/*SelectColor, SelectKey, SelectChartType, Zoom, ClusterAction*/} }
+  static get Actions () { return {/* SelectColor, SelectKey, SelectChartType, Zoom, ClusterAction */} }
 
   constructor (...args) {
     super(...args)
@@ -158,20 +158,10 @@ export default class CompositeRadialView extends ChartView {
       margin: this.config.margin,
       width: this.width,
       height: this.height,
-      /*
-      x: {
-        accessor: this.config.get('plot.x.accessor'),
-        domain: this.config.get('axes.x.domain'),
-        scale: this.config.get('axes.x.scale'),
-      }
-      */
     }
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
 
-    //_.each(this.config.get('axes'), axis => {
-    //  this.config.set(`axes.${axis.name}.calculatedDomain`, [], {silent: true})
-    //})
     children.enter().merge(children).each(child => {
       const type = this.config.getComponentType(child.accessor)
       config.id = `${this.id}-${child.key}`
