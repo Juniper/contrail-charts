@@ -1,30 +1,29 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {fixture} from 'commons'
 
 const length = 20
 const data = fixture({
-  length: length,
+  length,
   data: {
     'group.x': {linear: true, range: [0, length]},
-    'group.a': {linear: true, range: [3, (length - 1) * 3], gap: true},
+    'group.a': {linear: true, range: [3, (length - 1) * 3]},
+    'group.b': {linear: true, range: [4, (length - 1) * 4]},
+    'group.c': {linear: true, range: [-3, (length - 1) * -3]},
     b: {linear: true, range: [5, (length - 1) * 5], repeat: true},
     c: {linear: true, range: [7, (length - 1) * 7]},
   },
 })
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     id: 'grouped-bar-compositey',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       crosshair: 'crosshair-id',
       plot: {
         x: {
@@ -36,33 +35,35 @@ const chartConfig = {
           {
             accessor: 'group.a',
             labelFormatter: 'Label Group.A',
-            enabled: true,
-            chart: 'StackedBarChart',
+            chart: 'StackedBar',
+            stack: 'positive',
             axis: 'y1',
             tooltip: 'default-tooltip',
           }, {
-            accessor: 'b',
-            labelFormatter: 'Label B',
-            enabled: true,
-            chart: 'StackedBarChart',
+            accessor: 'group.b',
+            labelFormatter: 'Label Group.B',
+            chart: 'StackedBar',
+            stack: 'positive',
             axis: 'y1',
             tooltip: 'default-tooltip',
-          }, {
-            accessor: 'c',
-            labelFormatter: 'Label C',
-            enabled: true,
-            chart: 'StackedBarChart',
-            axis: 'y1',
-            tooltip: 'default-tooltip',
+          //}, {
+            //accessor: 'group.c',
+            //labelFormatter: 'Label Group.C',
+            //chart: 'StackedBar',
+            //stack: 'negative',
+            //axis: 'y1',
+            //tooltip: 'default-tooltip',
           }
         ]
       },
-      axis: {
+      axes: {
         x: {
           scale: 'scaleLinear',
         },
         y1: {
-          position: 'left',
+        },
+        y2: {
+          position: 'right',
         },
       },
     },
@@ -95,11 +96,9 @@ const chartConfig = {
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(chartConfig)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import Events from 'contrail-charts-events'
+import Events from 'contrail-events'
 /**
  * Action Manager - Singleton
  */

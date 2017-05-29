@@ -6,7 +6,7 @@ define([ // eslint-disable-line no-undef
   'd3v4', // Example use of multiple d3 versions. chart will use d3v4 instead of older d3.
   'lodash',
   'contrail-charts',
-], function (d3, _, coCharts) {
+], function (d3, _, cc) {
   const data = []
   _.each(d3.range(100), i => {
     const a = _.random(0, 100)
@@ -24,17 +24,17 @@ define([ // eslint-disable-line no-undef
   `<div component="chart-id1"></div>
    <div component="chart-id2"></div>`)
 
-  const chartConfig = {
+  let chart
+  const config = {
     id: 'chartBox',
     template,
     components: [{
       id: 'chart-id1',
-      type: 'CompositeYChart',
+      type: 'CompositeY',
       config: {
-        marginInner: 10,
-        marginLeft: 80,
-        marginRight: 80,
-        marginBottom: 40,
+        margin: {
+          right: 20,
+        },
         height: 450,
         plot: {
           x: {
@@ -46,53 +46,52 @@ define([ // eslint-disable-line no-undef
             {
               accessor: 'a',
               label: 'Label A',
-              enabled: true,
-              chart: 'StackedBarChart',
+              chart: 'StackedBar',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'b',
               label: 'Label B',
-              enabled: true,
-              chart: 'StackedBarChart',
+              chart: 'StackedBar',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'c',
               label: 'Label C',
-              enabled: false,
-              chart: 'StackedBarChart',
+              disabled: true,
+              chart: 'StackedBar',
               axis: 'y1',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'd',
-              label: 'Megabytes D',
+              label: 'Label D',
               color: '#d62728',
-              enabled: true,
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y2',
               tooltip: 'default-tooltip',
             }, {
               accessor: 'e',
-              label: 'Megabytes E',
+              label: 'Label E',
               color: '#9467bd',
-              enabled: true,
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y2',
               tooltip: 'default-tooltip',
             }
           ]
         },
-        axis: {
+        axes: {
+          x: {
+            formatter: d3.timeFormat('%H:%M:%S'),
+          },
           y1: {
             position: 'left',
-            formatter: (value) => value.toFixed(0),
-            labelMargin: 15
+            formatter: value => value.toFixed(0),
+            labelMargin: 15,
           },
           y2: {
             position: 'right',
-            formatter: (value) => value.toFixed(2),
-            labelMargin: 15
+            formatter: value => value.toFixed(2),
+            labelMargin: 15,
           }
         }
       },
@@ -103,27 +102,23 @@ define([ // eslint-disable-line no-undef
         dataConfig: [
           {
             accessor: 'x',
-            labelFormatter: (key) => 'Time',
-            valueFormatter: (value) => value.toFixed(0)
+            labelFormatter: key => 'Time',
+            valueFormatter: value => value.toFixed(0)
           }, {
             accessor: 'a',
             labelFormatter: () => 'Label A',
-            valueFormatter: (value) => value.toFixed(5)
+            valueFormatter: value => value.toFixed(5)
           }, {
             accessor: 'b',
             labelFormatter: () => 'Label B',
-            valueFormatter: (value) => value.toFixed(2)
+            valueFormatter: value => value.toFixed(2)
           }
         ]
       }
     }, {
       id: 'chart-id2',
-      type: 'CompositeYChart',
+      type: 'CompositeY',
       config: {
-        marginInner: 10,
-        marginLeft: 80,
-        marginRight: 80,
-        marginBottom: 40,
         height: 200,
         plot: {
           x: {
@@ -132,27 +127,27 @@ define([ // eslint-disable-line no-undef
           },
           y: [
             {
-              enabled: true,
               accessor: 'e',
-              chart: 'LineChart',
+              chart: 'Line',
               axis: 'y',
             }
           ]
         },
-        axis: {
+        axes: {
+          x: {
+            formatter: d3.timeFormat('%H:%M:%S'),
+          },
           y: {
-            ticks: 5
+            ticks: 5,
           }
         }
       }
     }]
   }
 
-  const chart = new coCharts.ChartView()
-
   return {
     render: function () {
-      chart.setConfig(chartConfig)
+      chart = new cc.composites.CompositeView({config})
       chart.setData(data)
     },
     remove: () => {

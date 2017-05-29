@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import _ from 'lodash'
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
 
 const data = fixture()
@@ -10,60 +10,41 @@ const template = _.template(
   `<div component="chart-id"></div>
   <div component="timeline-id"></div>`)
 
+let chart
 const config = {
   id: 'chartBox',
   template,
   components: [{
     id: 'chart-id',
-    type: 'CompositeYChart',
+    type: 'CompositeY',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
       height: 300,
       plot: {
         x: {
-          accessor: 't',
+          accessor: 'x',
           labelFormatter: 'Time',
           axis: 'x',
         },
         y: [
           {
             accessor: 'a',
-            labelFormatter: 'Label A',
-            enabled: true,
-            chart: 'BarChart',
+            chart: 'Line',
             axis: 'y1',
           }, {
             accessor: 'b',
-            labelFormatter: 'Label B',
-            enabled: true,
-            chart: 'LineChart',
-            axis: 'y1',
-          }, {
-            accessor: 'c',
-            labelFormatter: 'Label C',
-            enabled: false,
-            chart: 'LineChart',
+            chart: 'GroupedBar',
             axis: 'y1',
           },
         ]
       },
-      axis: {
+      axes: {
         x: {
-          formatter: formatter.extendedISOTime,
+          scale: 'scaleLinear',
         },
         y1: {
           position: 'left',
           formatter: formatter.toInteger,
-          labelMargin: 15,
         },
-        y2: {
-          position: 'right',
-          formatter: formatter.toInteger,
-          labelMargin: 15,
-        }
       }
     }
   }, {
@@ -71,16 +52,14 @@ const config = {
     type: 'Timeline',
     config: {
       selection: [55, 85],
-      accessor: 't',
+      accessor: 'x',
     }
   }]
 }
 
-const chart = new ChartView()
-
 export default {
   render: () => {
-    chart.setConfig(config)
+    chart = new composites.CompositeView({config})
     chart.setData(data)
   },
   remove: () => {

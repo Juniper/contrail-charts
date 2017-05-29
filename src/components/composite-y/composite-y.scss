@@ -1,9 +1,0 @@
-@import "composite-y-rules";
-@import "../../styles/variables";
-@import "../../styles/mixins";
-
-.cc-svg {
-  @include compositeYChartRules($compositeY);
-
-  @include themify($compositeYId, $themes);
-}

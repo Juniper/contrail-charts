@@ -1,20 +1,23 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import {ChartView} from 'coCharts'
+import {composites} from 'contrail-charts'
 import * as d3Scale from 'd3-scale'
 import flowData from './data.json'
 
-const chartConfig = {
+let chart
+const config = {
   id: 'chartBox',
   components: [{
     id: 'sankey-chart-component',
     type: 'Sankey',
     config: {
-      marginInner: 10,
-      marginLeft: 80,
-      marginRight: 80,
-      marginBottom: 40,
+      margin: {
+        left: 80,
+        right: 80,
+        bottom: 40,
+        top: 5
+      },
       colorScheme: d3Scale.schemeCategory20,
       levels: [ { level: 0, label: 'Virtual Network' }, { level: 1, label: 'IP' }, { level: 2, label: 'Port' } ],
       parseConfig: {
@@ -90,15 +93,12 @@ const chartConfig = {
   }]
 }
 
-const chartView = new ChartView()
-
 export default {
   render: () => {
-    chartView.setConfig(chartConfig)
-    chartView.setData(flowData.data)
-    chartView.render()
+    chart = new composites.CompositeView({config})
+    chart.setData(flowData.data)
   },
   remove: () => {
-    chartView.remove()
+    chart.remove()
   }
 }

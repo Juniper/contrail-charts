@@ -3,19 +3,14 @@
  */
 import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
-import ContrailChartsView from 'contrail-charts-view'
+import ChartView from 'chart-view'
+import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import _template from './filter.html'
 import './filter.scss'
 
-export default class FilterView extends ContrailChartsView {
-  static get dataType () { return 'DataFrame' }
-
-  constructor (p) {
-    super(p)
-    this.listenTo(this.model, 'change', this.render)
-    this.listenTo(this.config, 'change', this.render)
-  }
+export default class FilterView extends ChartView {
+  static get Model () { return Model }
 
   get selectors () {
     return _.extend({}, super.selectors, {
@@ -41,6 +36,6 @@ export default class FilterView extends ContrailChartsView {
     d3Selection.event.stopPropagation()
     const accessorName = el.value
     const isChecked = el.checked
-    actionman.fire('SelectSerie', accessorName, isChecked)
+    actionman.fire('SelectKey', accessorName, isChecked)
   }
 }

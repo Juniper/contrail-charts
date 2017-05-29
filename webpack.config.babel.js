@@ -6,10 +6,10 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin'
 
 let fileName = 'contrail-charts'
-const libraryName = 'coCharts'
+const libraryName = 'cc'
 const paths = {
   framework: 'plugins/backbone/',
-  contrail: 'core/contrail/',
+  core: 'core/',
 }
 function absolute (...args) {
   return join(__dirname, ...args)
@@ -111,11 +111,10 @@ export default (env = defaultEnv) => {
         'contrail-view': paths.framework + 'ContrailView',
         'contrail-events': paths.framework + 'ContrailEvents',
 
-        'contrail-charts-data-model': paths.contrail + 'ContrailChartsDataModel',
-        'contrail-charts-config-model': paths.contrail + 'ContrailChartsConfigModel',
-        'contrail-charts-view': paths.contrail + 'ContrailChartsView',
-        'contrail-charts-events': paths.contrail + 'ContrailChartsEvents',
-        'contrail-charts-utils': paths.contrail + 'ContrailChartsUtils',
+        'data-model': paths.core + 'DataModel',
+        'config-model': paths.core + 'ConfigModel',
+        'chart-view': paths.core + 'ChartView',
+        'utils': paths.core + 'Utils',
       },
       extensions: ['.js'],
     },

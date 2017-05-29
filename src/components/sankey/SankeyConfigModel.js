@@ -1,32 +1,26 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import * as d3Scale from 'd3-scale'
 import * as d3Ease from 'd3-ease'
-import * as d3Shape from 'd3-shape'
 import _ from 'lodash'
-import ContrailChartsConfigModel from 'contrail-charts-config-model'
+import ConfigModel from 'config-model'
 import ColoredChart from 'helpers/color/ColoredChart'
 
-export default class SankeyConfigModel extends ContrailChartsConfigModel {
+export default class SankeyConfigModel extends ConfigModel {
   get defaults () {
-    return Object.assign(super.defaults, ColoredChart.defaults, {
+    return _.merge(super.defaults, ColoredChart.defaults, {
       /*
-      isPrimary: true,
       // by default will use common shared container under the parent
       isSharedContainer: true,
       */
 
-      // The component width. If not provided will be caculated by View.
-      width: undefined,
-
-      // The component height. If not provided will be caculated by View.
-      height: undefined,
-
-      labelMargin: 50,
-
-      // The scale to use that will represent the value of links.
-      valueScale: d3Scale.scaleLog(),
+      // Side margins.
+      margin: {
+        top: 5,
+        bottom: 5,
+        left: 50,
+        right: 50
+      },
 
       // The width of the nodes in sankey diagram.
       nodeWidth: 15,
@@ -34,41 +28,12 @@ export default class SankeyConfigModel extends ContrailChartsConfigModel {
       // The padding between nodes in sankey diagram.
       nodePadding: 2,
 
-      // The labels of the levels.
+      // The hierarhy levels.
       levels: [],
 
-      // The duration of transitions.
+      // The duration and ease of transitions.
+      duration: 200,
       ease: d3Ease.easeCubic,
-
-      // The separation in degrees between nodes with different parents
-      parentSeparation: 1,
-      parentSeparationThreshold: 0,
-
-      // Arc width
-      arcWidth: 10,
-
-      // Show arc labels
-      showArcLabels: true,
-
-      // Estimated average letter width
-      arcLabelLetterWidth: 5,
-
-      // The X offset (in pixels) of the arc label counted from the beggining of the arc.
-      arcLabelXOffset: 2,
-
-      // The Y offset (in pixels) of the arc label counted from the outer edge of the arc (positive values offset the label into the center of the circle).
-      arcLabelYOffset: 18,
-
-      // Initial drill down level
-      drillDownLevel: 1,
-
-      // curve: d3Shape.curveBundle.beta(0.85)
-      // curve: d3Shape.curveBundle.beta(0.95)
-      // curve: d3Shape.curveBundle.beta(1)
-      curve: d3Shape.curveCatmullRom.alpha(0.5)
-      // curve: d3Shape.curveCatmullRom.alpha(0.75)
-      // curve: d3Shape.curveCatmullRom.alpha(1)
-      // curve: d3Shape.curveLinear
     })
   }
 
@@ -87,7 +52,7 @@ export default class SankeyConfigModel extends ContrailChartsConfigModel {
         level: level.level,
         label: level.label,
         color: level.color,
-        enabled: level.level < this.attributes.drillDownLevel
+        enabled: true
       }
     })
   }
