@@ -2,7 +2,7 @@
   {{#if editable}}<div class="edit-legend"><i class="icon-edit" aria-hidden="true"></i></div>{{/if}}
   <div class="keys">
   	{{#each keys}}
-  	<div class="key" data-key="{{ key }}">
+    <div class="key {{#if checked}}selected{{/if}}" data-key="{{ key }}">
   		<div class="edit-key">
   			<div class="select select--color" style="background-color: {{ color }}; border-color: {{ color }}" data-color="{{color}}"><div class="triangle"></div></div>
         {{#if ../chartTypes }}
@@ -16,7 +16,10 @@
         {{else}}
         <div class="color-indicator" style="border-color: {{ color }}; {{#if checked}} background-color: {{ color }} {{/if}}"></div>
         {{/if}}
-        <span class="associate-axis">{{ axis }}</span>{{ label }}
+        {{#if axis}}
+        <span class="associate-axis">{{ axis }}</span>
+        {{/if}}
+        {{ label }}
   		</label>
   	</div>
   	{{/each}}
