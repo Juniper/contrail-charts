@@ -138,6 +138,35 @@ describe('Composite Y view', () => {
 
           expect(+lineX2 + 10).toBe(+textX)
         })
+
+        it('Checking the correctness z-index positions of elements Line and Area', () => {
+          data = [
+            { x: 0, a: 0, b: 0 },
+            { x: 1, a: 2, b: 4 },
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Area',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let svg = container.querySelector('svg')
+          let components = []
+          _.each(svg.children, (elem, i) => {
+            if (elem.classList.value === 'line child') {
+              components.push(elem)
+            }
+            if (elem.classList.value === 'area child') {
+              components.push(elem)
+            }
+          })
+          let firstComponentOrder = components[0].getAttribute('data-order')
+          let lastComponentOrder = components[1].getAttribute('data-order')
+          expect(+firstComponentOrder).toBeGreaterThan(+lastComponentOrder)
+        })
       })
 
       describe('Line on y axis and Stacked Bar on y1 axis', () => {
@@ -177,7 +206,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('Checking the correctness of the column position along the x axis', (done) => {
+        it('Checking the correctness of the columns position along the x axis', (done) => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -221,6 +250,221 @@ describe('Composite Y view', () => {
             }
             done()
           })
+        })
+
+        it('The total height of the last two bars should be equal to the height of the parent container', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 1 },
+            { x: 1, a: 1, b: 2, c: 2 },
+            { x: 2, a: 2, b: 3, c: 2 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'StackedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'StackedBar',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let rects = container.querySelectorAll('rect.bar')
+
+          observe('attr', rects[rects.length - 1], 'height', () => {
+            let lastBarRect = rects[rects.length - 1].getBoundingClientRect()
+            let beforeLastBarRect = rects[rects.length - 2].getBoundingClientRect()
+            let barsContainerRect = container.querySelector('g.stacked-bar').getBoundingClientRect()
+
+            expect(lastBarRect.height + beforeLastBarRect.height).toBe(barsContainerRect.height)
+            done()
+          })
+        })
+
+        it('Checking the correctness z-index positions of elements Line and Stacked Bar', () => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 1 },
+            { x: 1, a: 1, b: 2, c: 2 },
+            { x: 2, a: 2, b: 3, c: 2 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'StackedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'StackedBar',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let svg = container.querySelector('svg')
+          let components = []
+          _.each(svg.children, (elem, i) => {
+            if (elem.classList.value === 'line child') {
+              components.push(elem)
+            }
+            if (elem.classList.value === 'stacked-bar child') {
+              components.push(elem)
+            }
+          })
+          let firstComponentOrder = components[0].getAttribute('data-order')
+          let lastComponentOrder = components[1].getAttribute('data-order')
+          expect(+firstComponentOrder).toBeGreaterThan(+lastComponentOrder)
+        })
+      })
+
+      describe('Line on y axis and GroupedBar on y1 axis', () => {
+        it('The height of bigest bar should be equal to height of the parent container', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 1 },
+            { x: 1, a: 1, b: 2, c: 2 },
+            { x: 2, a: 2, b: 2, c: 3 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let rects = container.querySelectorAll('rect.bar')
+
+          observe('attr', rects[rects.length - 1], 'height', () => {
+            let lastBarRect = rects[rects.length - 1].getBoundingClientRect()
+            let barsContainerRect = container.querySelector('g.grouped-bar').getBoundingClientRect()
+
+            expect(lastBarRect.height).toBe(barsContainerRect.height)
+            done()
+          })
+        })
+
+        it('Checking the correctness of the columns position along the x axis', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 1 },
+            { x: 1, a: 1, b: 2, c: 2 },
+            { x: 2, a: 2, b: 2, c: 3 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          config.axes.x.ticks = 2
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let rects = container.querySelectorAll('rect.bar')
+
+          observe('attr', rects[rects.length - 1], 'height', () => {
+            let xTics = container.querySelectorAll('.axis.x .tick')
+            let j = 0
+            _.each(xTics, (tick, i) => {
+              let tickTransform = tick.getAttribute('transform')
+              let tickPosition = tickTransform.slice(tickTransform.indexOf('(') + 1, -1)
+              let xtickPosition = +tickPosition.slice(0, tickPosition.indexOf(','))
+              let groupedBarsEndXPosition = +rects[j + 1].getAttribute('width') + +rects[j + 1].getAttribute('x')
+              let groupedBarStartXPosition = +rects[j].getAttribute('x')
+              let groupMiddle = groupedBarStartXPosition + (groupedBarsEndXPosition - groupedBarStartXPosition) / 2
+              expect(groupMiddle).toBe(xtickPosition)
+              j += 2
+            })
+            done()
+          })
+        })
+
+        it('should apply default colors', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 1 },
+            { x: 1, a: 1, b: 2, c: 2 },
+            { x: 2, a: 2, b: 2, c: 3 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let rects = container.querySelectorAll('rect.bar')
+          let evenColor = d3.schemeCategory20[0]
+          let eventRgb = hexToRGB(parseInt(evenColor.slice(1), 16))
+          let oddColor = d3.schemeCategory20[1]
+          let oddRgb = hexToRGB(parseInt(oddColor.slice(1), 16))
+
+          observe('attr', rects[rects.length - 1], 'height', () => {
+            _.each(rects, (rect, i) => {
+              let color = rect.getAttribute('fill')
+              if (i % 2) {
+                expect(color).toBe(oddRgb)
+              } else {
+                expect(color).toBe(eventRgb)
+              }
+            })
+            done()
+          })
+        })
+
+        it('Checking the correctness z-index positions of elements Line and Grouped Bar', () => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 1 },
+            { x: 1, a: 1, b: 2, c: 2 },
+            { x: 2, a: 2, b: 3, c: 2 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let svg = container.querySelector('svg')
+          let components = []
+          _.each(svg.children, (elem, i) => {
+            if (elem.classList.value === 'line child') {
+              components.push(elem)
+            }
+            if (elem.classList.value === 'grouped-bar child') {
+              components.push(elem)
+            }
+          })
+          let firstComponentOrder = components[0].getAttribute('data-order')
+          let lastComponentOrder = components[1].getAttribute('data-order')
+          expect(+firstComponentOrder).toBeGreaterThan(+lastComponentOrder)
         })
       })
     })
