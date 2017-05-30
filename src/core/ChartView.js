@@ -207,11 +207,8 @@ export default class ChartView extends ContrailView {
       this._initSvg()
       if (this.svg.select(`#${this.id}`).empty()) {
         this.el.setAttribute('data-order', this.zIndex)
-        this.svg.node().append(this.el)
-      }
-      const offset = {
-        left: this.config.margin.left + this.padding.left,
-        top: this.config.margin.top + this.padding.top,
+        let next = _.find(this.svg.node().children, el => el.getAttribute('data-order') > this.zIndex) || null
+        this.svg.node().insertBefore(this.el, next)
       }
       this.d3.attr('transform', `translate(${this.config.margin.left},${this.config.margin.top})`)
     } else {
@@ -323,6 +320,7 @@ export default class ChartView extends ContrailView {
       el.dataset['order'] = this.config.get('order')
     }
     el.classList.add(this.selectorClass('component'))
+    // TODO use insertBefore as it is for svg el
     this._container.appendChild(el)
     if (this._container.childElementCount > 1 && this.config.has('order')) {
       this.container
