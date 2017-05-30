@@ -6,12 +6,14 @@ import ChartView from 'chart-view'
 import Config from './NavigationConfigModel'
 import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
+import Zoom from '../../actions/Zoom'
 import CompositeYView from 'composites/y/CompositeYView'
 import BrushView from 'components/brush/BrushView'
 
 export default class NavigationView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
+  static get Actions () { return {Zoom} }
 
   constructor (...args) {
     super(...args)
@@ -23,9 +25,14 @@ export default class NavigationView extends ChartView {
     super.render()
     if (!this._yChart) {
       this._yChart = new CompositeYView({
-        config: _.extend({
+        config: {
           frozen: true,
-        }, this.config.attributes),
+          height: this.config.get('height'),
+          margin: this.config.get('margin'),
+          duration: this.config.get('duration'),
+          axes: this.config.get('axes'),
+          plot: this.config.get('plot'),
+        },
         container: this.el,
         model: this.model,
       })
@@ -50,16 +57,21 @@ export default class NavigationView extends ChartView {
     this._components = []
     this.stopListening(this._brush, 'selection')
   }
-
+  /**
+   * is limited to x scale
+   */
   zoom (ranges) {
-    const range = ranges[this.config.get('plot.x.accessor')]
-    if (!range || range[0] === range[1]) return
-    const sScale = this.config.get('selectionScale')
-    const visualMin = this._yChart.config.xScale(range[0])
-    const visualMax = this._yChart.config.xScale(range[1])
+    let selection
+    if (ranges) {
+      const range = ranges[this.config.get('plot.x.accessor')]
+      if (!range || range[0] === range[1]) return
+      const sScale = this.config.get('selectionScale')
+      const visualMin = this._yChart.config.xScale(range[0])
+      const visualMax = this._yChart.config.xScale(range[1])
 
-    // round zoom range to integers in percents including the original exact float values
-    const selection = [_.floor(sScale.invert(visualMin)), _.ceil(sScale.invert(visualMax))]
+      // round zoom range to integers in percents including the original exact float values
+      selection = [_.floor(sScale.invert(visualMin)), _.ceil(sScale.invert(visualMax))]
+    }
 
     if (_.isEqual(this.config.get('selection'), selection)) return
     this.config.set('selection', selection, {silent: true})
@@ -79,10 +91,6 @@ export default class NavigationView extends ChartView {
     const sScale = this.config.get('selectionScale')
     const selection = [_.floor(sScale.invert(range[0])), _.ceil(sScale.invert(range[1]))]
     this.config.set('selection', selection, {silent: true})
-
-    // TODO navigation should not know anything about the data it operates
-    if (_.isDate(xMin)) xMin = xMin.getTime()
-    if (_.isDate(xMax)) xMax = xMax.getTime()
 
     const data = {[xAccessor]: [xMin, xMax]}
     actionman.fire('Zoom', this.config.get('update'), data)
