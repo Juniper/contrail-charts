@@ -58,8 +58,6 @@ export default {
     // chart.setConfig is designed for chart update already rendered with data
     chart = new composites.CompositeRadialView({config, container})
     chart.setData(data)
-    console.log('data: ', data)
-    console.log('chart: ', chart)
   },
 
   remove: () => {

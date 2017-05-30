@@ -72,11 +72,18 @@ export default class RadialAxisView extends ChartView {
       _.each(angleTickValues, a => {
         _.each(this.config.get('otherAxisScales'), otherScale => {
           const line = {
+            value: a,
             points: [{ angle: scale(a), r: otherScale.range()[0] }, { angle: scale(a), r: otherScale.range()[1] }]
           }
           angleTickLines.push(line)
         })
       })
+      // Remove last angle tick as it is the same as first.
+      if (angleTickLines.length) {
+        for (let i = 0; i < this.config.get('otherAxisScales').length; i++) {
+          angleTickLines.pop()
+        }
+      }
       const points = []
       const rAxisLine = d3Shape.radialLine()
         .angle(p => p.angle)
@@ -88,13 +95,21 @@ export default class RadialAxisView extends ChartView {
         .attr('class', 'tick')
       rAxisPathEnter.append('path')
         .attr('d', d => rAxisLine(d.points))
+      rAxisPathEnter.append('text')
+        .attr('x', d => Math.cos(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
+        .attr('y', d => Math.sin(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
+        .text(d => d.value)
       const rAxisPathEdit = rAxisPath.transition()
         .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       rAxisPathEdit.select('path')
         .attr('d', d => rAxisLine(d.points))
+      rAxisPathEdit.select('text')
+        .attr('x', d => Math.cos(d.points[0].angle) * (d.points[1].r + 10))
+        .attr('y', d => Math.sin(d.points[0].angle) * (d.points[1].r + 10))
+        .text(d => d.value)
       rAxisPath.exit().remove()
     }
-    this._renderLabel()
+    //this._renderLabel()
     this._ticking = false
   }
 

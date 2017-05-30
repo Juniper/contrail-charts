@@ -131,7 +131,6 @@ export default class CompositeRadialView extends ChartView {
         container: this._container,
       })
       component.el.__data__ = axis
-      console.log('composite config: ', component.config)
     })
 
     elements.each(axis => {
