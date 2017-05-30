@@ -45,12 +45,24 @@ describe('Composite Y view', () => {
       expect(container.querySelectorAll('.axis.x').length).toEqual(1)
       expect(container.querySelectorAll('.axis.y').length).toEqual(1)
     })
+
+    it('check component element is on top of the axes', () => {
+      config.plot.y[0].chart = 'Line'
+      chart = new cc.composites.CompositeYView({config, container})
+      chart.setData(data)
+      let line = container.querySelector('.line')
+      let svg = container.querySelector('svg')
+      let children = _.map(svg.children)
+
+      expect(children.indexOf(line)).toBe(children.length - 1)
+    })
   })
 
   describe('Render with non-default config.', () => {
-    describe('Change child component type.', () => {
-      it('Line => Stacked Bar', () => {
+    describe('different child component type.', () => {
+      it('Stacked Bar', () => {
         config.plot.y[0].chart = 'StackedBar'
+        // add second accessor
         config.plot.y.push({
           accessor: 'b',
           chart: 'StackedBar'
@@ -61,8 +73,9 @@ describe('Composite Y view', () => {
         expect(container.querySelectorAll('rect.bar').length).toEqual(10)
       })
 
-      it('Line => Grouped Bar', () => {
+      it('Grouped Bar', () => {
         config.plot.y[0].chart = 'GroupedBar'
+        // add second accessor
         config.plot.y.push({
           accessor: 'b',
           chart: 'GroupedBar'
@@ -73,14 +86,14 @@ describe('Composite Y view', () => {
         expect(container.querySelectorAll('rect.bar').length).toEqual(10)
       })
 
-      it('Line => ScatterPlot', () => {
+      it('ScatterPlot', () => {
         config.plot.y[0].chart = 'ScatterPlot'
         chart = new cc.composites.CompositeYView({config, container})
         chart.setData(data)
         expect(container.querySelectorAll('text.point').length).toEqual(5)
       })
 
-      it('Line => Area', () => {
+      it('Area', () => {
         config.plot.y[0].chart = 'Area'
         chart = new cc.composites.CompositeYView({config, container})
         chart.setData(data)
@@ -95,6 +108,7 @@ describe('Composite Y view', () => {
             { x: 0, a: 0, b: 0 },
             { x: 1, a: 2, b: 4 },
           ]
+          // ensure the type for the first accessor is Line
           config.plot.y[0].chart = 'Line'
           config.plot.y[1] = {
             accessor: 'b',
@@ -117,11 +131,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('the y1 axis should be right', () => {
-          data = [
-            { x: 0, a: 0, b: 0 },
-            { x: 1, a: 2, b: 4 },
-          ]
+        it('the y1 axis should be at right', () => {
           config.plot.y[0].chart = 'Line'
           config.plot.y[1] = {
             accessor: 'b',
@@ -136,14 +146,10 @@ describe('Composite Y view', () => {
           let lineX2 = tick.querySelector('line').getAttribute('x2')
           let textX = tick.querySelector('text').getAttribute('x')
 
-          expect(+lineX2 + 10).toBe(+textX)
+          expect(+lineX2).toBeGreaterThan(+textX)
         })
 
-        it('Checking the correctness z-index positions of elements Line and Area', () => {
-          data = [
-            { x: 0, a: 0, b: 0 },
-            { x: 1, a: 2, b: 4 },
-          ]
+        it('Line should render above Area', () => {
           config.plot.y[0].chart = 'Line'
           config.plot.y[1] = {
             accessor: 'b',
@@ -154,18 +160,52 @@ describe('Composite Y view', () => {
           chart = new cc.composites.CompositeYView({config, container})
           chart.setData(data)
           let svg = container.querySelector('svg')
-          let components = []
-          _.each(svg.children, (elem, i) => {
-            if (elem.classList.value === 'line child') {
-              components.push(elem)
-            }
-            if (elem.classList.value === 'area child') {
-              components.push(elem)
-            }
+          let area = svg.querySelector('.area')
+          let line = svg.querySelector('.line')
+          let children = _.map(svg.children)
+
+          expect(children.indexOf(area)).toBeLessThan(children.indexOf(line))
+        })
+
+        it('Check y and y1 axes ticks are completely overlapped', () => {
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Area',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let yAxisTicks = container.querySelectorAll('.axis.y .tick')
+          let y1AxisTicks = container.querySelectorAll('.axis.y1 .tick')
+
+          expect(yAxisTicks.length).toBe(y1AxisTicks.length)
+          _.each(yAxisTicks, (yTick, i) => {
+            let yTransform = yTick.getAttribute('transform')
+            let y1Transform = y1AxisTicks[i].getAttribute('transform')
+            expect(yTransform).toBe(y1Transform)
           })
-          let firstComponentOrder = components[0].getAttribute('data-order')
-          let lastComponentOrder = components[1].getAttribute('data-order')
-          expect(+firstComponentOrder).toBeGreaterThan(+lastComponentOrder)
+        })
+
+        it('should apply color', (done) => {
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Area',
+            axis: 'y1',
+            color: 'red'
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let area = container.querySelector('path.area')
+
+          observe('attr', area, 'fill', () => {
+            let areaColor = area.getAttribute('fill')
+            expect(areaColor).toBe('rgb(255, 0, 0)')
+            done()
+          })
         })
       })
 
@@ -191,14 +231,15 @@ describe('Composite Y view', () => {
           chart = new cc.composites.CompositeYView({config, container})
           chart.setData(data)
           let line = container.querySelector('path.line')
-          let rect = container.querySelectorAll('rect.bar')
+          let bars = container.querySelectorAll('rect.bar')
 
           observe('attr', line, 'd', () => {
             let path = line.getAttribute('d')
             let lineEndPoint = getPathEndPoint(path)
-            let lastBarY = rect[data.length * 2 - 1].getAttribute('y')
-            let lastBarX = rect[data.length * 2 - 1].getAttribute('x')
-            let barWidth = rect[data.length * 2 - 1].getAttribute('width')
+            let lastBar = bars[data.length * 2 - 1]
+            let lastBarY = lastBar.getAttribute('y')
+            let lastBarX = lastBar.getAttribute('x')
+            let barWidth = lastBar.getAttribute('width')
             let barMiddleX = +lastBarX + (+barWidth / 2)
 
             expect(lineEndPoint).toBe(`${barMiddleX},${lastBarY}`)
@@ -206,7 +247,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('Checking the correctness of the columns position along the x axis', (done) => {
+        it('x axis tick should be below and at the middle of the bar', (done) => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -228,26 +269,21 @@ describe('Composite Y view', () => {
           chart = new cc.composites.CompositeYView({config, container})
           chart.setData(data)
           let rects = container.querySelectorAll('rect.bar')
-          let xTics = container.querySelectorAll('.axis.x .tick')
-          let tickPosition = _.map(xTics, (tick) => {
+          let xTicks = container.querySelectorAll('.axis.x .tick')
+          let tickPositions = _.map(xTicks, (tick) => {
             let transform = tick.getAttribute('transform')
-            let start = transform.indexOf('(') + 1
-            let end = transform.indexOf(')')
-            return transform.slice(start, end)
+            return transform.match(/\d+\.?\d*,\d+\.?\d*/)[0]
           })
 
           observe('attr', rects[rects.length - 1], 'height', () => {
             let bars = container.querySelectorAll('rect.bar')
             let barWidth = bars[0].getAttribute('width')
 
-            let length = bars.length
-            let j = 0
-            for (let i = 0; i < length; i += 2) {
-              let barX = bars[i].getAttribute('x')
+            _.each(tickPositions, (tick, i) => {
+              let barX = bars[i * 2].getAttribute('x')
               let barMiddleX = +barX + (+barWidth / 2)
-              expect(tickPosition[j]).toBe(`${barMiddleX},0`)
-              j++
-            }
+              expect(tickPositions[i]).toBe(`${barMiddleX},0`)
+            })
             done()
           })
         })
@@ -284,7 +320,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('Checking the correctness z-index positions of elements Line and Stacked Bar', () => {
+        it('Line should render above Stacked Bar', () => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -305,18 +341,11 @@ describe('Composite Y view', () => {
           chart = new cc.composites.CompositeYView({config, container})
           chart.setData(data)
           let svg = container.querySelector('svg')
-          let components = []
-          _.each(svg.children, (elem, i) => {
-            if (elem.classList.value === 'line child') {
-              components.push(elem)
-            }
-            if (elem.classList.value === 'stacked-bar child') {
-              components.push(elem)
-            }
-          })
-          let firstComponentOrder = components[0].getAttribute('data-order')
-          let lastComponentOrder = components[1].getAttribute('data-order')
-          expect(+firstComponentOrder).toBeGreaterThan(+lastComponentOrder)
+          let stackedBar = svg.querySelector('.stacked-bar')
+          let line = svg.querySelector('.line')
+          let children = _.map(svg.children)
+
+          expect(children.indexOf(stackedBar)).toBeLessThan(children.indexOf(line))
         })
       })
 
@@ -377,16 +406,13 @@ describe('Composite Y view', () => {
 
           observe('attr', rects[rects.length - 1], 'height', () => {
             let xTics = container.querySelectorAll('.axis.x .tick')
-            let j = 0
             _.each(xTics, (tick, i) => {
               let tickTransform = tick.getAttribute('transform')
-              let tickPosition = tickTransform.slice(tickTransform.indexOf('(') + 1, -1)
-              let xtickPosition = +tickPosition.slice(0, tickPosition.indexOf(','))
-              let groupedBarsEndXPosition = +rects[j + 1].getAttribute('width') + +rects[j + 1].getAttribute('x')
-              let groupedBarStartXPosition = +rects[j].getAttribute('x')
+              let xtickPosition = tickTransform.match(/\d+\.?\d*/)[0]
+              let groupedBarsEndXPosition = +rects[(i * 2) + 1].getAttribute('width') + +rects[(i * 2) + 1].getAttribute('x')
+              let groupedBarStartXPosition = +rects[(i * 2)].getAttribute('x')
               let groupMiddle = groupedBarStartXPosition + (groupedBarsEndXPosition - groupedBarStartXPosition) / 2
-              expect(groupMiddle).toBe(xtickPosition)
-              j += 2
+              expect(groupMiddle).toBe(+xtickPosition)
             })
             done()
           })
@@ -415,7 +441,7 @@ describe('Composite Y view', () => {
           chart.setData(data)
           let rects = container.querySelectorAll('rect.bar')
           let evenColor = d3.schemeCategory20[0]
-          let eventRgb = hexToRGB(parseInt(evenColor.slice(1), 16))
+          let evenRgb = hexToRGB(parseInt(evenColor.slice(1), 16))
           let oddColor = d3.schemeCategory20[1]
           let oddRgb = hexToRGB(parseInt(oddColor.slice(1), 16))
 
@@ -425,14 +451,14 @@ describe('Composite Y view', () => {
               if (i % 2) {
                 expect(color).toBe(oddRgb)
               } else {
-                expect(color).toBe(eventRgb)
+                expect(color).toBe(evenRgb)
               }
             })
             done()
           })
         })
 
-        it('Checking the correctness z-index positions of elements Line and Grouped Bar', () => {
+        it('Line should render above Grouped Bar', () => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -453,19 +479,196 @@ describe('Composite Y view', () => {
           chart = new cc.composites.CompositeYView({config, container})
           chart.setData(data)
           let svg = container.querySelector('svg')
-          let components = []
-          _.each(svg.children, (elem, i) => {
-            if (elem.classList.value === 'line child') {
-              components.push(elem)
-            }
-            if (elem.classList.value === 'grouped-bar child') {
-              components.push(elem)
-            }
-          })
-          let firstComponentOrder = components[0].getAttribute('data-order')
-          let lastComponentOrder = components[1].getAttribute('data-order')
-          expect(+firstComponentOrder).toBeGreaterThan(+lastComponentOrder)
+          let groupedBar = svg.querySelector('.grouped-bar')
+          let line = svg.querySelector('.line')
+          let children = _.map(svg.children)
+
+          expect(children.indexOf(groupedBar)).toBeLessThan(children.indexOf(line))
         })
+      })
+
+      describe('Render all components', () => {
+        it('check default color scale is applied for all different components', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 2, d: 2, f: 1, g: 0 },
+            { x: 1, a: 2, b: 4, c: 2, d: 1, f: 2, g: 1 },
+            { x: 2, a: 4, b: 4, c: 3, d: 2, f: 1, g: 2 }
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'GroupedBar',
+            axis: 'y1',
+          }
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'StackedBar',
+            axis: 'y1',
+          }
+          config.plot.y[3] = {
+            accessor: 'd',
+            chart: 'Area',
+            axis: 'y1',
+          }
+          config.axes.y1 = { position: 'right' }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let line = container.querySelector('path.line')
+
+          observe('attr', line, 'd', () => {
+            let colors = []
+            colors.push(line.getAttribute('stroke'))
+            let groupedBarRect = container.querySelector('.grouped-bar .bar')
+            colors.push(groupedBarRect.getAttribute('fill'))
+            let stackedBarRect = container.querySelector('.stacked-bar .bar')
+            colors.push(stackedBarRect.getAttribute('fill'))
+            let area = container.querySelector('path.area')
+            colors.push(area.getAttribute('fill'))
+            _.each(colors, (color, i) => {
+              let position = colors.indexOf(color)
+              let secondPosition = colors.indexOf(color, position + 1)
+              if (secondPosition !== -1) {
+                expect(color).not.toBe(colors[secondPosition])
+              }
+            })
+            done()
+          })
+        })
+      })
+    })
+
+    describe('Render with data variants.', () => {
+      describe('Render with extremum data.', () => {
+        it('line should not exceed clipPath height', (done) => {
+          data = [
+            { x: 0, a: 0 },
+            { x: 1, a: 3 },
+            { x: 2, a: 2 },
+          ]
+          config.plot.y[0].chart = 'Line'
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let line = container.querySelector('path.line')
+
+          observe('attr', line, 'd', () => {
+            let clipPath = container.querySelector('clipPath rect')
+            let lineTransform = container.querySelector('.line.child').getAttribute('transform')
+            let clipPathTransform = container.querySelector('.composite-y').getAttribute('transform')
+            let lineRect = line.getBoundingClientRect()
+            let clipPathRect = clipPath.getBoundingClientRect()
+
+            expect(lineTransform).toBe(clipPathTransform)
+            expect(lineRect.height).toBeLessThanOrEqual(clipPathRect.height)
+            done()
+          })
+        })
+
+        it('line should not exceed clipPath width', (done) => {
+          data = [
+            { x: 0, a: 0 },
+            { x: 2, a: 1 },
+            { x: 1, a: 2 },
+          ]
+          config.plot.y[0].chart = 'Line'
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let line = container.querySelector('path.line')
+
+          observe('attr', line, 'd', () => {
+            let clipPath = container.querySelector('clipPath rect')
+            let lineTransform = container.querySelector('.line.child').getAttribute('transform')
+            let clipPathTransform = container.querySelector('.composite-y').getAttribute('transform')
+            let lineRect = line.getBoundingClientRect()
+            let clipPathRect = clipPath.getBoundingClientRect()
+
+            expect(lineTransform).toBe(clipPathTransform)
+            expect(lineRect.width).toBeLessThanOrEqual(clipPathRect.width)
+            done()
+          })
+        })
+
+        it('stackedBar should not exceed clipPath height', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0 },
+            { x: 1, a: 3, b: 2 },
+            { x: 2, a: 3, b: 4 },
+          ]
+          config.plot.y[0].chart = 'StackedBar'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'StackedBar',
+            axis: 'y',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let bars = container.querySelectorAll('rect.bar')
+
+          observe('attr', bars[bars.length - 1], 'height', () => {
+            let clipPath = container.querySelector('clipPath rect')
+            let barsContainer = container.querySelector('.stacked-bar')
+            let stackedBarTransform = barsContainer.getAttribute('transform')
+            let clipPathTransform = container.querySelector('.composite-y').getAttribute('transform')
+            let barsContainerRect = barsContainer.getBoundingClientRect()
+            let clipPathRect = clipPath.getBoundingClientRect()
+
+            expect(stackedBarTransform).toBe(clipPathTransform)
+            expect(barsContainerRect.height).toBeLessThanOrEqual(clipPathRect.height)
+            done()
+          })
+        })
+
+        it('groupedBar should not exceed clipPath width', (done) => {
+          data = [
+            { x: 0, a: 2, b: 1 },
+            { x: 1, a: 3, b: 2 },
+            { x: 2, a: 3, b: 4 },
+          ]
+          config.plot.y[0].chart = 'GroupedBar'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'GroupedBar',
+            axis: 'y',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          let bars = container.querySelectorAll('rect.bar')
+
+          observe('attr', bars[bars.length - 1], 'height', () => {
+            let clipPath = container.querySelector('clipPath rect')
+            let barsContainer = container.querySelector('.grouped-bar')
+            let groupedBarTransform = barsContainer.getAttribute('transform')
+            let clipPathTransform = container.querySelector('.composite-y').getAttribute('transform')
+            let barsContainerRect = barsContainer.getBoundingClientRect()
+            let clipPathRect = clipPath.getBoundingClientRect()
+
+            expect(groupedBarTransform).toBe(clipPathTransform)
+            expect(barsContainerRect.width).toBeLessThanOrEqual(clipPathRect.width)
+            done()
+          })
+        })
+      })
+
+      it('should render empty chart without data', () => {
+        chart = new cc.composites.CompositeYView({config, container})
+        chart.render()
+        let svg = container.querySelector('svg')
+        let children = _.map(svg.children)
+        let line = container.querySelector('path.line')
+        // should render composite-y, axis x, axis y
+        expect(children.length).toBe(3)
+        expect(line).toBeNull()
+      })
+
+      it('should render empty chart with empty data', () => {
+        chart = new cc.composites.CompositeYView({config, container})
+        chart.setData([])
+        chart.render()
+        let svg = container.querySelector('svg')
+        let children = _.map(svg.children)
+        let line = container.querySelector('path.line')
+        // should render composite-y, axis x, axis y
+        expect(children.length).toBe(3)
+        expect(line).toBeNull()
       })
     })
   })
