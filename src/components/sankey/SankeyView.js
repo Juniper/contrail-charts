@@ -46,7 +46,6 @@ export default class SankeyView extends ChartView {
     const data = this.model.data
     const nodeNameMap = {}
     const parseConfig = this.config.get('parseConfig')
-    let valueSum = 0
     this._nodes = []
     this._links = []
     _.each(data, (d) => {
@@ -56,7 +55,6 @@ export default class SankeyView extends ChartView {
         if (!link.value || link.value <= 0) {
           return
         }
-        valueSum += link.value
         if (!nodeNameMap[link.source]) {
           const node = { name: link.source, label: link.sourceNode.label, level: link.sourceNode.level, index: this._nodes.length }
           nodeNameMap[link.source] = node
