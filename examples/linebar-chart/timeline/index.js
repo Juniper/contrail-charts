@@ -53,6 +53,7 @@ const config = {
     config: {
       selection: [55, 85],
       accessor: 'x',
+      update: ['chart-id'],
     }
   }]
 }

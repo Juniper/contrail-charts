@@ -74,13 +74,14 @@ export default class CompositeYView extends ChartView {
    * There is no option to set zoomed range by exact position at x scale (start / end)
    */
   zoom (ranges) {
+    const resetAll = !ranges
     const accessorsByAxis = _.groupBy(this.config.yAccessors, 'axis')
     accessorsByAxis.x = [{accessor: this.config.get('plot.x.accessor')}]
 
     _.each(accessorsByAxis, (accessors, axisName) => {
       // change domains only for specified accessors or
       // if no ranges specified - reset all
-      if (_.isEmpty(_.filter(accessors, a => !ranges || ranges[a.accessor]))) return
+      if (!resetAll && _.isEmpty(_.filter(accessors, a => !ranges || ranges[a.accessor]))) return
 
       // combine ranges of different accessors on the same axis
       const range = d3Array.extent(_(accessors).map(accessor => {
@@ -323,7 +324,7 @@ export default class CompositeYView extends ChartView {
     const config = {
       clip: `${this.id}-${this.selectors.clip}`,
       margin: this.config.margin,
-      update: this.id,
+      update: this.config.update,
       xAccessor: this.config.get('plot.x.accessor'),
     }
     // TODO performance optimization: do not calculate cluster on Zoom action if start-end distance didn't change
