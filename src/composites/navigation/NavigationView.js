@@ -110,6 +110,7 @@ export default class NavigationView extends ChartView {
    * Composite Y component is updated on resize on its own
    */
   _update () {
+    this._yChart.render()
     const xRange = this._yChart.config.get('axes.x.scale').range()
     const yRange = this._yChart.config.get('axes.y.scale').range()
     this._brush.config.set({

@@ -31,7 +31,7 @@ export default class ChartView extends ContrailView {
     this.setConfig(p.config)
     // overwrite _onResize handler with instance specific one
     this._onResize = this._onResize.bind(this)
-    window.addEventListener('resize', this._onResize)
+    if (!p.config.frozen) window.addEventListener('resize', this._onResize)
     _.each(this.constructor.Actions, action => actionman.set(action, this))
     actionman.set(ToggleHalt, this)
   }

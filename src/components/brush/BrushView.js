@@ -5,6 +5,7 @@ import _ from 'lodash'
 import * as d3Selection from 'd3-selection'
 import * as d3Shape from 'd3-shape'
 import * as d3Brush from 'd3-brush'
+import * as d3Ease from 'd3-ease'
 import ChartView from 'chart-view'
 import Config from './BrushConfigModel'
 import './brush.scss'
@@ -57,8 +58,11 @@ export default class BrushView extends ChartView {
         .endAngle((d, i) => { return i ? Math.PI : -Math.PI }))
     this.d3.call(this._brush)
 
-    const selection = _.isEmpty(this.config.selection) ? null : this.config.selection
-    this._brush.move(this.d3, selection)
+    if (_.isEmpty(this.config.selection)) this._brush.move(this.d3, null)
+    else {
+      const brushGroup = this.d3.transition().ease(d3Ease.easeLinear).duration(this.config.duration)
+      this._brush.move(brushGroup, this.config.selection)
+    }
   }
 
   show (selection) {
