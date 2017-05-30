@@ -198,7 +198,6 @@ export default class CompositeYView extends ChartView {
       component.el.__data__ = {key: child.key}
     }
 
-    // TODO must be a less verbose method to get scale from component (make it calculate)
     component.calculateScales()
     const axisName = this.config.getAxisName(child.accessors)
     let yDomain = this.config.get(`axes.${axisName}.calculatedDomain`) || []

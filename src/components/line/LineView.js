@@ -56,7 +56,8 @@ export default class LineView extends ChartView {
    */
   render () {
     super.render()
-    this.calculateScales()
+    // frozen component is completely controlled from outside
+    if (!this.config.get('frozen')) this.calculateScales()
     const data = this.model.data
     const xAccessor = this.config.get('x.accessor')
     const accessor = this.config.get('y')

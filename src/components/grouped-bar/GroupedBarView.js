@@ -72,7 +72,8 @@ export default class GroupedBarView extends ChartView {
   render () {
     super.render()
     this._onMouseout()
-    this.calculateScales()
+    // frozen component is completely controlled from outside
+    if (!this.config.get('frozen')) this.calculateScales()
 
     // Create a flat data structure
     const numOfAccessors = _.keys(this.config.yAccessors).length
