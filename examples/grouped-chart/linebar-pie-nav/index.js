@@ -51,10 +51,6 @@ const config = {
     config: {
       legend: 'legend-panel-id',
       crosshair: 'crosshair-id',
-      chartTypes: {
-        y1: ['GroupedBar', 'Line'],
-        y2: ['GroupedBar', 'Line']
-      },
       plot: {
         x: {
           accessor: 'x',
@@ -135,7 +131,6 @@ const config = {
     config: {
       legend: 'legend-panel-id2',
       height: 300,
-      chartTypes: ['GroupedBar', 'Line'],
       plot: {
         x: {
           accessor: 'x',

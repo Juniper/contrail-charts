@@ -3,12 +3,15 @@
  */
 import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
+import template from './template.html'
+import './index.scss'
 
 const data = fixture()
 
 let chart
 const config = {
   id: 'chartBox',
+  template,
   components: [{
     id: 'control-panel-id',
     type: 'ControlPanel',
