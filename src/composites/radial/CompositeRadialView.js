@@ -8,7 +8,7 @@ import Config from './CompositeRadialConfigModel'
 import Model from 'models/DataFrame'
 import CompositeChart from 'helpers/CompositeChart'
 import actionman from 'core/Actionman'
-//import SelectColor from '../../actions/SelectColor'
+import SelectColor from '../../actions/SelectColor'
 //import SelectKey from '../../actions/SelectKey'
 //import Zoom from '../../actions/Zoom'
 //import ClusterAction from '../../components/bucket/actions/Cluster'
@@ -21,7 +21,7 @@ import './radial.scss'
 export default class CompositeRadialView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {/* SelectColor, SelectKey, SelectChartType, Zoom, ClusterAction */} }
+  static get Actions () { return { SelectColor /* , SelectKey, SelectChartType, Zoom, ClusterAction */} }
 
   constructor (...args) {
     super(...args)
@@ -59,7 +59,7 @@ export default class CompositeRadialView extends ChartView {
       component.render()
     })
     //this._cluster()
-    //this._showLegend()
+    this._showLegend()
     //this._initCrosshair()
 
     this._ticking = false
@@ -274,21 +274,20 @@ export default class CompositeRadialView extends ChartView {
   }
   */
 
-  /*
   _showLegend () {
     const legendId = this.config.get('legend')
     if (!legendId) return
 
     const config = {
       colorScheme: this.config.get('colorScheme'),
-      chartTypes: this.config.get('chartTypes'),
+      //chartTypes: this.config.get('chartTypes'),
     }
     const data = _.map(this.config.accessors, accessor => {
       return {
-        key: accessor.accessor,
+        key: `${accessor.angle}-${accessor.r}`,
         disabled: accessor.disabled,
         label: this.config.getLabel(undefined, accessor),
-        color: this.config.getColor(accessor.accessor),
+        color: this.config.getColor(accessor),
         chartType: config.chartTypes ? accessor.chart : undefined,
         axis: accessor.axis,
         shape: accessor.shape,
@@ -296,7 +295,6 @@ export default class CompositeRadialView extends ChartView {
     })
     actionman.fire('ToggleVisibility', legendId, true, data, config)
   }
-  */
 
   /**
    * If bucket is specified for this component perform scatterplot data bundling for Bucket

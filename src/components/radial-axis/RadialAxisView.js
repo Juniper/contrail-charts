@@ -79,7 +79,7 @@ export default class RadialAxisView extends ChartView {
         })
       })
       // Remove last angle tick as it is the same as first.
-      if (angleTickLines.length) {
+      if (this.config.get('removeLastAngleTick') && angleTickLines.length) {
         for (let i = 0; i < this.config.get('otherAxisScales').length; i++) {
           angleTickLines.pop()
         }
@@ -104,8 +104,8 @@ export default class RadialAxisView extends ChartView {
       rAxisPathEdit.select('path')
         .attr('d', d => rAxisLine(d.points))
       rAxisPathEdit.select('text')
-        .attr('x', d => Math.cos(d.points[0].angle) * (d.points[1].r + 10))
-        .attr('y', d => Math.sin(d.points[0].angle) * (d.points[1].r + 10))
+        .attr('x', d => Math.cos(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
+        .attr('y', d => Math.sin(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
         .text(d => d.value)
       rAxisPath.exit().remove()
     }

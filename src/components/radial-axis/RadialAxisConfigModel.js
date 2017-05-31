@@ -29,10 +29,13 @@ export default class RadialAxisConfigModel extends ConfigModel {
 
   get defaults () {
     return _.merge(super.defaults, {
-
       isSharedContainer: true,
+
       // Default axis ticks if not specified per axis.
       ticks: 10,
+
+      // Removes last angle tick if true.
+      removeLastAngleTick: false,
 
       //positions: ['left', 'right', 'top', 'bottom'],
 

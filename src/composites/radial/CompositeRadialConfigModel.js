@@ -50,7 +50,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
 
   get children () {
     return _.map(this.accessors, (accessor) => {
-      const key = `${accessor.angle}-${accessor.r}-${accessor.chart}`
+      const key = `${accessor.angle}-${accessor.r}`
       return {key, accessor}
     })
   }
@@ -173,15 +173,15 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     })
   }
 
-  getColor (accessorName) {
-    const configured = _.find(this.accessors, {accessor: accessorName}).color
+  getColor (accessor) {
+    const configured = accessor.color
     return configured || this.attributes.colorScale(accessorName)
   }
 
   setColor (accessorName, color) {
-    const accessor = _.find(this.accessors, {accessor: accessorName})
+    const accessor = _.find(this.children, {key: accessorName})
     if (!accessor) return
-    accessor.color = color
+    accessor.accessor.color = color
     this.trigger('change')
   }
 
