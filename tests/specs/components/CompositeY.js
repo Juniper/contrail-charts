@@ -670,6 +670,138 @@ describe('Composite Y view', () => {
         expect(children.length).toBe(3)
         expect(line).toBeNull()
       })
+
+      describe('Change config after render', () => {
+        it('add StackedBar components', () => {
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Line',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          config.plot.y[2] = {
+            accessor: 'c',
+            chart: 'StackedBar',
+            axis: 'y1'
+          }
+          config.axes.y1 = { position: 'right' }
+          chart.setConfig(config)
+          let bars = container.querySelectorAll('rect.bar')
+          let line = container.querySelectorAll('path.line')
+          expect(line.length).toBe(2)
+          expect(bars.length).toBe(5)
+        })
+
+        it('change Line to Gtouped Bar', () => {
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Line',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          config.plot.y[1].chart = 'StackedBar'
+          chart.setConfig(config)
+          let bars = container.querySelectorAll('rect.bar')
+          let line = container.querySelectorAll('path.line')
+          expect(line.length).toBe(1)
+          expect(bars.length).toBe(5)
+        })
+
+        it('disabled second Line', () => {
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Line',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          config.plot.y[1].disabled = true
+          chart.setConfig(config)
+          let lines = container.querySelectorAll('path.line')
+          expect(lines.length).toBe(1)
+        })
+
+        it('change second Line accessor', (done) => {
+          data = [
+            { x: 0, a: 0, b: 0, c: 14 },
+            { x: 1, a: 2, b: 4, c: 12 },
+            { x: 2, a: 4, b: 8, c: 8 },
+            { x: 3, a: 6, b: 12, c: 4 },
+            { x: 4, a: 8, b: 14, c: 0 },
+          ]
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Line',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          config.plot.y[1].accessor = 'c'
+          chart.setConfig(config)
+          let secondLine = container.querySelector('path.line-c')
+
+          observe('attr', secondLine, 'd', () => {
+            let path = secondLine.getAttribute('d')
+            let lineStartPoint = getPathStartPoint(path)
+            let lineEndPoint = getPathEndPoint(path)
+            let clipPath = container.querySelector('clipPath rect')
+            let clipWidth = clipPath.getAttribute('width')
+            let clipHeight = clipPath.getAttribute('height')
+
+            expect(lineStartPoint).toBe('0,0')
+            expect(lineEndPoint).toBe(`${clipWidth},${clipHeight}`)
+            done()
+          })
+        })
+
+        it('checking the default label change when the accessor changes', () => {
+          config.plot.y[0].chart = 'Line'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'Line',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+          config.plot.y[1].accessor = 'c'
+          chart.setConfig(config)
+          let axisY = container.querySelector('g.axis.y')
+          let labels = axisY.querySelectorAll('.axis-label')
+          _.each(labels, (label, i) => {
+            let labelText = label.innerHTML
+            expect(labelText).toBe(config.plot.y[i].accessor)
+          })
+        })
+
+        it('change stackedBar color', (done) => {
+          config.plot.y[0].chart = 'StackedBar'
+          config.plot.y[1] = {
+            accessor: 'b',
+            chart: 'StackedBar',
+          }
+          chart = new cc.composites.CompositeYView({config, container})
+          chart.setData(data)
+
+          setTimeout(() => {
+            config.plot.y[0].color = 'red'
+            config.plot.y[1].color = 'green'
+            chart.setConfig(config)
+            let bars = container.querySelectorAll('rect.bar')
+            observe('attr', bars[bars.length - 1], 'height', () => {
+              _.each(bars, (bar, i) => {
+                let barColor = bar.getAttribute('fill')
+                if (i % 2) {
+                  expect(barColor).toBe('rgb(0, 128, 0)')
+                } else {
+                  expect(barColor).toBe('rgb(255, 0, 0)')
+                }
+              })
+              done()
+            })
+          }, 0)
+        })
+      })
     })
   })
 })
