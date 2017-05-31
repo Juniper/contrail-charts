@@ -178,6 +178,7 @@ export default class CompositeYView extends ChartView {
   _updateComponent (child, config) {
     const type = this.config.getComponentType(child.accessors)
     config.id = `${this.id}-${child.key}`
+    config.duration = this.config.duration
     if (this.config.isMultiAccessor(type)) config.y = child.accessors
     else {
       config.y = child.accessors[0]
