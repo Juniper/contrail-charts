@@ -48,7 +48,7 @@ const config = {
         x: {
           accessor: 'x',
           labelFormatter: 'X Values',
-          axis: 'x'
+          axis: 'x',
         },
         y: [
           {

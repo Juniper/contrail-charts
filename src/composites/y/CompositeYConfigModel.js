@@ -94,6 +94,10 @@ export default class CompositeYConfigModel extends ConfigModel {
     })
   }
 
+  get update () {
+    return [this.id, ...this.attributes.update]
+  }
+
   set (...args) {
     ColoredChart.set(...args)
     super.set(...args)

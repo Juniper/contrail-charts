@@ -148,6 +148,6 @@ export default class BucketView extends ChartView {
   }
 
   _onBackgroundClick () {
-    actionman.fire('Zoom')
+    actionman.fire('Zoom', this.config.get('update'))
   }
 }

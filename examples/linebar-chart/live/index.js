@@ -4,6 +4,8 @@
 import _ from 'lodash'
 import {composites} from 'contrail-charts'
 import {formatter, fixture} from 'commons'
+import template from './template.html'
+import './index.scss'
 
 const length = 20
 let counter = length
@@ -18,6 +20,7 @@ const data = fixture({
 let chart
 const config = {
   id: 'chartBox',
+  template,
   components: [{
     id: 'control-panel-id',
     type: 'ControlPanel',

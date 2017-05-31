@@ -4,3 +4,4 @@ docs/
 .sass-cache
 npm-debug.log
 /nbproject/private/
+\.idea/
