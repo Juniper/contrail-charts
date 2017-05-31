@@ -1,0 +1,9 @@
+@import "radial-bar-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .radial-bar {
+  @include radialBarChartRules($radial-bar-chart);
+
+  @include themify($radialBarChartId, $themes);
+}
