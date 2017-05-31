@@ -87,11 +87,11 @@ const allExamples = {
     },
   },
   'radial': {
-    'Pie Chart': {
-      view: pieChart,
-    },
     'Dendrogram': {
       view: dendrogramChart,
+    },
+    'Pie Chart': {
+      view: pieChart,
     },
     'Line Bar': {
       view: radialLineBar,
@@ -193,15 +193,20 @@ function createLink (example) {
   const chartType = example.category || ''
   const view = example.view
   const cleaned = encodeURIComponent(example.title.replace(/\s/g, ''))
-  const link = `<a class="${chartType}${cleaned}" href="#${chartType}${cleaned}">
+  const link = `<a class="example-link ${chartType}${cleaned}" href="#${chartType}${cleaned}">
     <span class="nav-text">${example.title}</span>
     </a>`
   const $link = $(link)
-  if (view.type === 'RJS') {
-    $link.click(e => _initRJS(example))
-  } else {
-    $link.click(e => _viewRenderInit(example))
-  }
+  $link.click(e => {
+    $('.example-link').removeClass('active')
+    $link.addClass('active')
+
+    if (view.type === 'RJS') {
+      _initRJS(example)
+    } else {
+      _viewRenderInit(example)
+    }
+  })
   return $link
 }
 
@@ -225,5 +230,5 @@ function _initRJS (example) {
   }
 }
 
-const exampleName = window.location.hash.substr(1) || 'groupedNavigation'
+const exampleName = window.location.hash.substr(1) || 'lineBarLegend'
 $('.' + exampleName).find('span').click()

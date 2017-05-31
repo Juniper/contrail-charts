@@ -100,12 +100,8 @@ export default class TimelineView extends ChartView {
     const selection = [_.floor(sScale.invert(range[0])), _.ceil(sScale.invert(range[1]))]
     this.config.set('selection', selection, {silent: true})
 
-    // TODO navigation should not know anything about the data it operates
-    if (_.isDate(xMin)) xMin = xMin.getTime()
-    if (_.isDate(xMax)) xMax = xMax.getTime()
-
     const data = {[xAccessor]: [xMin, xMax]}
-    actionman.fire('Zoom', data)
+    actionman.fire('Zoom', this.config.get('update'), data)
   }
   /**
    * Turn off selection for the animation period on resize
