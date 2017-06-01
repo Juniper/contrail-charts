@@ -31,7 +31,7 @@ describe('ScatterPlotView.', () => {
   })
 
   afterEach(() => {
-   // while (container.firstChild) { container.firstChild.remove() }
+    while (container.firstChild) { container.firstChild.remove() }
   })
 
   describe('Render with minimal config.', () => {
