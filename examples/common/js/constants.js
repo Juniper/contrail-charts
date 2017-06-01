@@ -5,61 +5,61 @@
 import {schemeCategory10 as d3ColorScheme10, schemeCategory20 as d3ColorScheme20} from 'd3-scale'
 
 const lbColorScheme7 = [
-  '#a88add',
-  '#fcc100',
-  '#2196f3',
-  '#4caf50',
-  '#0cc2aa',
-  '#6cc788',
-  '#6887ff'
+  '#3F51B5',
+  '#2196F3',
+  '#0FBFAD',
+  '#6CBD70',
+  '#EA8235',
+  '#F44455',
+  '#F77A99'
 ]
 
 const lbColorScheme17 = [
-  '#a88add',
-  '#fcc100',
-  '#2196f3',
-  '#4caf50',
-  '#0cc2aa',
-  '#6cc788',
-  '#6887ff',
-  '#f06292'
+  '#3F51B5',
+  '#2196F3',
+  '#0FBFAD',
+  '#6CBD70',
+  '#EA8235',
+  '#F44455',
+  '#F77A99',
+  '#9CB0C5'
 ].concat(d3ColorScheme10)
 
 const bubbleColorScheme6 = [
-  '#3f51b5',
-  d3ColorScheme10[1],
-  d3ColorScheme10[0],
-  d3ColorScheme10[2],
-  '#424242',
-  '#9c27b0'
+  '#3F51B5',
+  '#2196F3',
+  '#0FBFAD',
+  '#6CBD70',
+  '#EA8235',
+  '#F44455'
 ]
 
 const bubbleColorScheme13 = [
-  '#424242',
-  '#9c27b0',
-  '#3f51b5'
+  '#3F51B5',
+  '#2196F3',
+  '#0FBFAD',
 ].concat(d3ColorScheme10)
 
 const radialColorScheme6 = [
-  '#00bcd4',
-  '#4caf50',
-  '#a88add',
-  '#fcc100',
-  '#2196f3',
-  '#c62828',
+  '#3F51B5',
+  '#2196F3',
+  '#0FBFAD',
+  '#6CBD70',
+  '#EA8235',
+  '#F44455',
 ]
 
 const radialColorScheme10 = [
-  '#3f51b5',
-  d3ColorScheme10[0],
-  d3ColorScheme10[2],
-  '#9c27b0',
-  '#00bcd4',
-  '#4caf50',
-  '#a88add',
-  '#fcc100',
-  '#2196f3',
-  '#c62828',
+  '#3F51B5',
+  '#2196F3',
+  '#0FBFAD',
+  '#6CBD70',
+  '#EA8235',
+  '#F44455',
+  '#F77A99',
+  '#9CB0C5',
+  '#6686A6',
+  '#374B60',
 ]
 
 export default {

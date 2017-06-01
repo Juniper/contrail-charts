@@ -190,6 +190,30 @@ a, .btn {
 }
 
 
+/* Chart SVG Styles */
+.cc-svg .axis .tick line {
+    stroke: rgba(0,0,0,.1);
+}
+.cc-svg .x-axis .tick line {
+    stroke-dasharray: 2, 3;
+}
+
+.cc-svg .brush .selection {
+    stroke: rgba(0,0,0,.12);
+}
+.cc-svg .bucket .bucket {
+    stroke: none;
+    fill-opacity: 1;
+    fill: rgba(0,0,0,.35);
+}
+.cc-svg .bucket .bucket text.bucket-label {
+    font-family: $font;
+    font-weight: 700;
+    position: relative;
+    top: -5px;
+    fill: rgba(0,0,0,.85);
+}
+
 /* Modals */
 
 .modal {
@@ -1278,6 +1302,9 @@ a, .btn {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-bucket:before {
+  content: "\e919";
+} 
 .icon-charttype-area:before {
   content: "\e915";
 }
