@@ -11,7 +11,7 @@ export default class LineConfigModel extends ConfigModel {
     return _.merge(super.defaults,
       {
         isSharedContainer: true,
-        curve: d3Shape.curveCatmullRom.alpha(0.5),
+        curve: d3.curveMonotoneX,
         y: {
           color: 'steelblue',
         },
