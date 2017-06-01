@@ -3,4 +3,5 @@ node_modules/
 docs/
 .sass-cache
 npm-debug.log
+package-lock.json
 /nbproject/private/
