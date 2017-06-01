@@ -19,7 +19,7 @@ const config = {
     config: {
       editable: {
         color: true,
-        chart: false,
+        chart: true,
       },
     },
   }, {
@@ -36,6 +36,15 @@ const config = {
       },
       accessors: [
         {
+          chart: 'RadialBar',
+          labelFormatter: 'D Values',
+          angle: 'x',
+          r: 'd',
+          angleAxis: 'angleAxis',
+          rAxis: 'rAxis2',
+          color: colorScheme[4],
+          barPadding: 20,
+        }, {
           chart: 'RadialLine',
           labelFormatter: 'A Values',
           angle: 'x',
@@ -67,16 +76,7 @@ const config = {
           angleAxis: 'angleAxis',
           rAxis: 'rAxis2',
           color: colorScheme[3],
-        }, {
-          chart: 'RadialBar',
-          labelFormatter: 'D Values',
-          angle: 'x',
-          r: 'd',
-          angleAxis: 'angleAxis',
-          rAxis: 'rAxis2',
-          color: colorScheme[4],
-          barPadding: 50,
-        }
+        },
       ],
       axes: {
         angleAxis: {
@@ -109,7 +109,6 @@ export default {
     chart = new composites.CompositeView({config})
     //chart = new composites.CompositeRadialView({config, container})
     chart.setData(data)
-    console.log('composites: ', chart.composite)
   },
 
   remove: () => {

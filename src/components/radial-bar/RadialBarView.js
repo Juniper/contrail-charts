@@ -32,7 +32,7 @@ export default class RadialBarView extends ChartView {
    */
   get selectors () {
     return _.extend(super.selectors, {
-      node: '.radial-bar',
+      node: '.bar',
     })
   }
 
@@ -85,13 +85,11 @@ export default class RadialBarView extends ChartView {
       .paddingOuter(0.05)
     // Render the flat data structure
     const flatData = this._prepareData()
-    console.log('RadialBarConfig: ', this.config, this.config.rScale.domain(), this.config.rScale.range())
-    console.log('flatData: ', flatData)
     const svgBarGroups = this.d3
       .selectAll(this.selectors.node)
       .data(flatData, d => d.id)
     svgBarGroups.enter().append('path')
-      .attr('class', 'radial-bar')
+      .attr('class', 'bar')
       .attr('d', this._createEnterRadialBarPath)
       .merge(svgBarGroups).transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attr('fill', d => d.color)

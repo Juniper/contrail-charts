@@ -9,7 +9,7 @@ import Model from 'models/DataFrame'
 import CompositeChart from 'helpers/CompositeChart'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
-//import SelectKey from '../../actions/SelectKey'
+import SelectKey from '../../actions/SelectKey'
 //import Zoom from '../../actions/Zoom'
 //import ClusterAction from '../../components/bucket/actions/Cluster'
 //import SelectChartType from './actions/SelectChartType'
@@ -21,7 +21,7 @@ import './radial.scss'
 export default class CompositeRadialView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return { SelectColor /* , SelectKey, SelectChartType, Zoom, ClusterAction */} }
+  static get Actions () { return { SelectColor, SelectKey, /* SelectChartType, Zoom, ClusterAction */} }
 
   constructor (...args) {
     super(...args)
@@ -33,7 +33,7 @@ export default class CompositeRadialView extends ChartView {
   get selectors () {
     return _.extend(super.selectors, {
       node: '.child',
-      axis: '.axis',
+      axis: '.radial-axis',
       clip: 'clipPath',
     })
   }
@@ -50,7 +50,7 @@ export default class CompositeRadialView extends ChartView {
     this._renderClip()
 
     // force composite scale for children components
-    const components = this._composite.getByType(_(this.config.accessors).map('chart').uniq().value())
+    const components = this._composite.getByType(_(this.config.activeAccessors).map('chart').uniq().value())
     _.each(components, component => {
       const componentAngleAxisName = this.config.getAngleAxisName(component.config.get('angle'))
       component.config.set('angle.scale', this.config.get(`axes.${componentAngleAxisName}.scale`), {silent: true})
@@ -136,7 +136,8 @@ export default class CompositeRadialView extends ChartView {
     elements.each(axis => {
       const component = this._composite.get(axis.id)
       // if only a scale is changed Backbone doesn't trigger "change" event and no render will happen
-      component.config.set(this.config.getAxisConfig(axis.name))
+      component.config.set(this.config.getAxisConfig(axis.name), {silent: true})
+      component.render()
     })
 
     elements.exit().each(axis => {
@@ -158,6 +159,20 @@ export default class CompositeRadialView extends ChartView {
       width: this.width,
       height: this.height,
     }
+
+    // reset calculated values from previous render
+    /*
+    _.each(config.accessors, accessor => {
+      const angleAxisName = this.config.getAngleAxisName(accessor)
+      this.config.set(`axes.${angleAxisName}.calculatedDomain`, undefined, {silent: true})
+      // TODO this will reset user defined range?
+      //this.config.set(`axes.${angleAxisName}.range`, undefined, {silent: true})
+      const rAxisName = this.config.getRAxisName(accessor)
+      this.config.set(`axes.${rAxisName}.calculatedDomain`, undefined, {silent: true})
+      //this.config.set(`axes.${rAxisName}.range`, undefined, {silent: true})
+    })
+    */
+
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
 
@@ -171,6 +186,7 @@ export default class CompositeRadialView extends ChartView {
       config.r.accessor = child.accessor.r
       config.r.axis = child.accessor.rAxis
       config.tooltip = child.accessor.tooltip
+      config.barPadding = child.accessor.barPadding
 
       let component = this._composite.get(`${this.id}-${child.key}`)
       if (component) component.config.set(config, {silent: true})
@@ -189,10 +205,12 @@ export default class CompositeRadialView extends ChartView {
       component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
       const angleAxisName = this.config.getAngleAxisName(child.accessor)
       let calculatedDomain = this.config.get(`axes.${angleAxisName}.calculatedDomain`) || []
+      //calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angle.calculatedDomain')))
       calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.angleScale.domain()))
       this.config.set(`axes.${angleAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
       const rAxisName = this.config.getRAxisName(child.accessor)
       calculatedDomain = this.config.get(`axes.${rAxisName}.calculatedDomain`) || []
+      //calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('r.calculatedDomain')))
       calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.rScale.domain()))
       this.config.set(`axes.${rAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
     })

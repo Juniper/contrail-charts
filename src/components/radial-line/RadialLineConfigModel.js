@@ -35,10 +35,14 @@ export default class RadialLineConfigModel extends ConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
+    const angleScale = ScalableChart.getScale(model, config)
+    //_.set(this.attributes, 'angle.calculatedDomain', angleScale.domain())
     if (!_.has(this.attributes, 'angle.scale')) {
       _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
     }
-    config = _.merge({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
+    config = _.extend({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
+    //const rScale = ScalableChart.getScale(model, config)
+    //_.set(this.attributes, 'r.calculatedDomain', rScale.domain())
     if (!_.has(this.attributes, 'r.scale')) {
       _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
     }

@@ -2,10 +2,10 @@
   $p_opacity: map-get($bar-chart, "barOpacity");
   $p_activeOpacity: map-get($bar-chart, "activeBarOpacity");
 
-  .bar {
+  .radial-bar {
     opacity: $p_opacity;
   }
-  .bar.active {
+  .radial-bar.active {
     opacity: $p_activeOpacity;
   }
 }

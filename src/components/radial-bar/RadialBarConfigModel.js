@@ -41,14 +41,15 @@ export default class RadialBarConfigModel extends ConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
+    //const angleScale = ScalableChart.getScale(model, config)
+    //_.set(this.attributes, 'angle.calculatedDomain', angleScale.domain())
     if (!_.has(this.attributes, 'angle.scale')) {
       _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
     }
-
     config = _.merge({
       accessor: _.map(this.rAccessors, 'accessor'),
     }, {range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
-    console.log('ScalableChart config: ', config)
+    // TODO handle multiple r accessors
     /*
     const rScale = ScalableChart.getScale(model, config)
     _.each(this.rAccessors, a => {
@@ -56,7 +57,8 @@ export default class RadialBarConfigModel extends ConfigModel {
       _.set(a, 'scale', rScale)
     })
     */
-    // TODO handle multiple r accessors
+    //const rScale = ScalableChart.getScale(model, config)
+    //_.set(this.attributes, 'r.calculatedDomain', rScale.domain())
     if (!_.has(this.attributes, 'r.scale')) {
       _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
     }

@@ -38,7 +38,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
    * @return {Array} all enabled accessors
    */
   get activeAccessors () {
-    return _.filter(this.get('accessors'), a => !a.disabled)
+    return _.filter(this.accessors, a => !a.disabled)
   }
 
   /**
@@ -49,8 +49,8 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   }
 
   get children () {
-    return _.map(this.accessors, (accessor) => {
-      const key = `${accessor.angle}-${accessor.r}`
+    return _.map(this.activeAccessors, (accessor) => {
+      const key = this.getAccessorKey(accessor)
       return {key, accessor}
     })
   }
@@ -91,11 +91,16 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     ColoredChart.set(...args)
     super.set(...args)
   }
+
   /**
    * @param {Object} accessors element of array returned by this.children
    */
   getComponentType (accessor) {
     return accessor.chart || 'RadialLine'
+  }
+
+  getAccessorKey (accessor) {
+    return `${accessor.angle}-${accessor.r}`
   }
 
   getAngleAxisName (accessor) {
@@ -137,7 +142,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
    * @param height
    */
   calculateScales (model, width, height) {
-    const accessorsByAngleAxis = _.groupBy(this.accessors, a => this.getAngleAxisName(a))
+    const accessorsByAngleAxis = _.groupBy(this.activeAccessors, a => this.getAngleAxisName(a))
     _.each(accessorsByAngleAxis, (accessors, axisName) => {
       const accessorNames = _(accessors).map('angle').uniq().value()
       const config = _.extend(
@@ -150,7 +155,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
       )
       _.set(this.attributes, `axes.${axisName}.scale`, ScalableChart.getScale(model, config))
     })
-    const accessorsByRAxis = _.groupBy(this.accessors, a => this.getRAxisName(a))
+    const accessorsByRAxis = _.groupBy(this.activeAccessors, a => this.getRAxisName(a))
     const availableR = Math.min(width / 2, height / 2)
     _.each(accessorsByRAxis, (accessors, axisName) => {
       const accessorNames = _(accessors).map('r').uniq().value()
@@ -179,26 +184,25 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   }
 
   setColor (accessorName, color) {
-    const accessor = _.find(this.children, {key: accessorName})
+    const accessor = _.find(this.accessors, a => this.getAccessorKey(a) === accessorName)
     if (!accessor) return
-    accessor.accessor.color = color
+    accessor.color = color
     this.trigger('change')
   }
 
-  /*
   setKey (accessorName, isEnabled) {
-    const accessor = _.find(this.accessors, a => a.accessor === accessorName)
+    const accessor = _.find(this.accessors, a => this.getAccessorKey(a) === accessorName)
     if (!accessor) return
     accessor.disabled = !isEnabled
     this.trigger('change')
   }
-  */
 
   /**
    * Changing anyone chart type from GroupedBar to StackedBar or vise versa will affect all bars for no bars overlap
    * @param accessorName
    * @param type
    */
+  /*
   setChartType (accessorName, type) {
     const barCharts = ['GroupedBar', 'StackedBar']
     const accessor = _.find(this.accessors, {accessor: accessorName})
@@ -214,6 +218,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     _.each(toUpdate, accessor => { accessor.chart = type })
     this.trigger('change')
   }
+  */
 
   isMultiAccessor (type) {
     return ['Area', 'StackedBar', 'GroupedBar'].includes(type)
