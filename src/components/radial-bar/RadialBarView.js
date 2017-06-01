@@ -10,10 +10,10 @@ import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
 import {interpolatePath as d3InterpolatePath} from 'd3-interpolate-path'
 import ChartView from 'chart-view'
-import Config from './RadialLineConfigModel'
+import Config from './RadialBarConfigModel'
 import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
-import './radial-line.scss'
+import './radial-bar.scss'
 
 export default class RadialBarView extends ChartView {
   static get Config () { return Config }
@@ -47,11 +47,6 @@ export default class RadialBarView extends ChartView {
     return this.config.get('height') || this.width
   }
 
-  get innerHeight () {
-    const margin = this.config.margin
-    return this.height - margin.top - margin.bottom
-  }
-
   get radius () {
     return Math.min(this.innerWidth, this.innerHeight) / 2
   }
@@ -62,7 +57,8 @@ export default class RadialBarView extends ChartView {
     const paddedPart = 1 - (this.config.get('barPadding') / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
-    return this.config.get('angle.range') / data.length * paddedPart
+    const angleScale = this.config.angleScale
+    return (angleScale.range()[1] - angleScale.range()[0]) / data.length * paddedPart
   }
 
   /**
@@ -88,9 +84,12 @@ export default class RadialBarView extends ChartView {
       .paddingInner(0.05)
       .paddingOuter(0.05)
     // Render the flat data structure
+    const flatData = this._prepareData()
+    console.log('RadialBarConfig: ', this.config, this.config.rScale.domain(), this.config.rScale.range())
+    console.log('flatData: ', flatData)
     const svgBarGroups = this.d3
       .selectAll(this.selectors.node)
-      .data(this._prepareData(), d => d.id)
+      .data(flatData, d => d.id)
     svgBarGroups.enter().append('path')
       .attr('class', 'radial-bar')
       .attr('d', this._createEnterRadialBarPath)
@@ -105,50 +104,43 @@ export default class RadialBarView extends ChartView {
   _createRadialBarPath (d) {
     const halfPI = Math.PI / 2
     const x1 = Math.cos(d.angle - halfPI) * d.rStart
-    const x2 = Math.cos(d.angle + d.bandAngle - halfPI) * d.rEnd
     const y1 = Math.sin(d.angle - halfPI) * d.rStart
-    const y2 = Math.sin(d.angle + d.bandAngle - halfPI) * d.rEnd
-    return `M${x1},${y1}L${x1},${y2}L${x2},${y2}L${x2},${y1}Z`
+    const x2 = Math.cos(d.angle - halfPI) * d.rEnd
+    const y2 = Math.sin(d.angle - halfPI) * d.rEnd
+    const x3 = Math.cos(d.angle + d.bandAngle - halfPI) * d.rEnd
+    const y3 = Math.sin(d.angle + d.bandAngle - halfPI) * d.rEnd
+    const x4 = Math.cos(d.angle + d.bandAngle - halfPI) * d.rStart
+    const y4 = Math.sin(d.angle + d.bandAngle - halfPI) * d.rStart
+    return `M${x1},${y1}L${x2},${y2}L${x3},${y3}L${x4},${y4}Z`
   }
 
   _createEnterRadialBarPath (d) {
     const halfPI = Math.PI / 2
     const x1 = Math.cos(d.angle - halfPI) * d.rStart
-    const x2 = Math.cos(d.angle + d.bandAngle - halfPI) * d.rStart
     const y1 = Math.sin(d.angle - halfPI) * d.rStart
-    const y2 = Math.sin(d.angle + d.bandAngle - halfPI) * d.rStart
-    return `M${x1},${y1}L${x1},${y2}L${x2},${y2}L${x2},${y1}Z`
+    const x4 = Math.cos(d.angle + d.bandAngle - halfPI) * d.rStart
+    const y4 = Math.sin(d.angle + d.bandAngle - halfPI) * d.rStart
+    return `M${x1},${y1}L${x1},${y1}L${x4},${y4}L${x4},${y4}Z`
   }
 
   _prepareData () {
     const flatData = []
     const innerBandWidth = this._innerBandScale.bandwidth()
-    const rAccessors = _.isArray(this.config.get('r')) ? this.config.get('r') : [this.config.get('r')]
+    const rAccessors = this.config.rAccessors
     _.each(this.model.data, d => {
-      const angle = _.get(d, this.config.get('r.accessor'))
-      _.each(this.config.rAccessors, (accessor, j) => {
-        const key = accessor.accessor
+      const angle = _.get(d, this.config.get('angle.accessor'))
+      _.each(rAccessors, (rAccessor, j) => {
+        const key = rAccessor.accessor
         const obj = {
+          id: angle + '-' + key,
           angle: this.config.angleScale(angle) + this._innerBandScale(j),
+          bandAngle: innerBandWidth,
+          rStart: this.config.rScale.range()[0],
+          rEnd: this.config.rScale(_.get(d, key)),
+          color: this.config.getColor(rAccessor, d),
           data: d,
         }
         flatData.push(obj)
-      })
-    })
-      const x = _.get(d, this.config.get('x.accessor'))
-      _.each(this.config.yAccessors, (accessor, j) => {
-        const key = accessor.accessor
-        const obj = {
-          id: x + '-' + key,
-          x: this.config.xScale(x) + this._innerBandScale(j),
-          // TODO in order to plot in forth quadrant use: y: this.config.yScale.range()[1]
-          y: this.config.yScale(_.get(d, key)),
-          h: this.config.yScale(start) - this.config.yScale(_.get(d, key)),
-          w: innerBandWidth,
-          color: this.config.getColor(accessor.accessor, d),
-          accessor: accessor,
-          data: d,
-        }
       })
     })
     return flatData

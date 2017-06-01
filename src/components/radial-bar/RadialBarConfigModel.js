@@ -2,8 +2,8 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
 */
 import _ from 'lodash'
-import * as d3Shape from 'd3-shape'
 import ConfigModel from 'config-model'
+import ColoredChart from 'helpers/color/ColoredChart'
 import ScalableChart from 'helpers/scale/ScalableChart'
 
 export default class RadialBarConfigModel extends ConfigModel {
@@ -15,7 +15,7 @@ export default class RadialBarConfigModel extends ConfigModel {
           color: 'steelblue',
         },
         // Padding between series in percents of bar width
-        barPadding: 10,
+        barPadding: 15,
 
         //scale - calculated from data domain and available plot area size
       }
@@ -29,6 +29,11 @@ export default class RadialBarConfigModel extends ConfigModel {
   get rScale () {
     return this.get('r.scale')
   }
+
+  get rAccessors () {
+    return _.isArray(this.get('r')) ? this.get('r') : [this.get('r')]
+  }
+
   /**
    * @param model
    * @param width
@@ -39,14 +44,30 @@ export default class RadialBarConfigModel extends ConfigModel {
     if (!_.has(this.attributes, 'angle.scale')) {
       _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
     }
-    config = _.merge({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
+
+    config = _.merge({
+      accessor: _.map(this.rAccessors, 'accessor'),
+    }, {range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
+    console.log('ScalableChart config: ', config)
+    /*
+    const rScale = ScalableChart.getScale(model, config)
+    _.each(this.rAccessors, a => {
+      if (!_.has(a, 'scale'))
+      _.set(a, 'scale', rScale)
+    })
+    */
+    // TODO handle multiple r accessors
     if (!_.has(this.attributes, 'r.scale')) {
       _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
     }
   }
 
-  getColor () {
-    return this.get('r.color')
+  /**
+   * @param {Object} data may be used to assign color to individual bar based on its value
+   */
+  getColor (accessor, data) {
+    const configured = ColoredChart.getColor(data, accessor)
+    return configured || this.attributes.colorScale(accessor.accessor)
   }
 
   setColor (accessorName, color) {

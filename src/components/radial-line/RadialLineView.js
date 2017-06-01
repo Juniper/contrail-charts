@@ -47,11 +47,6 @@ export default class RadialLineView extends ChartView {
     return this.config.get('height') || this.width
   }
 
-  get innerHeight () {
-    const margin = this.config.margin
-    return this.height - margin.top - margin.bottom
-  }
-
   get radius () {
     return Math.min(this.innerWidth, this.innerHeight) / 2
   }

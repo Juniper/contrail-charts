@@ -18,6 +18,8 @@ export {default as LineView} from './line/LineView'
 export {default as LineConfigModel} from './line/LineConfigModel'
 export {default as RadialLineView} from './radial-line/RadialLineView'
 export {default as RadialLineConfigModel} from './radial-line/RadialLineConfigModel'
+export {default as RadialBarView} from './radial-bar/RadialBarView'
+export {default as RadialBarConfigModel} from './radial-bar/RadialBarConfigModel'
 export {default as ScatterPlotView} from './scatter-plot/ScatterPlotView'
 export {default as ScatterPlotConfigModel} from './scatter-plot/ScatterPlotConfigModel'
 

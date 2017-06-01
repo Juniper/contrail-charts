@@ -3,7 +3,7 @@
 @import "../../styles/mixins";
 
 .cc-svg .radial-bar {
-  @include radialBarChartRules($radial-bar-chart);
+  @include barChartRules($bar-chart);
 
-  @include themify($radialBarChartId, $themes);
+  @include themify($barChartId, $themes);
 }

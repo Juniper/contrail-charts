@@ -33,7 +33,7 @@ export default class RadialAxisView extends ChartView {
   }
 
   get radius () {
-    return Math.min(this.width, this.height) / 2
+    return Math.min(this.innerWidth, this.innerHeight) / 2
   }
 
   /**
@@ -44,10 +44,9 @@ export default class RadialAxisView extends ChartView {
     if (!scale) return
     super.render()
 
-    const radius = this.radius
     const margin = this.config.get('margin')
     this.d3
-      .attr('transform', `translate(${radius}, ${radius})`)
+      .attr('transform', `translate(${this.radius}, ${this.radius})`)
       .classed(this.config.name, true)
 
     if (this.config.position === 'r') {

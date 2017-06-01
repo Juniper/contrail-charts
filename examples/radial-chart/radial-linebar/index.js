@@ -67,7 +67,16 @@ const config = {
           angleAxis: 'angleAxis',
           rAxis: 'rAxis2',
           color: colorScheme[3],
-        },
+        }, {
+          chart: 'RadialBar',
+          labelFormatter: 'D Values',
+          angle: 'x',
+          r: 'd',
+          angleAxis: 'angleAxis',
+          rAxis: 'rAxis2',
+          color: colorScheme[4],
+          barPadding: 50,
+        }
       ],
       axes: {
         angleAxis: {
