@@ -35,7 +35,10 @@ export default class RadialLineConfigModel extends ConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
-    const angleScale = ScalableChart.getScale(model, config)
+    // TODO angle.scale may have been provided by composite or by user - in this we do not want to overwrite
+    // but it might have also been here from a previous render - in this case we want to overwrite - eg. after window was rescaled
+    // still dont know how to solve it.
+    //const angleScale = ScalableChart.getScale(model, config)
     //_.set(this.attributes, 'angle.calculatedDomain', angleScale.domain())
     if (!_.has(this.attributes, 'angle.scale')) {
       _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
