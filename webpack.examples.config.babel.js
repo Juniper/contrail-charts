@@ -56,7 +56,7 @@ export default (env = defaultEnv) => {
 
   const externals = {
     'jquery': {amd: 'jquery', root: 'jQuery'},
-    //'lodash': {amd: 'lodash', root: '_'},
+    // 'lodash': {amd: 'lodash', root: '_'},
     'backbone': {amd: 'backbone', root: 'Backbone'},
     'contrail-charts': 'cc',
   }
