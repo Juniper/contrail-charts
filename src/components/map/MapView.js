@@ -114,12 +114,12 @@ export default class MapView extends ChartView {
     this.d3.append('path')
       .datum(graticule)
       .attr('class', 'graticule')
-      .attr('d', path)
+      // .attr('d', path)
 
     this.d3.append('defs').append('path')
       .datum({type: 'Sphere'})
       .attr('id', 'sphere')
-      .attr('d', path)
+      // .attr('d', path)
 
     this.d3.append('use')
       .attr('class', 'stroke')

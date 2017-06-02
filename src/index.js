@@ -7,7 +7,6 @@ import * as components from 'components'
 import * as composites from 'composites'
 import * as actions from 'actions'
 import * as Util from 'core/Util'
+import './styles/index.scss'
 
 export {composites, components, helpers, models, actions, Util}
-
-import './styles/index.scss'
