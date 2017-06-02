@@ -53,6 +53,26 @@ export default class LegendPanelView extends ChartView {
     }
   }
 
+  /**
+   * @private
+   * @see https://github.com/d3/d3-selection/blob/master/README.md#selection_on
+   * @returns {String}
+   */
+  _getClickEventId() {
+    return 'click.' + this._uniqId
+  }
+
+  /**
+   * @override
+   */
+  remove() {
+    super.remove()
+    /*
+     * Remove view's outside click event handler.
+     */
+    d3.select('body').on(this._getClickEventId(), null);
+  }
+
   render () {
     const template = this.config.get('template') || _template
     const data = this._prepareData()
@@ -61,7 +81,7 @@ export default class LegendPanelView extends ChartView {
     /*
      * Register view's outside click event handler.
      */
-    d3.select('body').on('click.' + this.className, this._clickOutsideEventHandler.bind(this));
+    d3.select('body').on(this._getClickEventId(), this._clickOutsideEventHandler.bind(this));
 
     if (!this.config.attributes.filter || data.keys.length === 1) {
       this.d3.selectAll(this.selectors.key)
