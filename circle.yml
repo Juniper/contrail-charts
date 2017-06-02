@@ -18,7 +18,7 @@ dependencies:
 
 test:
   pre:
-    - npm run build:examples
+    - npm run build
   override:
     - cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready:
         background: true
