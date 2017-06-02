@@ -9,25 +9,35 @@
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js"></script>
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/json2.js"></script>
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
-	<script src="../node_modules/jasmine-core/lib/console/console.js"></script>
+	<script src="./helpers/functions.js"></script>
+    <script src="./jasmine-jsreporter.js"></script>
+
 
   <!--third-party libraries-->
 	<script src="../node_modules/jquery/dist/jquery.js"></script>
 	<script src="../node_modules/lodash/lodash.js"></script>
 	<script src="../node_modules/backbone/backbone.js"></script>
 	<script src="../node_modules/d3/build/d3.js"></script>
+	<link rel="stylesheet" href="../node_modules/font-awesome/css/font-awesome.min.css">
 
 	<!-- contrail-charts -->
-	<script src="../build/contrail-charts.js"></script>
-	<link href="../build/contrail-charts.css" rel="stylesheet">
+	<script src="/contrail-charts.js"></script>
+	<link href="/contrail-charts.css" rel="stylesheet">
+
+  <script>
+    jasmine.getEnv().addReporter(new jasmine.JSReporter2())
+  </script>
 </head>
 <body>
   <!--default container-->
-  <div id="chart" style="visibility: hidden;"></div>
+  <div id="chart"></div>
 
   <script src="./specs/cc.js"></script>
   <script src="./specs/core/ChartView.js"></script>
   <script src="./specs/components/Line.js"></script>
   <script src="./specs/components/Pie.js"></script>
+  <script src="./specs/components/Area.js"></script>
+  <script src="./specs/components/CompositeY.js"></script>
+  <script src="./specs/components/ScatterPlot.js"></script>
 </body>
 </html>

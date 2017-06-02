@@ -99,6 +99,7 @@ export default class LegendPanelView extends ChartView {
    */
   _prepareData () {
     let chartTypes = []
+    let axesQuantity = _.keys(_.groupBy(this.model.data, 'axis')).length
     _.each(this.config.get('chartTypes'), (configChartTypes, axisLabel) => {
       chartTypes = chartTypes.concat(_.map(configChartTypes, chartType => {
         return {
@@ -116,6 +117,7 @@ export default class LegendPanelView extends ChartView {
     }
     data.keys = _.map(this.model.data, item => {
       return _.extend(item, {
+        axis: axesQuantity > 1 ? item.axis : undefined,
         icon: icons[item.chartType],
         checked: this.config.get('filter') && !item.disabled,
       })

@@ -14,8 +14,7 @@ export default class Zoom extends Action {
    * while zooming by axes will require components to have the same corresponding axes names
    * @param ranges Hash of ranges by accessor
    */
-  _execute (...args) {
-    let ids = args.length > 1 ? args.shift() : null
+  _execute (ids, ...args) {
     if (!_.isNil(ids) && !_.isArray(ids)) ids = [ids]
     if (!ids || ids.includes(this._registrar.id)) this._registrar.zoom(...args)
   }

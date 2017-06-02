@@ -37,6 +37,7 @@ const config = {
     config: {
       legend: 'legend-id',
       bucket: 'bucket-id',
+      update: ['navigation-id'],
       height: 450,
       plot: {
         x: {
