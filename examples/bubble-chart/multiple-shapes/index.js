@@ -3,6 +3,7 @@
  */
 import {composites, Util} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
+import './index.scss'
 
 const data = fixture({
   length: 20,
@@ -138,7 +139,7 @@ const config = {
     type: 'Bucket',
     config: {
       range: [500, 800],
-      shape: bubbleShapes.square,
+      shape: bubbleShapes.bucket,
       tooltip: 'tooltip-bucket',
     }
   }, {
