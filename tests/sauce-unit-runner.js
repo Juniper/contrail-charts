@@ -1,6 +1,7 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
+const _ = require('lodash')
 const request = require('request')
 const auth = {
   user: process.env.SAUCE_USERNAME,
@@ -18,14 +19,14 @@ request.post(startTestsUrl, {
       ['Windows 8.1', 'chrome', '58'],
     ],
     url: 'http://localhost:8080/tests/TestRunner.html',
-    framework: 'jasmine',
+    framework: 'custom',
   }
 }, (error, response, body) => {
   if (error) {
     console.error(error)
     process.exit(1)
   }
-  sauceId = body['js tests'][0]
+  sauceId = _.get(body, 'js tests[0]')
   setTimeout(getResult, 2000)
 })
 
@@ -40,7 +41,7 @@ function getResult () {
         process.stdout.write('.')
         setTimeout(getResult, 2000)
       }
-      if (body['js tests'][0]['result'] === null) {
+      if (!_.get(body, 'js tests[0].result.passed')) {
         console.error('Tests failed')
         process.exit(1)
       }
