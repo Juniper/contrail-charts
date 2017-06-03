@@ -288,7 +288,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('The total height of the last two bars should be equal to the height of the parent container', (done) => {
+        it('The total height of the last two bars should be equal to the height of the parent container', done => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -315,7 +315,7 @@ describe('Composite Y view', () => {
             let beforeLastBarRect = rects[rects.length - 2].getBoundingClientRect()
             let barsContainerRect = container.querySelector('g.stacked-bar').getBoundingClientRect()
 
-            expect(lastBarRect.height + beforeLastBarRect.height).toBe(barsContainerRect.height)
+            expect(lastBarRect.height + beforeLastBarRect.height).toBeCloseTo(barsContainerRect.height, 2)
             done()
           })
         })
@@ -350,7 +350,7 @@ describe('Composite Y view', () => {
       })
 
       describe('Line on y axis and GroupedBar on y1 axis', () => {
-        it('The height of bigest bar should be equal to height of the parent container', (done) => {
+        it('The height of bigest bar should be equal to height of the parent container', done => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -381,7 +381,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('Checking the correctness of the columns position along the x axis', (done) => {
+        it('Checking the correctness of the columns position along the x axis', done => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -418,7 +418,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('should apply default colors', (done) => {
+        it('should apply default colors', done => {
           data = [
             { x: 0, a: 0, b: 0, c: 1 },
             { x: 1, a: 1, b: 2, c: 2 },
@@ -488,7 +488,7 @@ describe('Composite Y view', () => {
       })
 
       describe('Render all components', () => {
-        xit('check default color scale is applied for all different components', (done) => {
+        xit('check default color scale is applied for all different components', done => {
           data = [
             { x: 0, a: 0, b: 0, c: 2, d: 2, f: 1, g: 0 },
             { x: 1, a: 2, b: 4, c: 2, d: 1, f: 2, g: 1 },
@@ -539,7 +539,7 @@ describe('Composite Y view', () => {
 
     describe('Render with data variants.', () => {
       describe('Render with extremum data.', () => {
-        xit('line should not exceed clipPath height', (done) => {
+        xit('line should not exceed clipPath height', done => {
           data = [
             { x: 0, a: 0 },
             { x: 1, a: 3 },
@@ -563,7 +563,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        xit('line should not exceed clipPath width', (done) => {
+        xit('line should not exceed clipPath width', done => {
           data = [
             { x: 0, a: 0 },
             { x: 2, a: 1 },
@@ -587,7 +587,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('stackedBar should not exceed clipPath height', (done) => {
+        it('stackedBar should not exceed clipPath height', done => {
           data = [
             { x: 0, a: 0, b: 0 },
             { x: 1, a: 3, b: 2 },
@@ -617,7 +617,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('groupedBar should not exceed clipPath width', (done) => {
+        it('groupedBar should not exceed clipPath width', done => {
           data = [
             { x: 0, a: 2, b: 1 },
             { x: 1, a: 3, b: 2 },
@@ -723,7 +723,7 @@ describe('Composite Y view', () => {
           expect(lines.length).toBe(1)
         })
 
-        it('change second Line accessor', (done) => {
+        it('change second Line accessor', done => {
           data = [
             { x: 0, a: 0, b: 0, c: 14 },
             { x: 1, a: 2, b: 4, c: 12 },
@@ -774,7 +774,7 @@ describe('Composite Y view', () => {
           })
         })
 
-        it('change stackedBar color', (done) => {
+        it('change stackedBar color', done => {
           config.plot.y[0].chart = 'StackedBar'
           config.plot.y[1] = {
             accessor: 'b',
