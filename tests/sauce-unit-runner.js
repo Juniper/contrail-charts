@@ -40,8 +40,7 @@ function getResult () {
       if (!body.completed) {
         process.stdout.write('.')
         setTimeout(getResult, 2000)
-      }
-      if (!_.get(body, 'js tests[0].result.passed')) {
+      } else if (!_.get(body, 'js tests[0].result.passed')) {
         console.error('Tests failed')
         process.exit(1)
       }
