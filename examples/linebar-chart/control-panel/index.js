@@ -63,7 +63,6 @@ const config = {
           }, {
             accessor: 'random',
             labelFormatter: 'Random',
-            color: '#d62728',
             chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',

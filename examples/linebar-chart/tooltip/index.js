@@ -2,8 +2,9 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import {composites} from 'contrail-charts'
-import {formatter, fixture} from 'commons'
+import {formatter, _c, fixture} from 'commons'
 import template from './template.html'
+const colorScheme = _c.lbColorScheme7
 
 const data = fixture()
 
@@ -35,7 +36,7 @@ const config = {
             tooltip: 'custom-tooltip',
           }, {
             accessor: 'c',
-            color: 'grey',
+            color: colorScheme[2],
             chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
