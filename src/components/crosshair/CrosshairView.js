@@ -101,4 +101,10 @@ export default class CrosshairView extends ChartView {
     super.hide()
     actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
+  /**
+   * Crosshair is hidden on resize as mouse position is changed relative to the chart
+   * so there is not need in render
+   * @override
+   */
+  _onResize () {}
 }
