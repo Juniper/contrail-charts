@@ -66,23 +66,20 @@ export default class ScatterPlotView extends ChartView {
     let points = this.d3.selectAll(this.selectors.node)
       .data(this._data, d => d.id)
 
-    const groupsEnter = points.enter()
+    const pointsEnter = points.enter()
       .append('g')
       .classed(this.selectorClass('node'), true)
       .attr('transform', d => `translate(${d.x},${d.y})`)
-    groupsEnter
+    pointsEnter
       .append('circle')
-      .attr('r', d => Math.sqrt(d.area) / 2)
-      .attr('fill', d => d.color)
-    points.select('circle')
-      .attr('r', d => Math.sqrt(d.area) / 2)
-      .attr('fill', d => d.color)
-    groupsEnter
+    pointsEnter
       .append('text')
+
+    const update = pointsEnter.merge(points)
+    update.select('circle')
+      .attr('r', d => Math.sqrt(d.area) / 2)
       .attr('fill', d => d.color)
-      .html(d => d.accessor.shape)
-      .style('font-size', d => Math.sqrt(d.area / 4))
-    points.select('text')
+    update.select('text')
       .attr('fill', d => d.color)
       .html(d => d.accessor.shape)
       .style('font-size', d => Math.sqrt(d.area / 4))
