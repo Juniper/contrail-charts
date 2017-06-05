@@ -48,14 +48,14 @@ export default class LineView extends ChartView {
 
   get padding () {
 
-    var strokeWidth = 2;
+    var strokeWidth = 2
 
-    const padding = this.config.padding;
+    const padding = this.config.padding
 
-    padding.top = strokeWidth / 2;
-    padding.bottom = strokeWidth / 2;
+    padding.top = strokeWidth / 2
+    padding.bottom = strokeWidth / 2
 
-    return padding;
+    return padding
   }
 
   calculateScales () {
