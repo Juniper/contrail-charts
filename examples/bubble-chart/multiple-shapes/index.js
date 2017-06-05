@@ -55,7 +55,7 @@ const config = {
               range: [200, 100],
             },
             // this is a circle symbol from fontawesome
-            //shape: bubbleShapes.circleFill,
+            // shape: bubbleShapes.circleFill,
             color: d => colorScheme[0],
             axis: 'y1',
             tooltip: 'tooltip-id',

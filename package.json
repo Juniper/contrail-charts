@@ -15,10 +15,11 @@
     "start": "webpack-dev-server",
     "test:unit": "node test.js",
     "lint": "npm run lint:src && npm run lint:examples",
-    "lint:src": "eslint src/** || true",
-    "lint:examples": "eslint examples/** || true",
+    "lint:src": "eslint src/**",
+    "lint:examples": "eslint examples/**",
     "doc": "jsdoc src -r -d docs"
   },
+  "precommit": "lint",
   "license": "Apache-2.0",
   "devDependencies": {
     "babel-core": "6.24.1",
@@ -40,6 +41,7 @@
     "json-loader": "0.5.4",
     "node-sass": "4.5.3",
     "open": "0.0.5",
+    "pre-commit": "^1.2.2",
     "raw-loader": "0.5.1",
     "requirejs": "2.3.3",
     "sass-loader": "6.0.3",
