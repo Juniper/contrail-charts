@@ -51,6 +51,20 @@ export default (env = defaultEnv) => {
     }
   })
 
+  let d3Libs = ['d3', 'd3-selection', 'd3-scale', 'd3-shape', 'd3-array', 'd3-axis', 'd3-ease', 'd3-brush',
+    'd3-time-format', 'd3-hierarchy', 'd3-geo', 'd3-zoom', 'd3-format']
+
+  const externals = {
+    'jquery': {amd: 'jquery', root: 'jQuery'},
+    // 'lodash': {amd: 'lodash', root: '_'},
+    'backbone': {amd: 'backbone', root: 'Backbone'},
+    'contrail-charts': 'cc',
+  }
+
+  d3Libs.forEach(d3Lib => {
+    externals[d3Lib] = 'd3'
+  })
+
   return {
     entry: {
       'loader': absolute('examples/common/js/loader')
@@ -61,13 +75,7 @@ export default (env = defaultEnv) => {
       filename: '[name].bundle.js'
     },
     module: {loaders},
-    externals: {
-      jquery: { amd: 'jquery', root: 'jQuery' },
-      d3: { amd: 'd3v4', root: 'd3' },
-      // lodash: { amd: 'lodash', root: '_' },
-      backbone: { amd: 'backbone', root: 'Backbone' },
-      'contrail-charts': 'cc'
-    },
+    externals: externals,
     resolve: {
       modules: [absolute(), 'node_modules'],
       alias: {
