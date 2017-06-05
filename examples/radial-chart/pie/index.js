@@ -4,6 +4,8 @@
 import {composites} from 'contrail-charts'
 import {formatter} from 'commons'
 import * as d3Scale from 'd3-scale'
+import template from './template.html'
+import './index.scss'
 
 const data = [
   { label: 'Process 1', value: 2704659 },
@@ -25,8 +27,10 @@ function getValue (serie) {
 let chart
 const config = {
   id: 'chartBox',
+  template,
   title: 'Donut Chart',
   components: [{
+    id: 'control-panel-id',
     type: 'ControlPanel',
     config: {
       menu: [{
@@ -34,7 +38,7 @@ const config = {
       }],
     }
   }, {
-    id: 'donut-chart-id',
+    id: 'donut-id',
     type: 'Pie',
     config: {
       legend: 'legend-id',
