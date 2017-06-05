@@ -13,11 +13,11 @@ export default class DataModel {
   }
 
   get data () {
-    return this._data
+    return this._data || []
   }
 
   set data (data) {
-    this._data = this.parse(data) || []
+    this._data = this.parse(data)
     this.trigger('change')
   }
 
@@ -34,7 +34,6 @@ export default class DataModel {
   parse (data) {
     return _.isFunction(this._formatter) ? this._formatter(data) : data
   }
-
 }
 // TODO replace with class extends syntax
 _.extend(DataModel.prototype, Events)
