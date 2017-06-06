@@ -10,7 +10,7 @@
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/json2.js"></script>
 	<script src="../node_modules/jasmine-core/lib/jasmine-core/boot.js"></script>
 	<script src="./helpers/functions.js"></script>
-    <script src="./jasmine-jsreporter.js"></script>
+  <script src="./jasmine-jsreporter.js"></script>
 
 
   <!--third-party libraries-->
@@ -25,6 +25,17 @@
 
   <script>
     jasmine.getEnv().addReporter(new jasmine.JSReporter2())
+    jasmine.getEnv().addReporter({
+      jasmineDone: () => {
+        const report = jasmine.getJSReport()
+        // TODO Jasmine reporter is not supported by Saucelabs
+        window.global_test_results = {
+          passed: report.passed ? 1 : 0,
+          failed: report.passed ? 0 : 1,
+          duration: report.durationSec,
+        }
+      }
+    })
   </script>
 </head>
 <body>
@@ -36,8 +47,8 @@
   <script src="./specs/components/Line.js"></script>
   <script src="./specs/components/Pie.js"></script>
   <script src="./specs/components/Area.js"></script>
-  <script src="./specs/components/CompositeY.js"></script>
   <script src="./specs/components/ScatterPlot.js"></script>
   <script src="./specs/components/LegendPanel.js"></script>
+  <script src="./specs/composites/Y.js"></script>
 </body>
 </html>
