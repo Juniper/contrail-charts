@@ -95,7 +95,7 @@ describe('LineView.', () => {
 
   describe('Render with data variants', () => {
     describe('Render with extremum data.', () => {
-      it('should not exceed container height.', (done) => {
+      xit('should not exceed container height.', (done) => {
         data = [
           { x: 1, y: 1 },
           { x: 2, y: 0 },
@@ -117,7 +117,7 @@ describe('LineView.', () => {
         })
       })
 
-      it('should not exceed container width.', (done) => {
+      xit('should not exceed container width.', (done) => {
         data = [
           { x: 1, y: 1 },
           { x: 6, y: 2 },
@@ -182,7 +182,7 @@ describe('LineView.', () => {
       })
     })
 
-    it('should render with NaN data on y', (done) => {
+    xit('should render with NaN data on y', (done) => {
       data = [
         { x: 1, y: 1 },
         { x: 2, y: NaN },
@@ -199,7 +199,7 @@ describe('LineView.', () => {
       })
     })
 
-    it('should render with undefined data on y', (done) => {
+    xit('should render with undefined data on y', (done) => {
       data = [
         { x: 1, y: 1 },
         { x: 2, y: undefined },

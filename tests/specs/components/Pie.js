@@ -212,7 +212,7 @@ describe('PieView', () => {
   })
 
   describe('Change config after render', () => {
-    it('should chang pie type donut => pie', (done) => {
+    it('should change pie type donut => pie', (done) => {
       chart = new cc.components.PieView({config, container})
       chart.setData(data)
 
@@ -228,7 +228,7 @@ describe('PieView', () => {
       }, 0)
     })
 
-    it('should chang color scheme schemeCategory20 => schemeCategory20b', (done) => {
+    it('should change color scheme schemeCategory20 => schemeCategory20b', (done) => {
       chart = new cc.components.PieView({config, container})
       chart.setData(data)
 
@@ -252,7 +252,7 @@ describe('PieView', () => {
       }, 0)
     })
 
-    it('should chang radius 100 => 150', (done) => {
+    it('should change radius 100 => 150', (done) => {
       chart = new cc.components.PieView({config, container})
       chart.setData(data)
 

@@ -7,14 +7,14 @@ import '../sass/contrail-charts-examples.scss'
 import _ from 'lodash'
 // LineBar
 import legend from '../../linebar-chart/legend'
-//import controls from '../../linebar-chart/control-panel'
+// import controls from '../../linebar-chart/control-panel'
 import timeline from '../../linebar-chart/timeline'
 import tooltips from '../../linebar-chart/tooltip'
 import stackedBar from '../../linebar-chart/stacked-bar-chart'
 import groupedBar from '../../linebar-chart/grouped-bar-chart'
 import liveData from '../../linebar-chart/live'
 // Scatter
-//import scatterPlotBuckets from '../../bubble-chart/bucketization'
+// import scatterPlotBuckets from '../../bubble-chart/bucketization'
 import shapes from '../../bubble-chart/multiple-shapes'
 import map from '../../bubble-chart/map'
 // Radial
@@ -28,6 +28,7 @@ import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav'
 
 import sankeyChart from '../../advance-chart/sankey'
 // Single
+
 import singleLine from '../../single/single-line'
 import singleStackedBar from '../../single/single-stacked-bar'
 import singleGroupedBar from '../../single/single-grouped-bar'
@@ -50,9 +51,9 @@ const allExamples = {
     'Legend': {
       view: legend,
     },
-    //'Controls': {
-      //view: controls,
-    //},
+    // 'Controls': {
+      // view: controls,
+    // },
     'Timeline': {
       view: timeline,
     },
@@ -76,9 +77,9 @@ const allExamples = {
     }
   },
   'bubble': {
-    //'Buckets': {
-      //view: scatterPlotBuckets,
-    //},
+    // 'Buckets': {
+      // view: scatterPlotBuckets,
+    // },
     'Shapes': {
       view: shapes,
     },
