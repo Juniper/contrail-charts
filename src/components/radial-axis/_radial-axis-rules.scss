@@ -1,0 +1,49 @@
+@mixin radialAxisRules($axis) {
+  $p_gridline_color: map-get($axis, "gridlineColor");
+  $p_tick_size: map-get($axis, "tickSize");
+  $p_tick_color: map-get($axis, "tickColor");
+  $p_label_size: map-get($axis, "axisLabelSize");
+  $p_label_color: map-get($axis, "axisLabelColor");
+
+  .tick {
+    circle {
+      stroke: $p_gridline_color;
+      fill: none;
+    }
+    text {
+      font-size: $p_tick_size;
+      fill: $p_tick_color;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    path {
+      stroke: $p_gridline_color;
+      fill: none;
+    }
+  }
+
+/*
+  .radial-axis {
+    .axis {
+      stroke: $p_gridline_color;
+      fill: none;
+    }
+    .tick {
+      line {
+        stroke: $p_gridline_color;
+      }
+      text {
+        font-size: $p_tick_size;
+        fill: $p_tick_color;
+      }
+    }
+    .axis-label {
+      margin: 4px;
+      font-size: $p_label_size;
+      fill: $p_label_color;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+  }
+*/
+}

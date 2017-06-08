@@ -18,8 +18,9 @@ export default class SankeyView extends ChartView {
 
   get events () {
     return {
-      'mouseover .link': '_onMouseoverLink',
-      'mouseout .link': '_onMouseoutLink'
+      'mouseover link': '_onMouseoverLink',
+      'mouseout link': '_onMouseoutLink',
+      'click node': '_onClickNode'
     }
   }
 
@@ -96,6 +97,18 @@ export default class SankeyView extends ChartView {
         node.dy = 1
       }
     })
+    // Fix link coordinates if they are too small.
+    _.each(this._links, (link) => {
+      if (link.dy < 1) {
+        link.dy = 0
+      }
+      if (link.ty < 1) {
+        link.ty = 0
+      }
+      if (link.sy < 1) {
+        link.sy = 0
+      }
+    })
   }
 
   _render () {
@@ -156,6 +169,6 @@ export default class SankeyView extends ChartView {
   }
 
   _onMouseoutLink (d, el) {
-    actionman.fire('HideComponent', this.config.get('tooltip'))
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 }
