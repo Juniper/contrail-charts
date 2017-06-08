@@ -61,4 +61,9 @@ export default class CompositeView extends ChartView {
   remove () {
     this.composite.remove()
   }
+  /**
+   * Each descendant of ChartView reacts to resize event by its own
+   * @override
+   */
+  _onResize () {}
 }

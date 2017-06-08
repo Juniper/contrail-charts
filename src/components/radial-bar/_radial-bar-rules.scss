@@ -1,0 +1,11 @@
+@mixin barChartRules($bar-chart) {
+  $p_opacity: map-get($bar-chart, "barOpacity");
+  $p_activeOpacity: map-get($bar-chart, "activeBarOpacity");
+
+  .radial-bar {
+    opacity: $p_opacity;
+  }
+  .radial-bar.active {
+    opacity: $p_activeOpacity;
+  }
+}

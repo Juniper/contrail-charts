@@ -76,11 +76,13 @@ their config options.
 
 ![Grouped Chart](images/grouped-chart.png)
 
-
 #### Sankey Chart
 
 ![Sankey Chart](images/sankey-chart.png)
 
+#### Radial Line Bar Chart
+
+![Sankey Chart](images/radial-linebar.png)
 
 ### Authors
 

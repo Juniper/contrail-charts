@@ -1,4 +1,4 @@
-/* global cc, describe, it, expect, beforeEach afterEach */
+/* global _, cc, describe, it, expect, beforeEach afterEach */
 
 describe('ScatterPlotView.', () => {
   let config
@@ -46,7 +46,7 @@ describe('ScatterPlotView.', () => {
       chart.setData(data)
       let points = container.querySelectorAll('.scatter-plot .point')
       _.each(points, (point) => {
-        let code = point.innerHTML
+        let code = point.textContent
         expect(code).toBe(config.y.shape)
       })
     })
@@ -59,13 +59,14 @@ describe('ScatterPlotView.', () => {
       ]
       chart = new cc.components.ScatterPlotView({config, container})
       chart.setData(data)
-      let points = container.querySelectorAll('.scatter-plot .point')
+
+      let points = container.querySelectorAll('.scatter-plot .point text')
       let firstPointFontSize = points[0].style.fontSize
       let endPointFontSize = points[points.length - 1].style.fontSize
 
       // default range [1, 500]
-      expect(+firstPointFontSize.slice(0, -2)).toBeCloseTo(Math.sqrt(1))
-      expect(+endPointFontSize.slice(0, -2)).toBeCloseTo(Math.sqrt(500))
+      expect(+firstPointFontSize.slice(0, -2) * 2).toBeCloseTo(Math.sqrt(1))
+      expect(+endPointFontSize.slice(0, -2) * 2).toBeCloseTo(Math.sqrt(500))
     })
 
     it('point should have class "active" on hover', () => {
@@ -87,7 +88,9 @@ describe('ScatterPlotView.', () => {
       chart.setData(data)
       let points = container.querySelectorAll('.scatter-plot .point')
       _.each(points, point => {
-        let color = point.getAttribute('fill')
+        let color = point.querySelector('circle').getAttribute('fill')
+        expect(color).toBe(config.y.color)
+        color = point.querySelector('text').getAttribute('fill')
         expect(color).toBe(config.y.color)
       })
     })
@@ -206,7 +209,7 @@ describe('ScatterPlotView.', () => {
       chart.setConfig(config)
       let points = container.querySelectorAll('.scatter-plot .point')
       _.each(points, (point) => {
-        let code = point.innerHTML
+        let code = point.textContent
         expect(code.charCodeAt(0).toString(16)).toBe(config.y.shape.slice(3, -1))
       })
     })
@@ -218,8 +221,10 @@ describe('ScatterPlotView.', () => {
       chart.setConfig(config)
       let points = container.querySelectorAll('.scatter-plot .point')
       _.each(points, point => {
-        let pointColor = point.getAttribute('fill')
-        expect(pointColor).toBe('red')
+        let color = point.querySelector('circle').getAttribute('fill')
+        expect(color).toBe(config.y.color)
+        color = point.querySelector('text').getAttribute('fill')
+        expect(color).toBe(config.y.color)
       })
     })
 
@@ -238,8 +243,8 @@ describe('ScatterPlotView.', () => {
       let points = container.querySelectorAll('.scatter-plot .point')
       _.each(points, (point, i) => {
         if (i > 0) {
-          let pointSize = point.style.fontSize
-          let beforePointSize = points[i - 1].style.fontSize
+          let pointSize = point.querySelector('text').style.fontSize
+          let beforePointSize = points[i - 1].querySelector('text').style.fontSize
           expect(+pointSize.slice(0, -2)).toBeGreaterThan(+beforePointSize.slice(0, -2))
         }
       })
