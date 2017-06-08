@@ -1,0 +1,41 @@
+@import "../../styles/colors";
+
+@mixin sankeyRules($sankey) {
+  $p_link_color: map-get($sankey, "linkColor");
+  $p_node_color: map-get($sankey, "nodeColor");
+  $p_hovered_link_color: map-get($sankey, "linkHoverColor");
+  $p_hovered_node_color: map-get($sankey, "nodeHoverColor");
+  $p_node_border_width: map-get($sankey, "nodeBorderWidth");
+  $p_node_border_color: map-get($sankey, "nodeBorderColor");
+  $p_hovered_node_border_color: map-get($sankey, "nodeBorderHoverColor");
+  $p_node_label_size: map-get($sankey, "nodeLabelSize");
+  $p_node_label_color: map-get($sankey, "nodeLabelColor");
+
+  .link {
+    fill: none;
+    stroke: $p_link_color;
+    stroke-opacity: 0.4;
+  }
+  .link:hover {
+    stroke: $p_hovered_link_color;
+  }
+  .node {
+    rect {
+      fill: $p_node_color;
+      stroke: $p_node_border_color;
+      stroke-width: $p_node_border_width;
+    }
+    text {
+      alignment-baseline: central;
+      font-size: $p_node_label_size;
+      fill: $p_node_label_color;
+    }
+  }
+  .node:hover {
+    rect {
+      fill: $p_hovered_node_color;
+      stroke: $p_hovered_node_border_color;
+      stroke-width: $p_node_border_width;
+    }
+  }
+}
