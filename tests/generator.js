@@ -14,6 +14,7 @@ export default function (p = {}) {
     a: {linear: true, range: [0, length * 3]},
     b: {linear: true, range: [0, length * 5]},
     c: {linear: true, range: [0, length * 7]},
+    d: {linear: true, range: [0, length * 4]},
     random: {random: true, range: [0, length * 7]},
   }
   _.each(dataConfig, (config, key) => {

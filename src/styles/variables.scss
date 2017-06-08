@@ -17,6 +17,7 @@ $lineChartId: "line-chart";
 $pieChartId: "pie-chart";
 $dendrogramId: "dendrogram";
 $scatterPlotId: "scatter-plot";
+$sankeyId: "sankey";
 
 /*
  * z-index levels
@@ -25,7 +26,7 @@ $presentation: 1;
 $control: 5;
 $alwaysTop: 9999;
 
-/* 
+/*
  * load custom theme definitions and define the theme list variable
  */
 @import "themes/alert_theme";
