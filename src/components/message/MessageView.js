@@ -47,7 +47,7 @@ export default class MessageView extends ChartView {
       })
     })
 
-    // only messages with 'update' action should be udpated
+    // only messages with 'update' action should be updated
     const update = this.d3.selectAll(this.selectors.node).filter(d => d.action === 'update')
       .data(messages, d => d.text)
     const enter = update.enter().append('div')
@@ -61,4 +61,9 @@ export default class MessageView extends ChartView {
     }
     update.exit().remove()
   }
+  /**
+   * Should remain the same on resize
+   * @override
+   */
+  _onResize () {}
 }
