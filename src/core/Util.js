@@ -40,7 +40,8 @@ const bubbleShapes = {
   warning: '&#xf071;',
   alarmFill: '&#xf0f3;',
   deleted: '&#xf05e;',
-  asterisk: '&#xf069;'
+  asterisk: '&#xf069;',
+  bucket: '&#xe919;',
 }
 
 export {
