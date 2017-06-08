@@ -1,0 +1,10 @@
+@mixin lineChartRules($line-chart) {
+  $p_line_width: map-get($line-chart, "lineWidth");
+  $p_line_opacity: map-get($line-chart, "lineOpacity");
+
+  .radial-line {
+    fill: none;
+    stroke-width: $p_line_width;
+    opacity: $p_line_opacity;
+  }
+}
