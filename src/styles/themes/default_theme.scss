@@ -205,3 +205,16 @@ $dendrogram: (
   arcLabelSize: 9px,
   arcBorderWidth: 1px,
 ) !default;
+
+// sakey chart
+$sankey: (
+  linkColor: $darkGrey,
+  nodeColor: $solidBlue,
+  linkHoverColor: $orange,
+  nodeHoverColor: $orange,
+  nodeBorderWidth: 1px,
+  nodeBorderColor: $black,
+  nodeBorderHoverColor: $orange,
+  nodeLabelSize: 9px,
+  nodeLabelColor: $black,
+) !default;
