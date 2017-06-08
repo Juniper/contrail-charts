@@ -47,31 +47,28 @@ export default class CrosshairView extends ChartView {
         label: label.value,
       }
     })
+    // console.log(lineCoords);
     const margin = this.config.get('margin')
-    const lines = this.d3.selectAll(this.selectors.node).data(lineCoords)
-    const linesEnter = lines.enter().append('g')
+    const crosshairs = this.d3.selectAll(this.selectors.node).data(lineCoords)
+    const crosshairEnter = crosshairs.enter().append('g')
       .attr('class', this.selectorClass('node'))
-    linesEnter
+    crosshairEnter
       .attr('transform', d => `translate(${d.x1}, ${d.y2})`)
-      .merge(lines)
+      .merge(crosshairs)
       .transition().ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       .attr('transform', d => `translate(${d.x1}, ${d.y2})`)
-    linesEnter.append('line')
+    crosshairEnter.append('line')
       .attr('class', this.selectorClass('line'))
       .attr('x1', 0)
       .attr('x2', 0)
-      .attr('y1', d => d.y1)
-      .attr('y2', d => d.y2)
-    linesEnter.append('text')
+    crosshairEnter.append('text')
       .attr('class', this.selectorClass('text'))
-      .attr('y', d => d.y1 + margin.label)
-      .text(d => d.label)
-    const update = linesEnter.merge(lines)
-    update.selectAll(this.selectors.line)
+    const update = crosshairEnter.merge(crosshairs)
+    update.select(this.selectors.line)
       .attr('y1', d => d.y1)
       .attr('y2', d => d.y2)
-    update.selectAll(this.selectors.text)
-      .attr('y', d => d.y1 + margin.label)
+    update.select(this.selectors.text)
+      .attr('y', d => d.y1 + margin.label / 2)
       .text(d => d.label)
 
     // Draw bubbles for all enabled y accessors.
@@ -104,4 +101,10 @@ export default class CrosshairView extends ChartView {
     super.hide()
     actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
+  /**
+   * Crosshair is hidden on resize as mouse position is changed relative to the chart
+   * so there is not need in render
+   * @override
+   */
+  _onResize () {}
 }

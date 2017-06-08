@@ -6,14 +6,21 @@
   $p_point_hovered_cursor: map-get($scatter-plot, "cursorOverPoint");
 
   .point {
-    opacity: $p_point_opacity;
-    shape-rendering: geometricPrecision;
-    font-family: FontAwesome;
-    alignment-baseline: middle;
-    text-anchor: middle;
+    circle {
+      opacity: $p_point_opacity;
+      &:hover {
+        opacity: $p_point_hovered_opacity;
+      }
+    }
+
+    text {
+      shape-rendering: geometricPrecision;
+      font-family: FontAwesome;
+      alignment-baseline: middle;
+      text-anchor: middle;
+    }
 
     &:hover {
-      opacity: $p_point_hovered_opacity;
       stroke-width: $p_point_hovered_edge_width;
       stroke: $p_point_hovered_edge_color;
       cursor: $p_point_hovered_cursor;
