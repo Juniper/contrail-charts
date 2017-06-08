@@ -16,4 +16,3 @@ export default class Cluster extends Action {
     if (!ids || ids.includes(this._registrar.id)) this._registrar.cluster(...args)
   }
 }
-

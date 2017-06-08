@@ -47,7 +47,6 @@ export default class LineView extends ChartView {
   }
 
   get padding () {
-
     var strokeWidth = 2
 
     const padding = this.config.padding
@@ -59,7 +58,6 @@ export default class LineView extends ChartView {
   }
 
   calculateScales () {
-
     this.config.set('x.range', [this.padding.left, this.plotWidth - this.padding.right], {silent: true})
     this.config.set('y.range', [this.plotHeight, this.padding.top], {silent: true})
 

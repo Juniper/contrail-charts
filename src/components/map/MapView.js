@@ -108,26 +108,26 @@ export default class MapView extends ChartView {
   }
   // TODO
   _renderGraticule () {
-    if (!this.config.get('graticule')) return
-    const graticule = d3Geo.geoGraticule()
-
-    this.d3.append('path')
-      .datum(graticule)
-      .attr('class', 'graticule')
-      .attr('d', path)
-
-    this.d3.append('defs').append('path')
-      .datum({type: 'Sphere'})
-      .attr('id', 'sphere')
-      .attr('d', path)
-
-    this.d3.append('use')
-      .attr('class', 'stroke')
-      .attr('xlink:href', '#sphere')
-
-    this.d3.append('use')
-      .attr('class', 'fill')
-      .attr('xlink:href', '#sphere')
+    // if (!this.config.get('graticule')) return
+    // const graticule = d3Geo.geoGraticule()
+    //
+    // this.d3.append('path')
+    //   .datum(graticule)
+    //   .attr('class', 'graticule')
+    //   .attr('d', path)
+    //
+    // this.d3.append('defs').append('path')
+    //   .datum({type: 'Sphere'})
+    //   .attr('id', 'sphere')
+    //   .attr('d', path)
+    //
+    // this.d3.append('use')
+    //   .attr('class', 'stroke')
+    //   .attr('xlink:href', '#sphere')
+    //
+    // this.d3.append('use')
+    //   .attr('class', 'fill')
+    //   .attr('xlink:href', '#sphere')
   }
   // TODO temporary method to plot data before integrating with any chart component like scatter plot
   // Note, people often put these in lat then lng, but mathematically we want x then y which is `lng,lat`

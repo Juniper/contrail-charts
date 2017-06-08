@@ -2,16 +2,16 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
 */
 import _ from 'lodash'
-import * as d3Shape from 'd3-shape'
 import ConfigModel from 'config-model'
 import ScalableChart from 'helpers/scale/ScalableChart'
+import * as d3Shape from 'd3-shape'
 
 export default class LineConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults,
       {
         isSharedContainer: true,
-        curve: d3.curveMonotoneX,
+        curve: d3Shape.curveMonotoneX,
         y: {
           color: 'steelblue',
         },
