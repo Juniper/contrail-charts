@@ -2,7 +2,8 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 import {composites} from 'contrail-charts'
-import {formatter, fixture} from 'commons'
+import {formatter, _c, fixture} from 'commons'
+const colorScheme = _c.lbColorScheme7
 
 const length = 100
 const data = fixture({
@@ -73,14 +74,14 @@ const config = {
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
-            color: '#d62728',
+            color: colorScheme[3],
             chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
           }, {
             accessor: 'e',
             labelFormatter: 'Label E',
-            color: '#9467bd',
+            color: colorScheme[4],
             chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
