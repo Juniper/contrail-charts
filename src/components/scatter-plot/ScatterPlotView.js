@@ -58,7 +58,7 @@ export default class ScatterPlotView extends ChartView {
     if (!this._waiting) {
       // frozen component is completely controlled from outside
       if (!this.config.get('frozen')) this.calculateScales()
-      this._data = this.prepareData()
+      this._data = _.filter(this.prepareData(), d => !_.find(this._overlapping, {id: d.id}))
 
       // do not render points before it is known what of them to skip due to bucketization
       if (this._cluster()) return
@@ -66,14 +66,23 @@ export default class ScatterPlotView extends ChartView {
     let points = this.d3.selectAll(this.selectors.node)
       .data(this._data, d => d.id)
 
-    points.enter()
-      .append('text')
-      .classed('point', true)
+    const pointsEnter = points.enter()
+      .append('g')
+      .classed(this.selectorClass('node'), true)
       .attr('transform', d => `translate(${d.x},${d.y})`)
-      .merge(points)
+    pointsEnter
+      .append('circle')
+    pointsEnter
+      .append('text')
+
+    const update = pointsEnter.merge(points)
+    update.select('circle')
+      .attr('r', d => Math.sqrt(d.area) / 2)
+      .attr('fill', d => d.color)
+    update.select('text')
+      .attr('fill', d => d.color)
       .html(d => d.accessor.shape)
-      .attr('fill', d => _.find(this._overlapping, {id: d.id}) ? 'none' : d.color)
-      .style('font-size', d => Math.sqrt(d.area))
+      .style('font-size', d => Math.sqrt(d.area / 4))
 
     // Update
     points
