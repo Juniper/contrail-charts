@@ -1,16 +1,14 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import _ from 'lodash'
 import {composites} from 'contrail-charts'
 import {_c} from 'commons'
-import {fixture} from 'commons'
+import fixture from 'fixture'
 import {schemeCategory10 as colorScheme} from 'd3-scale'
 
 const data = fixture()
 
 let chart
-const container = document.querySelector('#chartBox')
 const config = {
   id: 'chartBox',
   components: [{
@@ -82,7 +80,7 @@ const config = {
         angleAxis: {
           scale: 'scaleLinear',
           label: 'Angle',
-          range: [0, 6,4],
+          range: [0, 6, 4],
           removeLastAngleTick: false,
         },
         rAxis1: {
@@ -107,7 +105,7 @@ export default {
     // Create new chart with config if it's available
     // chart.setConfig is designed for chart update already rendered with data
     chart = new composites.CompositeView({config})
-    //chart = new composites.CompositeRadialView({config, container})
+    // chart = new composites.CompositeRadialView({config, container})
     chart.setData(data)
   },
 

@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
-import _ from 'lodash'
 import {composites} from 'contrail-charts'
 import {fixture} from 'commons'
 import {schemeCategory10 as colorScheme} from 'd3-scale'
