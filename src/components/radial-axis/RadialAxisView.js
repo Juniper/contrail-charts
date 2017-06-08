@@ -44,7 +44,6 @@ export default class RadialAxisView extends ChartView {
     if (!scale) return
     super.render()
 
-    const margin = this.config.get('margin')
     this.d3
       .attr('transform', `translate(${this.radius}, ${this.radius})`)
       .classed(this.config.name, true)
@@ -83,7 +82,6 @@ export default class RadialAxisView extends ChartView {
           angleTickLines.pop()
         }
       }
-      const points = []
       const rAxisLine = d3Shape.radialLine()
         .angle(p => p.angle)
         .radius(p => p.r)
@@ -108,7 +106,7 @@ export default class RadialAxisView extends ChartView {
         .text(d => d.value)
       rAxisPath.exit().remove()
     }
-    //this._renderLabel()
+    // TODO this._renderLabel()
     this._ticking = false
   }
 

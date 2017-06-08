@@ -37,8 +37,6 @@ export default class RadialAxisConfigModel extends ConfigModel {
       // Removes last angle tick if true.
       removeLastAngleTick: false,
 
-      //positions: ['left', 'right', 'top', 'bottom'],
-
       margin: {
         label: 10,
       },

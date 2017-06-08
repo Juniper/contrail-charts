@@ -10,9 +10,6 @@ import CompositeChart from 'helpers/CompositeChart'
 import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
 import SelectKey from '../../actions/SelectKey'
-//import Zoom from '../../actions/Zoom'
-//import ClusterAction from '../../components/bucket/actions/Cluster'
-//import SelectChartType from './actions/SelectChartType'
 import './radial.scss'
 
 /**
@@ -21,7 +18,7 @@ import './radial.scss'
 export default class CompositeRadialView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return { SelectColor, SelectKey, /* SelectChartType, Zoom, ClusterAction */} }
+  static get Actions () { return { SelectColor, SelectKey } }
 
   constructor (...args) {
     super(...args)
@@ -58,9 +55,7 @@ export default class CompositeRadialView extends ChartView {
       component.config.set('r.scale', this.config.get(`axes.${componentRAxisName}.scale`), {silent: true})
       component.render()
     })
-    //this._cluster()
     this._showLegend()
-    //this._initCrosshair()
 
     this._ticking = false
   }
@@ -198,19 +193,19 @@ export default class CompositeRadialView extends ChartView {
           container: this._container,
         })
         component.d3.classed(this.selectorClass('node'), true)
-          //.attr('clip-path', `url(#${this.id}-${this.selectors.clip})`)
+        // TODO clipping .attr('clip-path', `url(#${this.id}-${this.selectors.clip})`)
         component.el.__data__ = {key: child.key}
       }
 
       component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
       const angleAxisName = this.config.getAngleAxisName(child.accessor)
       let calculatedDomain = this.config.get(`axes.${angleAxisName}.calculatedDomain`) || []
-      //calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angle.calculatedDomain')))
+      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angle.calculatedDomain')))
       calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.angleScale.domain()))
       this.config.set(`axes.${angleAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
       const rAxisName = this.config.getRAxisName(child.accessor)
       calculatedDomain = this.config.get(`axes.${rAxisName}.calculatedDomain`) || []
-      //calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('r.calculatedDomain')))
+      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('r.calculatedDomain')))
       calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.rScale.domain()))
       this.config.set(`axes.${rAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
     })

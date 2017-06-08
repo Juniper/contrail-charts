@@ -5,10 +5,8 @@ import _ from 'lodash'
 import * as d3Array from 'd3-array'
 import * as d3Selection from 'd3-selection'
 import 'd3-transition'
-import * as d3Shape from 'd3-shape'
 import * as d3Ease from 'd3-ease'
 import * as d3Scale from 'd3-scale'
-import {interpolatePath as d3InterpolatePath} from 'd3-interpolate-path'
 import ChartView from 'chart-view'
 import Config from './RadialBarConfigModel'
 import Model from 'models/DataFrame'
@@ -66,10 +64,6 @@ export default class RadialBarView extends ChartView {
    */
   render () {
     super.render()
-    const data = this.model.data
-    const angleAccessor = this.config.get('angle.accessor')
-    const accessor = this.config.get('r')
-    const key = accessor.accessor
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     this.d3.attr('transform', `translate(${this.radius}, ${this.radius})`)

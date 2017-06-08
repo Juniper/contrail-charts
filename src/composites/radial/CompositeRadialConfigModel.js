@@ -180,7 +180,7 @@ export default class CompositeRadialConfigModel extends ConfigModel {
 
   getColor (accessor) {
     const configured = accessor.color
-    return configured || this.attributes.colorScale(accessorName)
+    return configured || this.attributes.colorScale(accessor.accessor)
   }
 
   setColor (accessorName, color) {
