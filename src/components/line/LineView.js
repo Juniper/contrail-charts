@@ -46,9 +46,21 @@ export default class LineView extends ChartView {
     return this.config.yScale(_.get(datum, yAccessor))
   }
 
+  get padding () {
+    var strokeWidth = 2
+
+    const padding = this.config.padding
+
+    padding.top = strokeWidth / 2
+    padding.bottom = strokeWidth / 2
+
+    return padding
+  }
+
   calculateScales () {
     this.config.set('x.range', [this.padding.left, this.plotWidth - this.padding.right], {silent: true})
-    this.config.set('y.range', [this.plotHeight - this.padding.bottom, this.padding.top], {silent: true})
+    this.config.set('y.range', [this.plotHeight, this.padding.top], {silent: true})
+
     this.config.calculateScales(this.model)
   }
   /**
