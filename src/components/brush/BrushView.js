@@ -70,7 +70,10 @@ export default class BrushView extends ChartView {
     this.d3.selectAll(this.selectors.unselected)
       .classed('hide', false)
       .attr('x', d => (d.type === 'w' ? xRange[0] : selection[1]))
-      .attr('width', d => (d.type === 'w' ? selection[0] - xRange[0] : xRange[1] - selection[1]))
+      .attr('width', d => {
+        const length = d.type === 'w' ? selection[0] - xRange[0] : xRange[1] - selection[1]
+        return length > 0 ? length : 0
+      })
 
     this.d3.selectAll(this.selectors.handle)
       .classed('hide', false)

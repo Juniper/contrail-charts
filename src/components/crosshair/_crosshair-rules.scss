@@ -14,6 +14,7 @@
     }
     .text {
       text-anchor: middle;
+      dominant-baseline: middle;
       font-size: $p_footer_size;
       font-weight: bold;
       fill: $p_footer_color;
