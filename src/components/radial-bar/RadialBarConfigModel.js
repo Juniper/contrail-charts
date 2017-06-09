@@ -11,7 +11,7 @@ export default class RadialBarConfigModel extends ConfigModel {
     return _.merge(super.defaults,
       {
         isSharedContainer: true,
-        r: {
+        radial: {
           color: 'steelblue',
         },
         // Padding between series in percents of bar width
@@ -22,16 +22,16 @@ export default class RadialBarConfigModel extends ConfigModel {
     )
   }
 
-  get angleScale () {
-    return this.get('angle.scale')
+  get angularScale () {
+    return this.get('angular.scale')
   }
 
-  get rScale () {
-    return this.get('r.scale')
+  get radialScale () {
+    return this.get('radial.scale')
   }
 
-  get rAccessors () {
-    return _.isArray(this.get('r')) ? this.get('r') : [this.get('r')]
+  get radialAccessors () {
+    return _.isArray(this.get('radial')) ? this.get('radial') : [this.get('radial')]
   }
 
   /**
@@ -40,25 +40,26 @@ export default class RadialBarConfigModel extends ConfigModel {
    * @param height
    */
   calculateScales (model, width, height) {
-    let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
-    // TODO calculate domain _.set(this.attributes, 'angle.calculatedDomain', angleScale.domain())
-    if (!_.has(this.attributes, 'angle.scale')) {
-      _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
+    let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angular)
+    // check if user provided a scale in config
+    if (!_.has(this.attributes, 'angular.providedScale')) {
+      _.set(this.attributes, 'angular.providedScale', _.has(this.attributes, 'angular.scale'))
+    }
+    if (!_.has(this.attributes, 'radial.providedScale')) {
+      _.set(this.attributes, 'radial.providedScale', _.has(this.attributes, 'radial.scale'))
+    }
+
+    _.set(this.attributes, 'angular.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'angular.scale') || !this.attributes.angular.providedScale) {
+      _.set(this.attributes, 'angular.scale', ScalableChart.getScale(model, config))
     }
     config = _.merge({
-      accessor: _.map(this.rAccessors, 'accessor'),
-    }, {range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
+      accessor: _.map(this.radialAccessors, 'accessor'),
+    }, {range: [0, Math.min(width / 2, height / 2)]}, this.attributes.radial)
     // TODO handle multiple r accessors
-    /*
-    const rScale = ScalableChart.getScale(model, config)
-    _.each(this.rAccessors, a => {
-      if (!_.has(a, 'scale'))
-      _.set(a, 'scale', rScale)
-    })
-    */
-    // TODO calculate domain _.set(this.attributes, 'r.calculatedDomain', rScale.domain())
-    if (!_.has(this.attributes, 'r.scale')) {
-      _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
+    _.set(this.attributes, 'radial.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'radial.scale') || !this.attributes.radial.providedScale) {
+      _.set(this.attributes, 'radial.scale', ScalableChart.getScale(model, config))
     }
   }
 
@@ -71,6 +72,6 @@ export default class RadialBarConfigModel extends ConfigModel {
   }
 
   setColor (accessorName, color) {
-    this.set('r.color', color)
+    this.set('radial.color', color)
   }
 }

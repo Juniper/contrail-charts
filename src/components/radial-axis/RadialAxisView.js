@@ -22,7 +22,7 @@ export default class RadialAxisView extends ChartView {
    */
   get selectors () {
     return _.extend(super.selectors, {
-      node: '.axis',
+      node: '.radial-axis',
       label: '.axis-label',
       tick: '.tick',
     })
@@ -48,98 +48,68 @@ export default class RadialAxisView extends ChartView {
       .attr('transform', `translate(${this.radius}, ${this.radius})`)
       .classed(this.config.name, true)
 
-    if (this.config.position === 'r') {
-      const rTickValues = scale.ticks(this.config.get('ticks'))
-      const rAxisTicks = this.d3.selectAll('.tick').data(rTickValues)
-      const rAxisTicksEnter = rAxisTicks.enter().append('g')
+    if (this.config.position === 'radial') {
+      const radialTickValues = scale.ticks(this.config.get('ticks'))
+      const radialAxisTicks = this.d3.selectAll('.tick').data(radialTickValues)
+      const radialAxisTicksEnter = radialAxisTicks.enter().append('g')
         .attr('class', 'tick')
-      rAxisTicksEnter.append('circle')
+      radialAxisTicksEnter.append('circle')
         .attr('r', d => scale(d))
-      rAxisTicksEnter.append('text')
+      radialAxisTicksEnter.append('text')
         .text(d => d)
         .attr('dy', d => -scale(d))
-      const rAxisTicksEdit = rAxisTicks.transition()
+      const radialAxisTicksEdit = radialAxisTicks.transition()
         .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-      rAxisTicksEdit.select('circle')
+      radialAxisTicksEdit.select('circle')
         .attr('r', d => scale(d))
-      rAxisTicks.exit().remove()
+      radialAxisTicksEdit.select('text')
+        .text(d => d)
+        .attr('dy', d => -scale(d))
+      radialAxisTicks.exit().remove()
     }
-    if (this.config.position === 'angle') {
-      const angleTickValues = scale.ticks(this.config.get('ticks'))
-      const angleTickLines = []
-      _.each(angleTickValues, a => {
+    if (this.config.position === 'angular') {
+      const angularTickValues = scale.ticks(this.config.get('ticks'))
+      const angularTickLines = []
+      _.each(angularTickValues, a => {
         _.each(this.config.get('otherAxisScales'), otherScale => {
           const line = {
             value: a,
             points: [{ angle: scale(a), r: otherScale.range()[0] }, { angle: scale(a), r: otherScale.range()[1] }]
           }
-          angleTickLines.push(line)
+          angularTickLines.push(line)
         })
       })
-      // Remove last angle tick as it is the same as first.
-      if (this.config.get('removeLastAngleTick') && angleTickLines.length) {
+      // Remove last angular tick as it is the same as first.
+      if (this.config.get('removeLastAngularTick') && angularTickLines.length) {
         for (let i = 0; i < this.config.get('otherAxisScales').length; i++) {
-          angleTickLines.pop()
+          angularTickLines.pop()
         }
       }
-      const rAxisLine = d3Shape.radialLine()
+      const radialAxisLine = d3Shape.radialLine()
         .angle(p => p.angle)
         .radius(p => p.r)
         .curve(d3Shape.curveLinear)
-      const rAxisPath = this.d3.selectAll('.tick')
-        .data(angleTickLines)
-      const rAxisPathEnter = rAxisPath.enter().append('g')
+      const radialAxisPath = this.d3.selectAll('.tick')
+        .data(angularTickLines)
+      const radialAxisPathEnter = radialAxisPath.enter().append('g')
         .attr('class', 'tick')
-      rAxisPathEnter.append('path')
-        .attr('d', d => rAxisLine(d.points))
-      rAxisPathEnter.append('text')
+      radialAxisPathEnter.append('path')
+        .attr('d', d => radialAxisLine(d.points))
+      radialAxisPathEnter.append('text')
         .attr('x', d => Math.cos(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
         .attr('y', d => Math.sin(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
         .text(d => d.value)
-      const rAxisPathEdit = rAxisPath.transition()
+      const radialAxisPathEdit = radialAxisPath.transition()
         .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
-      rAxisPathEdit.select('path')
-        .attr('d', d => rAxisLine(d.points))
-      rAxisPathEdit.select('text')
+      radialAxisPathEdit.select('path')
+        .attr('d', d => radialAxisLine(d.points))
+      radialAxisPathEdit.select('text')
         .attr('x', d => Math.cos(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
         .attr('y', d => Math.sin(d.points[0].angle - Math.PI / 2) * (d.points[1].r + 10))
         .text(d => d.value)
-      rAxisPath.exit().remove()
+      radialAxisPath.exit().remove()
     }
     // TODO this._renderLabel()
     this._ticking = false
   }
-
-  /**
-   * Labels are rendered at the center along axis
-   * TODO not optimal label spacing
-   * and in the first quater of the margin between container edge and tick
-   */
-  /*
-  _renderLabel () {
-    const offset = {
-      along: this._plotLength / 2,
-      across: this._tickLength * +(this.config.location === 'end') +
-        this.config.get('margin.' + this.config.position) * 0.75 * this.config.side,
-    }
-
-    const labels = this.d3.selectAll(this.selectors.label)
-      .data(this.config.labels)
-    labels
-      .enter()
-      .append('text')
-      .attr('class', this.selectorClass('label'))
-      .text(d => d)
-      .merge(labels)
-      .attr('transform', (d, i) => {
-        offset.across += i * this.config.get('margin.label') * this.config.side
-        const position = this.config.isHorizontal ? [offset.along, offset.across] : [offset.across, offset.along]
-
-        return `translate(${position[0]}, ${position[1]})
-          rotate(${90 * this.config.side * +!this.config.isHorizontal})`
-      })
-
-    labels.exit().remove()
-  }
-  */
 }
