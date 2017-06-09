@@ -37,6 +37,10 @@ export default {
     return scale
   },
 
+  getCalculatedDomain (model, config = {}) {
+    return model.getRangeFor(config.accessor, false)
+  },
+
   outerWidth (width, model, accessor, scale) {
     if (!model || !accessor || !_.isFunction(scale)) return width
     const first = _.get(_(model.data).first(), accessor)

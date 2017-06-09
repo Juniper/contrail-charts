@@ -55,8 +55,8 @@ export default class RadialBarView extends ChartView {
     const paddedPart = 1 - (this.config.get('barPadding') / 100)
     // TODO do not use model.data.length as there can be gaps
     // or fill the gaps in it beforehand
-    const angleScale = this.config.angleScale
-    return (angleScale.range()[1] - angleScale.range()[0]) / data.length * paddedPart
+    const angularScale = this.config.angularScale
+    return (angularScale.range()[1] - angularScale.range()[0]) / data.length * paddedPart
   }
 
   /**
@@ -118,18 +118,18 @@ export default class RadialBarView extends ChartView {
   _prepareData () {
     const flatData = []
     const innerBandWidth = this._innerBandScale.bandwidth()
-    const rAccessors = this.config.rAccessors
+    const radialAccessors = this.config.radialAccessors
     _.each(this.model.data, d => {
-      const angle = _.get(d, this.config.get('angle.accessor'))
-      _.each(rAccessors, (rAccessor, j) => {
-        const key = rAccessor.accessor
+      const angularAccessor = _.get(d, this.config.get('angular.accessor'))
+      _.each(radialAccessors, (radialAccessor, j) => {
+        const key = radialAccessor.accessor
         const obj = {
-          id: angle + '-' + key,
-          angle: this.config.angleScale(angle) + this._innerBandScale(j),
+          id: angularAccessor + '-' + key,
+          angle: this.config.angularScale(angularAccessor) + this._innerBandScale(j),
           bandAngle: innerBandWidth,
-          rStart: this.config.rScale.range()[0],
-          rEnd: this.config.rScale(_.get(d, key)),
-          color: this.config.getColor(rAccessor, d),
+          rStart: this.config.radialScale.range()[0],
+          rEnd: this.config.radialScale(_.get(d, key)),
+          color: this.config.getColor(radialAccessor, d),
           data: d,
         }
         flatData.push(obj)
@@ -143,16 +143,16 @@ export default class RadialBarView extends ChartView {
   _onMouseover (d, el) {
     if (d.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      const angleAccessor = this.config.get('angle.accessor')
-      const angleVal = this.config.angleScale.invert(left)
-      const dataItem = this.model.getNearest(angleAccessor, angleVal)
+      const angularAccessor = this.config.get('angular.accessor')
+      const angularVal = this.config.angularScale.invert(left)
+      const dataItem = this.model.getNearest(angularAccessor, angularVal)
       actionman.fire('ToggleVisibility', d.tooltip, true, {left, top}, dataItem)
     }
     el.classList.add(this.selectorClass('active'))
   }
 
   _onMouseout (d = {}, el) {
-    const tooltipId = d.tooltip || this.config.get('r.tooltip')
+    const tooltipId = d.tooltip || this.config.get('radial.tooltip')
     if (!_.isEmpty(tooltipId)) actionman.fire('ToggleVisibility', tooltipId, false)
 
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)
