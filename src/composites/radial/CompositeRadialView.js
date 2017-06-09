@@ -46,6 +46,7 @@ export default class CompositeRadialView extends ChartView {
     this._renderAxes()
 
     // force composite scale for children components
+    // and inform them that it is a provided scale so they will not overwrite.
     const components = this._composite.getByType(_(this.config.activeAccessors).map('chart').uniq().value())
     _.each(components, component => {
       const componentAngularAxisName = this.config.getAngularAxisName(component.config.get('angular'))
@@ -59,6 +60,11 @@ export default class CompositeRadialView extends ChartView {
     this._showLegend()
 
     this._ticking = false
+  }
+
+  remove () {
+    this._composite.remove()
+    super.remove()
   }
 
   /**
@@ -158,78 +164,6 @@ export default class CompositeRadialView extends ChartView {
     })
   }
 
-  /*
-  _initCrosshair () {
-    const crosshairId = this.config.get('crosshair')
-    if (!crosshairId) return
-    this.svg.delegate('mousemove', 'svg', this._onMousemove.bind(this))
-  }
-  */
-
-  /*
-  _toggleCrosshair (point) {
-    const crosshairId = this.config.get('crosshair')
-    if (point[0] < 0 || point[0] > this.innerWidth || point[1] < 0 || point[1] > this.innerHeight) {
-      actionman.fire('ToggleVisibility', crosshairId, false)
-      this._ticking = false
-      return
-    }
-    const xScale = this.config.get('axes.x.scale')
-    const mouseX = xScale.invert(point[0])
-    const xAccessor = this.config.get('plot.x.accessor')
-    const serie = this.model.getNearest(xAccessor, mouseX)
-
-    const config = {
-      container: this._container,
-      margin: this.config.margin,
-      bubbles: true,
-      lines: 'full',
-    }
-
-    const data = {
-      hoverPoint: point,
-      dataPoint: [],
-      item: serie,
-      labels: [],
-      points: [],
-    }
-
-    data.dataPoint[0] = xScale(_.get(serie, xAccessor))
-    // TODO if scatterplot - calculate snapped y coord too
-    data.dataPoint[1] = point[1]
-
-    data.labels = _.map(this.config.activeAxes, axisConfig => {
-      const axis = this._composite.get(`${this.id}-${axisConfig.name}`)
-      const accessor = this.config.getAxisAccessors(axisConfig.name)[0]
-      let value = _.get(serie, accessor)
-      const formatter = axis.config.formatter
-      if (formatter) value = formatter(value)
-      return {
-        position: 'bottom',
-        value: value,
-      }
-    })
-    // TODO enable not only for x axis
-    data.labels = [data.labels[0]]
-
-    _.each(this.config.children, child => {
-      const component = this._composite.get(this.id + '-' + child.key)
-      _.each(child.accessors, accessor => {
-        const accessorName = accessor.accessor
-        data.points.push({
-          id: accessorName,
-          x: component.getScreenX(serie, accessorName),
-          y: component.getScreenY(serie, accessorName),
-          color: this.config.getColor(accessorName),
-        })
-      })
-    })
-
-    actionman.fire('ToggleVisibility', crosshairId, true, data, config)
-    this._ticking = false
-  }
-  */
-
   _showLegend () {
     const legendId = this.config.get('legend')
     if (!legendId) return
@@ -250,43 +184,5 @@ export default class CompositeRadialView extends ChartView {
       }
     })
     actionman.fire('ToggleVisibility', legendId, true, data, config)
-  }
-
-  /**
-   * If bucket is specified for this component perform scatterplot data bundling for Bucket
-   */
-  /*
-  _cluster () {
-    const bucketId = this.config.get('bucket')
-    if (!bucketId) return
-    const points = []
-
-    const scatterPlots = this._composite.getByType('ScatterPlot')
-    _.each(scatterPlots, component => {
-      // TODO performance optimization: cluster only visible points
-      points.push(...component.prepareData())
-    })
-
-    const config = {
-      clip: `${this.id}-${this.selectors.clip}`,
-      margin: this.config.margin,
-      update: this.id,
-      xAccessor: this.config.get('plot.x.accessor'),
-    }
-    // TODO performance optimization: do not calculate cluster on Zoom action if start-end distance didn't change
-    actionman.fire('ToggleVisibility', this.config.get('bucket'), true, points, config)
-  }
-  */
-
-  // Event handlers
-
-  _onMousemove (d, el, e) {
-    /*
-    const point = d3.mouse(this.el)
-    if (!this._ticking) {
-      window.requestAnimationFrame(this._toggleCrosshair.bind(this, point))
-      this._ticking = true
-    }
-    */
   }
 }

@@ -22,7 +22,7 @@ export default class RadialAxisView extends ChartView {
    */
   get selectors () {
     return _.extend(super.selectors, {
-      node: '.axis',
+      node: '.radial-axis',
       label: '.axis-label',
       tick: '.tick',
     })
