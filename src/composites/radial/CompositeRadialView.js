@@ -44,71 +44,21 @@ export default class CompositeRadialView extends ChartView {
     this._updateComponents()
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
     this._renderAxes()
-    this._renderClip()
 
     // force composite scale for children components
     const components = this._composite.getByType(_(this.config.activeAccessors).map('chart').uniq().value())
     _.each(components, component => {
       const componentAngularAxisName = this.config.getAngularAxisName(component.config.get('angular'))
       component.config.set('angular.scale', this.config.get(`axes.${componentAngularAxisName}.scale`), {silent: true})
+      component.config.set('angular.providedScale', true, {silent: true})
       const componentRadialAxisName = this.config.getRadialAxisName(component.config.get('radial'))
       component.config.set('radial.scale', this.config.get(`axes.${componentRadialAxisName}.scale`), {silent: true})
+      component.config.set('radial.providedScale', true, {silent: true})
       component.render()
     })
     this._showLegend()
 
     this._ticking = false
-  }
-
-  /**
-   * Works only with incremental values at x scale, as range is set as min / max values for x scale
-   * There is no option to set zoomed range by exact position at x scale (start / end)
-   */
-  /*
-  zoom (ranges) {
-    const accessorsByAxis = _.groupBy(this.config.yAccessors, 'axis')
-    accessorsByAxis.x = [{accessor: this.config.get('plot.x.accessor')}]
-
-    _.each(accessorsByAxis, (accessors, axisName) => {
-      // change domains only for specified accessors or
-      // if no ranges specified - reset all
-      if (_.isEmpty(_.filter(accessors, a => !ranges || ranges[a.accessor]))) return
-
-      // combine ranges of different accessors on the same axis
-      const range = d3Array.extent(_(accessors).map(accessor => {
-        return ranges ? ranges[accessor.accessor] : []
-      }).flatten().value())
-
-      // Skip equal start-end ranges except they are "undefined"
-      console.log(range);
-      if (range[0] !== range[1] || _.isNil(range[0])) {
-        this.config.set(`axes.${axisName}.domain`, range, {silent: true})
-      }
-    })
-
-    this.render()
-  }
-  */
-
-  /**
-   * React on "Cluster" action fired
-   */
-  /*
-  cluster (overlapping) {
-    this._overlapping = overlapping
-    const scatterPlots = this._composite.getByType('ScatterPlot')
-    _.each(scatterPlots, component => component.cluster(overlapping))
-  }
-  */
-
-  _renderClip () {
-    let clip = this.d3.select(this.selectors.clip)
-    if (clip.empty()) {
-      clip = this.d3.append(this.selectors.clip)
-        .attr('id', `${this.id}-${this.selectors.clip}`)
-        .append('rect')
-    }
-    clip.attr('width', this.innerWidth).attr('height', this.innerHeight)
   }
 
   /**
@@ -156,17 +106,12 @@ export default class CompositeRadialView extends ChartView {
     }
 
     // reset calculated values from previous render
-    /*
-    _.each(config.accessors, accessor => {
+    _.each(this.config.accessors, accessor => {
       const angularAxisName = this.config.getAngularAxisName(accessor)
       this.config.set(`axes.${angularAxisName}.calculatedDomain`, undefined, {silent: true})
-      // TODO this will reset user defined range?
-      //this.config.set(`axes.${angularAxisName}.range`, undefined, {silent: true})
       const radialAxisName = this.config.getRadialAxisName(accessor)
       this.config.set(`axes.${radialAxisName}.calculatedDomain`, undefined, {silent: true})
-      //this.config.set(`axes.${radialAxisName}.range`, undefined, {silent: true})
     })
-    */
 
     const children = this.svg.selectAll(this.selectors.node)
       .data(this.config.children, d => d.key)
@@ -200,13 +145,11 @@ export default class CompositeRadialView extends ChartView {
       component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
       const angularAxisName = this.config.getAngularAxisName(child.accessor)
       let calculatedDomain = this.config.get(`axes.${angularAxisName}.calculatedDomain`) || []
-      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angular.calculatedDomain')))
-      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.angularScale.domain()))
+      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angular.calculatedDomain')))
       this.config.set(`axes.${angularAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
       const radialAxisName = this.config.getRadialAxisName(child.accessor)
       calculatedDomain = this.config.get(`axes.${radialAxisName}.calculatedDomain`) || []
-      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('radial.calculatedDomain')))
-      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.radialScale.domain()))
+      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('radial.calculatedDomain')))
       this.config.set(`axes.${radialAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
     })
 

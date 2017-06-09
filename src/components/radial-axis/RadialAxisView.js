@@ -62,6 +62,9 @@ export default class RadialAxisView extends ChartView {
         .ease(d3Ease.easeLinear).duration(this.config.get('duration'))
       radialAxisTicksEdit.select('circle')
         .attr('r', d => scale(d))
+      radialAxisTicksEdit.select('text')
+        .text(d => d)
+        .attr('dy', d => -scale(d))
       radialAxisTicks.exit().remove()
     }
     if (this.config.position === 'angular') {
@@ -109,37 +112,4 @@ export default class RadialAxisView extends ChartView {
     // TODO this._renderLabel()
     this._ticking = false
   }
-
-  /**
-   * Labels are rendered at the center along axis
-   * TODO not optimal label spacing
-   * and in the first quater of the margin between container edge and tick
-   */
-  /*
-  _renderLabel () {
-    const offset = {
-      along: this._plotLength / 2,
-      across: this._tickLength * +(this.config.location === 'end') +
-        this.config.get('margin.' + this.config.position) * 0.75 * this.config.side,
-    }
-
-    const labels = this.d3.selectAll(this.selectors.label)
-      .data(this.config.labels)
-    labels
-      .enter()
-      .append('text')
-      .attr('class', this.selectorClass('label'))
-      .text(d => d)
-      .merge(labels)
-      .attr('transform', (d, i) => {
-        offset.across += i * this.config.get('margin.label') * this.config.side
-        const position = this.config.isHorizontal ? [offset.along, offset.across] : [offset.across, offset.along]
-
-        return `translate(${position[0]}, ${position[1]})
-          rotate(${90 * this.config.side * +!this.config.isHorizontal})`
-      })
-
-    labels.exit().remove()
-  }
-  */
 }

@@ -12,7 +12,7 @@ export default class RadialLineConfigModel extends ConfigModel {
       {
         isSharedContainer: true,
         curve: d3Shape.curveCatmullRom.alpha(0.5),
-        r: {
+        radial: {
           color: 'steelblue',
         },
 
@@ -35,16 +35,21 @@ export default class RadialLineConfigModel extends ConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angular)
-    // TODO angular.scale may have been provided by composite or by user - in this we do not want to overwrite
-    // but it might have also been here from a previous render - in this case we want to overwrite - eg. after window was rescaled
-    // still dont know how to solve it.
-    // TODO calculate domain _.set(this.attributes, 'angular.calculatedDomain', angularScale.domain())
-    if (!_.has(this.attributes, 'angular.scale')) {
+    // check if user provided a scale in config
+    if (!_.has(this.attributes, 'angular.providedScale')) {
+      _.set(this.attributes, 'angular.providedScale', _.has(this.attributes, 'angular.scale'))
+    }
+    if (!_.has(this.attributes, 'radial.providedScale')) {
+      _.set(this.attributes, 'radial.providedScale', _.has(this.attributes, 'radial.scale'))
+    }
+
+    _.set(this.attributes, 'angular.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'angular.scale') || !this.attributes.angular.providedScale) {
       _.set(this.attributes, 'angular.scale', ScalableChart.getScale(model, config))
     }
     config = _.extend({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.radial)
-    // TODO calculate domain  _.set(this.attributes, 'radial.calculatedDomain', radialScale.domain())
-    if (!_.has(this.attributes, 'radial.scale')) {
+    _.set(this.attributes, 'radial.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'radial.scale') || !this.attributes.radial.providedScale) {
       _.set(this.attributes, 'radial.scale', ScalableChart.getScale(model, config))
     }
   }

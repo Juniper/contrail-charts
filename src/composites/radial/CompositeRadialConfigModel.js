@@ -168,12 +168,14 @@ export default class CompositeRadialConfigModel extends ConfigModel {
         this.get(`axes.${axisName}`)
       )
       // Handle ranges given in %
-      _.each(config.range, (range, i) => {
+      const newRange = [config.range[0], config.range[1]]
+      _.each(newRange, (range, i) => {
         if (_.endsWith(range, '%')) {
           const percent = parseInt(_.trim(range, ' %'))
-          config.range[i] = (percent / 100) * availableR
+          newRange[i] = (percent / 100) * availableR
         }
       })
+      config.range = newRange
       _.set(this.attributes, `axes.${axisName}.scale`, ScalableChart.getScale(model, config))
     })
   }
@@ -196,29 +198,6 @@ export default class CompositeRadialConfigModel extends ConfigModel {
     accessor.disabled = !isEnabled
     this.trigger('change')
   }
-
-  /**
-   * Changing anyone chart type from GroupedBar to StackedBar or vise versa will affect all bars for no bars overlap
-   * @param accessorName
-   * @param type
-   */
-  /*
-  setChartType (accessorName, type) {
-    const barCharts = ['GroupedBar', 'StackedBar']
-    const accessor = _.find(this.accessors, {accessor: accessorName})
-    if (!accessor) return
-    const toUpdate = [accessor]
-    if (barCharts.includes(type)) {
-      toUpdate.push(..._.filter(this.accessors, a => {
-        return barCharts.includes(a.chart) && this.getAxisName(a) === this.getAxisName(accessor) && a !== accessor
-      }))
-    }
-
-    // TODO should fire SelectChartType action for all extra accessors changed
-    _.each(toUpdate, accessor => { accessor.chart = type })
-    this.trigger('change')
-  }
-  */
 
   isMultiAccessor (type) {
     return ['Area', 'StackedBar', 'GroupedBar'].includes(type)

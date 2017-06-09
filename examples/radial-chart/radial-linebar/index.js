@@ -80,7 +80,7 @@ const config = {
         angularAxis: {
           scale: 'scaleLinear',
           label: 'Angle',
-          range: [0, 6, 4],
+          range: [0, 6.0],
           removeLastAngularTick: false,
         },
         radialAxis1: {

@@ -11,7 +11,7 @@ export default class RadialBarConfigModel extends ConfigModel {
     return _.merge(super.defaults,
       {
         isSharedContainer: true,
-        r: {
+        radial: {
           color: 'steelblue',
         },
         // Padding between series in percents of bar width
@@ -41,23 +41,24 @@ export default class RadialBarConfigModel extends ConfigModel {
    */
   calculateScales (model, width, height) {
     let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angular)
-    // TODO calculate domain _.set(this.attributes, 'angular.calculatedDomain', angularScale.domain())
-    if (!_.has(this.attributes, 'angular.scale')) {
+    // check if user provided a scale in config
+    if (!_.has(this.attributes, 'angular.providedScale')) {
+      _.set(this.attributes, 'angular.providedScale', _.has(this.attributes, 'angular.scale'))
+    }
+    if (!_.has(this.attributes, 'radial.providedScale')) {
+      _.set(this.attributes, 'radial.providedScale', _.has(this.attributes, 'radial.scale'))
+    }
+
+    _.set(this.attributes, 'angular.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'angular.scale') || !this.attributes.angular.providedScale) {
       _.set(this.attributes, 'angular.scale', ScalableChart.getScale(model, config))
     }
     config = _.merge({
       accessor: _.map(this.radialAccessors, 'accessor'),
     }, {range: [0, Math.min(width / 2, height / 2)]}, this.attributes.radial)
     // TODO handle multiple r accessors
-    /*
-    const radialScale = ScalableChart.getScale(model, config)
-    _.each(this.radialAccessors, a => {
-      if (!_.has(a, 'scale'))
-      _.set(a, 'scale', radialScale)
-    })
-    */
-    // TODO calculate domain _.set(this.attributes, 'radial.calculatedDomain', radialScale.domain())
-    if (!_.has(this.attributes, 'radial.scale')) {
+    _.set(this.attributes, 'radial.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'radial.scale') || !this.attributes.radial.providedScale) {
       _.set(this.attributes, 'radial.scale', ScalableChart.getScale(model, config))
     }
   }
