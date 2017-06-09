@@ -25,8 +25,8 @@ export default class CompositeRadialConfigModel extends ConfigModel {
         chart: 'RadialLine',
         accessors: [
           {
-            angleAxis: 'angleAxis',
-            rAxis: 'rAxis',
+            angularAxis: 'angularAxis',
+            radialAxis: 'radialAxis',
           }
         ],
         ticks: {},
@@ -61,27 +61,27 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   /**
    * @return axes with enabled accessors to plot
    */
-  get activeAngleAxes () {
-    const angleAxisNames = _(this.activeAccessors).map(a => this.getAngleAxisName(a)).uniq().value()
+  get activeAngularAxes () {
+    const angularAxisNames = _(this.activeAccessors).map(a => this.getAngularAxisName(a)).uniq().value()
     return _.filter(this.attributes.axes, (axis, name) => {
-      const includes = angleAxisNames.includes(name)
+      const includes = angularAxisNames.includes(name)
       if (includes) {
         axis.id = `${this.id}-${name}`
         axis.name = name
-        axis.position = 'angle'
+        axis.position = 'angular'
       }
       return includes
     })
   }
 
-  get activeRAxes () {
-    const rAxisNames = _(this.activeAccessors).map(a => this.getRAxisName(a)).uniq().value()
+  get activeRadialAxes () {
+    const radialAxisNames = _(this.activeAccessors).map(a => this.getRadialAxisName(a)).uniq().value()
     return _.filter(this.attributes.axes, (axis, name) => {
-      const includes = rAxisNames.includes(name)
+      const includes = radialAxisNames.includes(name)
       if (includes) {
         axis.id = `${this.id}-${name}`
         axis.name = name
-        axis.position = 'r'
+        axis.position = 'radial'
       }
       return includes
     })
@@ -100,27 +100,27 @@ export default class CompositeRadialConfigModel extends ConfigModel {
   }
 
   getAccessorKey (accessor) {
-    return `${accessor.angle}-${accessor.r}`
+    return `${accessor.angular}-${accessor.radial}`
   }
 
-  getAngleAxisName (accessor) {
-    return accessor.angleAxis || 'angleAxis'
+  getAngularAxisName (accessor) {
+    return accessor.angularAxis || 'angularAxis'
   }
 
-  getRAxisName (accessor) {
-    return accessor.rAxis || 'rAxis'
+  getRadialAxisName (accessor) {
+    return accessor.radialAxis || 'radialAxis'
   }
 
   getOtherAxisName (position, accessor) {
-    if (position === 'r') {
-      return this.getAngleAxisName(accessor)
+    if (position === 'radial') {
+      return this.getAngularAxisName(accessor)
     } else {
-      return this.getRAxisName(accessor)
+      return this.getRadialAxisName(accessor)
     }
   }
 
   getAxisAccessors (name) {
-    return _.filter(this.accessors, accessor => this.getAngleAxisName(accessor) === name || this.getRAxisName(accessor) === name)
+    return _.filter(this.accessors, accessor => this.getAngularAxisName(accessor) === name || this.getRadialAxisName(accessor) === name)
   }
 
   getAxisConfig (name) {
@@ -142,9 +142,9 @@ export default class CompositeRadialConfigModel extends ConfigModel {
    * @param height
    */
   calculateScales (model, width, height) {
-    const accessorsByAngleAxis = _.groupBy(this.activeAccessors, a => this.getAngleAxisName(a))
-    _.each(accessorsByAngleAxis, (accessors, axisName) => {
-      const accessorNames = _(accessors).map('angle').uniq().value()
+    const accessorsByAngularAxis = _.groupBy(this.activeAccessors, a => this.getAngularAxisName(a))
+    _.each(accessorsByAngularAxis, (accessors, axisName) => {
+      const accessorNames = _(accessors).map('angular').uniq().value()
       const config = _.extend(
         {
           domain: this.get(`axes.${axisName}.calculatedDomain`),
@@ -155,10 +155,10 @@ export default class CompositeRadialConfigModel extends ConfigModel {
       )
       _.set(this.attributes, `axes.${axisName}.scale`, ScalableChart.getScale(model, config))
     })
-    const accessorsByRAxis = _.groupBy(this.activeAccessors, a => this.getRAxisName(a))
+    const accessorsByRadialAxis = _.groupBy(this.activeAccessors, a => this.getRadialAxisName(a))
     const availableR = Math.min(width / 2, height / 2)
-    _.each(accessorsByRAxis, (accessors, axisName) => {
-      const accessorNames = _(accessors).map('r').uniq().value()
+    _.each(accessorsByRadialAxis, (accessors, axisName) => {
+      const accessorNames = _(accessors).map('radial').uniq().value()
       const config = _.extend(
         {
           domain: this.get(`axes.${axisName}.calculatedDomain`),

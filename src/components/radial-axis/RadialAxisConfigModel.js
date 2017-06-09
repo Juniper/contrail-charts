@@ -34,8 +34,8 @@ export default class RadialAxisConfigModel extends ConfigModel {
       // Default axis ticks if not specified per axis.
       ticks: 10,
 
-      // Removes last angle tick if true.
-      removeLastAngleTick: false,
+      // Removes last angular tick if true.
+      removeLastAngularTick: false,
 
       margin: {
         label: 10,

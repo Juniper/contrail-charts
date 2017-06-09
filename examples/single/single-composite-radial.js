@@ -19,31 +19,31 @@ const config = {
   accessors: [
     {
       chart: 'RadialLine',
-      angle: 'x',
-      r: 'a',
-      angleAxis: 'angleAxis',
-      rAxis: 'rAxis1',
+      angular: 'x',
+      radial: 'a',
+      angleAxis: 'angularAxis',
+      radialAxis: 'radialAxis1',
       color: colorScheme[0],
     }, {
       chart: 'RadialLine',
-      angle: 'x',
-      r: 'random',
-      angleAxis: 'angleAxis',
-      rAxis: 'rAxis2',
+      angular: 'x',
+      radial: 'random',
+      angleAxis: 'angularAxis',
+      radialAxis: 'radialAxis2',
       color: colorScheme[1],
     },
   ],
   axes: {
-    angleAxis: {
+    angular: {
       scale: 'scaleLinear',
       label: 'Angle',
     },
-    rAxis1: {
+    radialAxis1: {
       scale: 'scaleLinear',
       label: 'R1',
       range: ['5%', '45%'],
     },
-    rAxis2: {
+    radialAxis2: {
       scale: 'scaleLinear',
       label: 'R2',
       range: ['55%', '95%'],

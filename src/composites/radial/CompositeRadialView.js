@@ -49,10 +49,10 @@ export default class CompositeRadialView extends ChartView {
     // force composite scale for children components
     const components = this._composite.getByType(_(this.config.activeAccessors).map('chart').uniq().value())
     _.each(components, component => {
-      const componentAngleAxisName = this.config.getAngleAxisName(component.config.get('angle'))
-      component.config.set('angle.scale', this.config.get(`axes.${componentAngleAxisName}.scale`), {silent: true})
-      const componentRAxisName = this.config.getRAxisName(component.config.get('r'))
-      component.config.set('r.scale', this.config.get(`axes.${componentRAxisName}.scale`), {silent: true})
+      const componentAngularAxisName = this.config.getAngularAxisName(component.config.get('angular'))
+      component.config.set('angular.scale', this.config.get(`axes.${componentAngularAxisName}.scale`), {silent: true})
+      const componentRadialAxisName = this.config.getRadialAxisName(component.config.get('radial'))
+      component.config.set('radial.scale', this.config.get(`axes.${componentRadialAxisName}.scale`), {silent: true})
       component.render()
     })
     this._showLegend()
@@ -115,7 +115,7 @@ export default class CompositeRadialView extends ChartView {
    * Render axes and calculate inner margins for charts
    */
   _renderAxes () {
-    const allAxes = _.concat(this.config.activeAngleAxes, this.config.activeRAxes)
+    const allAxes = _.concat(this.config.activeAngularAxes, this.config.activeRadialAxes)
     const elements = this.svg.selectAll(this.selectors.axis)
       .data(allAxes, d => d.name)
 
@@ -158,13 +158,13 @@ export default class CompositeRadialView extends ChartView {
     // reset calculated values from previous render
     /*
     _.each(config.accessors, accessor => {
-      const angleAxisName = this.config.getAngleAxisName(accessor)
-      this.config.set(`axes.${angleAxisName}.calculatedDomain`, undefined, {silent: true})
+      const angularAxisName = this.config.getAngularAxisName(accessor)
+      this.config.set(`axes.${angularAxisName}.calculatedDomain`, undefined, {silent: true})
       // TODO this will reset user defined range?
-      //this.config.set(`axes.${angleAxisName}.range`, undefined, {silent: true})
-      const rAxisName = this.config.getRAxisName(accessor)
-      this.config.set(`axes.${rAxisName}.calculatedDomain`, undefined, {silent: true})
-      //this.config.set(`axes.${rAxisName}.range`, undefined, {silent: true})
+      //this.config.set(`axes.${angularAxisName}.range`, undefined, {silent: true})
+      const radialAxisName = this.config.getRadialAxisName(accessor)
+      this.config.set(`axes.${radialAxisName}.calculatedDomain`, undefined, {silent: true})
+      //this.config.set(`axes.${radialAxisName}.range`, undefined, {silent: true})
     })
     */
 
@@ -174,12 +174,12 @@ export default class CompositeRadialView extends ChartView {
     children.enter().merge(children).each(child => {
       const type = this.config.getComponentType(child.accessor)
       config.id = `${this.id}-${child.key}`
-      config.angle = _.merge({}, child.accessor)
-      config.r = _.merge({}, child.accessor)
-      config.angle.accessor = child.accessor.angle
-      config.angle.axis = child.accessor.angleAxis
-      config.r.accessor = child.accessor.r
-      config.r.axis = child.accessor.rAxis
+      config.angular = _.merge({}, child.accessor)
+      config.radial = _.merge({}, child.accessor)
+      config.angular.accessor = child.accessor.angular
+      config.angular.axis = child.accessor.angularAxis
+      config.radial.accessor = child.accessor.radial
+      config.radial.axis = child.accessor.radialAxis
       config.tooltip = child.accessor.tooltip
       config.barPadding = child.accessor.barPadding
 
@@ -198,16 +198,16 @@ export default class CompositeRadialView extends ChartView {
       }
 
       component.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
-      const angleAxisName = this.config.getAngleAxisName(child.accessor)
-      let calculatedDomain = this.config.get(`axes.${angleAxisName}.calculatedDomain`) || []
-      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angle.calculatedDomain')))
-      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.angleScale.domain()))
-      this.config.set(`axes.${angleAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
-      const rAxisName = this.config.getRAxisName(child.accessor)
-      calculatedDomain = this.config.get(`axes.${rAxisName}.calculatedDomain`) || []
-      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('r.calculatedDomain')))
-      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.rScale.domain()))
-      this.config.set(`axes.${rAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
+      const angularAxisName = this.config.getAngularAxisName(child.accessor)
+      let calculatedDomain = this.config.get(`axes.${angularAxisName}.calculatedDomain`) || []
+      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('angular.calculatedDomain')))
+      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.angularScale.domain()))
+      this.config.set(`axes.${angularAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
+      const radialAxisName = this.config.getRadialAxisName(child.accessor)
+      calculatedDomain = this.config.get(`axes.${radialAxisName}.calculatedDomain`) || []
+      // TODO calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.get('radial.calculatedDomain')))
+      calculatedDomain = d3Array.extent(calculatedDomain.concat(component.config.radialScale.domain()))
+      this.config.set(`axes.${radialAxisName}.calculatedDomain`, calculatedDomain, {silent: true})
     })
 
     children.exit().each(child => {
@@ -297,7 +297,7 @@ export default class CompositeRadialView extends ChartView {
     }
     const data = _.map(this.config.accessors, accessor => {
       return {
-        key: `${accessor.angle}-${accessor.r}`,
+        key: `${accessor.angular}-${accessor.radial}`,
         disabled: accessor.disabled,
         label: this.config.getLabel(undefined, accessor),
         color: this.config.getColor(accessor),
