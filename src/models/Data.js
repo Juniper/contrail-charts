@@ -35,5 +35,6 @@ export default class DataModel {
     return _.isFunction(this._formatter) ? this._formatter(data) : data
   }
 }
+
 // TODO replace with class extends syntax
 _.extend(DataModel.prototype, Events)

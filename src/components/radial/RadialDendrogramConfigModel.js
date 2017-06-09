@@ -26,6 +26,9 @@ export default class RadialDendrogramConfigModel extends ConfigModel {
         right: 50
       },
 
+      // The radius of the outer circle. Will be computed if undefined.
+      // innerRadius: 300,
+
       // The scale used to display throuput.
       valueScale: d3Scale.scaleLog(),
       // valueScale: d3Scale.scaleLinear(),
