@@ -57,14 +57,14 @@ export default class RadialLineView extends ChartView {
   render () {
     super.render()
     const data = this.model.data
-    const angleAccessor = this.config.get('angle.accessor')
-    const accessor = this.config.get('r')
+    const angularAccessor = this.config.get('angular.accessor')
+    const accessor = this.config.get('radial')
     const key = accessor.accessor
     this.config.calculateScales(this.model, this.innerWidth, this.innerHeight)
 
     this._line = d3Shape.radialLine()
-      .angle(d => this.config.angleScale(_.get(d, angleAccessor)))
-      .radius(d => this.config.rScale(_.get(d, key)))
+      .angle(d => this.config.angularScale(_.get(d, angularAccessor)))
+      .radius(d => this.config.radialScale(_.get(d, key)))
       .curve(this.config.get('curve'))
 
     const linePath = this.d3.selectAll(this.selectors.node)
@@ -110,16 +110,16 @@ export default class RadialLineView extends ChartView {
   _onMouseover (d, el) {
     if (d.tooltip) {
       const [left, top] = d3Selection.mouse(this._container)
-      const angleAccessor = this.config.get('angle.accessor')
-      const angleVal = this.config.angleScale.invert(left)
-      const dataItem = this.model.getNearest(angleAccessor, angleVal)
+      const angularAccessor = this.config.get('angular.accessor')
+      const angularVal = this.config.angularScale.invert(left)
+      const dataItem = this.model.getNearest(angularAccessor, angularVal)
       actionman.fire('ToggleVisibility', d.tooltip, true, {left, top}, dataItem)
     }
     el.classList.add(this.selectorClass('active'))
   }
 
   _onMouseout (d = {}, el) {
-    const tooltipId = d.tooltip || this.config.get('r.tooltip')
+    const tooltipId = d.tooltip || this.config.get('radial.tooltip')
     if (!_.isEmpty(tooltipId)) actionman.fire('ToggleVisibility', tooltipId, false)
 
     const els = el ? d3Selection.select(el) : this.d3.selectAll(this.selectors.node)

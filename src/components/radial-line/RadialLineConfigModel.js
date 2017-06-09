@@ -12,7 +12,7 @@ export default class RadialLineConfigModel extends ConfigModel {
       {
         isSharedContainer: true,
         curve: d3Shape.curveCatmullRom.alpha(0.5),
-        r: {
+        radial: {
           color: 'steelblue',
         },
 
@@ -21,12 +21,12 @@ export default class RadialLineConfigModel extends ConfigModel {
     )
   }
 
-  get angleScale () {
-    return this.get('angle.scale')
+  get angularScale () {
+    return this.get('angular.scale')
   }
 
-  get rScale () {
-    return this.get('r.scale')
+  get radialScale () {
+    return this.get('radial.scale')
   }
   /**
    * @param model
@@ -34,26 +34,31 @@ export default class RadialLineConfigModel extends ConfigModel {
    * @param height
    */
   calculateScales (model, width, height) {
-    let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angle)
-    // TODO angle.scale may have been provided by composite or by user - in this we do not want to overwrite
-    // but it might have also been here from a previous render - in this case we want to overwrite - eg. after window was rescaled
-    // still dont know how to solve it.
-    // TODO calculate domain _.set(this.attributes, 'angle.calculatedDomain', angleScale.domain())
-    if (!_.has(this.attributes, 'angle.scale')) {
-      _.set(this.attributes, 'angle.scale', ScalableChart.getScale(model, config))
+    let config = _.extend({range: [0, 2 * Math.PI]}, this.attributes.angular)
+    // check if user provided a scale in config
+    if (!_.has(this.attributes, 'angular.providedScale')) {
+      _.set(this.attributes, 'angular.providedScale', _.has(this.attributes, 'angular.scale'))
     }
-    config = _.extend({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.r)
-    // TODO calculate domain  _.set(this.attributes, 'r.calculatedDomain', rScale.domain())
-    if (!_.has(this.attributes, 'r.scale')) {
-      _.set(this.attributes, 'r.scale', ScalableChart.getScale(model, config))
+    if (!_.has(this.attributes, 'radial.providedScale')) {
+      _.set(this.attributes, 'radial.providedScale', _.has(this.attributes, 'radial.scale'))
+    }
+
+    _.set(this.attributes, 'angular.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'angular.scale') || !this.attributes.angular.providedScale) {
+      _.set(this.attributes, 'angular.scale', ScalableChart.getScale(model, config))
+    }
+    config = _.extend({range: [0, Math.min(width / 2, height / 2)]}, this.attributes.radial)
+    _.set(this.attributes, 'radial.calculatedDomain', ScalableChart.getCalculatedDomain(model, config))
+    if (!_.has(this.attributes, 'radial.scale') || !this.attributes.radial.providedScale) {
+      _.set(this.attributes, 'radial.scale', ScalableChart.getScale(model, config))
     }
   }
 
   getColor () {
-    return this.get('r.color')
+    return this.get('radial.color')
   }
 
   setColor (accessorName, color) {
-    this.set('r.color', color)
+    this.set('radial.color', color)
   }
 }

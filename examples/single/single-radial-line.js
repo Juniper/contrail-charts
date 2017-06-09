@@ -24,12 +24,12 @@ const config = {
     top: 10,
     bottom: 10
   },
-  angle: {
+  angular: {
     accessor: 'group.x',
     labelFormatter: 'Value',
     //scale: 'scaleLinear',
   },
-  r: {
+  radial: {
     accessor: 'group.a',
     labelFormatter: 'Label Group.A',
     color: colorScheme[2],
