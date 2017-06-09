@@ -11,7 +11,7 @@ const auth = {
 const startTestsUrl = `https://saucelabs.com/rest/v1/${process.env.SAUCE_USERNAME}/js-tests`
 const resultUrl = `https://saucelabs.com/rest/v1/${process.env.SAUCE_USERNAME}/js-tests/status`
 
-let sauceId
+var sauceId
 request.post(startTestsUrl, {
   auth,
   json: {

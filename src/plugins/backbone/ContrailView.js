@@ -23,6 +23,7 @@ export default class ContrailView extends Backbone.View {
   constructor (p) {
     super(p)
     this.actionman = actionman
+    this._uniqId = this._getUniqId()
   }
   /**
    * @return {String} this class name without 'View'
@@ -103,5 +104,13 @@ export default class ContrailView extends Backbone.View {
   _setElement (el) {
     super._setElement(el)
     this.d3 = d3Selection.select(el)
+  }
+  /**
+   * Get unique id.
+   * @private
+   * @returns {String}
+   */
+  _getUniqId () {
+    return Math.random().toString(36).substr(2, 10)
   }
 }

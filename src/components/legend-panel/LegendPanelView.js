@@ -3,6 +3,7 @@
  */
 import $ from 'jquery'
 import _ from 'lodash'
+import * as d3Selection from 'd3-selection'
 import * as d3Color from 'd3-color'
 import ChartView from 'chart-view'
 import Config from './LegendPanelConfigModel'
@@ -53,11 +54,35 @@ export default class LegendPanelView extends ChartView {
     }
   }
 
+  /**
+   * @private
+   * @see https://github.com/d3/d3-selection/blob/master/README.md#selection_on
+   * @returns {String}
+   */
+  _getClickEventId () {
+    return 'click.' + this._uniqId
+  }
+
+  /**
+   * @override
+   */
+  remove () {
+    super.remove()
+    /*
+     * Remove view's outside click event handler.
+     */
+    d3Selection.select('body').on(this._getClickEventId(), null)
+  }
+
   render () {
     const template = this.config.get('template') || _template
     const data = this._prepareData()
     const content = template(data)
     super.render(content)
+    /*
+     * Register view's outside click event handler.
+     */
+    d3Selection.select('body').on(this._getClickEventId(), this._clickOutsideEventHandler.bind(this))
 
     if (!this.config.attributes.filter || data.keys.length === 1) {
       this.d3.selectAll(this.selectors.key)
@@ -133,7 +158,20 @@ export default class LegendPanelView extends ChartView {
       .classed('hide', false)
   }
 
-  _toggleSelector (d, el) {
+  _clickOutsideEventHandler () {
+    this._closeSelector()
+  }
+
+  _closeSelector () {
+    this.d3.select('.selector').classed('active', false)
+  }
+
+  _toggleSelector (d, el, event) {
+    /*
+     * Stop event propagation. This is necessary to prevent call of _clickOutsideEventHandler.
+     */
+    event.stopPropagation()
+
     this._key = $(el).parents('.key').data('key')
     const currentSelector = el.classList.contains('select--chart') ? 'chart' : 'color'
 
@@ -169,7 +207,12 @@ export default class LegendPanelView extends ChartView {
       .style('left', elemOffset.left + 'px')
   }
 
-  _selectColor (d, el) {
+  _selectColor (d, el, event) {
+    /*
+     * Stop event propagation. This is necessary to prevent call of _clickOutsideEventHandler.
+     */
+    event.stopPropagation()
+
     const color = window.getComputedStyle(el).backgroundColor
     actionman.fire('SelectColor', this._key, color)
   }
