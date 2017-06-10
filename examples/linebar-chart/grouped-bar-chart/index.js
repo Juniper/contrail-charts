@@ -47,6 +47,7 @@ const config = {
             labelFormatter: 'Label C',
             tooltip: 'default-tooltip',
             axis: 'y1',
+            color: '#ffbb78'
           }
         ]
       },

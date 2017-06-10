@@ -199,8 +199,8 @@ $pie-chart: (
 $dendrogram: (
   linkColor: $solidBlue,
   ribbonColor: $dimmedBlue,
-  ribbonActiveColor: $orange,
-  ribbonHoverColor: $orange,
+  ribbonActiveColor: rgba(0,0,0,.45),
+  ribbonHoverColor: rgba(0,0,0,.45),
   arcLabelColor: $black,
   arcLabelSize: 9px,
   arcBorderWidth: 1px,

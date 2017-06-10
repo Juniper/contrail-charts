@@ -17,16 +17,16 @@
   }
   .ribbon {
     fill: $p_ribbon_color;
-    fill-opacity: .2;
+    fill-opacity: .7;
     stroke-width: 0;
   }
   .ribbon:hover {
     fill: $p_hovered_ribbon_color;
-    fill-opacity: .4;
+    fill-opacity: .8;
   }
   .ribbon.active {
     fill: $p_active_ribbon_color;
-    fill-opacity: .7;
+    fill-opacity: .8;
   }
   .arc {
     fill: $p_ribbon_color;
