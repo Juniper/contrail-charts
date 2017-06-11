@@ -4,7 +4,7 @@
 import {composites} from 'contrail-charts'
 import formatter from 'formatter'
 import fixture from 'fixture'
-import {schemeCategory10 as colorScheme} from 'd3-scale'
+import {schemeCategory20 as colorScheme} from 'd3-scale'
 
 const length = 10
 const data = fixture({
@@ -46,21 +46,21 @@ const config = {
             chart: 'Area',
             stack: 'positive',
             axis: 'y',
-            color: colorScheme[2],
+            color: colorScheme[0],
             tooltip: 'default-tooltip',
           }, {
             accessor: 'b',
             chart: 'Area',
             stack: 'negative',
             axis: 'y',
-            color: colorScheme[3],
+            color: colorScheme[1],
             tooltip: 'default-tooltip',
           }, {
             accessor: 'c',
             chart: 'Area',
             stack: 'negative',
             axis: 'y',
-            color: colorScheme[4],
+            color: colorScheme[8],
             tooltip: 'default-tooltip',
           }
         ]

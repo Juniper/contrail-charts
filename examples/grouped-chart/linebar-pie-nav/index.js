@@ -5,7 +5,7 @@ import _ from 'lodash'
 import {composites} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
 import template from './template.html'
-const colorScheme = _c.d3ColorScheme20
+const colorScheme = _c.palette
 
 const now = _.now()
 const length = 100
@@ -167,7 +167,7 @@ const config = {
       radius: 100,
       width: 200,
       height: 300,
-      colorScale: d3.scaleOrdinal().range([colorScheme[0], colorScheme[4], colorScheme[2]]), // eslint-disable-line no-undef
+      colorScale: d3.scaleOrdinal().range([colorScheme[3], colorScheme[5], colorScheme[9]]), // eslint-disable-line no-undef
       serie: {
         getValue: serie => serie.value,
         getLabel: serie => serie.label,

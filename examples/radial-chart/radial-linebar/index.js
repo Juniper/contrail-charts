@@ -4,7 +4,7 @@
 import {composites} from 'contrail-charts'
 import {_c} from 'commons'
 import fixture from 'fixture'
-import {schemeCategory10 as colorScheme} from 'd3-scale'
+import {schemeCategory20 as colorScheme} from 'd3-scale'
 
 const data = fixture()
 
@@ -40,7 +40,7 @@ const config = {
           radial: 'd',
           angularAxis: 'angularAxis',
           radialAxis: 'radialAxis2',
-          color: colorScheme[4],
+          color: colorScheme[0],
           barPadding: 20,
         }, {
           chart: 'RadialLine',
@@ -49,7 +49,7 @@ const config = {
           radial: 'a',
           angularAxis: 'angularAxis',
           radialAxis: 'radialAxis1',
-          color: colorScheme[0],
+          color: colorScheme[4],
         }, {
           chart: 'RadialLine',
           labelFormatter: 'B Values',
@@ -57,7 +57,7 @@ const config = {
           radial: 'b',
           angularAxis: 'angularAxis',
           radialAxis: 'radialAxis1',
-          color: colorScheme[1],
+          color: colorScheme[6],
         }, {
           chart: 'RadialLine',
           labelFormatter: 'Random Values',
@@ -65,7 +65,7 @@ const config = {
           radial: 'random',
           angularAxis: 'angularAxis',
           radialAxis: 'radialAxis2',
-          color: colorScheme[2],
+          color: colorScheme[1],
         }, {
           chart: 'RadialLine',
           labelFormatter: 'C Values',
@@ -73,7 +73,7 @@ const config = {
           radial: 'c',
           angularAxis: 'angularAxis',
           radialAxis: 'radialAxis2',
-          color: colorScheme[3],
+          color: colorScheme[8],
         },
       ],
       axes: {

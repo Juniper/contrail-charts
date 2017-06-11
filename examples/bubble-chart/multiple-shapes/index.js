@@ -18,7 +18,7 @@ const data = fixture({
   },
 })
 
-const colorScheme = _c.radialColorScheme10
+const colorScheme = _c.palette
 const bubbleShapes = Util.bubbleShapes
 
 let chart

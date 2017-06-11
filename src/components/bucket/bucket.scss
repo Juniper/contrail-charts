@@ -1,26 +1,38 @@
 .cc-svg .bucket {
   .bucket {
-    stroke: #ff7f0e;
+    stroke: rgba(0,0,0,.3);
     shape-rendering: geometricPrecision;
-    fill: #ff7f0e;
-    fill-opacity: 0.1;
+    fill: rgba(255,255,255,.8);
+    fill-opacity: 1;
+    transition: .1s all;
 
     &.active {
+      fill: rgba(0,0,0,.12);
+      stroke: rgba(0,0,0,.4);
+        
       text {
         opacity: 1;
+        transition: .1s all;
+        
+        &.bucket-label {
+          fill: rgba(0,0,0,.65);
+        }
       }
     }
 
     text {
-      opacity: 0.7;
+      opacity: 1;
       stroke-width: 1;
       text-anchor: middle;
       alignment-baseline: middle;
     }
     text.bucket-label {
+      fill: rgba(0,0,0,.3);
       opacity: 1;
       stroke-width: 1;
       font-weight: normal;
+      font-family: Arimo, Arial, Helvetica Neue, Helvetica, sans-serif;
+      transform: translateY(-3px);
     }
   }
 }

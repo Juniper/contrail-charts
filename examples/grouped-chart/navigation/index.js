@@ -5,7 +5,7 @@ import {composites} from 'contrail-charts'
 import {_c, fixture} from 'commons'
 import template from './template.html'
 
-const colorScheme = _c.lbColorScheme17
+const colorScheme = _c.paletteSoft
 
 const length = 20
 const data = fixture({
@@ -38,13 +38,13 @@ const config = {
             accessor: 'a',
             label: 'Label A',
             chart: 'StackedBar',
-            color: colorScheme[1],
+            color: colorScheme[0],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
             chart: 'StackedBar',
-            color: colorScheme[3],
+            color: colorScheme[2],
             axis: 'y',
           }
         ]
@@ -74,13 +74,13 @@ const config = {
             accessor: 'a',
             label: 'Label A',
             chart: 'GroupedBar',
-            color: colorScheme[7],
+            color: colorScheme[12],
             axis: 'y',
           }, {
             accessor: 'b',
             label: 'Label B',
             chart: 'GroupedBar',
-            color: colorScheme[6],
+            color: colorScheme[14],
             axis: 'y',
           },
         ]
@@ -111,14 +111,14 @@ const config = {
             label: 'Label A',
             chart: 'Area',
             axis: 'y',
-            color: colorScheme[2],
+            color: colorScheme[3],
           }, {
             accessor: 'c',
             label: 'Label C',
             chart: 'Area',
             stack: 'negative',
             axis: 'y',
-            color: colorScheme[4],
+            color: colorScheme[9],
           },
         ]
       },
@@ -148,13 +148,13 @@ const config = {
             label: 'Label A',
             chart: 'Line',
             axis: 'y',
-            color: colorScheme[11],
+            color: colorScheme[4],
           }, {
             accessor: 'c',
             label: 'Label C',
             chart: 'Line',
             axis: 'y',
-            color: colorScheme[9],
+            color: colorScheme[6],
           }
         ]
       },
@@ -186,7 +186,7 @@ const config = {
           {
             accessor: 'a',
             label: 'Label D',
-            color: colorScheme[8],
+            color: colorScheme[0],
             chart: 'Line',
             axis: 'y',
           }

@@ -17,7 +17,7 @@
   }
 
   .feature {
-    fill: #989898;
+    fill: #B5BCC4;
   }
 
   .boundary {
@@ -27,13 +27,21 @@
   }
 
   .point {
-    fill: #fcb134;
+    fill: #1f77b4;
+    stroke: rgba(255,255,255,.5);
+    stroke-width: 2px;
+    transition: .2s all;
+    
+    &:hover {
+      fill: #333;
+      stroke: transparent;
+    }
   }
 
   .link {
-	  fill: none;
-	  stroke-width: 2px;
-	  stroke: #fcb134;
-	  pointer-events: none;
+    fill: none;
+    stroke-width: 2px;
+    stroke: #1f77b4;
+    pointer-events: none;
   }
 }
