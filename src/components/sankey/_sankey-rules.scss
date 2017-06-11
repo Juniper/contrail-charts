@@ -14,7 +14,8 @@
   .link {
     fill: none;
     stroke: $p_link_color;
-    stroke-opacity: 0.4;
+    stroke-opacity: 1;
+    transition: .1s stroke;
   }
   .link:hover {
     stroke: $p_hovered_link_color;

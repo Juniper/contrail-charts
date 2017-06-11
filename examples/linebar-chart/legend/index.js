@@ -3,7 +3,7 @@
  */
 import {composites} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
-const colorScheme = _c.lbColorScheme7
+const colorScheme = _c.palette
 
 const length = 100
 const data = fixture({
@@ -58,12 +58,14 @@ const config = {
             chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
+            color: colorScheme[0],
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
             chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
+            color: colorScheme[1],
           }, {
             accessor: 'c',
             labelFormatter: 'Label C',
@@ -71,10 +73,11 @@ const config = {
             chart: 'GroupedBar',
             axis: 'y1',
             tooltip: 'default-tooltip',
+            color: colorScheme[2],
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
-            color: colorScheme[3],
+            color: colorScheme[6],
             chart: 'Line',
             axis: 'y2',
             tooltip: 'default-tooltip',
@@ -123,14 +126,17 @@ const config = {
             accessor: 'a',
             labelFormatter: 'Label A',
             chart: 'StackedBar',
+            color: colorScheme[0],
           }, {
             accessor: 'b',
             labelFormatter: 'Label B',
             chart: 'StackedBar',
+            color: colorScheme[1],
           }, {
             accessor: 'd',
             labelFormatter: 'Label D',
             chart: 'Line',
+            color: colorScheme[6],
           }
         ]
       },

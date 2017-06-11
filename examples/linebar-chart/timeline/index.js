@@ -30,10 +30,12 @@ const config = {
             accessor: 'a',
             chart: 'Line',
             axis: 'y1',
+            color: '#1f77b4',
           }, {
             accessor: 'b',
             chart: 'GroupedBar',
             axis: 'y1',
+            color: '#aec7e8',
           },
         ]
       },

@@ -4,6 +4,7 @@
 
   .bar {
     opacity: $p_opacity;
+    transition: .2s opacity;
   }
   .bar.active {
     opacity: $p_activeOpacity;
