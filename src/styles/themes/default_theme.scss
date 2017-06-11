@@ -7,11 +7,11 @@
 
 // brush
 $brush-selection: (
-  fillColor: $ashGrey
+  fillColor: #C7CBD1,
 ) !default;
 $brush-handle: (
   overallOpacity: 1,
-  fillColor: $grey,
+  fillColor: #677381,
   fillOpacity: 0.75,
   edgeColor: $blackGrey,
   edgeWidth: 1,
@@ -171,7 +171,7 @@ $area-chart: (
 
 // bar chart
 $bar-chart: (
-  barOpacity: 0.6,
+  barOpacity: 0.7,
   activeBarOpacity: 0.9
 ) !default;
 
@@ -208,13 +208,13 @@ $dendrogram: (
 
 // sakey chart
 $sankey: (
-  linkColor: $darkGrey,
+  linkColor: $dimmedBlue,
   nodeColor: $solidBlue,
-  linkHoverColor: $orange,
-  nodeHoverColor: $orange,
+  linkHoverColor: rgba(0,0,0,.45),
+  nodeHoverColor: rgba(0,0,0,.45),
   nodeBorderWidth: 1px,
-  nodeBorderColor: $black,
-  nodeBorderHoverColor: $orange,
+  nodeBorderColor: rgba(0,0,0,.12),
+  nodeBorderHoverColor: rgba(0,0,0,.55),
   nodeLabelSize: 9px,
   nodeLabelColor: $black,
 ) !default;

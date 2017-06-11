@@ -3,7 +3,7 @@
  */
 import {composites} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
-const colorScheme = _c.lbColorScheme7
+const colorScheme = _c.palette
 
 const length = 100
 const data = fixture({

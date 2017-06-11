@@ -18,7 +18,7 @@ const data = fixture({
   },
 })
 
-const colorScheme = _c.lbColorScheme17
+const colorScheme = _c.palette
 const bubbleShapes = Util.bubbleShapes
 
 let chart
@@ -56,7 +56,7 @@ const config = {
             },
             // this is a circle symbol from fontawesome
             // shape: bubbleShapes.circleFill,
-            color: d => colorScheme[1],
+            color: d => colorScheme[0],
             axis: 'y1',
             tooltip: 'tooltip-id',
           }, {

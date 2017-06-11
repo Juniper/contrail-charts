@@ -10,15 +10,15 @@
   $p_arc_label_color: map-get($dendrogram, "arcLabelColor");
 
   .link {
-    stroke: $p_link_color;
-    stroke-opacity: .2;
-    fill: none;
+    full: $p_link_color;
+    fill-opacity: .7;
     pointer-events: none;
   }
   .ribbon {
     fill: $p_ribbon_color;
     fill-opacity: .7;
     stroke-width: 0;
+    transition: .1s fill-opacity, .1s fill;
   }
   .ribbon:hover {
     fill: $p_hovered_ribbon_color;

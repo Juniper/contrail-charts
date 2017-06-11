@@ -4,7 +4,7 @@
 import {composites} from 'contrail-charts'
 import {formatter, _c, fixture} from 'commons'
 import template from './template.html'
-const colorScheme = _c.lbColorScheme7
+const colorScheme = _c.palette
 
 const data = fixture()
 

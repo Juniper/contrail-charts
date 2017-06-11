@@ -6,6 +6,14 @@
   $p_handle_border_color: map-get($brush-handle, "edgeColor");
   $p_handle_border_width: map-get($brush-handle, "edgeWidth");
   $p_handle_cursor: map-get($brush-handle, "cursorShape");
+  
+  &:hover {
+    
+    .handle--custom {
+      fill: #505661;
+      stroke: rgba(0,0,0,.25);
+    }
+  }
 
   .selection {
     fill: none;
@@ -17,19 +25,22 @@
 
   .unselected {
     fill: $p_selection_color;
-    opacity: 0.2;
+    opacity: 0.25;
   }
 
   .handle--custom {
     opacity: $p_handle_opacity;
     fill: $p_handle_color;
     fill-opacity: $p_handle_color_opacity;
-    stroke: $p_handle_border_color;
+    stroke: rgba(0,0,0,.35);
     stroke-width: $p_handle_border_width;
     cursor: $p_handle_cursor;
+    transition: .2s fill, .2s stroke;
 
     &.hide {
       display: none;
     }
   }
+  
+  
 }

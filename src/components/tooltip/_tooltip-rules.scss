@@ -36,8 +36,8 @@
 
   .tooltip-content {
     min-width: 200px;
-    padding: 14px;
-    border-radius: 8px;
+    padding: 12px 14px;
+    border-radius: 6px;
     /* background-color: $p_body_bg_color; */
     background-color: rgba(0,0,0,.75);
     color: $p_body_fg_color;
@@ -46,15 +46,24 @@
     .cc-title {
       font-weight: bold;
       font-size: $p_title_font_size;
+      opacity: 1;
       /*
       border-bottom-width: $p_title_separator_width;
       border-bottom-style: $p_title_separator_style;
       border-bottom-color: $p_title_separator_color; */
-      border-bottom: 1px solid rgba(255,255,255,.12);
+      /* border-bottom: 1px solid rgba(255,255,255,.12);
       padding-bottom: 8px;
-      /* margin-bottom: 15px; */
+      margin-bottom: 15px; */
       text-align: left;
+      margin: 0;
+      
+      &+.tooltip-items {
+        border-top: 1px solid rgba(255,255,255,.18);
+        padding-top: 6px;
+        margin-top: 6px;
+      }
     }
+
   }
 
   .tooltip-item {
@@ -96,11 +105,15 @@
   
   &.tooltip-light {
       
-      .tooltip-content {
-        background-color: rgba(255,255,255,.95);
-        border: 1px solid rgba(0,0,0,.2);
+    .tooltip-content {
+      background-color: rgba(255,255,255,.95);
+      border: 1px solid rgba(0,0,0,.2);
+      color: #111;
+      
+      .cc-title {
         color: #111;
       }
+    }
   }
   
   

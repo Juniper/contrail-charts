@@ -4,6 +4,7 @@
 
 import {schemeCategory10 as d3ColorScheme10, schemeCategory20 as d3ColorScheme20, schemeCategory20c as d3ColorScheme20c} from 'd3-scale'
 
+/*
 const lbColorScheme7 = [
   '#1f77b4',
   '#aec7e8',
@@ -47,7 +48,7 @@ const radialColorScheme6 = [
   '#fcc100',
   '#2196f3',
   '#c62828'
-]
+]  
 
 const radialColorScheme10 = [
   lbColorScheme7[0],
@@ -60,7 +61,9 @@ const radialColorScheme10 = [
   '#ff9896',
   '#9467bd',
   '#c5b0d5'
-]
+] */
+
+const palette = d3ColorScheme20
 
 const paletteSoft = [
   '#3182bd',
@@ -86,13 +89,14 @@ const paletteSoft = [
 ]
 
 export default {
-  bubbleColorScheme6,
+  /*bubbleColorScheme6,
   bubbleColorScheme13,
   lbColorScheme7,
   lbColorScheme17,
   radialColorScheme6,
-  radialColorScheme10,
+  radialColorScheme10, */
   d3ColorScheme10,
   d3ColorScheme20,
-  paletteSoft
+  paletteSoft,
+  palette
 }

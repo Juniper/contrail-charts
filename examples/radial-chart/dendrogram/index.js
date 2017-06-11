@@ -24,7 +24,7 @@ const config = {
       parentSeparation: 1.0,
       parentSeparationShrinkFactor: 0.05,
       parentSeparationDepthThreshold: 4,
-      colorScheme: _c.radialColorScheme10,
+      colorScheme: _c.palette,
       drawLinks: false,
       drawRibbons: true,
       arcWidth: 15,
