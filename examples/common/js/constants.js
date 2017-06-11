@@ -2,7 +2,7 @@
  * Copyright (c) Juniper Networks, Inc. All rights reserved.
  */
 
-import {schemeCategory10 as d3ColorScheme10, schemeCategory20 as d3ColorScheme20, schemeCategory20c as d3ColorScheme20c} from 'd3-scale'
+import {schemeCategory10 as d3ColorScheme10, schemeCategory20 as d3ColorScheme20} from 'd3-scale'
 
 const palette = d3ColorScheme20
 
@@ -30,12 +30,6 @@ const paletteSoft = [
 ]
 
 export default {
-  /*bubbleColorScheme6,
-  bubbleColorScheme13,
-  lbColorScheme7,
-  lbColorScheme17,
-  radialColorScheme6,
-  radialColorScheme10, */
   d3ColorScheme10,
   d3ColorScheme20,
   paletteSoft,
