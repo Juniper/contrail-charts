@@ -1,0 +1,23 @@
+@import "../../styles/colors";
+
+@mixin trafficMapRules($trafficMap) {
+  $p_link_color: map-get($trafficMap, "linkColor");
+  $p_map_feature_color: map-get($trafficMap, "mapFeatureColor");
+  $p_map_boundry_color: map-get($trafficMap, "mapBoundryColor");
+
+  .link {
+    fill: none;
+    stroke: $p_link_color;
+    stroke-opacity: .9;
+  }
+
+  .feature {
+    fill: $p_map_feature_color;
+  }
+
+  .boundary {
+    fill: none;
+    stroke: $p_map_boundry_color;
+    stroke-width: .5px;
+  }
+}

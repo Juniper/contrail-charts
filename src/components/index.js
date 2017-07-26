@@ -52,3 +52,5 @@ export {default as RadialAxisConfigModel} from './radial-axis/RadialAxisConfigMo
 export {default as RadialAxisView} from './radial-axis/RadialAxisView'
 export {default as MapView} from './map/MapView'
 export {default as MapConfigModel} from './map/MapConfigModel'
+export {default as TrafficMapConfigModel} from './traffic-map/TrafficMapConfigModel'
+export {default as TrafficMapView} from './traffic-map/TrafficMapView'

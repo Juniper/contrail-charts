@@ -1,0 +1,9 @@
+@import "traffic-map-rules";
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.cc-svg .traffic-map {
+  @include trafficMapRules($trafficMap);
+
+  @include themify($trafficMapId, $themes);
+}
