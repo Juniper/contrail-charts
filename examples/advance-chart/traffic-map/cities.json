@@ -2,20 +2,7 @@
   "id": "FRPAR",
    "latitude": 48.86,
    "longitude": 2.3444,
-   "city": "Paris",
-   "links": [{
-     "id": "USNYC",
-     "factor": -0.3,
-     "width": 2
-   }, {
-     "id": "USSAN",
-     "factor": -0.5,
-     "width": 4
-   }, {
-     "id": "BRBSB",
-     "factor": -0.8,
-     "width": 1
-   }]
+   "city": "Paris"
   }, {
   "id": "USNYC",
    "latitude": 40.667,
@@ -35,12 +22,7 @@
   "id": "ITROM",
    "latitude": 41.827637,
    "longitude": 12.462732,
-   "city": "Roma",
-   "links": [{
-     "id": "USMIA",
-     "factor": 0.2,
-     "width": 4
-   }]
+   "city": "Roma"
   }, {
   "id": "USMIA",
    "latitude": 25.789125,
@@ -55,11 +37,6 @@
   "id": "AUSYD",
    "latitude": -33.917,
    "longitude": 151.167,
-   "city": "Sydney",
-   "links": [{
-     "id": "JPTYO",
-     "factor": 0.2,
-     "width": 6
-   }]
+   "city": "Sydney"
   }
 ]

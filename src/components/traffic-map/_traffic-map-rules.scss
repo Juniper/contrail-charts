@@ -2,13 +2,19 @@
 
 @mixin trafficMapRules($trafficMap) {
   $p_link_color: map-get($trafficMap, "linkColor");
+  $p_marker_color: map-get($trafficMap, "markerColor");
   $p_map_feature_color: map-get($trafficMap, "mapFeatureColor");
   $p_map_boundry_color: map-get($trafficMap, "mapBoundryColor");
 
   .link {
     fill: none;
     stroke: $p_link_color;
-    stroke-opacity: .9;
+    stroke-opacity: .5;
+  }
+
+  .marker {
+    fill: $p_marker_color;
+    stroke: none;
   }
 
   .feature {

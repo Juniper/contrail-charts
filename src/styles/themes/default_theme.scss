@@ -221,7 +221,8 @@ $sankey: (
 
 // traffic map chart
 $trafficMap: (
-  linkColor: $darkOrange,
+  linkColor: $dimmedBlue,
+  markerColor: $solidBlue,
   mapFeatureColor: $ashGrey2,
   mapBoundryColor: $snowWhite
 ) !default;

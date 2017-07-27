@@ -35,6 +35,18 @@ export default class TrafficMapConfigModel extends ConfigModel {
         right: 50
       },
 
+      // The spacing between moving markers measured in marker radiuses.
+      markerSpacing: 3,
+
+      // Speed of moving markers measured in pixels per step (step = 60 times per second).
+      markerSpeed: 1,
+
+      // Number of steps of the marker ending animation.
+      markerEndAnimationSteps: 100,
+
+      // How many times larger does the radius of the ending marker grow.
+      markerEndRadiusFactor: 5,
+
       // curve: d3Shape.curveBundle.beta(0.85)
       // curve: d3Shape.curveBundle.beta(0.95)
       // curve: d3Shape.curveBundle.beta(1)
