@@ -48,4 +48,34 @@
   "bytes": 6000,
   "from": "ITROM",
   "to": "USNYC"
+}, {
+  "time": 1501159423000,
+  "bytes": 7000,
+  "from": "FRPAR",
+  "to": "JPTYO"
+}, {
+  "time": 1501159523000,
+  "bytes": 2000,
+  "from": "FRPAR",
+  "to": "AUSYD"
+}, {
+  "time": 1501159623000,
+  "bytes": 6000,
+  "from": "BRBSB",
+  "to": "JPTYO"
+}, {
+  "time": 1501159623000,
+  "bytes": 15000,
+  "from": "USMIA",
+  "to": "USNYC"
+}, {
+  "time": 1501159723000,
+  "bytes": 5000,
+  "from": "USSAN",
+  "to": "USNYC"
+}, {
+  "time": 1501159823000,
+  "bytes": 4000,
+  "from": "ITROM",
+  "to": "BRBSB"
 }]

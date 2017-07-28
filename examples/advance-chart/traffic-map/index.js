@@ -40,7 +40,7 @@ const config = {
         bottom: 30
       },
       height: 200,
-      selection: [25, 75],
+      selection: [75, 100],
       update: ['traffic-map-chart-component'],
       plot: {
         x: {
@@ -72,7 +72,7 @@ const config = {
 
 const model = new models.Serie(connectionsData, {
   formatter: function(data) {
-    const frameDuration = 180000
+    const frameDuration = 60000
     let frameTime = data[0].time
     const aggregatedData = []
     let aDataElem = { time: frameTime, bytes: 0, connections: [] }
@@ -86,7 +86,6 @@ const model = new models.Serie(connectionsData, {
       aDataElem.bytes += d.bytes
       aDataElem.connections.push(d)
     })
-    console.log('aggregatedData: ', aggregatedData)
     return aggregatedData
   }
 })
@@ -95,7 +94,6 @@ export default {
   render: () => {
     chart = new composites.CompositeView({config, model})
     chart.setData(model.data)
-    console.log('after render: ', chart)
   },
   remove: () => {
     chart.remove()

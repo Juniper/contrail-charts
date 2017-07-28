@@ -35,8 +35,8 @@ export default class TrafficMapConfigModel extends ConfigModel {
         right: 50
       },
 
-      // The spacing between moving markers measured in marker radiuses.
-      markerSpacing: 3,
+      // The spacing between moving markers measured in pixels.
+      markerSpacing: 50,
 
       // Speed of moving markers measured in pixels per step (step = 60 times per second).
       markerSpeed: 1,

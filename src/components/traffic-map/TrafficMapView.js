@@ -18,6 +18,11 @@ import Zoom from '../../actions/Zoom'
 import './traffic-map.scss'
 
 export default class TrafficMapView extends ChartView {
+  constructor (p = {}) {
+    super(p)
+    this._markers = []
+  }
+
   static get Config () { return Config }
   static get Model () { return Model }
   static get Actions () { return {SelectColor, SelectKey, Zoom} }
@@ -60,23 +65,26 @@ export default class TrafficMapView extends ChartView {
     const locations = this.config.get('map.locations')
     let minR = 1000000000000
     let maxR = 0
-    console.log('TrafficMapView.zoom: ', ranges, this.model.data, accessorName)
-    this._linksData = []
+    const links = []
     _.each(this.model.data, d => {
-      if (range[0] < d[accessorName] && d[accessorName] < range[1]) {
-        _.each(d.connections, connection => {
-          const link = { bytes: connection.bytes, source: _.find(locations, { id: connection.from }), target: _.find(locations, { id: connection.to }) }
-          link.id = `${link.source.id}-${link.target.id}`
-          if (link.bytes < minR) {
-            minR = link.bytes
+      _.each(d.connections, connection => {
+        if (range[0] <= connection[accessorName] && connection[accessorName] <= range[1]) {
+          const id = `${connection.from}-${connection.to}`
+          let link = _.find(this._linksData, { id })
+          if (!link) {
+            link = { id, bytes: connection.bytes, source: _.find(locations, { id: connection.from }), target: _.find(locations, { id: connection.to }) }
           }
-          if (link.bytes > maxR) {
-            maxR = link.bytes
-          }
-          this._linksData.push(link)
-        })
-      }
+          links.push(link)
+        }
+        if (connection.bytes < minR) {
+          minR = connection.bytes
+        }
+        if (connection.bytes > maxR) {
+          maxR = connection.bytes
+        }
+      })
     })
+    this._linksData = links
     // Set the width of all links.
     const linkWidthScale = d3Scale.scaleLinear().domain([minR, maxR]).range([1, 10])
     _.each(this._linksData, link => link.width = linkWidthScale(link.bytes))
@@ -84,26 +92,23 @@ export default class TrafficMapView extends ChartView {
   }
 
   _render () {
-    const projection = this.config.get('projection').precision(0.1)
     const data = this.model.data
     if (!this._linksData || _.isEmpty(this._linksData)) {
       return
     }
-    console.log(this._linksData)
     // Create a path for each source/target pair.
     const links = this.d3.selectAll(this.selectors.link).data(this._linksData)
-    links
-      .enter()
-      .append('path')
+    links.enter().append('path')
       .attr('class', this.selectorClass('link'))
       .merge(links)
       .attr('d', link => {
-        const source = projection([link.source.longitude, link.source.latitude])
-        const target = projection([link.target.longitude, link.target.latitude])
+        const source = this._projection([link.source.longitude, link.source.latitude])
+        const target = this._projection([link.target.longitude, link.target.latitude])
         return this._arc(source, target)
       })
       .attr('id', link => link.id)
       .attr('stroke-width', link => link.width)
+    links.exit().remove()
     // Animate over links.
     this._initAnimationOverLinks()
   }
@@ -115,20 +120,35 @@ export default class TrafficMapView extends ChartView {
     const markerEndRadiusFactor = this.config.get('markerEndRadiusFactor')
     this._markerFinishedRadiusScale = d3Scale.scaleLinear().domain([0, markerEndAnimationSteps]).range([1, markerEndRadiusFactor])
     this._markerFinishedOpacityScale = d3Scale.scaleLinear().domain([0, markerEndAnimationSteps]).range([1, 0])
-    this._markers = []
     _.each(this._linksData, link => {
       const pathNode = this.svg.select(`#${link.id}`).node()
       link.len = pathNode.getTotalLength()
       link.markers = 0
-      link.steps = 0
       link.pathNode = pathNode
-      link.stepsBetweenMarkerRelease = (link.width * (2 + markerSpacing)) / markerSpeed
+      link.stepsBetweenMarkerRelease = markerSpacing / markerSpeed
+      if (!_.has(link, 'steps')) {
+        link.steps = link.stepsBetweenMarkerRelease
+      }
     })
-    window.requestAnimationFrame(this._animateMarkers.bind(this))
+    // Merge markers data
+    _.each(this._markers, marker => {
+      const foundLink = _.find(this._linksData, { id: marker.link.id })
+      if (!foundLink) {
+        // Link for this marker was not found in current data. Flag the marker for removing.
+        marker.finished = markerEndAnimationSteps
+      }
+    })
+    if (!this._animationStarted) {
+      window.requestAnimationFrame(this._animateMarkers.bind(this))
+    }
+    this._animationStarted = true
   }
 
   _animateMarkers () {
+    const markerEndAnimationSteps = this.config.get('markerEndAnimationSteps')
     const markerSpeed = this.config.get('markerSpeed')
+    // Remove markers
+    this._markers = _.filter(this._markers, marker => marker.finished < markerEndAnimationSteps)
     // Move existing markers
     _.each(this._markers, marker => {
       marker.offset += markerSpeed
@@ -150,8 +170,6 @@ export default class TrafficMapView extends ChartView {
         this._markers.push(marker)
       }
     })
-    // Remove markers
-    this._markers = _.filter(this._markers, marker => marker.finished < 100)
     // Render markers
     this._renderMarkers()
     window.requestAnimationFrame(this._animateMarkers.bind(this))
@@ -186,30 +204,33 @@ export default class TrafficMapView extends ChartView {
     const featureData = topojson.feature(map, map.objects[featureName]).features
     const boundariesData = [topojson.mesh(map, map.objects[featureName], (a, b) => a !== b)]
     const path = d3Geo.geoPath()
-    const projection = this.config.get('projection').precision(0.1)
-    const zoomFactor = this.config.get('zoom.factor')
-    if (zoomFactor) {
-      projection
-        .scale(zoomFactor)
-        .translate([this.params.width / 2, this.params.height / 2])
-      path.projection(projection)
+    if (!this._projection) {
+      // Rendering the map for the first time.
+      this._projection = this.config.get('projection').precision(0.1)
+      const zoomFactor = this.config.get('zoom.factor')
+      if (zoomFactor) {
+        this._projection
+          .scale(zoomFactor)
+          .translate([this.params.width / 2, this.params.height / 2])
+        path.projection(this._projection)
+      } else {
+        const featureToFit = topojson.feature(map, map.objects[this.config.get('map.fit')])
+        this._fit(path, this._projection, featureToFit, {width: this.width, height: this.height})
+      }
+      const zoom = d3Zoom.zoom()
+        .scaleExtent(this.config.get('zoom.extent'))
+        .on('zoom', this._onZoom.bind(this))
+      this.svg.call(zoom)
     } else {
-      const featureToFit = topojson.feature(map, map.objects[this.config.get('map.fit')])
-      this._fit(path, projection, featureToFit, {width: this.width, height: this.height})
+      path.projection(this._projection)
     }
-    const zoom = d3Zoom.zoom()
-      .scaleExtent(this.config.get('zoom.extent'))
-      .on('zoom', this._onZoom.bind(this))
-    this.svg.call(zoom)
     const features = this.d3.selectAll(this.selectors.feature).data(featureData)
-    features
-      .enter().insert('path', this.selectors.graticule)
+    features.enter().insert('path', this.selectors.graticule)
       .attr('class', this.selectorClass('feature'))
       .merge(features)
       .attr('d', path)
     const boundaries = this.d3.selectAll(this.selectors.boundary).data(boundariesData)
-    boundaries
-      .enter().insert('path', this.selectors.graticule)
+    boundaries.enter().insert('path', this.selectors.graticule)
       .attr('class', this.selectorClass('boundary'))
       .merge(boundaries)
       .attr('d', path)
@@ -223,6 +244,11 @@ export default class TrafficMapView extends ChartView {
     const b = path.bounds(feature)
     const scale = 0.95 / Math.max((b[1][0] - b[0][0]) / rect.width, (b[1][1] - b[0][1]) / rect.height)
     const translate = [(rect.width - scale * (b[1][0] + b[0][0])) / 2, (rect.height - scale * (b[1][1] + b[0][1])) / 2]
+    d3Zoom.zoomIdentity.k = scale
+    d3Zoom.zoomIdentity.x = translate[0]
+    d3Zoom.zoomIdentity.y = translate[1]
+    this.config.get('zoom').extent[0] = scale
+    this.config.get('zoom').extent[1] = scale * 8
     projection
       .scale(scale)
       .translate(translate)
@@ -241,13 +267,10 @@ export default class TrafficMapView extends ChartView {
   * Called by _onZoom when no rendering is taking place.
   */
   _onZoomHandler (transform) {
-    this.d3.selectAll(this.selectors.boundary)
-      .style('stroke-width', 0.5 / transform.k + 'px')
-    this.d3.selectAll(this.selectors.node).attr('r', 8 / transform.k)
-    this.d3.selectAll(this.selectors.link)
-      .style('stroke-width', 2 / transform.k + 'px')
-    this.d3.attr('transform', transform)
-    this._ticking = false
+    this._projection
+      .scale(transform.k)
+      .translate([transform.x, transform.y])
+    this.render()
   }
 
   _onConfigModelChange () {
