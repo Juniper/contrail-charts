@@ -40,7 +40,7 @@ export default class ControlPanelView extends ChartView {
 
   render () {
     const configs = _.map(this.config.get('menu'), config => {
-      return _.extend({}, config, this.config.menuItems[config.id])
+      return _.extend({}, this.config.menuItems[config.id], config)
     })
     const menuItemsDiv = this.d3.select(this.selectors.menuItems)
 
@@ -95,7 +95,7 @@ export default class ControlPanelView extends ChartView {
     if (d.component) this.open(d)
     else {
       actionId = d.action ? d.action : d.id
-      actionman.fire(actionId, this.config.update, d.toggle)
+      actionman.fire(actionId, this.config.update, d.toggle, d.attribute)
     }
   }
 }

@@ -5,9 +5,24 @@ import {composites, models} from 'contrail-charts'
 import {formatter} from 'commons'
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
-import connectionsData from './data.json'
+import * as d3TimeFormat from 'd3-time-format'
+//import connectionsData from './data.json'
 import world from './world-110m.json'
 import cities from './cities.json'
+
+const numOfCities = cities.length
+const connectionsData = []
+for (let i = 0; i < 250; i++) {
+  const fromCityIndex = Math.floor(Math.random() * numOfCities)
+  let toCityIndex = Math.floor(Math.random() * numOfCities)
+  while(fromCityIndex === toCityIndex) {
+    toCityIndex = Math.floor(Math.random() * numOfCities)
+  }
+  const bytes = Math.round(Math.random() * 100000)
+  const time = 1501158423000 + (i * 100000) + Math.floor(Math.random() * 100000)
+  const connection = { id: i, from: cities[fromCityIndex].id, to: cities[toCityIndex].id, bytes, time  }
+  connectionsData.push(connection)
+}
 
 let chart
 const config = {
@@ -23,24 +38,46 @@ const config = {
         fit: 'land'
       },
       margin: {
-        left: 80,
-        right: 80,
-        bottom: 40,
+        left: 30,
+        right: 30,
+        bottom: 30,
         top: 5
       },
       colorScheme: d3Scale.schemeCategory20
     }
   }, {
+    id: 'control-panel-id',
+    type: 'ControlPanel',
+    config: {
+      menu: [{
+        id: 'Back',
+        action: 'Browse',
+        attribute: 'back',
+        title: 'Backwards',
+        icon: 'icon-back',
+      }, {
+        id: 'Start'
+      }, {
+        id: 'Forward',
+        action: 'Browse',
+        attribute: 'forward',
+        title: 'Forwards',
+        icon: 'icon-forward',
+      }],
+      update: ['navigation-id'],
+    }
+  }, {
+    id: 'navigation-id',
     type: 'Navigation',
     config: {
       margin: {
-        left: 30,
+        left: 50,
         top: 5,
         right: 5,
         bottom: 30
       },
       height: 200,
-      selection: [75, 100],
+      selection: [98, 100],
       update: ['traffic-map-chart-component'],
       plot: {
         x: {
@@ -59,7 +96,7 @@ const config = {
       },
       axes: {
         x: {
-          formatter: formatter.extendedISOTime
+          formatter: d3TimeFormat.timeFormat('%e %b %H:%M')
         },
         y: {
           formatter: formatter.byteFormatter,
@@ -72,7 +109,7 @@ const config = {
 
 const model = new models.Serie(connectionsData, {
   formatter: function(data) {
-    const frameDuration = 60000
+    const frameDuration = 180000
     let frameTime = data[0].time
     const aggregatedData = []
     let aDataElem = { time: frameTime, bytes: 0, connections: [] }

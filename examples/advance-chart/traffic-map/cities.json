@@ -38,5 +38,15 @@
    "latitude": -33.917,
    "longitude": 151.167,
    "city": "Sydney"
-  }
+ }, {
+   "id": "INMUM",
+   "latitude": 19.0728300,
+   "longitude": 72.8826100,
+   "city": "Mumbai"
+ }, {
+   "id": "PLWAW",
+   "latitude": 52.22967560,
+   "longitude": 21.01222870,
+   "city": "Warsaw"
+ }
 ]

@@ -63,24 +63,25 @@ export default class TrafficMapView extends ChartView {
     const accessorName = _.keys(ranges)[0]
     const range = ranges[accessorName]
     const locations = this.config.get('map.locations')
+    const accessors = this.config.get('accessors')
     let minR = 1000000000000
     let maxR = 0
     const links = []
     _.each(this.model.data, d => {
       _.each(d.connections, connection => {
         if (range[0] <= connection[accessorName] && connection[accessorName] <= range[1]) {
-          const id = `${connection.from}-${connection.to}`
+          const id = connection[accessors.id]
           let link = _.find(this._linksData, { id })
           if (!link) {
-            link = { id, bytes: connection.bytes, source: _.find(locations, { id: connection.from }), target: _.find(locations, { id: connection.to }) }
+            link = { id, bytes: connection[accessors.width], source: _.find(locations, { id: connection[accessors.from] }), target: _.find(locations, { id: connection[accessors.to] }) }
           }
           links.push(link)
         }
-        if (connection.bytes < minR) {
-          minR = connection.bytes
+        if (connection[accessors.width] < minR) {
+          minR = connection[accessors.width]
         }
-        if (connection.bytes > maxR) {
-          maxR = connection.bytes
+        if (connection[accessors.width] > maxR) {
+          maxR = connection[accessors.width]
         }
       })
     })
@@ -92,6 +93,7 @@ export default class TrafficMapView extends ChartView {
   }
 
   _render () {
+    const accessors = this.config.get('accessors')
     const data = this.model.data
     if (!this._linksData || _.isEmpty(this._linksData)) {
       return
@@ -102,11 +104,11 @@ export default class TrafficMapView extends ChartView {
       .attr('class', this.selectorClass('link'))
       .merge(links)
       .attr('d', link => {
-        const source = this._projection([link.source.longitude, link.source.latitude])
-        const target = this._projection([link.target.longitude, link.target.latitude])
+        const source = this._projection([link.source[accessors.longitude], link.source[accessors.latitude]])
+        const target = this._projection([link.target[accessors.longitude], link.target[accessors.latitude]])
         return this._arc(source, target)
       })
-      .attr('id', link => link.id)
+      .attr('id', link => `c${link.id}`)
       .attr('stroke-width', link => link.width)
     links.exit().remove()
     // Animate over links.
@@ -121,7 +123,7 @@ export default class TrafficMapView extends ChartView {
     this._markerFinishedRadiusScale = d3Scale.scaleLinear().domain([0, markerEndAnimationSteps]).range([1, markerEndRadiusFactor])
     this._markerFinishedOpacityScale = d3Scale.scaleLinear().domain([0, markerEndAnimationSteps]).range([1, 0])
     _.each(this._linksData, link => {
-      const pathNode = this.svg.select(`#${link.id}`).node()
+      const pathNode = this.svg.select(`#c${link.id}`).node()
       link.len = pathNode.getTotalLength()
       link.markers = 0
       link.pathNode = pathNode
@@ -166,7 +168,7 @@ export default class TrafficMapView extends ChartView {
         link.steps = 0
         link.markers++
         const point = link.pathNode.getPointAtLength(0)
-        const marker = { id: `${link.id}-${link.markers}`, point, r: link.width, link, offset: 0, finished: 0 }
+        const marker = { id: `${link.id}-${link.markers}`, point, r: link.width / 2, link, offset: 0, finished: 0 }
         this._markers.push(marker)
       }
     })
@@ -190,9 +192,13 @@ export default class TrafficMapView extends ChartView {
 
   _arc (source, target) {
     if (target && source) {
-      const dx = Math.abs(target[0] - source[0]) / 2
-      const dy = Math.abs(target[1] - source[1]) / 2
-      return `M${source[0]},${source[1]} C${source[0]},${source[1] - dy} ${target[0]},${target[1] - dy} ${target[0]},${target[1]}`
+      const dx = Math.abs(target[0] - source[0]) / 3
+      const dy = Math.abs(target[1] - source[1]) / 3
+      const dsx = (target[0] - source[0]) / 3
+      const dtx = (source[0] - target[0]) / 3
+      const dsy = (target[1] - source[1]) / 3
+      const dty = (source[1] - target[1]) / 3
+      return `M${source[0]},${source[1]} C${source[0] + dsx},${source[1] + dsy - dx} ${target[0] + dtx},${target[1] + dty - dx} ${target[0]},${target[1]}`
     } else {
       return 'M0,0,l0,0z'
     }
@@ -224,19 +230,25 @@ export default class TrafficMapView extends ChartView {
     } else {
       path.projection(this._projection)
     }
-    const features = this.d3.selectAll(this.selectors.feature).data(featureData)
-    features.enter().insert('path', this.selectors.graticule)
+    let mapSvg = this.d3.select('.map')
+    if (mapSvg.empty()) {
+      this.d3.append('g').attr('class', 'map')
+      mapSvg = this.d3.select('.map')
+    }
+    const features = mapSvg.selectAll(this.selectors.feature).data(featureData)
+    features.enter().append('path')
       .attr('class', this.selectorClass('feature'))
       .merge(features)
       .attr('d', path)
-    const boundaries = this.d3.selectAll(this.selectors.boundary).data(boundariesData)
-    boundaries.enter().insert('path', this.selectors.graticule)
+    const boundaries = mapSvg.selectAll(this.selectors.boundary).data(boundariesData)
+    boundaries.enter().append('path')
       .attr('class', this.selectorClass('boundary'))
       .merge(boundaries)
       .attr('d', path)
   }
 
   _fit (path, projection, feature, rect) {
+    const zoomExtent = this.config.get('zoom.extent')
     projection
       .scale(1)
       .translate([0, 0])
@@ -247,8 +259,8 @@ export default class TrafficMapView extends ChartView {
     d3Zoom.zoomIdentity.k = scale
     d3Zoom.zoomIdentity.x = translate[0]
     d3Zoom.zoomIdentity.y = translate[1]
-    this.config.get('zoom').extent[0] = scale
-    this.config.get('zoom').extent[1] = scale * 8
+    this.config.get('zoom').extent[0] = scale * zoomExtent[0]
+    this.config.get('zoom').extent[1] = scale * zoomExtent[1]
     projection
       .scale(scale)
       .translate(translate)

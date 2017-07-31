@@ -82,6 +82,10 @@ export default class BrushView extends ChartView {
       })
   }
 
+  move (selection) {
+    this._brush.move(this.d3, selection)
+  }
+
   hide () {
     this.d3.selectAll(this.selectors.handle)
       .classed('hide', true)

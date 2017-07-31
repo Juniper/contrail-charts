@@ -23,6 +23,14 @@ export default class TrafficMapConfigModel extends ConfigModel {
         step: 0.5,
         extent: [1, 8],
       },
+      accessors: {
+        id: 'id',
+        from: 'from',
+        to: 'to',
+        width: 'bytes',
+        longitude: 'longitude',
+        latitude: 'latitude'
+      },
 
       // The duration of transitions.
       ease: d3Ease.easeCubic,
@@ -36,7 +44,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
       },
 
       // The spacing between moving markers measured in pixels.
-      markerSpacing: 50,
+      markerSpacing: 15,
 
       // Speed of moving markers measured in pixels per step (step = 60 times per second).
       markerSpeed: 1,
