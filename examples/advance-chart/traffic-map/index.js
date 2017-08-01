@@ -10,6 +10,8 @@ import world from './world-110m.json'
 import cities from './cities.json'
 
 const numOfCities = cities.length
+// Generate connections data
+const trafficTypes = ['UDP-Flood', 'Smurf', 'SIDDOS', 'HTTP-FLOOD']
 const connectionsData = []
 for (let i = 0; i < 250; i++) {
   const fromCityIndex = Math.floor(Math.random() * numOfCities)
@@ -19,9 +21,11 @@ for (let i = 0; i < 250; i++) {
   } while (fromCityIndex === toCityIndex)
   const bytes = Math.round(Math.random() * 100000)
   const time = 1501158423000 + (i * 100000) + Math.floor(Math.random() * 100000)
-  const connection = { id: i, from: cities[fromCityIndex].id, to: cities[toCityIndex].id, bytes, time }
+  const trafficType = trafficTypes[Math.floor(Math.random() * trafficTypes.length)]
+  const connection = { id: i, from: cities[fromCityIndex].id, to: cities[toCityIndex].id, bytes, time, trafficType }
   connectionsData.push(connection)
 }
+console.log(connectionsData)
 
 let chart
 const config = {
@@ -41,8 +45,7 @@ const config = {
         right: 30,
         bottom: 30,
         top: 5
-      },
-      colorScheme: d3Scale.schemeCategory20
+      }
     }
   }, {
     id: 'control-panel-id',

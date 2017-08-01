@@ -9,7 +9,7 @@ import * as d3Geo from 'd3-geo'
 import * as topojson from 'topojson'
 import ChartView from 'chart-view'
 import Config from './TrafficMapConfigModel'
-import Model from 'models/Serie'
+import Model from 'models/DataFrame'
 import SelectColor from '../../actions/SelectColor'
 import SelectKey from '../../actions/SelectKey'
 import Zoom from '../../actions/Zoom'
@@ -71,7 +71,13 @@ export default class TrafficMapView extends ChartView {
           const id = connection[accessors.id]
           let link = _.find(this._linksData, { id })
           if (!link) {
-            link = { id, bytes: connection[accessors.width], source: _.find(locations, { id: connection[accessors.from] }), target: _.find(locations, { id: connection[accessors.to] }) }
+            link = {
+              id,
+              bytes: connection[accessors.width],
+              source: _.find(locations, { id: connection[accessors.from] }),
+              target: _.find(locations, { id: connection[accessors.to] }),
+              trafficType: connection.trafficType
+            }
           }
           links.push(link)
         }
@@ -106,7 +112,8 @@ export default class TrafficMapView extends ChartView {
         return this._arc(source, target)
       })
       .attr('id', link => `c${link.id}`)
-      .attr('stroke-width', link => link.width)
+      .style('stroke-width', link => link.width)
+      .style('stroke', link => this.config.getColor(link.trafficType))
     links.exit().remove()
     // Animate over links.
     this._initAnimationOverLinks()
@@ -183,6 +190,7 @@ export default class TrafficMapView extends ChartView {
       .attr('cy', marker => marker.point.y)
       .attr('r', marker => marker.r * this._markerFinishedRadiusScale(marker.finished))
       .style('opacity', marker => this._markerFinishedOpacityScale(marker.finished))
+      .style('fill', marker => this.config.getColor(marker.link.trafficType))
       .attr('id', marker => marker.id)
     markersSvg.exit().remove()
   }

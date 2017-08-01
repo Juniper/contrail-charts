@@ -1,8 +1,7 @@
 /*
  * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
  */
-import * as d3Ease from 'd3-ease'
-import * as d3Shape from 'd3-shape'
+import * as d3Scale from 'd3-scale'
 import * as d3Geo from 'd3-geo'
 import _ from 'lodash'
 import ConfigModel from 'config-model'
@@ -12,6 +11,9 @@ export default class TrafficMapConfigModel extends ConfigModel {
   get defaults () {
     return _.merge(super.defaults, ColoredChart.defaults, {
       isSharedContainer: true,
+
+      trafficTypes: [],
+      colorScheme: d3Scale.schemeCategory10,
 
       projection: d3Geo.geoEquirectangular(),
       zoom: {
@@ -31,10 +33,6 @@ export default class TrafficMapConfigModel extends ConfigModel {
         latitude: 'latitude'
       },
 
-      // The duration of transitions.
-      ease: d3Ease.easeCubic,
-      duration: 500,
-
       margin: {
         top: 50,
         bottom: 50,
@@ -52,15 +50,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
       markerEndAnimationSteps: 100,
 
       // How many times larger does the radius of the ending marker grow.
-      markerEndRadiusFactor: 5,
-
-      // curve: d3Shape.curveBundle.beta(0.85)
-      // curve: d3Shape.curveBundle.beta(0.95)
-      // curve: d3Shape.curveBundle.beta(1)
-      curve: d3Shape.curveCatmullRom.alpha(0.5),
-      // curve: d3Shape.curveCatmullRom.alpha(0.75)
-      // curve: d3Shape.curveCatmullRom.alpha(1)
-      // curve: d3Shape.curveLinear
+      markerEndRadiusFactor: 5
     })
   }
 
@@ -85,8 +75,12 @@ export default class TrafficMapConfigModel extends ConfigModel {
   }
 
   getColor (key) {
-    const configured = _.find(this.attributes.levels, {level: key}).color
-    return configured || this.attributes.colorScale(key)
+    const trafficType = _.find(this.attributes.trafficTypes, {type: key})
+    let configuredColor = null
+    if (trafficType && trafficType.color) {
+      configuredColor = trafficType.color
+    }
+    return configuredColor || this.attributes.colorScale(key)
   }
 
   setColor (key, color) {
