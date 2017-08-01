@@ -13,12 +13,16 @@ import Model from 'models/DataFrame'
 import SelectColor from '../../actions/SelectColor'
 import SelectKey from '../../actions/SelectKey'
 import Zoom from '../../actions/Zoom'
+import MapView from '../map/MapView'
 import './traffic-map.scss'
 
-export default class TrafficMapView extends ChartView {
+export default class TrafficMapView extends MapView {
   constructor (p = {}) {
     super(p)
+    // The bubbles animated on links indicating the direction of traffic.
     this._markers = []
+    // Flag indicating if zoom was applied. Zoom is applied on first render.
+    this._zoomApplied = false
   }
 
   static get Config () { return Config }
@@ -47,12 +51,14 @@ export default class TrafficMapView extends ChartView {
     })
   }
 
+  /*
   render () {
     super.render()
     this._renderMap()
-    this._render()
+    this._renderData()
     this._ticking = false
   }
+  */
 
   /**
   * The time series slider was moved.
@@ -93,28 +99,28 @@ export default class TrafficMapView extends ChartView {
     // Set the width of all links.
     const linkWidthScale = d3Scale.scaleLinear().domain([minR, maxR]).range([1, 10])
     _.each(this._linksData, link => { link.width = linkWidthScale(link.bytes) })
-    this._render()
+    this._renderData()
   }
 
-  _render () {
+  _renderData () {
     const accessors = this.config.get('accessors')
     if (!this._linksData || _.isEmpty(this._linksData)) {
       return
     }
     // Create a path for each source/target pair.
-    const links = this.d3.selectAll(this.selectors.link).data(this._linksData)
-    links.enter().append('path')
+    const linksSvg = this.d3.selectAll(this.selectors.link).data(this._linksData)
+    linksSvg.enter().append('path')
       .attr('class', this.selectorClass('link'))
-      .merge(links)
+      .merge(linksSvg)
       .attr('d', link => {
-        const source = this._projection([link.source[accessors.longitude], link.source[accessors.latitude]])
-        const target = this._projection([link.target[accessors.longitude], link.target[accessors.latitude]])
+        const source = this.config.project(link.source)
+        const target = this.config.project(link.target)
         return this._arc(source, target)
       })
       .attr('id', link => `c${link.id}`)
       .style('stroke-width', link => link.width)
       .style('stroke', link => this.config.getColor(link.trafficType))
-    links.exit().remove()
+    linksSvg.exit().remove()
     // Animate over links.
     this._initAnimationOverLinks()
   }
@@ -127,7 +133,7 @@ export default class TrafficMapView extends ChartView {
     this._markerFinishedRadiusScale = d3Scale.scaleLinear().domain([0, markerEndAnimationSteps]).range([1, markerEndRadiusFactor])
     this._markerFinishedOpacityScale = d3Scale.scaleLinear().domain([0, markerEndAnimationSteps]).range([1, 0])
     _.each(this._linksData, link => {
-      const pathNode = this.svg.select(`#c${link.id}`).node()
+      const pathNode = this.d3.select(`#c${link.id}`).node()
       link.len = pathNode.getTotalLength()
       link.markers = 0
       link.pathNode = pathNode
@@ -151,6 +157,9 @@ export default class TrafficMapView extends ChartView {
   }
 
   _animateMarkers () {
+    if (!this._animationStarted) {
+      return
+    }
     const markerEndAnimationSteps = this.config.get('markerEndAnimationSteps')
     const markerSpeed = this.config.get('markerSpeed')
     // Remove markers
@@ -195,6 +204,12 @@ export default class TrafficMapView extends ChartView {
     markersSvg.exit().remove()
   }
 
+  remove () {
+    super.remove()
+    this._animationStarted = false
+  }
+
+  /*
   _arc (source, target) {
     if (target && source) {
       const dx = Math.abs(target[0] - source[0]) / 3
@@ -209,31 +224,31 @@ export default class TrafficMapView extends ChartView {
   }
 
   _renderMap () {
+    this.d3.attr('transform', `translate(${this.config.get('margin.left')}, ${this.config.get('margin.top')})`)
     const map = this.config.get('map.data')
     const featureName = this.config.get('map.feature')
     const featureData = topojson.feature(map, map.objects[featureName]).features
     const boundariesData = [topojson.mesh(map, map.objects[featureName], (a, b) => a !== b)]
     const path = d3Geo.geoPath()
-    if (!this._projection) {
+    const projection = this.config.get('projection')
+    if (!this._zoomApplied) {
       // Rendering the map for the first time.
-      this._projection = this.config.get('projection').precision(0.1)
       const zoomFactor = this.config.get('zoom.factor')
       if (zoomFactor) {
-        this._projection
+        projection
           .scale(zoomFactor)
-          .translate([this.params.width / 2, this.params.height / 2])
-        path.projection(this._projection)
+          .translate([this.width / 2, this.height / 2])
       } else {
         const featureToFit = topojson.feature(map, map.objects[this.config.get('map.fit')])
-        this._fit(path, this._projection, featureToFit, {width: this.width, height: this.height})
+        this._fit(path, projection, featureToFit, {width: this.innerWidth, height: this.innerHeight})
       }
       const zoom = d3Zoom.zoom()
         .scaleExtent(this.config.get('zoom.extent'))
         .on('zoom', this._onZoom.bind(this))
       this.svg.call(zoom)
-    } else {
-      path.projection(this._projection)
+      this._zoomApplied = true
     }
+    path.projection(projection)
     let mapSvg = this.d3.select('.map')
     if (mapSvg.empty()) {
       this.d3.append('g').attr('class', 'map')
@@ -244,11 +259,13 @@ export default class TrafficMapView extends ChartView {
       .attr('class', this.selectorClass('feature'))
       .merge(features)
       .attr('d', path)
+    features.exit().remove()
     const boundaries = mapSvg.selectAll(this.selectors.boundary).data(boundariesData)
     boundaries.enter().append('path')
       .attr('class', this.selectorClass('boundary'))
       .merge(boundaries)
       .attr('d', path)
+    boundaries.exit().remove()
   }
 
   _fit (path, projection, feature, rect) {
@@ -269,29 +286,30 @@ export default class TrafficMapView extends ChartView {
       .scale(scale)
       .translate(translate)
   }
+  */
 
   // Event handlers
 
+  /*
   _onZoom () {
     if (!this._ticking) {
       window.requestAnimationFrame(this._onZoomHandler.bind(this, d3Selection.event.transform))
       this._ticking = true
     }
   }
+  */
 
   /**
   * Called by _onZoom when no rendering is taking place.
   */
+  /*
   _onZoomHandler (transform) {
-    this._projection
+    this.config.get('projection')
       .scale(transform.k)
       .translate([transform.x, transform.y])
     this.render()
   }
-
-  _onConfigModelChange () {
-    this.render()
-  }
+  */
 
   _onMousemove (d, el) {
   }

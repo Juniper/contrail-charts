@@ -12,6 +12,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
     return _.merge(super.defaults, ColoredChart.defaults, {
       isSharedContainer: true,
 
+      // { name: 'UDP-Flood', color: '#ff0000' }
       trafficTypes: [],
       colorScheme: d3Scale.schemeCategory10,
 
@@ -34,10 +35,10 @@ export default class TrafficMapConfigModel extends ConfigModel {
       },
 
       margin: {
-        top: 50,
-        bottom: 50,
-        left: 50,
-        right: 50
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
       },
 
       // The spacing between moving markers measured in pixels.
@@ -52,6 +53,12 @@ export default class TrafficMapConfigModel extends ConfigModel {
       // How many times larger does the radius of the ending marker grow.
       markerEndRadiusFactor: 5
     })
+  }
+
+  project (serie) {
+    const lon = this.getValue(serie, { accessor: this.get('accessors.longitude') })
+    const lat = this.getValue(serie, { accessor: this.get('accessors.latitude') })
+    return this.attributes.projection([lon, lat])
   }
 
   set (...args) {
@@ -75,7 +82,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
   }
 
   getColor (key) {
-    const trafficType = _.find(this.attributes.trafficTypes, {type: key})
+    const trafficType = _.find(this.attributes.trafficTypes, {name: key})
     let configuredColor = null
     if (trafficType && trafficType.color) {
       configuredColor = trafficType.color

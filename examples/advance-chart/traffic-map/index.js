@@ -11,7 +11,7 @@ import cities from './cities.json'
 
 const numOfCities = cities.length
 // Generate connections data
-const trafficTypes = ['UDP-Flood', 'Smurf', 'SIDDOS', 'HTTP-FLOOD']
+const trafficTypes = ['UDP-Flood', 'SIDDOS', 'HTTP-FLOOD']
 const connectionsData = []
 for (let i = 0; i < 250; i++) {
   const fromCityIndex = Math.floor(Math.random() * numOfCities)
@@ -25,7 +25,6 @@ for (let i = 0; i < 250; i++) {
   const connection = { id: i, from: cities[fromCityIndex].id, to: cities[toCityIndex].id, bytes, time, trafficType }
   connectionsData.push(connection)
 }
-console.log(connectionsData)
 
 let chart
 const config = {
@@ -39,12 +38,6 @@ const config = {
         feature: 'countries',
         locations: cities,
         fit: 'land'
-      },
-      margin: {
-        left: 30,
-        right: 30,
-        bottom: 30,
-        top: 5
       }
     }
   }, {
