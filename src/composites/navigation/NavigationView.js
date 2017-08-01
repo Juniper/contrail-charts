@@ -102,7 +102,25 @@ export default class NavigationView extends ChartView {
   }
 
   setHalt (toggle) {
-    console.log('Navigation.setHalt: ', toggle, this._brush.config.get('selection'), this.config.get('selection'))
+    if (!toggle) {
+      // Start to play.
+      const selection = this._brush.config.get('selection').slice()
+      const xScale = this._yChart.config.get('axes.x.scale')
+      const delta = selection[1] - selection[0]
+      selection[0] = xScale.range()[0]
+      selection[1] = selection[0] + delta
+      this._brush.move(selection)
+      this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
+    } else {
+      // Halt.
+      window.clearTimeout(this._timer)
+    }
+  }
+
+  _animateBrush () {
+    // Keep moving the selection forward once every second.
+    this.browse('forward')
+    this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
   }
 
   // Event handlers

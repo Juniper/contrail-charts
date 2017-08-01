@@ -4,14 +4,12 @@
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
 import * as d3Selection from 'd3-selection'
-import * as d3Shape from 'd3-shape'
 import * as d3Zoom from 'd3-zoom'
 import * as d3Geo from 'd3-geo'
 import * as topojson from 'topojson'
 import ChartView from 'chart-view'
 import Config from './TrafficMapConfigModel'
 import Model from 'models/Serie'
-import actionman from 'core/Actionman'
 import SelectColor from '../../actions/SelectColor'
 import SelectKey from '../../actions/SelectKey'
 import Zoom from '../../actions/Zoom'
@@ -88,13 +86,12 @@ export default class TrafficMapView extends ChartView {
     this._linksData = links
     // Set the width of all links.
     const linkWidthScale = d3Scale.scaleLinear().domain([minR, maxR]).range([1, 10])
-    _.each(this._linksData, link => link.width = linkWidthScale(link.bytes))
+    _.each(this._linksData, link => { link.width = linkWidthScale(link.bytes) })
     this._render()
   }
 
   _render () {
     const accessors = this.config.get('accessors')
-    const data = this.model.data
     if (!this._linksData || _.isEmpty(this._linksData)) {
       return
     }
@@ -193,7 +190,6 @@ export default class TrafficMapView extends ChartView {
   _arc (source, target) {
     if (target && source) {
       const dx = Math.abs(target[0] - source[0]) / 3
-      const dy = Math.abs(target[1] - source[1]) / 3
       const dsx = (target[0] - source[0]) / 3
       const dtx = (source[0] - target[0]) / 3
       const dsy = (target[1] - source[1]) / 3

@@ -19,6 +19,7 @@
     "lint": "npm run lint:src && npm run lint:examples",
     "lint:src": "eslint src/**",
     "lint:examples": "eslint examples/**",
+    "lint:file": "eslint ${process.argv[2]}",
     "doc": "jsdoc src -r -d docs"
   },
   "precommit": "lint",
