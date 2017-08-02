@@ -4,7 +4,8 @@
 import _ from 'lodash'
 import Action from '../core/Action'
 /**
- * fired to stop updating component by setData
+ * Used for browsing through available data.
+ * For example to move the selected range of displayed data one step forward / backward.
  */
 export default class Browse extends Action {
   constructor (p) {

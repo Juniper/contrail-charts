@@ -36,20 +36,10 @@ export default class MapView extends ChartView {
 
   get events () {
     return _.extend(super.events, {
-      'mousemove node': '_onMousemove',
-      'mouseout node': '_onMouseout',
+      'mousemove node': '_onMousemoveNode',
+      'mouseout node': '_onMouseoutNode',
     })
   }
-
-  /*
-  get width () {
-    return this.config.get('width') || this._container.getBoundingClientRect().width
-  }
-
-  get height () {
-    return this.config.get('height') || Math.round(this.width / 2)
-  }
-  */
 
   /**
    * Draw a world map
@@ -60,64 +50,6 @@ export default class MapView extends ChartView {
     this._renderData()
     this._ticking = false
   }
-
-  /*
-  zoom (transform) {
-    this.d3.selectAll(this.selectors.boundary)
-      .style('stroke-width', 0.5 / transform.k + 'px')
-    this.d3.selectAll(this.selectors.node).attr('r', 8 / transform.k)
-    this.d3.selectAll(this.selectors.link)
-      .style('stroke-width', 2 / transform.k + 'px')
-
-    this.d3.attr('transform', transform)
-    this._ticking = false
-  }
-  */
-
-  /*
-  _renderLayout () {
-    const map = this.config.get('map')
-    const featureName = this.config.get('feature')
-    const featureData = topojson.feature(map, map.objects[featureName]).features
-    const boundariesData = [topojson.mesh(map, map.objects[featureName], (a, b) => a !== b)]
-    const path = d3Geo.geoPath()
-
-    const projection = this.config.get('projection')
-      .precision(0.1)
-    const zoomFactor = this.config.get('zoom.factor')
-    if (zoomFactor) {
-      projection
-        .scale(zoomFactor)
-        .translate([this.width / 2, this.height / 2])
-      path.projection(projection)
-    } else {
-      const featureToFit = topojson.feature(map, map.objects[this.config.get('fit')])
-      this._fit(path, projection, featureToFit, {width: this.width, height: this.height})
-    }
-
-    const zoom = d3Zoom.zoom()
-      .scaleExtent(this.config.get('zoom.extent'))
-      .on('zoom', this._onZoom.bind(this))
-
-    this.svg.call(zoom)
-
-    const features = this.d3.selectAll(this.selectors.feature).data(featureData)
-
-    features
-      .enter().insert('path', this.selectors.graticule)
-      .attr('class', this.selectorClass('feature'))
-      .merge(features)
-      .attr('d', path)
-
-    const boundaries = this.d3.selectAll(this.selectors.boundary).data(boundariesData)
-
-    boundaries
-      .enter().insert('path', this.selectors.graticule)
-      .attr('class', this.selectorClass('boundary'))
-      .merge(boundaries)
-      .attr('d', path)
-  }
-  */
 
   // TODO
   _renderGraticule () {
@@ -185,13 +117,30 @@ export default class MapView extends ChartView {
   }
 
   /**
+  * Prepares link path data using a cubic bezier curve.
+  */
+  _arc (source, target) {
+    if (target && source) {
+      const dx = Math.abs(target[0] - source[0]) / 3
+      const dsx = (target[0] - source[0]) / 3
+      const dtx = (source[0] - target[0]) / 3
+      const dsy = (target[1] - source[1]) / 3
+      const dty = (source[1] - target[1]) / 3
+      return `M${source[0]},${source[1]} C${source[0] + dsx},${source[1] + dsy - dx} ${target[0] + dtx},${target[1] + dty - dx} ${target[0]},${target[1]}`
+    } else {
+      return 'M0,0,l0,0z'
+    }
+  }
+
+  /**
+   * Alternative arc definition using arc curve.
    * @param {Number} bend parameter for how much bend is applied to arcs
    * If no bend is supplied, then do the plain square root
    * A bend of 5 looks nice and subtle, but this will depend on the length of arcs
    * Higher the number the less bend
    */
   /*
-  arc (source, target, bend = 1) {
+  _arc (source, target, bend = 1) {
     if (target && source) {
       const dx = target[0] - source[0]
       const dy = target[1] - source[1]
@@ -205,47 +154,7 @@ export default class MapView extends ChartView {
       return 'M0,0,l0,0z'
     }
   }
-
-  _fit (path, projection, feature, rect) {
-    projection
-      .scale(1)
-      .translate([0, 0])
-
-    path.projection(projection)
-
-    const b = path.bounds(feature)
-    const scale = 0.95 / Math.max((b[1][0] - b[0][0]) / rect.width, (b[1][1] - b[0][1]) / rect.height)
-    const translate = [(rect.width - scale * (b[1][0] + b[0][0])) / 2, (rect.height - scale * (b[1][1] + b[0][1])) / 2]
-
-    projection
-      .scale(scale)
-      .translate(translate)
-  }
   */
-
-  // Event handlers
-
-  /*
-  _onZoom () {
-    if (!this._ticking) {
-      window.requestAnimationFrame(this.zoom.bind(this, d3Selection.event.transform))
-      this._ticking = true
-    }
-  }
-  */
-
-  _arc (source, target) {
-    if (target && source) {
-      const dx = Math.abs(target[0] - source[0]) / 3
-      const dsx = (target[0] - source[0]) / 3
-      const dtx = (source[0] - target[0]) / 3
-      const dsy = (target[1] - source[1]) / 3
-      const dty = (source[1] - target[1]) / 3
-      return `M${source[0]},${source[1]} C${source[0] + dsx},${source[1] + dsy - dx} ${target[0] + dtx},${target[1] + dty - dx} ${target[0]},${target[1]}`
-    } else {
-      return 'M0,0,l0,0z'
-    }
-  }
 
   _renderMap () {
     this.d3.attr('transform', `translate(${this.config.get('margin.left')}, ${this.config.get('margin.top')})`)
@@ -330,12 +239,12 @@ export default class MapView extends ChartView {
     this.render()
   }
 
-  _onMousemove (d, el) {
+  _onMousemoveNode (d, el) {
     const [left, top] = d3Selection.mouse(this._container)
     actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d, {left, top})
   }
 
-  _onMouseout (d, el) {
+  _onMouseoutNode (d, el) {
     actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 }

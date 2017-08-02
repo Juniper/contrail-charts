@@ -12,11 +12,14 @@ export default class TrafficMapConfigModel extends ConfigModel {
     return _.merge(super.defaults, ColoredChart.defaults, {
       isSharedContainer: true,
 
+      // traficTypes - if left empty the colorScheme will be used.
       // { name: 'UDP-Flood', color: '#ff0000' }
       trafficTypes: [],
+
       colorScheme: d3Scale.schemeCategory10,
 
       projection: d3Geo.geoEquirectangular(),
+
       zoom: {
         // scale factor to show map at
         // 170 is the world view for mercator projection
@@ -25,6 +28,14 @@ export default class TrafficMapConfigModel extends ConfigModel {
         step: 0.5,
         extent: [1, 8],
       },
+
+      map: {
+        data: null, // the map json
+        feature: 'countries',
+        locations: null, // an array of possible location ids, this array will be used to locate the longitude/latitude of the locations given in data.from / data.to
+        fit: 'land'
+      },
+
       accessors: {
         id: 'id',
         from: 'from',
@@ -48,7 +59,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
       markerSpeed: 1,
 
       // Number of steps of the marker ending animation.
-      markerEndAnimationSteps: 100,
+      markerEndAnimationSteps: 50,
 
       // How many times larger does the radius of the ending marker grow.
       markerEndRadiusFactor: 5

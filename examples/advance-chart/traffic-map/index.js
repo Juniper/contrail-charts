@@ -38,7 +38,8 @@ const config = {
         feature: 'countries',
         locations: cities,
         fit: 'land'
-      }
+      },
+      tooltip: 'tooltip-id'
     }
   }, {
     id: 'control-panel-id',
@@ -98,6 +99,27 @@ const config = {
           ticks: 5
         }
       }
+    }
+  }, {
+    id: 'tooltip-id',
+    type: 'Tooltip',
+    config: {
+      dataConfig: [
+        {
+          accessor: 'source.city',
+          labelFormatter: 'Source'
+        }, {
+          accessor: 'target.city',
+          labelFormatter: 'Destination'
+        }, {
+          accessor: 'bytes',
+          labelFormatter: 'Bytes',
+          valueFormatter: formatter.byteFormatter,
+        }, {
+          accessor: 'trafficType',
+          labelFormatter: 'Type'
+        }
+      ]
     }
   }]
 }

@@ -12,6 +12,10 @@
     stroke-opacity: .25;
     stroke-linecap: round;
   }
+  .link:hover {
+    cursor: pointer;
+    stroke-opacity: .65;
+  }
 
   .marker {
     fill: $p_marker_color;

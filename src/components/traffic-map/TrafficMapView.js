@@ -4,16 +4,13 @@
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
 import * as d3Selection from 'd3-selection'
-import * as d3Zoom from 'd3-zoom'
-import * as d3Geo from 'd3-geo'
-import * as topojson from 'topojson'
-import ChartView from 'chart-view'
 import Config from './TrafficMapConfigModel'
 import Model from 'models/DataFrame'
 import SelectColor from '../../actions/SelectColor'
 import SelectKey from '../../actions/SelectKey'
 import Zoom from '../../actions/Zoom'
 import MapView from '../map/MapView'
+import actionman from 'core/Actionman'
 import './traffic-map.scss'
 
 export default class TrafficMapView extends MapView {
@@ -21,8 +18,6 @@ export default class TrafficMapView extends MapView {
     super(p)
     // The bubbles animated on links indicating the direction of traffic.
     this._markers = []
-    // Flag indicating if zoom was applied. Zoom is applied on first render.
-    this._zoomApplied = false
   }
 
   static get Config () { return Config }
@@ -46,19 +41,10 @@ export default class TrafficMapView extends MapView {
   get events () {
     return _.extend(super.events, {
       'click node': '_onClickNode',
-      'mousemove node': '_onMousemove',
-      'mouseout node': '_onMouseout',
+      'mousemove link': '_onMousemoveLink',
+      'mouseout link': '_onMouseoutLink',
     })
   }
-
-  /*
-  render () {
-    super.render()
-    this._renderMap()
-    this._renderData()
-    this._ticking = false
-  }
-  */
 
   /**
   * The time series slider was moved.
@@ -98,17 +84,26 @@ export default class TrafficMapView extends MapView {
     this._linksData = links
     // Set the width of all links.
     const linkWidthScale = d3Scale.scaleLinear().domain([minR, maxR]).range([1, 10])
-    _.each(this._linksData, link => { link.width = linkWidthScale(link.bytes) })
+    _.each(this._linksData, link => { link.width = linkWidthScale(link[accessors.width]) })
     this._renderData()
   }
 
+  /**
+  * Overrides Map._renderData.
+  * Renders the links on the map.
+  */
   _renderData () {
-    const accessors = this.config.get('accessors')
     if (!this._linksData || _.isEmpty(this._linksData)) {
       return
     }
+    let linksGroupSvg = this.d3.select('.links')
+    if (linksGroupSvg.empty()) {
+      this.d3.append('g').attr('class', 'markers')
+      this.d3.append('g').attr('class', 'links')
+      linksGroupSvg = this.d3.select('.links')
+    }
     // Create a path for each source/target pair.
-    const linksSvg = this.d3.selectAll(this.selectors.link).data(this._linksData)
+    const linksSvg = linksGroupSvg.selectAll(this.selectors.link).data(this._linksData)
     linksSvg.enter().append('path')
       .attr('class', this.selectorClass('link'))
       .merge(linksSvg)
@@ -162,8 +157,6 @@ export default class TrafficMapView extends MapView {
     }
     const markerEndAnimationSteps = this.config.get('markerEndAnimationSteps')
     const markerSpeed = this.config.get('markerSpeed')
-    // Remove markers
-    this._markers = _.filter(this._markers, marker => marker.finished < markerEndAnimationSteps)
     // Move existing markers
     _.each(this._markers, marker => {
       marker.offset += markerSpeed
@@ -171,8 +164,15 @@ export default class TrafficMapView extends MapView {
         marker.offset = marker.link.len
         marker.finished++
       }
+      if (marker.offset < marker.link.len && marker.finished) {
+        // This marker was already flaged for delete when the link changed length due to an onZoom event.
+        // End the process of removing this marker.
+        marker.finished = markerEndAnimationSteps
+      }
       marker.point = marker.link.pathNode.getPointAtLength(marker.offset)
     })
+    // Remove markers
+    this._markers = _.filter(this._markers, marker => marker.finished < markerEndAnimationSteps)
     // Add new markers
     _.each(this._linksData, link => {
       link.steps++
@@ -191,7 +191,8 @@ export default class TrafficMapView extends MapView {
   }
 
   _renderMarkers () {
-    const markersSvg = this.d3.selectAll(this.selectors.marker).data(this._markers)
+    const markersGroupSvg = this.d3.select('.markers')
+    const markersSvg = markersGroupSvg.selectAll(this.selectors.marker).data(this._markers)
     markersSvg.enter().append('circle')
       .attr('class', this.selectorClass('marker'))
       .merge(markersSvg)
@@ -209,112 +210,15 @@ export default class TrafficMapView extends MapView {
     this._animationStarted = false
   }
 
-  /*
-  _arc (source, target) {
-    if (target && source) {
-      const dx = Math.abs(target[0] - source[0]) / 3
-      const dsx = (target[0] - source[0]) / 3
-      const dtx = (source[0] - target[0]) / 3
-      const dsy = (target[1] - source[1]) / 3
-      const dty = (source[1] - target[1]) / 3
-      return `M${source[0]},${source[1]} C${source[0] + dsx},${source[1] + dsy - dx} ${target[0] + dtx},${target[1] + dty - dx} ${target[0]},${target[1]}`
-    } else {
-      return 'M0,0,l0,0z'
-    }
-  }
-
-  _renderMap () {
-    this.d3.attr('transform', `translate(${this.config.get('margin.left')}, ${this.config.get('margin.top')})`)
-    const map = this.config.get('map.data')
-    const featureName = this.config.get('map.feature')
-    const featureData = topojson.feature(map, map.objects[featureName]).features
-    const boundariesData = [topojson.mesh(map, map.objects[featureName], (a, b) => a !== b)]
-    const path = d3Geo.geoPath()
-    const projection = this.config.get('projection')
-    if (!this._zoomApplied) {
-      // Rendering the map for the first time.
-      const zoomFactor = this.config.get('zoom.factor')
-      if (zoomFactor) {
-        projection
-          .scale(zoomFactor)
-          .translate([this.width / 2, this.height / 2])
-      } else {
-        const featureToFit = topojson.feature(map, map.objects[this.config.get('map.fit')])
-        this._fit(path, projection, featureToFit, {width: this.innerWidth, height: this.innerHeight})
-      }
-      const zoom = d3Zoom.zoom()
-        .scaleExtent(this.config.get('zoom.extent'))
-        .on('zoom', this._onZoom.bind(this))
-      this.svg.call(zoom)
-      this._zoomApplied = true
-    }
-    path.projection(projection)
-    let mapSvg = this.d3.select('.map')
-    if (mapSvg.empty()) {
-      this.d3.append('g').attr('class', 'map')
-      mapSvg = this.d3.select('.map')
-    }
-    const features = mapSvg.selectAll(this.selectors.feature).data(featureData)
-    features.enter().append('path')
-      .attr('class', this.selectorClass('feature'))
-      .merge(features)
-      .attr('d', path)
-    features.exit().remove()
-    const boundaries = mapSvg.selectAll(this.selectors.boundary).data(boundariesData)
-    boundaries.enter().append('path')
-      .attr('class', this.selectorClass('boundary'))
-      .merge(boundaries)
-      .attr('d', path)
-    boundaries.exit().remove()
-  }
-
-  _fit (path, projection, feature, rect) {
-    const zoomExtent = this.config.get('zoom.extent')
-    projection
-      .scale(1)
-      .translate([0, 0])
-    path.projection(projection)
-    const b = path.bounds(feature)
-    const scale = 0.95 / Math.max((b[1][0] - b[0][0]) / rect.width, (b[1][1] - b[0][1]) / rect.height)
-    const translate = [(rect.width - scale * (b[1][0] + b[0][0])) / 2, (rect.height - scale * (b[1][1] + b[0][1])) / 2]
-    d3Zoom.zoomIdentity.k = scale
-    d3Zoom.zoomIdentity.x = translate[0]
-    d3Zoom.zoomIdentity.y = translate[1]
-    this.config.get('zoom').extent[0] = scale * zoomExtent[0]
-    this.config.get('zoom').extent[1] = scale * zoomExtent[1]
-    projection
-      .scale(scale)
-      .translate(translate)
-  }
-  */
-
   // Event handlers
 
-  /*
-  _onZoom () {
-    if (!this._ticking) {
-      window.requestAnimationFrame(this._onZoomHandler.bind(this, d3Selection.event.transform))
-      this._ticking = true
-    }
-  }
-  */
-
-  /**
-  * Called by _onZoom when no rendering is taking place.
-  */
-  /*
-  _onZoomHandler (transform) {
-    this.config.get('projection')
-      .scale(transform.k)
-      .translate([transform.x, transform.y])
-    this.render()
-  }
-  */
-
-  _onMousemove (d, el) {
+  _onMousemoveLink (d, el) {
+    const [left, top] = d3Selection.mouse(this._container)
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), true, d, {left, top})
   }
 
-  _onMouseout (d, el) {
+  _onMouseoutLink (d, el) {
+    actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
   }
 
   _onClickNode (d, el, e) {

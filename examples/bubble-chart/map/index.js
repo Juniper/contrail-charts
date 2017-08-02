@@ -12,9 +12,6 @@ const config = {
     id: 'map-id',
     type: 'Map',
     config: {
-      //map: world,
-      //feature: 'countries',
-      //fit: 'land',
       map: {
         data: world,
         feature: 'countries',
