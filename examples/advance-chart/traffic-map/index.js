@@ -4,7 +4,6 @@
 import {composites, models} from 'contrail-charts'
 import {formatter} from 'commons'
 import _ from 'lodash'
-import * as d3Scale from 'd3-scale'
 import * as d3TimeFormat from 'd3-time-format'
 import world from './world-110m.json'
 import cities from './cities.json'

@@ -20,7 +20,8 @@
     "lint:src": "eslint src/**",
     "lint:examples": "eslint examples/**",
     "lint:file": "eslint ${process.argv[2]}",
-    "doc": "jsdoc src -r -d docs"
+    "doc": "jsdoc src -r -d docs",
+    "postinstall": "npm run build"
   },
   "precommit": "lint",
   "license": "Apache-2.0",
