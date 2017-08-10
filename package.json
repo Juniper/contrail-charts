@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Contrail Chart library",
   "license": "Apache-2.0",
-  "main": "src/js/contrail-charts.js",
+  "main": "dist/contrail-charts.js",
   "repository": "Juniper/contrail-charts",
   "scripts": {
     "build": "npm run build:lib && npm run build:examples",
