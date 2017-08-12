@@ -19,7 +19,7 @@
     "lint:examples": "eslint examples/**",
     "lint:file": "eslint ${process.argv[2]}",
     "lint:src": "eslint src/**",
-    "publish": "test -d dist || cp -R build/ dist",
+    "publish": "rm -rf dist && cp -R build/ dist",
     "start": "webpack-dev-server",
     "start:examples": "static -p 8081",
     "test:e2e": "wdio wdio.conf.js",

@@ -56,12 +56,12 @@ export default (env = defaultEnv) => {
    *  When we need a build with all d3 packages set include env 'd3-all' or pass individual library name to be included.
    */
   let d3Libs = ['d3', 'd3-selection', 'd3-scale', 'd3-shape', 'd3-array', 'd3-axis', 'd3-ease', 'd3-brush',
-    'd3-time-format', 'd3-hierarchy', 'd3-geo', 'd3-zoom']
+    'd3-time-format', 'd3-hierarchy', 'd3-geo', 'd3-zoom', 'd3-quadtree']
 
   const externals = {
-    'jquery': {amd: 'jquery', root: 'jQuery'},
-    'lodash': {amd: 'lodash', root: '_'},
-    'backbone': {amd: 'backbone', root: 'Backbone'},
+    'jquery': { amd: 'jquery', commonjs: 'jquery', commonjs2: 'jquery', root: 'jQuery' }, 
+    'lodash': { amd: 'lodash', commonjs: 'lodash', commonjs2: 'lodash', root: '_' }, 
+    'backbone': { amd: 'backbone', commonjs: 'backbone', commonjs2: 'backbone', root: 'Backbone' }, 
   }
 
   // For every library added in the include env, we will remove from d3Libs.
@@ -75,7 +75,7 @@ export default (env = defaultEnv) => {
   }
 
   d3Libs.forEach(d3Lib => {
-    externals[d3Lib] = {amd: 'd3v4', root: 'd3'}
+    externals[d3Lib] = { amd: 'd3v4', commonjs: 'd3', commonjs2: 'd3', root: 'd3' } 
   })
 
   if (env.prod) {
