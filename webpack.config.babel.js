@@ -58,25 +58,27 @@ export default (env = defaultEnv) => {
   let d3Libs = ['d3', 'd3-selection', 'd3-scale', 'd3-shape', 'd3-array', 'd3-axis', 'd3-ease', 'd3-brush',
     'd3-time-format', 'd3-hierarchy', 'd3-geo', 'd3-zoom', 'd3-quadtree']
 
-  const externals = {
-    'jquery': { amd: 'jquery', commonjs: 'jquery', commonjs2: 'jquery', root: 'jQuery' }, 
-    'lodash': { amd: 'lodash', commonjs: 'lodash', commonjs2: 'lodash', root: '_' }, 
-    'backbone': { amd: 'backbone', commonjs: 'backbone', commonjs2: 'backbone', root: 'Backbone' }, 
+  let externals = {
+    jquery: { amd: 'jquery', commonjs: 'jquery', commonjs2: 'jquery', root: 'jQuery' },
+    lodash: { amd: 'lodash', commonjs: 'lodash', commonjs2: 'lodash', root: '_' },
+    backbone: { amd: 'backbone', commonjs: 'backbone', commonjs2: 'backbone', root: 'Backbone' },
   }
 
-  // For every library added in the include env, we will remove from d3Libs.
+  let entry = {
+    [fileName]: absolute('src/index.js'),
+    [`${fileName}.min`]: absolute('src/index.js')
+  }
+
   if (env.include) {
-    const d3Include = env.include.split(',')
-    d3Libs = d3Libs.filter(lib => {
-      return d3Include.indexOf(lib) === -1 && d3Include.indexOf('d3-all') === -1
+    externals = {}
+    entry = {
+      [`${fileName}.bundle.min`]: absolute('src/index.js')
+    }
+  } else {
+    d3Libs.forEach(d3Lib => {
+      externals[d3Lib] = { amd: 'd3v4', commonjs: 'd3', commonjs2: 'd3', root: 'd3' }
     })
-    // Will append .bundle to the output file name.
-    fileName = `${fileName}.bundle`
   }
-
-  d3Libs.forEach(d3Lib => {
-    externals[d3Lib] = { amd: 'd3v4', commonjs: 'd3', commonjs2: 'd3', root: 'd3' } 
-  })
 
   if (env.prod) {
     plugins.push(new UglifyJSPlugin({
@@ -86,7 +88,6 @@ export default (env = defaultEnv) => {
       mangle: {
         keep_fnames: true,
       },
-      sourceMap: true,
       include: /\.min\.js$/,
     }))
   }
@@ -97,10 +98,7 @@ export default (env = defaultEnv) => {
   const configList = []
 
   const config = {
-    entry: {
-      [fileName]: absolute('src/index.js'),
-      [`${fileName}.min`]: absolute('src/index.js')
-    },
+    entry,
     devtool: 'source-map',
     module: {rules},
     externals: externals,

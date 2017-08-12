@@ -10,7 +10,7 @@
     "build:clean": "rm -rf build/* && npm run build",
     "build:examples": "webpack --env.prod --config webpack.examples.config.babel.js",
     "build:lib": "webpack --env.prod",
-    "build:lib:withD3": "webpack --env.prod --env.include 'd3-all'",
+    "build:standalone": "webpack --env.prod --env.include 'all'",
     "dev": "npm run dev:lib & npm run dev:examples",
     "dev:examples": "webpack-dev-server --watch --env.dev --config webpack.examples.config.babel.js",
     "dev:lib": "webpack --progress --colors --watch --env.dev",
