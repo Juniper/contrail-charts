@@ -14,6 +14,9 @@ export default class NavigationConfigModel extends ConfigModel {
       // The selection to use when first rendered [xMin%, xMax%].
       selection: [],
 
+      // How much to move the brush on browse action (1 minute).
+      browseMoveBy: 60000,
+
       // Following is translated to internal yChart
       margin: {
         top: 8,

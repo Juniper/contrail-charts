@@ -7,13 +7,15 @@ import Config from './NavigationConfigModel'
 import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import Zoom from '../../actions/Zoom'
+import Browse from '../../actions/Browse'
+import ToggleHalt from '../../actions/ToggleHalt'
 import CompositeYView from 'composites/y/CompositeYView'
 import BrushView from 'components/brush/BrushView'
 
 export default class NavigationView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {Zoom} }
+  static get Actions () { return {Zoom, Browse, ToggleHalt} }
 
   constructor (...args) {
     super(...args)
@@ -78,6 +80,47 @@ export default class NavigationView extends ChartView {
     this._disabled = true
     this._update()
     this._debouncedEnable()
+  }
+
+  browse (attribute) {
+    const selection = this._brush.config.get('selection').slice()
+    const xScale = this._yChart.config.get('axes.x.scale')
+    selection[0] = xScale.invert(selection[0])
+    selection[1] = xScale.invert(selection[1])
+    let browseMoveBy = this.config.get('browseMoveBy')
+    if (attribute === 'back') {
+      browseMoveBy = -browseMoveBy
+    }
+    selection[0] += browseMoveBy
+    selection[1] += browseMoveBy
+    selection[0] = xScale(selection[0])
+    selection[1] = xScale(selection[1])
+    if (selection[0] < xScale.range()[0] || selection[1] > xScale.range()[1]) {
+      return
+    }
+    this._brush.move(selection)
+  }
+
+  setHalt (toggle) {
+    if (!toggle) {
+      // Start to play.
+      const selection = this._brush.config.get('selection').slice()
+      const xScale = this._yChart.config.get('axes.x.scale')
+      const delta = selection[1] - selection[0]
+      selection[0] = xScale.range()[0]
+      selection[1] = selection[0] + delta
+      this._brush.move(selection)
+      this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
+    } else {
+      // Halt.
+      window.clearTimeout(this._timer)
+    }
+  }
+
+  _animateBrush () {
+    // Keep moving the selection forward once every second.
+    this.browse('forward')
+    this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
   }
 
   // Event handlers

@@ -15,6 +15,7 @@
 @import "../components/axis/axis-rules";
 @import "../components/radial/radial-dendrogram-rules";
 @import "../components/sankey/sankey-rules";
+@import "../components/traffic-map/traffic-map-rules";
 
 @mixin applyRuleTemplate($componentId, $arg) {
   @if ($componentId == null) {
@@ -76,6 +77,8 @@
       @include dendrogramRules(nth($arg, 1));
     } @else if ($componentId == $sankeyId) {
       @include sankeyRules(nth($arg, 1));
+    } @else if ($componentId == $trafficMapId) {
+      @include trafficMapRules(nth($arg, 1));
     } @else {
       @warn "Unknown componentId, #{$componentId}, doesn't have an associated mixin.";
     }
