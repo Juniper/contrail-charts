@@ -95,8 +95,15 @@ export default class NavigationView extends ChartView {
     selection[1] += browseMoveBy
     selection[0] = xScale(selection[0])
     selection[1] = xScale(selection[1])
-    if (selection[0] < xScale.range()[0] || selection[1] > xScale.range()[1]) {
-      return
+    if (selection[0] < xScale.range()[0]) {
+      const delta = selection[1] - selection[0]
+      selection[1] = xScale.range()[1]
+      selection[0] = selection[1] - delta
+    }
+    if (selection[1] > xScale.range()[1]) {
+      const delta = selection[1] - selection[0]
+      selection[0] = xScale.range()[0]
+      selection[1] = selection[0] + delta
     }
     this._brush.move(selection)
   }
@@ -105,10 +112,6 @@ export default class NavigationView extends ChartView {
     if (!toggle) {
       // Start to play.
       const selection = this._brush.config.get('selection').slice()
-      const xScale = this._yChart.config.get('axes.x.scale')
-      const delta = selection[1] - selection[0]
-      selection[0] = xScale.range()[0]
-      selection[1] = selection[0] + delta
       this._brush.move(selection)
       this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
     } else {
