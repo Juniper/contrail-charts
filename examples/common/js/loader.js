@@ -27,7 +27,6 @@ import navigation from '../../grouped-chart/navigation'
 import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav'
 
 import sankeyChart from '../../advance-chart/sankey'
-import trafficMapChart from '../../advance-chart/traffic-map'
 
 // Single
 import singleLine from '../../single/single-line'
@@ -145,10 +144,7 @@ const allExamples = {
   'advance': {
     'Sankey': {
       view: sankeyChart,
-    },
-    'DDOS Attack Map': {
-      view: trafficMapChart,
-    },
+    }
   }
 }
 
