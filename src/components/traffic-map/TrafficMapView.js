@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ * Copyright (c) 2017 Volterra Systems, Inc. All rights reserved.
  */
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'

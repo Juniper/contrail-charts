@@ -112,6 +112,8 @@ export default class BrushView extends ChartView {
       setTimeout(() => this._brush.move(this.d3))
     }
 
-    this.trigger('selection', selection)
+    if (d3Selection.event.type === 'brush') {
+      this.trigger('selection', selection)
+    }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ * Copyright (c) 2017 Volterra Systems, Inc. All rights reserved.
  */
 import * as d3Scale from 'd3-scale'
 import * as d3Geo from 'd3-geo'
