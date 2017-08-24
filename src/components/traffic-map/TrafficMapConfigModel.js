@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ * Copyright (c) 2017 Volterra Systems, Inc. All rights reserved.
  */
 import * as d3Scale from 'd3-scale'
 import * as d3Geo from 'd3-geo'
@@ -13,7 +13,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
       isSharedContainer: true,
 
       // traficTypes - if left empty the colorScheme will be used.
-      // { name: 'UDP-Flood', color: '#ff0000' }
+      // { name: 'UDP-FLOOD', color: '#ff0000' }
       trafficTypes: [],
 
       colorScheme: d3Scale.schemeCategory10,
@@ -77,21 +77,6 @@ export default class TrafficMapConfigModel extends ConfigModel {
     super.set(...args)
   }
 
-  get legendData () {
-    return _.map(this.attributes.levels, level => {
-      return {
-        key: level.level,
-        label: level.label,
-        color: this.getColor(level.level),
-        disabled: level.level >= this.attributes.drillDownLevel,
-      }
-    })
-  }
-
-  get legendConfig () {
-    return {colorScheme: this.attributes.colorScheme}
-  }
-
   getColor (key) {
     const trafficType = _.find(this.attributes.trafficTypes, {name: key})
     let configuredColor = null
@@ -107,14 +92,5 @@ export default class TrafficMapConfigModel extends ConfigModel {
     if (!level) return
     level.color = color
     this.trigger('change', this.config)
-  }
-
-  setKey (key, isEnabled) {
-    const levels = this.attributes.levels
-    const level = _.find(levels, level => level.level === key)
-    if (!level) return
-    let drillDownLevel = isEnabled ? level.level + 1 : level.level
-    if (drillDownLevel < 1) drillDownLevel = 1
-    this.set({drillDownLevel})
   }
 }

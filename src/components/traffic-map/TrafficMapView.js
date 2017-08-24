@@ -1,9 +1,11 @@
 /*
- * Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
+ * Copyright (c) 2017 Volterra Systems, Inc. All rights reserved.
  */
 import _ from 'lodash'
 import * as d3Scale from 'd3-scale'
 import * as d3Selection from 'd3-selection'
+import * as d3Interpolate from 'd3-interpolate'
+import * as d3Ease from 'd3-ease'
 import Config from './TrafficMapConfigModel'
 import Model from 'models/DataFrame'
 import SelectColor from '../../actions/SelectColor'
@@ -88,6 +90,15 @@ export default class TrafficMapView extends MapView {
     this._renderData()
   }
 
+  render () {
+    super.render()
+    this._renderMap()
+    this._renderData()
+    this._updateMarkerPositionAlongLink()
+    this._renderMarkers()
+    this._ticking = false
+  }
+
   /**
   * Overrides Map._renderData.
   * Renders the links on the map.
@@ -103,21 +114,42 @@ export default class TrafficMapView extends MapView {
       linksGroupSvg = this.d3.select('.links')
     }
     // Create a path for each source/target pair.
-    const linksSvg = linksGroupSvg.selectAll(this.selectors.link).data(this._linksData)
+    const linksSvg = linksGroupSvg.selectAll(this.selectors.link).data(this._linksData, (d) => d.id)
     linksSvg.enter().append('path')
       .attr('class', this.selectorClass('link'))
-      .merge(linksSvg)
+      .attr('id', link => `c${link.id}`)
+      .style('stroke-width', link => link.width)
+      .style('stroke', link => this.config.getColor(link.trafficType))
       .attr('d', link => {
         const source = this.config.project(link.source)
         const target = this.config.project(link.target)
         return this._arc(source, target)
       })
-      .attr('id', link => `c${link.id}`)
-      .style('stroke-width', link => link.width)
-      .style('stroke', link => this.config.getColor(link.trafficType))
+      .call(this._linkTransition.bind(this))
+
+    linksSvg.attr('stroke-dasharray', null)
+    .attr('d', link => {
+      const source = this.config.project(link.source)
+      const target = this.config.project(link.target)
+      return this._arc(source, target)
+    })
+
     linksSvg.exit().remove()
     // Animate over links.
     this._initAnimationOverLinks()
+  }
+
+  _linkTransition (path) {
+    path.transition()
+    .ease(d3Ease.easeLinear)
+    .duration(function () { return this.getTotalLength() })
+    .attrTween('stroke-dasharray', this._tweenDash)
+  }
+
+  _tweenDash () {
+    const l = this.getTotalLength()
+    const i = d3Interpolate.interpolateString(`0,${l}`, `${l},${l}`)
+    return function (t) { return i(t) }
   }
 
   _initAnimationOverLinks () {
@@ -151,6 +183,28 @@ export default class TrafficMapView extends MapView {
     this._animationStarted = true
   }
 
+  _updateMarkerPositionAlongLink () {
+    const markerEndAnimationSteps = this.config.get('markerEndAnimationSteps')
+    const markerSpeed = this.config.get('markerSpeed')
+    _.each(this._markers, marker => {
+      let offset = marker.offset
+      if (offset > marker.link.len) {
+        // This marker reached the end of link because link changed length due to an onZoom event.
+        if (!marker.finished) {
+          marker.finished = 0
+        }
+        marker.finished += Math.round((marker.offset - marker.link.len) / markerSpeed)
+        offset = marker.link.len
+      }
+      marker.point = marker.link.pathNode.getPointAtLength(offset)
+    })
+    // Remove markers
+    this._markers = _.filter(this._markers, marker => marker.finished < markerEndAnimationSteps)
+  }
+
+  /**
+  * Move the bubbles over the links indicating traffic flow direction.
+  */
   _animateMarkers () {
     if (!this._animationStarted) {
       return
@@ -160,16 +214,17 @@ export default class TrafficMapView extends MapView {
     // Move existing markers
     _.each(this._markers, marker => {
       marker.offset += markerSpeed
-      if (marker.offset > marker.link.len) {
-        marker.offset = marker.link.len
-        marker.finished++
-      }
+      let offset = marker.offset
       if (marker.offset < marker.link.len && marker.finished) {
         // This marker was already flaged for delete when the link changed length due to an onZoom event.
         // End the process of removing this marker.
         marker.finished = markerEndAnimationSteps
       }
-      marker.point = marker.link.pathNode.getPointAtLength(marker.offset)
+      if (offset > marker.link.len) {
+        offset = marker.link.len
+        marker.finished++
+      }
+      marker.point = marker.link.pathNode.getPointAtLength(offset)
     })
     // Remove markers
     this._markers = _.filter(this._markers, marker => marker.finished < markerEndAnimationSteps)
@@ -219,8 +274,5 @@ export default class TrafficMapView extends MapView {
 
   _onMouseoutLink (d, el) {
     actionman.fire('ToggleVisibility', this.config.get('tooltip'), false)
-  }
-
-  _onClickNode (d, el, e) {
   }
 }

@@ -144,7 +144,7 @@ const allExamples = {
   'advance': {
     'Sankey': {
       view: sankeyChart,
-    },
+    }
   }
 }
 
