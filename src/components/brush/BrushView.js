@@ -102,10 +102,9 @@ export default class BrushView extends ChartView {
     if (!selection) return this.hide()
     else this.show(selection)
 
-    this.config.set('selection', selection, {silent: true})
+    this.config.set('selection', selection, { silent: true })
     // selection is removed when clicking outside a brush
     if (selection[0] === selection[1]) {
-      const xRange = this.config.get('xRange')
       selection = [xRange[0], xRange[1]]
     }
     if (_.isEqual(selection, xRange)) {
@@ -113,7 +112,7 @@ export default class BrushView extends ChartView {
     }
 
     if (d3Selection.event.type === 'brush') {
-      this.trigger('selection', selection)
+      this.trigger('brushed', selection)
     }
   }
 }

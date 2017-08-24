@@ -42,14 +42,22 @@ export default class NavigationConfigModel extends ConfigModel {
     })
   }
 
+  /**
+  * Returns the selection in pixels.
+  * Uses the pixelSelection if available as it is exactly what user selected.
+  * The selection is given in percent and may not change even if user moved the brush.
+  * Will recompute pixelSelection from selection if xRange changed (window resized).
+  */
   getSelectionRange (xRange) {
     const scale = this.attributes.selectionScale
     const selection = this.attributes.selection
-    scale.range(xRange)
+    const pixelSelection = this.attributes.pixelSelection
+    const previousXRange = this.attributes.xRange
     if (_.isEmpty(selection)) return []
-    return [
-      scale(selection[0]),
-      scale(selection[1]),
-    ]
+    if (!pixelSelection || !previousXRange || !_.isEqual(previousXRange, xRange)) {
+      scale.range(xRange)
+      return [ Math.floor(scale(selection[0])), Math.ceil(scale(selection[1])) ]
+    }
+    return pixelSelection
   }
 }

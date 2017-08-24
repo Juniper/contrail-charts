@@ -13,7 +13,7 @@ export default class TrafficMapConfigModel extends ConfigModel {
       isSharedContainer: true,
 
       // traficTypes - if left empty the colorScheme will be used.
-      // { name: 'UDP-Flood', color: '#ff0000' }
+      // { name: 'UDP-FLOOD', color: '#ff0000' }
       trafficTypes: [],
 
       colorScheme: d3Scale.schemeCategory10,
