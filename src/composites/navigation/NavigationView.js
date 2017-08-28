@@ -17,6 +17,11 @@ export default class NavigationView extends ChartView {
   static get Model () { return Model }
   static get Actions () { return {Zoom, Browse, ToggleHalt} }
 
+  constructor (p) {
+    super(p)
+    this._updatedFromNavigationView = 0
+  }
+
   render () {
     super.render()
     if (!this._yChart) {
@@ -44,6 +49,7 @@ export default class NavigationView extends ChartView {
         },
       })
       this.listenTo(this._brush, 'brushed', _.throttle(this._onSelection))
+      this.listenTo(this._brush, 'brushEnd', this._onSelectionEnd)
     }
     this._update()
   }
@@ -52,6 +58,7 @@ export default class NavigationView extends ChartView {
     super.remove()
     this._components = []
     this.stopListening(this._brush, 'brushed')
+    this.stopListening(this._brush, 'brushEnd')
   }
   /**
    * This is called when this NavigationView is the target of another Zoom action.
@@ -117,17 +124,31 @@ export default class NavigationView extends ChartView {
 
   // Event handlers
 
+  /**
+  * Method is invoked after brush triggers a brush event.
+  * Range is in pixels.
+  */
   _onSelection (range) {
     const xAccessor = this.config.get('plot.x.accessor')
     const xScale = this._yChart.config.get('axes.x.scale')
     let xMin = xScale.invert(range[0])
     let xMax = xScale.invert(range[1])
-    const sScale = this.config.get('selectionScale')
-    this.config.set('selection', [sScale.invert(range[0]), sScale.invert(range[1])], { silent: true })
-    this.config.set('pixelSelection', range, { silent: true })
+    if (!this._updatedFromNavigationView) {
+      const sScale = this.config.get('selectionScale')
+      this.config.set('selection', [sScale.invert(range[0]), sScale.invert(range[1])], { silent: true })
+      this.config.set('pixelSelection', range, { silent: true })
+    }
     const data = {[xAccessor]: [xMin, xMax]}
     actionman.fire('Zoom', this.config.get('update'), data)
   }
+
+  _onSelectionEnd () {
+    this._updatedFromNavigationView--
+    if (this._updatedFromNavigationView < 0) {
+      this._updatedFromNavigationView = 0
+    }
+  }
+
   /**
    * Turn off selection for the animation period on resize
    */
@@ -137,14 +158,15 @@ export default class NavigationView extends ChartView {
       this._ticking = true
     }
   }
+
   /**
    * Composite Y component is updated on resize on its own
    */
   _update () {
     this._yChart.render()
     const xRange = this._yChart.config.get('axes.x.scale').range()
-    xRange[0] = Math.round(xRange[0])
-    xRange[1] = Math.round(xRange[1])
+    xRange[0] = Math.floor(xRange[0])
+    xRange[1] = Math.ceil(xRange[1])
     const yRange = this._yChart.config.get('axes.y.scale').range()
     const pixelSelection = this.config.getSelectionRange(xRange)
     this._brush.config.set({
@@ -153,6 +175,7 @@ export default class NavigationView extends ChartView {
       yRange,
     }, {silent: true})
     this.config.set({ pixelSelection, xRange }, { silent: true })
+    this._updatedFromNavigationView++
     this._brush.render()
     this._ticking = false
   }
