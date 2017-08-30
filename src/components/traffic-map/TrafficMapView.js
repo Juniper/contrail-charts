@@ -104,7 +104,7 @@ export default class TrafficMapView extends MapView {
   * Renders the links on the map.
   */
   _renderData () {
-    if (!this._linksData || _.isEmpty(this._linksData)) {
+    if (!this._linksData) {
       return
     }
     let linksGroupSvg = this.d3.select('.links')
