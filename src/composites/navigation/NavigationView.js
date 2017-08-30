@@ -125,8 +125,16 @@ export default class NavigationView extends ChartView {
   // Event handlers
 
   /**
-  * Method is invoked after brush triggers a brush event.
-  * Range is in pixels.
+  * This method is invoked after a brushed event is triggered in BrushView.
+  * Here a situation opposite to _update occurs.
+  * Computing 'selection' (in percent) from 'range' in pixels can give slightly
+  * different results even if nothing changes between calls.
+  * So we only update 'selection' and 'pixelSelection' if we are sure
+  * it was an intended user input.
+  * We decide on this based the _updatedFromNavigationView flag.
+  * However even if nothing changed for this component, we still want to fire
+  * a 'Zoom' event for other components to decide for themselves.
+  * @param range - selection range in pixels.
   */
   _onSelection (range) {
     const xAccessor = this.config.get('plot.x.accessor')
@@ -148,7 +156,6 @@ export default class NavigationView extends ChartView {
       this._updatedFromNavigationView = 0
     }
   }
-
   /**
    * Turn off selection for the animation period on resize
    */
@@ -158,9 +165,17 @@ export default class NavigationView extends ChartView {
       this._ticking = true
     }
   }
-
   /**
-   * Composite Y component is updated on resize on its own
+   * Re-render the BrushView.
+   * The selection in pixels 'pixelSelection' is needed for configuring BrushView.
+   * However calculating it every time from 'selection' (given in percent) can give slightly
+   * different results even when nothing changes between calls.
+   * These small differences can make visual impact especially
+   * when large numbers are used in the navigation chart domain (ie. timestamps).
+   * This is why we need to save 'pixelSelection' along with 'selection'.
+   * 'pixelSelection' will be recomputed in config.getSelectionRange
+   * only if the xRange changes (browser window resized). Otherwise
+   * config.getSelectionRange will use the saved value.
    */
   _update () {
     this._yChart.render()
