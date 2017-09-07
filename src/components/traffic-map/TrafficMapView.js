@@ -32,6 +32,7 @@ export default class TrafficMapView extends MapView {
     return _.extend(super.selectors, {
       node: '.node',
       link: '.link',
+      source: '.source',
       marker: '.marker',
       active: '.active',
       graticule: '.graticule',
@@ -127,12 +128,22 @@ export default class TrafficMapView extends MapView {
       })
       .call(this._linkTransition.bind(this))
 
+    const sources = linksGroupSvg.selectAll(this.selectors.source).data(this._linksData, d => d.id)
+
+    sources.enter().append('circle')
+      .attr('class', this.selectorClass('source'))
+      .style('fill', link => this.config.getColor(link.trafficType))
+      .attr('r', link => link.width / 2)
+      .attr('cx', link => this.config.project(link.source)[0])
+      .attr('cy', link => this.config.project(link.source)[1])
+    sources.exit().remove()
+
     linksSvg.attr('stroke-dasharray', null)
-    .attr('d', link => {
-      const source = this.config.project(link.source)
-      const target = this.config.project(link.target)
-      return this._arc(source, target)
-    })
+      .attr('d', link => {
+        const source = this.config.project(link.source)
+        const target = this.config.project(link.target)
+        return this._arc(source, target)
+      })
 
     linksSvg.exit().remove()
     // Animate over links.
