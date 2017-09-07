@@ -27,8 +27,8 @@ import navigation from '../../grouped-chart/navigation'
 import twoLineBarOnePieNav from '../../grouped-chart/linebar-pie-nav'
 
 import sankeyChart from '../../advance-chart/sankey'
-// Single
 
+// Single
 import singleLine from '../../single/single-line'
 import singleStackedBar from '../../single/single-stacked-bar'
 import singleGroupedBar from '../../single/single-grouped-bar'
@@ -144,7 +144,7 @@ const allExamples = {
   'advance': {
     'Sankey': {
       view: sankeyChart,
-    },
+    }
   }
 }
 

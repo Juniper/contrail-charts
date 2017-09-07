@@ -7,18 +7,19 @@ import Config from './NavigationConfigModel'
 import Model from 'models/DataFrame'
 import actionman from 'core/Actionman'
 import Zoom from '../../actions/Zoom'
+import Browse from '../../actions/Browse'
+import ToggleHalt from '../../actions/ToggleHalt'
 import CompositeYView from 'composites/y/CompositeYView'
 import BrushView from 'components/brush/BrushView'
 
 export default class NavigationView extends ChartView {
   static get Config () { return Config }
   static get Model () { return Model }
-  static get Actions () { return {Zoom} }
+  static get Actions () { return {Zoom, Browse, ToggleHalt} }
 
-  constructor (...args) {
-    super(...args)
-    // needs more time to not encounter onSelection event after zoom
-    this._debouncedEnable = _.debounce(() => { this._disabled = false }, this.config.get('duration') * 2)
+  constructor (p) {
+    super(p)
+    this._updatedFromNavigationView = 0
   }
 
   render () {
@@ -47,7 +48,8 @@ export default class NavigationView extends ChartView {
           height: this.height,
         },
       })
-      this.listenTo(this._brush, 'selection', _.throttle(this._onSelection))
+      this.listenTo(this._brush, 'brushed', _.throttle(this._onSelection))
+      this.listenTo(this._brush, 'brushEnd', this._onSelectionEnd)
     }
     this._update()
   }
@@ -55,69 +57,140 @@ export default class NavigationView extends ChartView {
   remove () {
     super.remove()
     this._components = []
-    this.stopListening(this._brush, 'selection')
+    this.stopListening(this._brush, 'brushed')
+    this.stopListening(this._brush, 'brushEnd')
   }
   /**
+   * This is called when this NavigationView is the target of another Zoom action.
    * is limited to x scale
    */
   zoom (ranges) {
-    let selection
     if (ranges) {
       const range = ranges[this.config.get('plot.x.accessor')]
       if (!range || range[0] === range[1]) return
-      const sScale = this.config.get('selectionScale')
       const visualMin = this._yChart.config.xScale(range[0])
       const visualMax = this._yChart.config.xScale(range[1])
-
-      // round zoom range to integers in percents including the original exact float values
-      selection = [_.floor(sScale.invert(visualMin)), _.ceil(sScale.invert(visualMax))]
+      this.config.set({ pixelSelection: [visualMin, visualMax] }, { silent: true })
+      // Now when we call _update the brush._render method will be called.
+      // This will update the selection window and trigger _onSelection
+      // Which will save the new selection in percent.
     }
-
-    if (_.isEqual(this.config.get('selection'), selection)) return
-    this.config.set('selection', selection, {silent: true})
-    this._disabled = true
     this._update()
-    this._debouncedEnable()
+  }
+
+  browse (attribute) {
+    const selection = this._brush.config.get('selection').slice()
+    const xScale = this._yChart.config.get('axes.x.scale')
+    selection[0] = xScale.invert(selection[0])
+    selection[1] = xScale.invert(selection[1])
+    let browseMoveBy = this.config.get('browseMoveBy')
+    if (attribute === 'back') {
+      browseMoveBy = -browseMoveBy
+    }
+    selection[0] += browseMoveBy
+    selection[1] += browseMoveBy
+    selection[0] = xScale(selection[0])
+    selection[1] = xScale(selection[1])
+    if (selection[0] < xScale.range()[0]) {
+      const delta = selection[1] - selection[0]
+      selection[1] = xScale.range()[1]
+      selection[0] = selection[1] - delta
+    }
+    if (selection[1] > xScale.range()[1]) {
+      const delta = selection[1] - selection[0]
+      selection[0] = xScale.range()[0]
+      selection[1] = selection[0] + delta
+    }
+    this._brush.move(selection)
+  }
+
+  setHalt (toggle) {
+    if (!toggle) {
+      // Start to play.
+      const selection = this._brush.config.get('selection').slice()
+      this._brush.move(selection)
+      this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
+    } else {
+      // Halt.
+      window.clearTimeout(this._timer)
+    }
+  }
+
+  _animateBrush () {
+    // Keep moving the selection forward once every second.
+    this.browse('forward')
+    this._timer = window.setTimeout(this._animateBrush.bind(this), 1000)
   }
 
   // Event handlers
 
+  /**
+  * This method is invoked after a brushed event is triggered in BrushView.
+  * Here a situation opposite to _update occurs.
+  * Computing 'selection' (in percent) from 'range' in pixels can give slightly
+  * different results even if nothing changes between calls.
+  * So we only update 'selection' and 'pixelSelection' if we are sure
+  * it was an intended user input.
+  * We decide on this based the _updatedFromNavigationView flag.
+  * However even if nothing changed for this component, we still want to fire
+  * a 'Zoom' event for other components to decide for themselves.
+  * @param range - selection range in pixels.
+  */
   _onSelection (range) {
-    if (this._disabled) return
     const xAccessor = this.config.get('plot.x.accessor')
     const xScale = this._yChart.config.get('axes.x.scale')
     let xMin = xScale.invert(range[0])
     let xMax = xScale.invert(range[1])
-    const sScale = this.config.get('selectionScale')
-    const selection = [_.floor(sScale.invert(range[0])), _.ceil(sScale.invert(range[1]))]
-    this.config.set('selection', selection, {silent: true})
-
+    if (!this._updatedFromNavigationView) {
+      const sScale = this.config.get('selectionScale')
+      this.config.set('selection', [sScale.invert(range[0]), sScale.invert(range[1])], { silent: true })
+      this.config.set('pixelSelection', range, { silent: true })
+    }
     const data = {[xAccessor]: [xMin, xMax]}
     actionman.fire('Zoom', this.config.get('update'), data)
+  }
+
+  _onSelectionEnd () {
+    this._updatedFromNavigationView--
+    if (this._updatedFromNavigationView < 0) {
+      this._updatedFromNavigationView = 0
+    }
   }
   /**
    * Turn off selection for the animation period on resize
    */
   _onResize () {
-    this._disabled = true
-    this._debouncedEnable()
     if (!this._ticking) {
       window.requestAnimationFrame(this._update.bind(this))
       this._ticking = true
     }
   }
   /**
-   * Composite Y component is updated on resize on its own
+   * Re-render the BrushView.
+   * The selection in pixels 'pixelSelection' is needed for configuring BrushView.
+   * However calculating it every time from 'selection' (given in percent) can give slightly
+   * different results even when nothing changes between calls.
+   * These small differences can make visual impact especially
+   * when large numbers are used in the navigation chart domain (ie. timestamps).
+   * This is why we need to save 'pixelSelection' along with 'selection'.
+   * 'pixelSelection' will be recomputed in config.getSelectionRange
+   * only if the xRange changes (browser window resized). Otherwise
+   * config.getSelectionRange will use the saved value.
    */
   _update () {
     this._yChart.render()
     const xRange = this._yChart.config.get('axes.x.scale').range()
+    xRange[0] = Math.floor(xRange[0])
+    xRange[1] = Math.ceil(xRange[1])
     const yRange = this._yChart.config.get('axes.y.scale').range()
+    const pixelSelection = this.config.getSelectionRange(xRange)
     this._brush.config.set({
-      selection: this.config.getSelectionRange(xRange),
+      selection: pixelSelection,
       xRange,
       yRange,
     }, {silent: true})
+    this.config.set({ pixelSelection, xRange }, { silent: true })
+    this._updatedFromNavigationView++
     this._brush.render()
     this._ticking = false
   }

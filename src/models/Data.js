@@ -8,8 +8,8 @@ import Events from 'contrail-events'
  */
 export default class DataModel {
   constructor (data, config) {
-    if (!_.isEmpty(data)) this.data = data
     this.config = config
+    if (!_.isEmpty(data)) this.data = data
   }
 
   get data () {

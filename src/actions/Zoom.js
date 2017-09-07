@@ -17,5 +17,6 @@ export default class Zoom extends Action {
   _execute (ids, ...args) {
     if (!_.isNil(ids) && !_.isArray(ids)) ids = [ids]
     if (!ids || ids.includes(this._registrar.id)) this._registrar.zoom(...args)
+    this._registrar.trigger(this.id, args[0])
   }
 }

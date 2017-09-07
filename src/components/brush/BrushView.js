@@ -82,6 +82,10 @@ export default class BrushView extends ChartView {
       })
   }
 
+  move (selection) {
+    this._brush.move(this.d3, selection)
+  }
+
   hide () {
     this.d3.selectAll(this.selectors.handle)
       .classed('hide', true)
@@ -95,19 +99,22 @@ export default class BrushView extends ChartView {
     let selection = d3Selection.event.selection
     const xRange = this.config.get('xRange')
 
-    if (!selection) return this.hide()
-    else this.show(selection)
+    if (!selection) {
+      selection = [xRange[0], xRange[1]]
+      this.hide()
+    } else {
+      this.show(selection)
+    }
 
-    this.config.set('selection', selection, {silent: true})
-    // selection is removed when clicking outside a brush
+    this.config.set('selection', selection, { silent: true })
     if (selection[0] === selection[1]) {
-      const xRange = this.config.get('xRange')
       selection = [xRange[0], xRange[1]]
     }
-    if (_.isEqual(selection, xRange)) {
-      setTimeout(() => this._brush.move(this.d3))
-    }
 
-    this.trigger('selection', selection)
+    if (d3Selection.event.type === 'brush' || d3Selection.event.type === 'start') {
+      this.trigger('brushed', selection)
+    } else if (d3Selection.event.type === 'end') {
+      this.trigger('brushEnd', selection)
+    }
   }
 }

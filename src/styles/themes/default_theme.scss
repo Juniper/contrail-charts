@@ -218,3 +218,11 @@ $sankey: (
   nodeLabelSize: 9px,
   nodeLabelColor: $black,
 ) !default;
+
+// traffic map chart
+$trafficMap: (
+  linkColor: $dimmedBlue,
+  markerColor: $solidBlue,
+  mapFeatureColor: $ashGrey2,
+  mapBoundryColor: $snowWhite
+) !default;
